@@ -1,0 +1,8 @@
+{
+  "name": "@sign/eth",
+  "version": "1.0.0",
+  "description": "sign client for ethereum network",
+  "main": "cjs/index.js",
+  "author": "liujun93 <ljun8575@gmail.com>",
+  "license": "MIT"
+}

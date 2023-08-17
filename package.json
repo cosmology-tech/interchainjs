@@ -1,0 +1,28 @@
+{
+  "name": "sign",
+  "version": "1.0.0",
+  "private": true,
+  "description": "sign client for block-chain networks",
+  "repository": "git@github.com:cosmology-tech/sign.git",
+  "author": "liujun93 <ljun8575@gmail.com>",
+  "license": "MIT",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "lerna run build"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.3",
+    "@typescript-eslint/eslint-plugin": "^6.4.0",
+    "@typescript-eslint/parser": "^6.4.0",
+    "eslint": "^8.47.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-simple-import-sort": "^10.0.0",
+    "eslint-plugin-unused-imports": "^3.0.0",
+    "jest": "^29.6.2",
+    "lerna": "^6.0.3",
+    "prettier": "^3.0.2",
+    "typescript": "^5.1.6"
+  }
+}
