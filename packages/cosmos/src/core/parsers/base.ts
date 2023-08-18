@@ -9,7 +9,7 @@ import {
   TelescopeData,
   WrapType,
   WrapTypeUrl,
-} from "../types";
+} from "../../types";
 
 type ProtoData<T> = T | Uint8Array | WrapTypeUrl<T | Uint8Array>;
 

@@ -1,5 +1,7 @@
+import { TxResponse } from "interchain-query/cosmos/base/abci/v1beta1/abci";
 import { AuthInfo, TxBody, TxRaw } from "interchain-query/cosmos/tx/v1beta1/tx";
 
+import { txBodyParser } from "../../const/tx";
 import {
   ParserData,
   PartialProtoDoc,
@@ -7,10 +9,11 @@ import {
   StdSignDoc,
   WrapType,
   WrapTypeUrl,
-} from "../types";
+} from "../../types";
+import { toBytes } from "../utils/bytes";
+import { standardizeFee } from "../utils/fee";
 import { BaseParser } from "./base";
 import { MsgBaseParser } from "./msg.base";
-import { txBodyParser } from "./tx.const";
 
 export class MsgParser<ProtoT, AminoT> extends MsgBaseParser<ProtoT, AminoT> {
   constructor(args: ParserData<ProtoT, AminoT>) {
@@ -29,26 +32,13 @@ export class MsgParser<ProtoT, AminoT> extends MsgBaseParser<ProtoT, AminoT> {
     sequence,
     chainId,
   }: ProtoDoc<ProtoT>): StdSignDoc<AminoT> {
-    if (!this.aminoParser) {
-      throw new Error(
-        `No such aminoType and converter for typeUrl "${this.protoType}".`
-      );
-    }
-
-    const _fee = { ...fee, gas: fee.gasLimit.toString() };
-    delete _fee.gasLimit;
-    _fee.payer === "" && delete _fee.payer;
-    _fee.granter === "" && delete _fee.granter;
-
     return {
       msgs: msgs.map((msg) => {
         this.protoParser.assertMsg(msg);
-        return this.fromProto(msg).toAmino().pop() as WrapType<AminoT>;
+        return this.fromProto(msg).toAmino().wrap().pop() as WrapType<AminoT>;
       }),
-      fee: _fee,
+      fee: standardizeFee(fee),
       memo,
-      // account_number: Uint53.fromString(accountNumber.toString()).toString(),
-      // sequence: Uint53.fromString(sequence.toString()).toString(),
       account_number: accountNumber.toString(),
       sequence: sequence.toString(),
       chain_id: chainId,
@@ -75,7 +65,7 @@ export class MsgParser<ProtoT, AminoT> extends MsgBaseParser<ProtoT, AminoT> {
     });
 
     const signature: Uint8Array = this.auth.sign(
-      this._toBytes(this.toStdDoc(protoDoc))
+      toBytes(this.toStdDoc(protoDoc))
     );
 
     return this.createTxRaw({
@@ -88,5 +78,17 @@ export class MsgParser<ProtoT, AminoT> extends MsgBaseParser<ProtoT, AminoT> {
   async sign(partialProtoDoc: PartialProtoDoc<ProtoT>): Promise<TxRaw> {
     const protoDoc = await this.createProtoDoc(partialProtoDoc);
     return await this.signOffline(protoDoc);
+  }
+
+  async signAndBroadcast(
+    partialProtoDoc: PartialProtoDoc<ProtoT>,
+    checkTx = true,
+    commitTx = false
+  ): Promise<TxResponse | undefined> {
+    return await this.broadcast(
+      await this.sign(partialProtoDoc),
+      checkTx,
+      commitTx
+    );
   }
 }

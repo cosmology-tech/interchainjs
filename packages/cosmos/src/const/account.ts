@@ -10,8 +10,8 @@ import {
   PeriodicVestingAccount,
 } from "interchain-query/cosmos/vesting/v1beta1/vesting";
 
-import { AccountParser } from "./account";
-import { BaseParser } from "./base";
+import { AccountParser } from "../core/parsers/account";
+import { BaseParser } from "../core/parsers/base";
 
 // account
 export const baseAccountParser = AccountParser.fromParser(
@@ -32,6 +32,8 @@ export const delayedVestingAccountParser = AccountParser.fromParser(
 export const periodicVestingAccountParser = AccountParser.fromParser(
   BaseParser.fromTelescope(PeriodicVestingAccount)
 );
+
+// -------------------- COLLECTIONS -----------------------
 
 export const accountParsers = {
   BaseAccount: baseAccountParser,

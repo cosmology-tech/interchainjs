@@ -76,4 +76,19 @@ const myMsgPoolParser = MsgPoolParser.with("MsgSend", "MsgMultiSend");
 
 ### Broadcast
 
-TODO
+```ts
+// ...
+// Step 3: Sign messages
+const txRaw: TxRaw = await msgSendParser.sign({ msgs: [{...}] });
+
+// Step 4: Broadcast txRaw
+const txResp: TxResponse | undefined = await msgSendParser.broadcast(txRaw);
+```
+
+Or you can directly broadcast messages
+
+```ts
+// ...
+// Step 3: Sign and broadcast messages
+const txResp: TxResponse | undefined = await msgSendParser.signAndBroadcast({ msgs: [{...}] });
+```

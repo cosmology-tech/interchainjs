@@ -1,13 +1,9 @@
-import {
-  escapeCharacters,
-  sortedJsonStringify,
-} from "@cosmjs/amino/build/signdoc";
-import { toBech32, toUtf8 } from "@cosmjs/encoding";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { toBech32 } from "@cosmjs/encoding";
 import { Uint53 } from "@cosmjs/math";
-import { coins } from "@cosmjs/proto-signing";
-import { GasPrice } from "@cosmjs/stargate";
-import { chains } from "chain-registry";
+import { TxResponse } from "interchain-query/cosmos/base/abci/v1beta1/abci";
 import { SignMode } from "interchain-query/cosmos/tx/signing/v1beta1/signing";
+import { BroadcastMode } from "interchain-query/cosmos/tx/v1beta1/service";
 import {
   AuthInfo,
   Fee,
@@ -15,16 +11,14 @@ import {
   TxRaw,
 } from "interchain-query/cosmos/tx/v1beta1/tx";
 
-import { Query } from "../query";
-import { QueryParser } from "../query.parser";
 import {
-  AuthInfoParser,
-  FeeParser,
-  PubKeySecp256k1Parser,
-  TxBodyParser,
-  TxParser,
-  TxRawParser,
-} from "../sign.config";
+  authInfoParser,
+  feeParser,
+  pubKeySecp256k1Parser,
+  txBodyParser,
+  txParser,
+  txRawParser,
+} from "../../const";
 import {
   Auth,
   ParserData,
@@ -32,7 +26,10 @@ import {
   ProtoDoc,
   SignerData,
   WrapTypeUrl,
-} from "../types";
+} from "../../types";
+import prefixJson from "../config/prefix.json";
+import { QueryParser } from "../query.parser";
+import { calculateFee, GasPrice, getAvgGasPrice } from "../utils/fee";
 import { BaseParser } from "./base";
 
 export class MsgBaseParser<ProtoT, AminoT> extends BaseParser<ProtoT, AminoT> {
@@ -65,7 +62,7 @@ export class MsgBaseParser<ProtoT, AminoT> extends BaseParser<ProtoT, AminoT> {
   }
 
   on(endpoint: string) {
-    this._query = QueryParser.fromQuery(new Query(endpoint));
+    this._query = new QueryParser(endpoint);
     return this;
   }
 
@@ -114,52 +111,24 @@ export class MsgBaseParser<ProtoT, AminoT> extends BaseParser<ProtoT, AminoT> {
 
   async createSignerData(data: Partial<SignerData>): Promise<SignerData> {
     const { chainId = await this.query.getChainId() } = data;
-
-    let sequence = data.sequence;
-    let accountNumber = data.accountNumber;
     if (
       typeof data.sequence === "undefined" ||
       typeof data.accountNumber === "undefined"
     ) {
-      const prefix = chains.find((chain) => chain.chain_id === chainId)
-        ?.bech32_prefix;
+      const prefix = (prefixJson as any)[chainId];
       if (!prefix) {
-        throw new Error(
-          `Cannot find bech32_prefix for chain ${chainId} in chain-registry`
-        );
+        throw new Error(`Cannot find bech32_prefix for chain ${chainId}.`);
       }
-      const { account } = await this.query.getBaseAccount(
+      const {
+        account: { sequence, accountNumber },
+      } = await this.query.getBaseAccount(
         toBech32(prefix, this.auth.key.address)
       );
-      sequence = account.sequence;
-      accountNumber = account.accountNumber;
+      return { chainId, sequence, accountNumber };
+    } else {
+      const { sequence, accountNumber } = data;
+      return { chainId, sequence, accountNumber };
     }
-    return { chainId, sequence, accountNumber };
-  }
-
-  private _getAvgGasPrice(chainId: string) {
-    const feeToken = chains.find((chain) => chain.chain_id === chainId)?.fees
-      ?.fee_tokens?.[0];
-    if (typeof feeToken?.average_gas_price === "undefined") {
-      throw new Error(`No average_gas_price found for chain ${chainId}`);
-    }
-    return GasPrice.fromString(
-      `${feeToken.average_gas_price}${feeToken.denom}`
-    );
-  }
-
-  private _calculateFee(gasLimit: number, gasPrice: GasPrice | string): Fee {
-    const processedGasPrice =
-      typeof gasPrice === "string" ? GasPrice.fromString(gasPrice) : gasPrice;
-    const { denom, amount: gasPriceAmount } = processedGasPrice;
-    const amount = gasPriceAmount
-      .multiply(new Uint53(gasLimit))
-      .ceil()
-      .toString();
-    return FeeParser.createProtoData({
-      amount: coins(amount, denom),
-      gasLimit: BigInt(gasLimit.toString()),
-    }) as Fee;
   }
 
   async estimateFee<T extends ProtoT | WrapTypeUrl<ProtoT>>(
@@ -174,40 +143,45 @@ export class MsgBaseParser<ProtoT, AminoT> extends BaseParser<ProtoT, AminoT> {
       sequence,
       accountNumber,
     });
-    const txBytes = TxParser.fromProto({
-      body: TxBodyParser.createProtoData({
-        messages: msgs.map(
-          (msg) =>
-            this.fromProto(msg).wrap().encode().pop() as WrapTypeUrl<Uint8Array>
-        ),
-        memo: memo,
-      }),
-      authInfo: AuthInfoParser.createProtoData({
-        fee: FeeParser.createProtoData({}),
-        signerInfos: [
-          {
-            publicKey: PubKeySecp256k1Parser.fromProto({
-              key: this.auth.key.pubkey,
-            })
-              .wrap()
-              .encode()
-              .pop() as WrapTypeUrl<Uint8Array>,
-            sequence: BigInt(signerData.sequence),
-            modeInfo: { single: { mode: SignMode.SIGN_MODE_UNSPECIFIED } },
-          },
-        ],
-      }),
-      signatures: [new Uint8Array()],
-    })
+    const txBytes = txParser
+      .fromProto({
+        body: txBodyParser.createProtoData({
+          messages: msgs.map(
+            (msg) =>
+              this.fromProto(msg)
+                .wrap()
+                .encode()
+                .pop() as WrapTypeUrl<Uint8Array>
+          ),
+          memo: memo,
+        }),
+        authInfo: authInfoParser.createProtoData({
+          fee: feeParser.createProtoData({}),
+          signerInfos: [
+            {
+              publicKey: pubKeySecp256k1Parser
+                .fromProto({
+                  key: this.auth.key.pubkey,
+                })
+                .wrap()
+                .encode()
+                .pop() as WrapTypeUrl<Uint8Array>,
+              sequence: BigInt(signerData.sequence),
+              modeInfo: { single: { mode: SignMode.SIGN_MODE_UNSPECIFIED } },
+            },
+          ],
+        }),
+        signatures: [new Uint8Array()],
+      })
       .encode()
       .pop() as Uint8Array;
     const gasInfo = await this.query.estimateGas(txBytes);
-    const fee = this._calculateFee(
+    const fee = calculateFee(
       Math.round(
         Uint53.fromString(gasInfo.gasUsed.toString()).toNumber() *
           (multiplier || 1.3)
       ),
-      gasPrice || this._getAvgGasPrice(signerData.chainId)
+      gasPrice || getAvgGasPrice(signerData.chainId)
     );
     return fee;
   }
@@ -223,7 +197,8 @@ export class MsgBaseParser<ProtoT, AminoT> extends BaseParser<ProtoT, AminoT> {
   }): AuthInfo {
     const signers = [
       {
-        publicKey: PubKeySecp256k1Parser.fromProto({ key: pubkey })
+        publicKey: pubKeySecp256k1Parser
+          .fromProto({ key: pubkey })
           .wrap()
           .encode()
           .pop() as WrapTypeUrl<Uint8Array>,
@@ -233,7 +208,7 @@ export class MsgBaseParser<ProtoT, AminoT> extends BaseParser<ProtoT, AminoT> {
         sequence,
       },
     ];
-    return AuthInfoParser.createProtoData({
+    return authInfoParser.createProtoData({
       signerInfos: signers,
       fee,
     }) as AuthInfo;
@@ -248,21 +223,37 @@ export class MsgBaseParser<ProtoT, AminoT> extends BaseParser<ProtoT, AminoT> {
     authInfo: AuthInfo;
     signatures: Uint8Array[];
   }): TxRaw {
-    const txBodyBytes = TxBodyParser.fromProto(txBody)
+    const txBodyBytes = txBodyParser
+      .fromProto(txBody)
       .encode()
       .pop() as Uint8Array;
-    const authInfoBytes = AuthInfoParser.fromProto(authInfo)
+    const authInfoBytes = authInfoParser
+      .fromProto(authInfo)
       .encode()
       .pop() as Uint8Array;
 
-    return TxRawParser.fromProto({
-      bodyBytes: txBodyBytes,
-      authInfoBytes: authInfoBytes,
-      signatures: signatures,
-    }).pop() as TxRaw;
+    return txRawParser
+      .fromProto({
+        bodyBytes: txBodyBytes,
+        authInfoBytes: authInfoBytes,
+        signatures: signatures,
+      })
+      .pop() as TxRaw;
   }
 
-  protected _toBytes(obj: object) {
-    return toUtf8(escapeCharacters(sortedJsonStringify(obj)));
+  async broadcast(
+    txRaw: TxRaw,
+    checkTx = true,
+    commitTx = false
+  ): Promise<TxResponse | undefined> {
+    const txBytes = txRawParser.fromProto(txRaw).encode().pop() as Uint8Array;
+    const mode =
+      checkTx && commitTx
+        ? BroadcastMode.BROADCAST_MODE_BLOCK
+        : checkTx
+        ? BroadcastMode.BROADCAST_MODE_SYNC
+        : BroadcastMode.BROADCAST_MODE_ASYNC;
+    const { txResponse } = await this.query.broadcast(txBytes, mode);
+    return txResponse;
   }
 }

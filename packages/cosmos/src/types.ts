@@ -96,14 +96,8 @@ export interface Converter<ProtoT, AminoT> {
 }
 
 export interface Proto<T> {
-  encode: (
-    msg: T,
-    writer?: BinaryWriter | protobuf.Writer
-  ) => BinaryWriter | protobuf.Writer;
-  decode: (
-    input: Uint8Array | BinaryReader | protobuf.Reader,
-    length?: number
-  ) => T;
+  encode: (msg: T, writer?: BinaryWriter) => BinaryWriter;
+  decode: (input: Uint8Array | BinaryReader, length?: number) => T;
   fromPartial: (msg: DeepPartial<T>) => T;
 }
 

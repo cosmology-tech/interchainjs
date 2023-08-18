@@ -1,13 +1,15 @@
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-// export NODE_TLS_REJECT_UNAUTHORIZED=0
+/**
+ * if met certificate error, run `export NODE_TLS_REJECT_UNAUTHORIZED=0` in terminal
+ */
 
 import { Secp256k1HdWallet } from "@cosmjs/amino";
 import { toBase64 } from "@cosmjs/encoding";
 import { calculateFee, SigningStargateClient } from "@cosmjs/stargate";
 import { MsgSend } from "interchain-query/cosmos/bank/v1beta1/tx";
 
-import { Secp256k1Auth } from "../src/auth";
-import { msgSendParser, stargateMsgPoolParser } from "../src/parsers";
+import { msgSendParser, stargateMsgPoolParser } from "../src/const";
+import { Secp256k1Auth } from "../src/core/auth";
 import { Auth, WrapTypeUrl } from "../src/types";
 import { mnemonic2 } from "./test-data";
 
@@ -27,6 +29,12 @@ describe("MsgSend Sign", () => {
   };
   const msgs = [msgSend];
   const wrappedMsgs = [
+    /**
+     * {
+          typeUrl: "/cosmos.bank.v1beta1.MsgSend",
+          value: msgSend,
+        }
+     */
     msgSendParser.fromProto(msgSend).wrap().pop() as WrapTypeUrl<MsgSend>,
   ];
   const rpcEndpoint = "https://rpc-cosmoshub.blockapsis.com";
@@ -63,7 +71,7 @@ describe("MsgSend Sign", () => {
   });
 
   test(
-    "should equals to result with msgSendParser",
+    "should equals to result with MsgParser",
     async () => {
       const txRaw = await msgSendParser.on(rpcEndpoint).by(auth).sign({ msgs });
       expect(toBase64(txRaw.bodyBytes)).toEqual(bodyBytes);
@@ -74,7 +82,7 @@ describe("MsgSend Sign", () => {
   );
 
   test(
-    "should equals to result with SignClient",
+    "should equals to result with MsgPoolParser",
     async () => {
       const txRaw = await stargateMsgPoolParser.on(rpcEndpoint).by(auth).sign({
         msgs: wrappedMsgs,

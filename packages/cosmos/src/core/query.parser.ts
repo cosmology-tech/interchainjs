@@ -1,8 +1,8 @@
 import { BroadcastMode } from "interchain-query/cosmos/tx/v1beta1/service";
 
-import { accountParsers, baseAccountParser } from "./parsers/account.const";
+import { accountParsers, baseAccountParser } from "../const";
+import { Account } from "../types";
 import { Query } from "./query";
-import { Account } from "./types";
 
 export class QueryParser extends Query {
   constructor(endpoint: string) {
@@ -62,10 +62,7 @@ export class QueryParser extends Query {
     return gasInfo;
   }
 
-  async broadcast(
-    tx: Uint8Array,
-    mode: BroadcastMode = BroadcastMode.BROADCAST_MODE_BLOCK
-  ) {
+  async broadcast(tx: Uint8Array, mode: BroadcastMode) {
     return await this.tx.broadcastTx({ txBytes: tx, mode });
   }
 }

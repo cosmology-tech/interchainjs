@@ -13,7 +13,7 @@ import { toUtf8 } from "@cosmjs/encoding";
 import BN from "bn.js";
 import elliptic from "elliptic";
 
-import { Auth } from "./types";
+import { Auth } from "../types";
 
 const secp256k1 = new elliptic.ec("secp256k1");
 const secp256k1N = new BN(

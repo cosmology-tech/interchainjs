@@ -10,19 +10,27 @@
   "scripts": {
     "build": "tsc"
   },
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "dependencies": {
     "@cosmjs/crypto": "^0.31.0",
-    "@cosmjs/encoding": "^0.31.0",
     "bn.js": "^5.2.1",
-    "chain-registry": "^1.18.1",
     "elliptic": "^6.5.4",
-    "interchain-query": "^0.1.24"
+    "interchain-query": "0.1.13",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@cosmjs/amino": "^0.31.0",
+    "@cosmjs/stargate": "^0.31.0",
     "@types/bn.js": "^5.1.1",
-    "@types/elliptic": "^6.4.14"
+    "@types/elliptic": "^6.4.14",
+    "chain-registry": "^1.18.1"
   },
   "peerDependencies": {
+    "@cosmjs/encoding": "^0.31.0",
     "@cosmjs/math": "^0.31.0"
   }
 }

@@ -9,7 +9,7 @@ import {
   PeriodicVestingAccount,
 } from "interchain-query/cosmos/vesting/v1beta1/vesting";
 
-import { Account, ParserData } from "../types";
+import { Account, ParserData } from "../../types";
 import { BaseParser } from "./base";
 
 export class AccountParser<ProtoT, AminoT> extends BaseParser<ProtoT, AminoT> {

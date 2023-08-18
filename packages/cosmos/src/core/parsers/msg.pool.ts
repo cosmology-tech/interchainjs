@@ -1,17 +1,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { TxResponse } from "interchain-query/cosmos/base/abci/v1beta1/abci";
 import { AuthInfo, TxBody, TxRaw } from "interchain-query/cosmos/tx/v1beta1/tx";
 
+import { msgParsers } from "../../const/msg";
+import { txBodyParser } from "../../const/tx";
 import {
   PartialProtoDoc,
   ProtoDoc,
   StdSignDoc,
   WrapType,
   WrapTypeUrl,
-} from "../types";
+} from "../../types";
+import { toBytes } from "../utils/bytes";
+import { standardizeFee } from "../utils/fee";
 import { MsgParser } from "./msg";
 import { MsgBaseParser } from "./msg.base";
-import { msgParsers } from "./msg.const";
-import { txBodyParser } from "./tx.const";
 
 export class MsgPoolParser extends MsgBaseParser<any, any> {
   private _pool: Record<string, MsgParser<any, any>> = {};
@@ -60,20 +63,13 @@ export class MsgPoolParser extends MsgBaseParser<any, any> {
     sequence,
     chainId,
   }: ProtoDoc<WrapTypeUrl<any>>): StdSignDoc<any> {
-    const _fee = { ...fee, gas: fee.gasLimit.toString() };
-    delete _fee.gasLimit;
-    _fee.payer === "" && delete _fee.payer;
-    _fee.granter === "" && delete _fee.granter;
-
     return {
       msgs: msgs.map((msg) => {
         const parser = this._getParser(msg.typeUrl);
         return parser.fromProto(msg).toAmino().pop() as WrapType<any>;
       }),
-      fee: _fee,
+      fee: standardizeFee(fee),
       memo,
-      // account_number: Uint53.fromString(accountNumber.toString()).toString(),
-      // sequence: Uint53.fromString(sequence.toString()).toString(),
       account_number: accountNumber.toString(),
       sequence: sequence.toString(),
       chain_id: chainId,
@@ -100,7 +96,7 @@ export class MsgPoolParser extends MsgBaseParser<any, any> {
       fee,
     });
 
-    const signature = this.auth.sign(this._toBytes(this.toStdDoc(protoDoc)));
+    const signature = this.auth.sign(toBytes(this.toStdDoc(protoDoc)));
 
     return this.createTxRaw({
       txBody,
@@ -114,5 +110,17 @@ export class MsgPoolParser extends MsgBaseParser<any, any> {
   ): Promise<TxRaw> {
     const protoDoc = await this.createProtoDoc(partialProtoDoc);
     return await this.signOffline(protoDoc);
+  }
+
+  async signAndBroadcast(
+    partialProtoDoc: PartialProtoDoc<WrapTypeUrl<any>>,
+    checkTx = true,
+    commitTx = false
+  ): Promise<TxResponse | undefined> {
+    return await this.broadcast(
+      await this.sign(partialProtoDoc),
+      checkTx,
+      commitTx
+    );
   }
 }

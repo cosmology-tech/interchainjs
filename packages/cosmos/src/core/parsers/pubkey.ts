@@ -1,7 +1,7 @@
 import { PubKey as PubKeyEd25519 } from "interchain-query/cosmos/crypto/ed25519/keys";
 import { PubKey as PubKeySecp256k1 } from "interchain-query/cosmos/crypto/secp256k1/keys";
 
-import { ParserData } from "../types";
+import { ParserData } from "../../types";
 import { BaseParser } from "./base";
 
 export class PubKeyParser<ProtoT, AminoT> extends BaseParser<ProtoT, AminoT> {
