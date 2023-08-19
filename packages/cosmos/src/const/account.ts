@@ -14,32 +14,32 @@ import { AccountParser } from "../core/parsers/account";
 import { BaseParser } from "../core/parsers/base";
 
 // account
-export const baseAccountParser = AccountParser.fromParser(
+export const BaseAccountParser = AccountParser.fromParser(
   BaseParser.fromTelescope(BaseAccount)
 );
-export const moduleAccountParser = AccountParser.fromParser(
+export const ModuleAccountParser = AccountParser.fromParser(
   BaseParser.fromTelescope(ModuleAccount)
 );
-export const baseVestingAccountParser = AccountParser.fromParser(
+export const BaseVestingAccountParser = AccountParser.fromParser(
   BaseParser.fromTelescope(BaseVestingAccount)
 );
-export const continuousVestingAccountParser = AccountParser.fromParser(
+export const ContinuousVestingAccountParser = AccountParser.fromParser(
   BaseParser.fromTelescope(ContinuousVestingAccount)
 );
-export const delayedVestingAccountParser = AccountParser.fromParser(
+export const DelayedVestingAccountParser = AccountParser.fromParser(
   BaseParser.fromTelescope(DelayedVestingAccount)
 );
-export const periodicVestingAccountParser = AccountParser.fromParser(
+export const PeriodicVestingAccountParser = AccountParser.fromParser(
   BaseParser.fromTelescope(PeriodicVestingAccount)
 );
 
-// -------------------- COLLECTIONS -----------------------
+// *************************** COLLECTIONS ***************************
 
-export const accountParsers = {
-  BaseAccount: baseAccountParser,
-  ModuleAccount: moduleAccountParser,
-  BaseVestingAccount: baseVestingAccountParser,
-  ContinuousVestingAccount: continuousVestingAccountParser,
-  DelayedVestingAccount: delayedVestingAccountParser,
-  PeriodicVestingAccount: periodicVestingAccountParser,
+export const AccountParserMap = {
+  BaseAccount: BaseAccountParser,
+  ModuleAccount: ModuleAccountParser,
+  BaseVestingAccount: BaseVestingAccountParser,
+  ContinuousVestingAccount: ContinuousVestingAccountParser,
+  DelayedVestingAccount: DelayedVestingAccountParser,
+  PeriodicVestingAccount: PeriodicVestingAccountParser,
 };

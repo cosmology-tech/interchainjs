@@ -1,5 +1,5 @@
 node_modules
 dist
 __test__/test-data.ts
-/__test__/gen-prefix.ts
-/__test__/gen-fee-tokens.ts
+__test__/gen-prefix.ts
+__test__/gen-fee-tokens.ts

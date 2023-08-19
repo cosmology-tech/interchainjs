@@ -4,16 +4,16 @@ import { PubKey as PubKeySecp256k1 } from "interchain-query/cosmos/crypto/secp25
 import { BaseParser } from "../core/parsers/base";
 import { PubKeyParser } from "../core/parsers/pubkey";
 
-export const pubKeyEd25519Parser = PubKeyParser.fromParser(
+export const PubKeyEd25519Parser = PubKeyParser.fromParser(
   BaseParser.fromTelescope(PubKeyEd25519)
 );
-export const pubKeySecp256k1Parser = PubKeyParser.fromParser(
+export const PubKeySecp256k1Parser = PubKeyParser.fromParser(
   BaseParser.fromTelescope(PubKeySecp256k1)
 );
 
-// -------------------- COLLECTIONS -----------------------
+// *************************** COLLECTIONS ***************************
 
-export const pubKeyParsers = {
-  PubKeyEd25519: pubKeyEd25519Parser,
-  PubKeySecp256k1: pubKeySecp256k1Parser,
+export const PubKeyParsers = {
+  PubKeyEd25519: PubKeyEd25519Parser,
+  PubKeySecp256k1: PubKeySecp256k1Parser,
 };

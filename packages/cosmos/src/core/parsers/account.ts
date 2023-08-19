@@ -9,7 +9,8 @@ import {
   PeriodicVestingAccount,
 } from "interchain-query/cosmos/vesting/v1beta1/vesting";
 
-import { Account, ParserData } from "../../types";
+import { Account, ParserData, TelescopeData } from "../../types";
+import { toParserArgs } from "../utils/parser";
 import { BaseParser } from "./base";
 
 export class AccountParser<ProtoT, AminoT> extends BaseParser<ProtoT, AminoT> {
@@ -19,6 +20,10 @@ export class AccountParser<ProtoT, AminoT> extends BaseParser<ProtoT, AminoT> {
 
   static fromParser<ProtoT, AminoT>(parser: BaseParser<ProtoT, AminoT>) {
     return new AccountParser(parser.args);
+  }
+
+  static fromTelescope<ProtoT, AminoT>(data: TelescopeData<ProtoT, AminoT>) {
+    return new AccountParser(toParserArgs(data));
   }
 
   getBaseAccount(account: Account) {

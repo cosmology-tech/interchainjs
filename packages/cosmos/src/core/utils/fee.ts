@@ -1,7 +1,7 @@
 import { Decimal, Uint53 } from "@cosmjs/math";
 import { Fee } from "interchain-query/cosmos/tx/v1beta1/tx";
 
-import { feeParser } from "../../const";
+import { FeeParser } from "../../const";
 import { Coin, StdFee } from "../../types";
 import feeTokensJson from "../config/fee-tokens.json";
 
@@ -93,7 +93,7 @@ export function calculateFee(
     .multiply(new Uint53(gasLimit))
     .ceil()
     .toString();
-  return feeParser.createProtoData({
+  return FeeParser.createProtoData({
     amount: [coin(amount, denom)],
     gasLimit: BigInt(gasLimit.toString()),
   }) as Fee;

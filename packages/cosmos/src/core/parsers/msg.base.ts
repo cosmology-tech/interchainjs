@@ -12,12 +12,12 @@ import {
 } from "interchain-query/cosmos/tx/v1beta1/tx";
 
 import {
-  authInfoParser,
-  feeParser,
-  pubKeySecp256k1Parser,
-  txBodyParser,
-  txParser,
-  txRawParser,
+  AuthInfoParser,
+  FeeParser,
+  PubKeySecp256k1Parser,
+  TxBodyParser,
+  TxParser,
+  TxRawParser,
 } from "../../const";
 import {
   Auth,
@@ -143,36 +143,31 @@ export class MsgBaseParser<ProtoT, AminoT> extends BaseParser<ProtoT, AminoT> {
       sequence,
       accountNumber,
     });
-    const txBytes = txParser
-      .fromProto({
-        body: txBodyParser.createProtoData({
-          messages: msgs.map(
-            (msg) =>
-              this.fromProto(msg)
-                .wrap()
-                .encode()
-                .pop() as WrapTypeUrl<Uint8Array>
-          ),
-          memo: memo,
-        }),
-        authInfo: authInfoParser.createProtoData({
-          fee: feeParser.createProtoData({}),
-          signerInfos: [
-            {
-              publicKey: pubKeySecp256k1Parser
-                .fromProto({
-                  key: this.auth.key.pubkey,
-                })
-                .wrap()
-                .encode()
-                .pop() as WrapTypeUrl<Uint8Array>,
-              sequence: BigInt(signerData.sequence),
-              modeInfo: { single: { mode: SignMode.SIGN_MODE_UNSPECIFIED } },
-            },
-          ],
-        }),
-        signatures: [new Uint8Array()],
-      })
+    const txBytes = TxParser.fromProto({
+      body: TxBodyParser.createProtoData({
+        messages: msgs.map(
+          (msg) =>
+            this.fromProto(msg).wrap().encode().pop() as WrapTypeUrl<Uint8Array>
+        ),
+        memo: memo,
+      }),
+      authInfo: AuthInfoParser.createProtoData({
+        fee: FeeParser.createProtoData({}),
+        signerInfos: [
+          {
+            publicKey: PubKeySecp256k1Parser.fromProto({
+              key: this.auth.key.pubkey,
+            })
+              .wrap()
+              .encode()
+              .pop() as WrapTypeUrl<Uint8Array>,
+            sequence: BigInt(signerData.sequence),
+            modeInfo: { single: { mode: SignMode.SIGN_MODE_UNSPECIFIED } },
+          },
+        ],
+      }),
+      signatures: [new Uint8Array()],
+    })
       .encode()
       .pop() as Uint8Array;
     const gasInfo = await this.query.estimateGas(txBytes);
@@ -197,8 +192,7 @@ export class MsgBaseParser<ProtoT, AminoT> extends BaseParser<ProtoT, AminoT> {
   }): AuthInfo {
     const signers = [
       {
-        publicKey: pubKeySecp256k1Parser
-          .fromProto({ key: pubkey })
+        publicKey: PubKeySecp256k1Parser.fromProto({ key: pubkey })
           .wrap()
           .encode()
           .pop() as WrapTypeUrl<Uint8Array>,
@@ -208,7 +202,7 @@ export class MsgBaseParser<ProtoT, AminoT> extends BaseParser<ProtoT, AminoT> {
         sequence,
       },
     ];
-    return authInfoParser.createProtoData({
+    return AuthInfoParser.createProtoData({
       signerInfos: signers,
       fee,
     }) as AuthInfo;
@@ -223,22 +217,18 @@ export class MsgBaseParser<ProtoT, AminoT> extends BaseParser<ProtoT, AminoT> {
     authInfo: AuthInfo;
     signatures: Uint8Array[];
   }): TxRaw {
-    const txBodyBytes = txBodyParser
-      .fromProto(txBody)
+    const txBodyBytes = TxBodyParser.fromProto(txBody)
       .encode()
       .pop() as Uint8Array;
-    const authInfoBytes = authInfoParser
-      .fromProto(authInfo)
+    const authInfoBytes = AuthInfoParser.fromProto(authInfo)
       .encode()
       .pop() as Uint8Array;
 
-    return txRawParser
-      .fromProto({
-        bodyBytes: txBodyBytes,
-        authInfoBytes: authInfoBytes,
-        signatures: signatures,
-      })
-      .pop() as TxRaw;
+    return TxRawParser.fromProto({
+      bodyBytes: txBodyBytes,
+      authInfoBytes: authInfoBytes,
+      signatures: signatures,
+    }).pop() as TxRaw;
   }
 
   async broadcast(
@@ -246,7 +236,7 @@ export class MsgBaseParser<ProtoT, AminoT> extends BaseParser<ProtoT, AminoT> {
     checkTx = true,
     commitTx = false
   ): Promise<TxResponse | undefined> {
-    const txBytes = txRawParser.fromProto(txRaw).encode().pop() as Uint8Array;
+    const txBytes = TxRawParser.fromProto(txRaw).encode().pop() as Uint8Array;
     const mode =
       checkTx && commitTx
         ? BroadcastMode.BROADCAST_MODE_BLOCK

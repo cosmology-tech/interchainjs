@@ -1,6 +1,6 @@
 import { BroadcastMode } from "interchain-query/cosmos/tx/v1beta1/service";
 
-import { accountParsers, baseAccountParser } from "../const";
+import { AccountParserMap, BaseAccountParser } from "../const";
 import { Account } from "../types";
 import { Query } from "./query";
 
@@ -20,7 +20,7 @@ export class QueryParser extends Query {
       throw new Error(`Account is undefined.`);
     }
 
-    const accountParser = Object.values(accountParsers).find(
+    const accountParser = Object.values(AccountParserMap).find(
       (parser) => parser.protoType === accountResp.account!.typeUrl
     );
 
@@ -45,7 +45,7 @@ export class QueryParser extends Query {
     if (!baseAccount) {
       throw new Error("BaseAccount is undefined.");
     }
-    return { account: baseAccount, parser: baseAccountParser };
+    return { account: baseAccount, parser: BaseAccountParser };
   }
 
   async getChainId() {

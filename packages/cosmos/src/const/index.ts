@@ -1,21 +1,20 @@
-import { accountParsers } from "./account";
-import { msgParsers } from "./msg";
-import { msgPoolParsers } from "./msg.pool";
-import { pubKeyParsers } from "./pubkey";
-import { txParsers } from "./tx";
+import { AccountParserMap } from "./account";
+import { AllMsgParserMap } from "./msg";
+import { PubKeyParsers } from "./pubkey";
+import { TxParserMap } from "./tx";
 
 export * from "./account";
 export * from "./msg";
-export * from "./msg.pool";
+export * from "./msg.stargate";
+export * from "./msg.wasm";
 export * from "./pubkey";
 export * from "./tx";
 
-// -------------------- COLLECTIONS -----------------------
+// *************************** COLLECTIONS ***************************
 
 export const parsers = {
-  ...accountParsers,
-  ...pubKeyParsers,
-  ...msgParsers,
-  ...msgPoolParsers,
-  ...txParsers,
+  ...AccountParserMap,
+  ...PubKeyParsers,
+  ...AllMsgParserMap,
+  ...TxParserMap,
 };

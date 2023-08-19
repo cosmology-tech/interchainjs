@@ -8,7 +8,7 @@
   "author": "liujun93 <ljun8575@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "build": "tsc"
+    "build": "rm -rf dist && tsc"
   },
   "files": [
     "dist",
@@ -18,7 +18,7 @@
     "@cosmjs/crypto": "^0.31.0",
     "bn.js": "^5.2.1",
     "elliptic": "^6.5.4",
-    "interchain-query": "0.1.13",
+    "interchain-query": "0.1.25",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

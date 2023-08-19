@@ -1,7 +1,8 @@
 import { PubKey as PubKeyEd25519 } from "interchain-query/cosmos/crypto/ed25519/keys";
 import { PubKey as PubKeySecp256k1 } from "interchain-query/cosmos/crypto/secp256k1/keys";
 
-import { ParserData } from "../../types";
+import { ParserData, TelescopeData } from "../../types";
+import { toParserArgs } from "../utils/parser";
 import { BaseParser } from "./base";
 
 export class PubKeyParser<ProtoT, AminoT> extends BaseParser<ProtoT, AminoT> {
@@ -11,6 +12,10 @@ export class PubKeyParser<ProtoT, AminoT> extends BaseParser<ProtoT, AminoT> {
 
   static fromParser<ProtoT, AminoT>(parser: BaseParser<ProtoT, AminoT>) {
     return new PubKeyParser(parser.args);
+  }
+
+  static fromTelescope<ProtoT, AminoT>(data: TelescopeData<ProtoT, AminoT>) {
+    return new PubKeyParser(toParserArgs(data));
   }
 
   private _assertKeyType(key: Uint8Array) {

@@ -2,21 +2,22 @@
 import { TxResponse } from "interchain-query/cosmos/base/abci/v1beta1/abci";
 import { AuthInfo, TxBody, TxRaw } from "interchain-query/cosmos/tx/v1beta1/tx";
 
-import { msgParsers } from "../../const/msg";
-import { txBodyParser } from "../../const/tx";
+import { TxBodyParser } from "../../const/tx";
 import {
   PartialProtoDoc,
   ProtoDoc,
   StdSignDoc,
+  TelescopeData,
   WrapType,
   WrapTypeUrl,
 } from "../../types";
 import { toBytes } from "../utils/bytes";
 import { standardizeFee } from "../utils/fee";
+import { getMsgParser, getMsgParserPool } from "../utils/parser";
 import { MsgParser } from "./msg";
 import { MsgBaseParser } from "./msg.base";
 
-export class MsgPoolParser extends MsgBaseParser<any, any> {
+export class MsgParserPool extends MsgBaseParser<any, any> {
   private _pool: Record<string, MsgParser<any, any>> = {};
 
   constructor(parsers: MsgParser<any, any>[]) {
@@ -28,21 +29,42 @@ export class MsgPoolParser extends MsgBaseParser<any, any> {
 
   static with(...parsers: (MsgParser<any, any> | string)[]) {
     const _parsers = parsers.map((parser) => {
-      if (typeof parser === "string") {
-        const _parser = (msgParsers as any)[parser];
-        if (!_parser) {
-          throw new Error(`No such parser found with name ${parser}`);
-        }
-        return _parser;
-      } else {
-        return parser;
-      }
+      return typeof parser === "string" ? getMsgParser(parser) : parser;
     });
-    return new MsgPoolParser(_parsers);
+    return new MsgParserPool(_parsers);
   }
 
-  add(parser: MsgParser<any, any>) {
-    this._pool[parser.protoType] = parser;
+  static withTelescope(...data: TelescopeData<any, any>[]) {
+    const parsers = data.map((d) => {
+      return MsgParser.fromTelescope(d);
+    });
+    return new MsgParserPool(parsers);
+  }
+
+  add(...parsers: (MsgParser<any, any> | string)[]) {
+    parsers.forEach((parser) => {
+      if (typeof parser === "string") {
+        const _parser = getMsgParser(parser);
+        this._pool[_parser.protoType] = _parser;
+      } else {
+        this._pool[parser.protoType] = parser;
+      }
+    });
+  }
+
+  merge(...pools: (MsgParserPool | string)[]) {
+    pools.forEach((pool) => {
+      if (typeof pool === "string") {
+        const _pool = getMsgParserPool(pool);
+        this.add(..._pool.parsers);
+      } else {
+        this.add(...pool.parsers);
+      }
+    });
+  }
+
+  get parsers() {
+    return Array.from(Object.values(this._pool));
   }
 
   private _getParser(type: string) {
@@ -79,7 +101,7 @@ export class MsgPoolParser extends MsgBaseParser<any, any> {
   async signOffline(protoDoc: ProtoDoc<WrapTypeUrl<any>>): Promise<TxRaw> {
     const { msgs, fee, memo, sequence } = protoDoc;
 
-    const txBody: TxBody = txBodyParser.createProtoData({
+    const txBody: TxBody = TxBodyParser.createProtoData({
       messages: msgs.map((msg) => {
         const parser = this._pool[msg.typeUrl];
         if (!parser) {

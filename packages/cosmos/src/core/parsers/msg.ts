@@ -1,17 +1,19 @@
 import { TxResponse } from "interchain-query/cosmos/base/abci/v1beta1/abci";
 import { AuthInfo, TxBody, TxRaw } from "interchain-query/cosmos/tx/v1beta1/tx";
 
-import { txBodyParser } from "../../const/tx";
+import { TxBodyParser } from "../../const/tx";
 import {
   ParserData,
   PartialProtoDoc,
   ProtoDoc,
   StdSignDoc,
+  TelescopeData,
   WrapType,
   WrapTypeUrl,
 } from "../../types";
 import { toBytes } from "../utils/bytes";
 import { standardizeFee } from "../utils/fee";
+import { toParserArgs } from "../utils/parser";
 import { BaseParser } from "./base";
 import { MsgBaseParser } from "./msg.base";
 
@@ -22,6 +24,10 @@ export class MsgParser<ProtoT, AminoT> extends MsgBaseParser<ProtoT, AminoT> {
 
   static fromParser<ProtoT, AminoT>(parser: BaseParser<ProtoT, AminoT>) {
     return new MsgParser<ProtoT, AminoT>(parser.args);
+  }
+
+  static fromTelescope<ProtoT, AminoT>(data: TelescopeData<ProtoT, AminoT>) {
+    return new MsgParser(toParserArgs(data));
   }
 
   toStdDoc({
@@ -48,7 +54,7 @@ export class MsgParser<ProtoT, AminoT> extends MsgBaseParser<ProtoT, AminoT> {
   async signOffline(protoDoc: ProtoDoc<ProtoT>): Promise<TxRaw> {
     const { msgs, fee, memo, sequence } = protoDoc;
 
-    const txBody: TxBody = txBodyParser.createProtoData({
+    const txBody: TxBody = TxBodyParser.createProtoData({
       messages: msgs.map((msg) => {
         return this.fromProto(msg)
           .encode()

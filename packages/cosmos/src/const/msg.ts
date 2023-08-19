@@ -1,22 +1,18 @@
-import { MsgMultiSend, MsgSend } from "interchain-query/cosmos/bank/v1beta1/tx";
+import { MsgParserPool } from "../core/parsers";
+import { StargateMsgParserMap, StargateMsgParserPool } from "./msg.stargate";
+import { WasmMsgParserMap, WasmMsgParserPool } from "./msg.wasm";
 
-import { BaseParser } from "../core/parsers/base";
-import { MsgParser } from "../core/parsers/msg";
-
-export const msgSendParser = MsgParser.fromParser(
-  BaseParser.fromTelescope(MsgSend)
-);
-export const msgMultiSendParser = MsgParser.fromParser(
-  BaseParser.fromTelescope(MsgMultiSend)
-);
-
-// -------------------- COLLECTIONS -----------------------
-
-export const stargateMsgParsers = {
-  MsgSend: msgSendParser,
-  MsgMultiSend: msgMultiSendParser,
+export const AllMsgParserMap = {
+  ...StargateMsgParserMap,
+  ...WasmMsgParserMap,
 };
 
-export const msgParsers = {
-  ...stargateMsgParsers,
+export const AllMsgParserPool = MsgParserPool.with(
+  ...Object.values(AllMsgParserMap)
+);
+
+export const MsgParserPoolMap = {
+  Stargate: StargateMsgParserPool,
+  Wasm: WasmMsgParserPool,
+  All: AllMsgParserPool,
 };

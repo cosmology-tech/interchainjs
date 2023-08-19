@@ -10,6 +10,7 @@ import {
   WrapType,
   WrapTypeUrl,
 } from "../../types";
+import { toParserArgs } from "../utils/parser";
 
 type ProtoData<T> = T | Uint8Array | WrapTypeUrl<T | Uint8Array>;
 
@@ -255,24 +256,7 @@ export class BaseParser<ProtoT, AminoT> {
   }
 
   static fromTelescope<ProtoT, AminoT>(data: TelescopeData<ProtoT, AminoT>) {
-    const {
-      typeUrl,
-      aminoType,
-      encode,
-      decode,
-      fromAmino,
-      toAmino,
-      fromPartial,
-    } = data;
-    return new BaseParser({
-      protoType: typeUrl,
-      proto: { encode, decode, fromPartial },
-      aminoType: aminoType,
-      converter: {
-        toAmino,
-        toProto: fromAmino,
-      },
-    });
+    return new BaseParser(toParserArgs(data));
   }
 
   createProtoData(data: DeepPartial<ProtoT>) {

@@ -3817,10 +3817,10 @@ inquirer@^8.2.4:
     through "^2.3.6"
     wrap-ansi "^6.0.1"
 
-interchain-query@0.1.13:
-  version "0.1.13"
-  resolved "https://registry.npmjs.org/interchain-query/-/interchain-query-0.1.13.tgz#eeb649e84c5f654484d310d31b93e309a53059e2"
-  integrity sha512-0TI/QUZoJjph4Se5cYYi6fvG+wZAgF4rxg9eOjKlD5iIwS6qter+k3FIurRWFtJ1r3OvxMUCNCM5zeZ7jbhQeA==
+interchain-query@0.1.25:
+  version "0.1.25"
+  resolved "https://registry.npmjs.org/interchain-query/-/interchain-query-0.1.25.tgz#ede8fac27665bec3647620b5b26f26c000708edc"
+  integrity sha512-lMA2myaLAEUmMAOMCh4GVAkLRdMOsi4KGjwMAcIv5i+LS2iye5SjiwgEbvdZli+v2Dl1U1La8iPpPWAllViDXw==
   dependencies:
     "@cosmjs/amino" "0.29.4"
     "@cosmjs/proto-signing" "0.29.4"
