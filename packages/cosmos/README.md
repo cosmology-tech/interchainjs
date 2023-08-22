@@ -51,7 +51,7 @@ import {
 } from "@sign/cosmos";
 ```
 
-Also two `SignClient` exported by `"@sign/cosmos"`.
+Also two `SignClient`s exported by `"@sign/cosmos"`.
 
 ```ts
 export const StargateSignClient = StargateMsgParserPool;
