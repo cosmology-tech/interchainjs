@@ -40,10 +40,23 @@ The signing process is the same with `MsgParser`. Just replace the `MsgParser` i
 Check `MsgParserPool` instances.
 
 - `AllMsgParserPool`: supporting all message types.
-- `StargateMsgParserPool`: supporting all message types in `Stargate`.
+- `StargateMsgParserPool`: supporting message types in `Stargate`.
+- `WasmMsgParserPool`: supporting message types in `Wasm` (not include `Stargate`).
 
 ```ts
-import { AllMsgParserPool, StargateMsgParserPool } from "@sign/cosmos";
+import {
+  AllMsgParserPool,
+  StargateMsgParserPool,
+  WasmMsgParserPool,
+} from "@sign/cosmos";
+```
+
+Also two `SignClient` exported by `"@sign/cosmos"`.
+
+```ts
+export const StargateSignClient = StargateMsgParserPool;
+export const CosmWasmSignClient =
+  StargateMsgParserPool.merge(WasmMsgParserPool);
 ```
 
 ### Difference Between `MsgParserPool` and `MsgParserMap`

@@ -16,3 +16,7 @@ export const MsgParserPoolMap = {
   Wasm: WasmMsgParserPool,
   All: AllMsgParserPool,
 };
+
+export const StargateSignClient = StargateMsgParserPool;
+export const CosmWasmSignClient =
+  StargateMsgParserPool.merge(WasmMsgParserPool);
