@@ -38,8 +38,7 @@ class ProtoParser<ProtoT, AminoT> {
   }
 
   get isEncoded() {
-    const value = this.value;
-    return ArrayBuffer.isView(value) && !(value instanceof DataView);
+    return this.value instanceof Uint8Array;
   }
 
   get target() {

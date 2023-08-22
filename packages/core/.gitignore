@@ -1,0 +1,3 @@
+node_modules
+dist
+__test__/test-data.ts

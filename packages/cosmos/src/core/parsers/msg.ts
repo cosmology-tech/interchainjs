@@ -11,7 +11,7 @@ import {
   WrapType,
   WrapTypeUrl,
 } from "../../types";
-import { toBytes } from "../utils/bytes";
+import { toBytes } from "../utils/json";
 import { standardizeFee } from "../utils/fee";
 import { toParserArgs } from "../utils/parser";
 import { BaseParser } from "./base";
@@ -28,6 +28,11 @@ export class MsgParser<ProtoT, AminoT> extends MsgBaseParser<ProtoT, AminoT> {
 
   static fromTelescope<ProtoT, AminoT>(data: TelescopeData<ProtoT, AminoT>) {
     return new MsgParser(toParserArgs(data));
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  protected _getParser(protoType: string) {
+    return this;
   }
 
   toStdDoc({

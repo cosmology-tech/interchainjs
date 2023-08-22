@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { toBech32 } from "@cosmjs/encoding";
 import { Uint53 } from "@cosmjs/math";
+import { Auth } from "@sign/core";
 import { TxResponse } from "interchain-query/cosmos/base/abci/v1beta1/abci";
 import { SignMode } from "interchain-query/cosmos/tx/signing/v1beta1/signing";
 import { BroadcastMode } from "interchain-query/cosmos/tx/v1beta1/service";
@@ -20,7 +20,6 @@ import {
   TxRawParser,
 } from "../../const";
 import {
-  Auth,
   ParserData,
   PartialProtoDoc,
   ProtoDoc,
@@ -29,8 +28,10 @@ import {
 } from "../../types";
 import prefixJson from "../config/prefix.json";
 import { QueryParser } from "../query.parser";
+import { toBech32 } from "../utils/bech";
 import { calculateFee, GasPrice, getAvgGasPrice } from "../utils/fee";
 import { BaseParser } from "./base";
+import { MsgParser } from "./msg";
 
 export class MsgBaseParser<ProtoT, AminoT> extends BaseParser<ProtoT, AminoT> {
   protected _query?: QueryParser;
@@ -131,6 +132,11 @@ export class MsgBaseParser<ProtoT, AminoT> extends BaseParser<ProtoT, AminoT> {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  protected _getParser(protoType: string): MsgParser<any, any> {
+    throw new Error("Method not implemented.");
+  }
+
   async estimateFee<T extends ProtoT | WrapTypeUrl<ProtoT>>(
     data: Omit<PartialProtoDoc<T>, "fee">,
     gasPrice?: GasPrice,
@@ -147,7 +153,11 @@ export class MsgBaseParser<ProtoT, AminoT> extends BaseParser<ProtoT, AminoT> {
       body: TxBodyParser.createProtoData({
         messages: msgs.map(
           (msg) =>
-            this.fromProto(msg).wrap().encode().pop() as WrapTypeUrl<Uint8Array>
+            this._getParser((msg as any)["typeUrl"] || this.protoType)
+              .fromProto(msg)
+              .wrap()
+              .encode()
+              .pop() as WrapTypeUrl<Uint8Array>
         ),
         memo: memo,
       }),

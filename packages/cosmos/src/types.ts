@@ -13,12 +13,6 @@ import {
 } from "interchain-query/cosmos/vesting/v1beta1/vesting";
 import { DeepPartial } from "interchain-query/helpers";
 
-export interface Key {
-  algo: string;
-  pubkey: Uint8Array;
-  address: Uint8Array;
-}
-
 export interface WrapTypeUrl<T> {
   typeUrl: string;
   value: T;
@@ -41,11 +35,6 @@ export type Account =
   | ContinuousVestingAccount
   | DelayedVestingAccount
   | PeriodicVestingAccount;
-
-export interface Auth {
-  readonly key: Key;
-  sign: (message: Uint8Array) => Uint8Array;
-}
 
 export interface SignerData {
   accountNumber: bigint;

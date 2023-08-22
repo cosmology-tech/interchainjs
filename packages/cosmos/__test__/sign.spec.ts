@@ -4,13 +4,14 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
  */
 
 import { Secp256k1HdWallet } from "@cosmjs/amino";
-import { toBase64 } from "@cosmjs/encoding";
 import { calculateFee, SigningStargateClient } from "@cosmjs/stargate";
+import { toBase64 } from "@sign/core";
+import { Auth } from "@sign/core";
 import { MsgSend } from "interchain-query/cosmos/bank/v1beta1/tx";
 
-import { msgSendParser, stargateMsgPoolParser } from "../src/const";
+import { MsgSendParser, StargateMsgParserPool } from "../src/const";
 import { Secp256k1Auth } from "../src/core/auth";
-import { Auth, WrapTypeUrl } from "../src/types";
+import { WrapTypeUrl } from "../src/types";
 import { mnemonic2 } from "./test-data";
 
 const timeout = 50000;
@@ -35,9 +36,10 @@ describe("MsgSend Sign", () => {
           value: msgSend,
         }
      */
-    msgSendParser.fromProto(msgSend).wrap().pop() as WrapTypeUrl<MsgSend>,
+    MsgSendParser.fromProto(msgSend).wrap().pop() as WrapTypeUrl<MsgSend>,
   ];
-  const rpcEndpoint = "https://rpc-cosmoshub.blockapsis.com";
+  // const rpcEndpoint = "https://rpc-cosmoshub.blockapsis.com";
+  const rpcEndpoint = "https://cosmos-rpc.quickapi.com:443";
 
   let bodyBytes: string;
   let authInfoBytes: string;
@@ -73,7 +75,7 @@ describe("MsgSend Sign", () => {
   test(
     "should equals to result with MsgParser",
     async () => {
-      const txRaw = await msgSendParser.on(rpcEndpoint).by(auth).sign({ msgs });
+      const txRaw = await MsgSendParser.on(rpcEndpoint).by(auth).sign({ msgs });
       expect(toBase64(txRaw.bodyBytes)).toEqual(bodyBytes);
       expect(toBase64(txRaw.authInfoBytes)).toEqual(authInfoBytes);
       expect(toBase64(txRaw.signatures[0])).toEqual(signature);
@@ -82,9 +84,9 @@ describe("MsgSend Sign", () => {
   );
 
   test(
-    "should equals to result with MsgPoolParser",
+    "should equals to result with MsgParserPool",
     async () => {
-      const txRaw = await stargateMsgPoolParser.on(rpcEndpoint).by(auth).sign({
+      const txRaw = await StargateMsgParserPool.on(rpcEndpoint).by(auth).sign({
         msgs: wrappedMsgs,
       });
       expect(toBase64(txRaw.bodyBytes)).toEqual(bodyBytes);

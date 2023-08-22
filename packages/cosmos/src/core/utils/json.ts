@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { toUtf8 } from "@cosmjs/encoding";
+import { fromUtf8 } from "@sign/core";
 
 /**
  * Takes a valid JSON document and performs the following escapings in string values:
@@ -48,5 +48,5 @@ function sortedJsonStringify(obj: any): string {
 }
 
 export function toBytes(obj: object) {
-  return toUtf8(escapeCharacters(sortedJsonStringify(obj)));
+  return fromUtf8(escapeCharacters(sortedJsonStringify(obj)));
 }

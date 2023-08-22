@@ -1,4 +1,4 @@
-import { fromBase64, toBase64, toHex } from "@cosmjs/encoding";
+import { fromBase64, toBase64, toHex } from "@sign/core";
 import { QueryClientImpl as Auth } from "interchain-query/cosmos/auth/v1beta1/query.rpc.Query";
 import { QueryClientImpl as Bank } from "interchain-query/cosmos/bank/v1beta1/query.rpc.Query";
 import { ServiceClientImpl as Tx } from "interchain-query/cosmos/tx/v1beta1/service.rpc.Service";

@@ -4,8 +4,8 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
  */
 
 import { Secp256k1HdWallet } from "@cosmjs/amino";
-import { toBase64 } from "@cosmjs/encoding";
 import { calculateFee, SigningStargateClient } from "@cosmjs/stargate";
+import { toBase64 } from "@sign/core";
 import { MsgSend } from "interchain-query/cosmos/bank/v1beta1/tx";
 
 import { msgSendParser, stargateMsgPoolParser } from "../src/const";

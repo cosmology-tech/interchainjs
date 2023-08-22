@@ -11,8 +11,8 @@ import {
   WrapType,
   WrapTypeUrl,
 } from "../../types";
-import { toBytes } from "../utils/bytes";
 import { standardizeFee } from "../utils/fee";
+import { toBytes } from "../utils/json";
 import { getMsgParser, getMsgParserPool } from "../utils/parser";
 import { MsgParser } from "./msg";
 import { MsgBaseParser } from "./msg.base";
@@ -67,11 +67,11 @@ export class MsgParserPool extends MsgBaseParser<any, any> {
     return Array.from(Object.values(this._pool));
   }
 
-  private _getParser(type: string) {
-    const parser = this._pool[type];
+  protected _getParser(protoType: string) {
+    const parser = this._pool[protoType];
     if (!parser) {
       throw new Error(
-        `Please add the parser with typeUrl: ${type} in the pool (using \`add\` method).`
+        `Please add the parser with typeUrl: ${protoType} in the pool (using \`add\` method).`
       );
     }
     return parser;
@@ -103,11 +103,10 @@ export class MsgParserPool extends MsgBaseParser<any, any> {
 
     const txBody: TxBody = TxBodyParser.createProtoData({
       messages: msgs.map((msg) => {
-        const parser = this._pool[msg.typeUrl];
-        if (!parser) {
-          throw new Error(`No parser provided for typeUrl ${this.protoType}`);
-        }
-        return parser.fromProto(msg).encode().pop() as WrapTypeUrl<Uint8Array>;
+        return this._getParser(msg.typeUrl)
+          .fromProto(msg)
+          .encode()
+          .pop() as WrapTypeUrl<Uint8Array>;
       }),
       memo,
     }) as TxBody;
