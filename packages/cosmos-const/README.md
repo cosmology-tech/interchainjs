@@ -1,4 +1,4 @@
-# Cosmos Sign And Broadcast
+# Cosmos Sign And Broadcast Instances
 
 `@sign/cosmos-client` package exports dozens of message parsers, including `MsgStargateParser` and `MsgCosmWasmParser`.
 

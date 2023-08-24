@@ -1,7 +1,7 @@
 {
-  "name": "@sign/cosmos-client",
+  "name": "@sign/cosmos-const",
   "version": "1.0.0",
-  "description": "sign client for cosmos network",
+  "description": "Cosmos sign and broadcast instances",
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",

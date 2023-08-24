@@ -1,4 +1,4 @@
-# Cosmos Sign
+# Cosmos Sign And Broadcast Classes
 
 ## Quick Start
 
