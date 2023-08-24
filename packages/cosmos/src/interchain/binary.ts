@@ -67,8 +67,32 @@ export enum WireType {
 }
 
 // Reader
+export interface IBinaryReader{
+  buf: Uint8Array;
+  pos: number;
+  type: number;
+  len: number;
+  tag(): [number, WireType, number];
+  skip(length?: number): this;
+  skipType(wireType: number): this;
+  uint32(): number;
+  int32(): number;
+  sint32(): number;
+  fixed32(): number;
+  sfixed32(): number;
+  int64(): bigint;
+  uint64(): bigint;
+  sint64(): bigint;
+  fixed64(): bigint;
+  sfixed64(): bigint;
+  float(): number;
+  double(): number;
+  bool(): boolean;
+  bytes(): Uint8Array;
+  string(): string;
+}
 
-export class BinaryReader {
+export class BinaryReader implements IBinaryReader{
   buf: Uint8Array;
   pos: number;
   type: number;
@@ -216,6 +240,32 @@ export class BinaryReader {
 }
 
 // Writer
+export interface IBinaryWriter{
+  len: number;
+  head: Op;
+  tail: Op;
+  states: State;
+  finish(): Uint8Array;
+  fork(): IBinaryWriter;
+  reset(): IBinaryWriter;
+  ldelim(): IBinaryWriter;
+  tag(fieldNo: number, type: WireType): IBinaryWriter;
+  uint32(value: number): IBinaryWriter;
+  int32(value: number): IBinaryWriter;
+  sint32(value: number): IBinaryWriter;
+  int64(value: string | number | bigint): IBinaryWriter;
+  uint64: (value: string | number | bigint) => IBinaryWriter;
+  sint64(value: string | number | bigint): IBinaryWriter;
+  fixed64(value: string | number | bigint): IBinaryWriter;
+  sfixed64: (value: string | number | bigint) => IBinaryWriter;
+  bool(value: boolean): IBinaryWriter;
+  fixed32(value: number): IBinaryWriter;
+  sfixed32: (value: number) => IBinaryWriter;
+  float(value: number): IBinaryWriter;
+  double(value: number): IBinaryWriter;
+  bytes(value: Uint8Array): IBinaryWriter;
+  string(value: string): IBinaryWriter;
+}
 
 type OpVal = string | number | object | Uint8Array | { lo: number; hi: number };
 

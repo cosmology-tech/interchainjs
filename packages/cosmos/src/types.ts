@@ -8,7 +8,7 @@ import {
 } from "interchain-query/cosmos/vesting/v1beta1/vesting";
 import { DeepPartial } from "interchain-query/helpers";
 
-import { BinaryReader, BinaryWriter } from "./interchain/binary";
+import { IBinaryReader, IBinaryWriter } from "./interchain/binary";
 import { BaseAccount, ModuleAccount } from "./interchain/proto/auth";
 import { Coin } from "./interchain/proto/base";
 
@@ -88,8 +88,8 @@ export interface Converter<ProtoT, AminoT> {
 }
 
 export interface Proto<T> {
-  encode: (msg: T, writer?: BinaryWriter) => BinaryWriter;
-  decode: (input: Uint8Array | BinaryReader, length?: number) => T;
+  encode: (msg: T, writer?: IBinaryWriter) => IBinaryWriter;
+  decode: (input: Uint8Array | IBinaryReader, length?: number) => T;
   fromPartial: (msg: DeepPartial<T>) => T;
 }
 
@@ -103,8 +103,8 @@ export interface ParserData<ProtoT, AminoT> {
 export interface TelescopeData<ProtoT, AminoT> {
   typeUrl: string;
   aminoType: string;
-  encode(message: ProtoT, writer?: BinaryWriter): BinaryWriter;
-  decode(input: BinaryReader | Uint8Array, length?: number): ProtoT;
+  encode(message: ProtoT, writer?: IBinaryWriter): IBinaryWriter;
+  decode(input: IBinaryReader | Uint8Array, length?: number): ProtoT;
   fromPartial(object: DeepPartial<ProtoT>): ProtoT;
   fromAmino(object: AminoT): ProtoT;
   toAmino(message: ProtoT): AminoT;
