@@ -1,10 +1,10 @@
+import { MsgParser, MsgParserPool } from "@sign/cosmos";
 import {
   MsgExec,
   MsgGrant,
   MsgRevoke,
 } from "interchain-query/cosmos/authz/v1beta1/tx";
 import { MsgMultiSend, MsgSend } from "interchain-query/cosmos/bank/v1beta1/tx";
-import { Coin } from "interchain-query/cosmos/base/v1beta1/coin";
 import {
   MsgFundCommunityPool,
   MsgSetWithdrawAddress,
@@ -54,7 +54,6 @@ import {
 import { MsgCreateVestingAccount } from "interchain-query/cosmos/vesting/v1beta1/tx";
 import { MsgTransfer } from "interchain-query/ibc/applications/transfer/v1/tx";
 import {
-  MsgAcknowledgement,
   MsgChannelCloseConfirm,
   MsgChannelCloseInit,
   MsgChannelOpenAck,
@@ -78,9 +77,6 @@ import {
   MsgConnectionOpenTry,
 } from "interchain-query/ibc/core/connection/v1/tx";
 
-import { MsgParserPool } from "../core/parsers";
-import { MsgParser } from "../core/parsers/msg";
-
 // ------------- AUTHZ -------------
 
 export const MsgGrantParser = MsgParser.fromTelescope(MsgGrant);
@@ -91,11 +87,6 @@ export const MsgRevokeParser = MsgParser.fromTelescope(MsgRevoke);
 
 export const MsgSendParser = MsgParser.fromTelescope(MsgSend);
 export const MsgMultiSendParser = MsgParser.fromTelescope(MsgMultiSend);
-
-// ------------- BASE -------------
-
-// ??
-export const CoinParser = MsgParser.fromTelescope(Coin);
 
 // ------------- DISTRIBUTION -------------
 
@@ -173,8 +164,7 @@ export const MsgLeaveGroupParser = MsgParser.fromTelescope(MsgLeaveGroup);
 // ------------- IBC -------------
 
 export const MsgTransferParser = MsgParser.fromTelescope(MsgTransfer);
-export const MsgAcknowledgementParser =
-  MsgParser.fromTelescope(MsgAcknowledgement);
+export const MsgAcknowledgementParser = MsgParser.fromTelescope(MsgTransfer);
 export const MsgChannelCloseConfirmParser = MsgParser.fromTelescope(
   MsgChannelCloseConfirm
 );
@@ -226,73 +216,94 @@ export const MsgCreateVestingAccountParser = MsgParser.fromTelescope(
   MsgCreateVestingAccount
 );
 
-// *************************** COLLECTIONS ***************************
-
-export const StargateMsgParserMap = {
-  Coin: CoinParser,
-  MsgGrant: MsgGrantParser,
-  MsgExec: MsgExecParser,
-  MsgRevoke: MsgRevokeParser,
-  MsgSend: MsgSendParser,
-  MsgMultiSend: MsgMultiSendParser,
-  MsgSetWithdrawAddress: MsgSetWithdrawAddressParser,
-  MsgWithdrawDelegatorReward: MsgWithdrawDelegatorRewardParser,
-  MsgWithdrawValidatorCommission: MsgWithdrawValidatorCommissionParser,
-  MsgFundCommunityPool: MsgFundCommunityPoolParser,
-  MsgGrantAllowance: MsgGrantAllowanceParser,
-  MsgRevokeAllowance: MsgRevokeAllowanceParser,
-  MsgDepositV1: MsgDepositV1Parser,
-  MsgMsgSubmitProposalV1: MsgMsgSubmitProposalV1Parser,
-  MsgExecLegacyContentV1: MsgExecLegacyContentV1Parser,
-  MsgVoteV1: MsgVoteV1Parser,
-  MsgVoteWeightedV1: MsgVoteWeightedV1Parser,
-  MsgSubmitProposal: MsgSubmitProposalParser,
-  MsgVote: MsgVoteParser,
-  MsgVoteWeighted: MsgVoteWeightedParser,
-  MsgDeposit: MsgDepositParser,
-  MsgCreateGroup: MsgCreateGroupParser,
-  MsgUpdateGroupMembers: MsgUpdateGroupMembersParser,
-  MsgUpdateGroupAdmin: MsgUpdateGroupAdminParser,
-  MsgUpdateGroupMetadata: MsgUpdateGroupMetadataParser,
-  MsgCreateGroupPolicy: MsgCreateGroupPolicyParser,
-  MsgCreateGroupWithPolicy: MsgCreateGroupWithPolicyParser,
-  MsgUpdateGroupPolicyAdmin: MsgUpdateGroupPolicyAdminParser,
-  MsgUpdateGroupPolicyDecisionPolicy: MsgUpdateGroupPolicyDecisionPolicyParser,
-  MsgUpdateGroupPolicyMetadata: MsgUpdateGroupPolicyMetadataParser,
-  MsgGroupSubmitProposal: MsgGroupSubmitProposalParser,
-  MsgWithdrawProposal: MsgWithdrawProposalParser,
-  MsgGroupVote: MsgGroupVoteParser,
-  MsgGroupExec: MsgGroupExecParser,
-  MsgLeaveGroup: MsgLeaveGroupParser,
-  MsgTransfer: MsgTransferParser,
-  MsgAcknowledgement: MsgAcknowledgementParser,
-  MsgChannelCloseConfirm: MsgChannelCloseConfirmParser,
-  MsgChannelCloseInit: MsgChannelCloseInitParser,
-  MsgChannelOpenAck: MsgChannelOpenAckParser,
-  MsgChannelOpenConfirm: MsgChannelOpenConfirmParser,
-  MsgChannelOpenInit: MsgChannelOpenInitParser,
-  MsgChannelOpenTry: MsgChannelOpenTryParser,
-  MsgRecvPacket: MsgRecvPacketParser,
-  MsgTimeout: MsgTimeoutParser,
-  MsgTimeoutOnClose: MsgTimeoutOnCloseParser,
-  MsgCreateClient: MsgCreateClientParser,
-  MsgSubmitMisbehaviour: MsgSubmitMisbehaviourParser,
-  MsgUpdateClient: MsgUpdateClientParser,
-  MsgUpgradeClient: MsgUpgradeClientParser,
-  MsgConnectionOpenAck: MsgConnectionOpenAckParser,
-  MsgConnectionOpenConfirm: MsgConnectionOpenConfirmParser,
-  MsgConnectionOpenInit: MsgConnectionOpenInitParser,
-  MsgConnectionOpenTry: MsgConnectionOpenTryParser,
-  MsgCreateValidator: MsgCreateValidatorParser,
-  MsgEditValidator: MsgEditValidatorParser,
-  MsgDelegate: MsgDelegateParser,
-  MsgBeginRedelegate: MsgBeginRedelegateParser,
-  MsgUndelegate: MsgUndelegateParser,
-  MsgCreateVestingAccount: MsgCreateVestingAccountParser,
-};
-
 // *************************** POOL ***************************
 
-export const StargateMsgParserPool = MsgParserPool.with(
-  ...Object.values(StargateMsgParserMap)
+export const MsgAuthzParser = MsgParserPool.fromTelescope(
+  MsgGrant,
+  MsgExec,
+  MsgRevoke
+);
+export const MsgBankParser = MsgParserPool.fromTelescope(MsgSend, MsgMultiSend);
+export const MsgDistributionParser = MsgParserPool.fromTelescope(
+  MsgSetWithdrawAddress,
+  MsgWithdrawDelegatorReward,
+  MsgWithdrawValidatorCommission,
+  MsgFundCommunityPool
+);
+export const MsgFeeGrantParser = MsgParserPool.fromTelescope(
+  MsgGrantAllowance,
+  MsgRevokeAllowance
+);
+export const MsgGovParser = MsgParserPool.fromTelescope(
+  MsgDepositV1,
+  MsgSubmitProposalV1,
+  MsgExecLegacyContentV1,
+  MsgVoteV1,
+  MsgVoteWeightedV1,
+  MsgSubmitProposal,
+  MsgVote,
+  MsgVoteWeighted,
+  MsgDeposit
+);
+export const MsgGroupParser = MsgParserPool.fromTelescope(
+  MsgCreateGroup,
+  MsgUpdateGroupMembers,
+  MsgUpdateGroupAdmin,
+  MsgUpdateGroupMetadata,
+  MsgCreateGroupPolicy,
+  MsgCreateGroupWithPolicy,
+  MsgUpdateGroupPolicyAdmin,
+  MsgUpdateGroupPolicyDecisionPolicy,
+  MsgUpdateGroupPolicyMetadata,
+  MsgGroupSubmitProposal,
+  MsgWithdrawProposal,
+  MsgGroupVote,
+  MsgGroupExec,
+  MsgLeaveGroup
+);
+
+export const MsgIbcParser = MsgParserPool.fromTelescope(
+  MsgTransfer,
+  MsgTransfer,
+  MsgChannelCloseConfirm,
+  MsgChannelCloseInit,
+  MsgChannelOpenAck,
+  MsgChannelOpenConfirm,
+  MsgChannelOpenInit,
+  MsgChannelOpenTry,
+  MsgRecvPacket,
+  MsgTimeout,
+  MsgTimeoutOnClose,
+  MsgCreateClient,
+  MsgSubmitMisbehaviour,
+  MsgUpdateClient,
+  MsgUpgradeClient,
+  MsgConnectionOpenAck,
+  MsgConnectionOpenConfirm,
+  MsgConnectionOpenInit,
+  MsgConnectionOpenTry
+);
+
+export const MsgStakingParser = MsgParserPool.fromTelescope(
+  MsgCreateValidator,
+  MsgEditValidator,
+  MsgDelegate,
+  MsgBeginRedelegate,
+  MsgUndelegate
+);
+
+export const MsgVestingParser = MsgParserPool.fromTelescope(
+  MsgCreateVestingAccount
+);
+
+export const MsgStargateParser = MsgParserPool.fromPools(
+  MsgAuthzParser,
+  MsgBankParser,
+  MsgDistributionParser,
+  MsgFeeGrantParser,
+  MsgGovParser,
+  MsgGroupParser,
+  MsgIbcParser,
+  MsgStakingParser,
+  MsgVestingParser
 );

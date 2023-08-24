@@ -34,6 +34,10 @@ export class MsgParser<ProtoT, AminoT> extends MsgBaseParser<ProtoT, AminoT> {
     return this;
   }
 
+  get supportedMsgTypes() {
+    return [this.protoType];
+  }
+
   toStdDoc({
     msgs,
     fee,

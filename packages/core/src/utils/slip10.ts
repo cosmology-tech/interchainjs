@@ -1,4 +1,3 @@
-import { Hmac, Sha512 } from "@cosmjs/crypto";
 import { hmac } from "@noble/hashes/hmac";
 import { sha512 } from "@noble/hashes/sha512";
 import BN from "bn.js";
@@ -126,10 +125,7 @@ export class Slip10 {
         ...parentPrivkey,
         ...rawIndex.toBytesBigEndian(),
       ]);
-      i = new Hmac(Sha512, parentChainCode).update(payload).digest();
-      const i2 = hmac(sha512, payload, parentChainCode);
-      // console.log("%cslip10.ts line:131 i", "color: #007acc;", toBase64(i));
-      // console.log("%cslip10.ts line:131 i2", "color: #007acc;", toBase64(i2));
+      i = hmac(sha512, parentChainCode, payload);
     } else {
       if (curve === Slip10Curve.Ed25519) {
         throw new Error("Normal keys are not allowed with ed25519");
@@ -141,7 +137,7 @@ export class Slip10 {
           ...Slip10.serializedPoint(curve, new BN(parentPrivkey)),
           ...rawIndex.toBytesBigEndian(),
         ]);
-        i = new Hmac(Sha512, parentChainCode).update(data).digest();
+        i = hmac(sha512, parentChainCode, data);
       }
     }
 
@@ -194,9 +190,11 @@ export class Slip10 {
 
     // step 6
     if (this.isGteN(curve, il) || this.isZero(returnChildKey)) {
-      const newI = new Hmac(Sha512, parentChainCode)
-        .update(new Uint8Array([0x01, ...ir, ...rawIndex.toBytesBigEndian()]))
-        .digest();
+      const newI = hmac(
+        sha512,
+        parentChainCode,
+        new Uint8Array([0x01, ...ir, ...rawIndex.toBytesBigEndian()])
+      );
       return this.childImpl(
         curve,
         parentPrivkey,

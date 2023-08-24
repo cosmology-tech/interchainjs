@@ -9,16 +9,15 @@ import { toBase64 } from "@sign/core";
 import { Auth } from "@sign/core";
 import { MsgMultiSend, MsgSend } from "interchain-query/cosmos/bank/v1beta1/tx";
 
-import { cosmoshubAddress2, mnemonic2 } from "../../../test-data";
+import { cosmoshubAddress, mnemonic } from "../../../test-data";
 import { Secp256k1Auth } from "../src/core/auth";
 import { MsgParser, MsgParserPool } from "../src/core/parsers";
-import { WrapTypeUrl } from "../src/types";
 
 const timeout = 50000;
 
-describe("MsgSend Sign", () => {
+describe("Signing MsgSend", () => {
   const MsgSendParser = MsgParser.fromTelescope(MsgSend);
-  const BankParserPool = MsgParserPool.withTelescope(MsgMultiSend, MsgSend);
+  const BankClient = MsgParserPool.fromTelescope(MsgMultiSend, MsgSend);
   const msgSend = {
     amount: [
       {
@@ -26,18 +25,15 @@ describe("MsgSend Sign", () => {
         denom: "uatom",
       },
     ],
-    fromAddress: cosmoshubAddress2,
-    toAddress: cosmoshubAddress2,
+    fromAddress: cosmoshubAddress,
+    toAddress: cosmoshubAddress,
   };
   const msgs = [msgSend];
   const wrappedMsgs = [
-    /**
-     * {
-          typeUrl: "/cosmos.bank.v1beta1.MsgSend",
-          value: msgSend,
-        }
-     */
-    MsgSendParser.fromProto(msgSend).wrap().pop() as WrapTypeUrl<MsgSend>,
+    {
+      typeUrl: "/cosmos.bank.v1beta1.MsgSend",
+      value: msgSend,
+    },
   ];
   // const rpcEndpoint = "https://rpc-cosmoshub.blockapsis.com";
   const rpcEndpoint = "https://cosmos-rpc.quickapi.com:443";
@@ -49,13 +45,13 @@ describe("MsgSend Sign", () => {
   test(
     "prepare sign result with `cosmjs`",
     async () => {
-      const wallet = await Secp256k1HdWallet.fromMnemonic(mnemonic2);
+      const wallet = await Secp256k1HdWallet.fromMnemonic(mnemonic);
       const client = await SigningStargateClient.connectWithSigner(
         rpcEndpoint,
         wallet
       );
       const gasEstimation = await client.simulate(
-        cosmoshubAddress2,
+        cosmoshubAddress,
         wrappedMsgs,
         ""
       );
@@ -64,7 +60,7 @@ describe("MsgSend Sign", () => {
         "0.025uatom"
       );
       const txRaw = await client.sign(
-        cosmoshubAddress2,
+        cosmoshubAddress,
         wrappedMsgs,
         usedFee,
         ""
@@ -79,7 +75,7 @@ describe("MsgSend Sign", () => {
   let auth: Auth;
 
   test("prepare auth", async () => {
-    auth = await Secp256k1Auth.fromMnemonic(mnemonic2);
+    auth = await Secp256k1Auth.fromMnemonic(mnemonic);
   });
 
   test(
@@ -96,7 +92,7 @@ describe("MsgSend Sign", () => {
   test(
     "should equals to result with MsgParserPool",
     async () => {
-      const txRaw = await BankParserPool.on(rpcEndpoint).by(auth).sign({
+      const txRaw = await BankClient.on(rpcEndpoint).by(auth).sign({
         msgs: wrappedMsgs,
       });
       expect(toBase64(txRaw.bodyBytes)).toEqual(bodyBytes);

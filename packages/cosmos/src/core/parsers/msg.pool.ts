@@ -1,6 +1,6 @@
 import { TxBodyParser } from "../../const/tx";
-import { TxResponse } from "../../interchain/types";
 import { AuthInfo, TxBody, TxRaw } from "../../interchain/proto/tx";
+import { TxResponse } from "../../interchain/types";
 import {
   PartialProtoDoc,
   ProtoDoc,
@@ -11,7 +11,6 @@ import {
 } from "../../types";
 import { toStdFee } from "../utils/fee";
 import { toBytes } from "../utils/json";
-import { toParserArgs } from "../utils/parser";
 import { MsgParser } from "./msg";
 import { MsgBaseParser } from "./msg.base";
 
@@ -25,31 +24,45 @@ export class MsgParserPool extends MsgBaseParser<any, any> {
     );
   }
 
-  static fromTelescope(data: TelescopeData<any, any>) {
-    return new MsgParserPool([new MsgParser(toParserArgs(data))]);
+  static fromParser(parser: MsgParser<any, any>) {
+    return new MsgParserPool([parser]);
   }
 
-  static with(...parsers: MsgParser<any, any>[]) {
+  static fromParsers(...parsers: MsgParser<any, any>[]) {
     return new MsgParserPool(parsers);
   }
 
-  static withTelescope(...data: TelescopeData<any, any>[]) {
+  static fromTelescope(...data: TelescopeData<any, any>[]) {
     const parsers = data.map((d) => {
       return MsgParser.fromTelescope(d);
     });
     return new MsgParserPool(parsers);
   }
 
-  add(...parsers: MsgParser<any, any>[]) {
+  static fromPools(...pools: MsgParserPool[]) {
+    return new MsgParserPool(pools.map((pool) => pool.parsers).flat());
+  }
+
+  addParsers(...parsers: MsgParser<any, any>[]) {
     parsers.forEach((parser) => {
       this._pool[parser.protoType] = parser;
     });
   }
 
-  merge(...pools: MsgParserPool[]) {
-    pools.forEach((pool) => {
-      this.add(...pool.parsers);
+  addTelescope(...data: TelescopeData<any, any>[]) {
+    data.forEach((d) => {
+      this._pool[d.typeUrl] = MsgParser.fromTelescope(d);
     });
+  }
+
+  mergePools(...pools: MsgParserPool[]) {
+    pools.forEach((pool) => {
+      this.addParsers(...pool.parsers);
+    });
+  }
+
+  get supportedMsgTypes() {
+    return Array.from(Object.keys(this._pool));
   }
 
   get parsers() {

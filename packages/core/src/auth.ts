@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-// import { HdPath, Slip10, Slip10Curve, Slip10RawIndex } from "@cosmjs/crypto";
 import { sha256 } from "@noble/hashes/sha256";
 import BN from "bn.js";
 import elliptic from "elliptic";
@@ -16,7 +15,7 @@ const secp256k1N = new BN(
   "hex"
 );
 
-const defaultHdPath = [
+export const defaultHdPath = [
   Slip10RawIndex.hardened(44),
   Slip10RawIndex.hardened(118),
   Slip10RawIndex.hardened(0),
