@@ -1,9 +1,8 @@
-import { fromBase64, toBase64, toHex } from "@sign/core";
-import { QueryClientImpl as Auth } from "interchain-query/cosmos/auth/v1beta1/query.rpc.Query";
-import { QueryClientImpl as Bank } from "interchain-query/cosmos/bank/v1beta1/query.rpc.Query";
-import { ServiceClientImpl as Tx } from "interchain-query/cosmos/tx/v1beta1/service.rpc.Service";
+import { fromBase64, toHex } from "@sign/core";
 
-function createRpcClient(endpoint: string) {
+import { Rpc } from "../types";
+
+function createRpc(endpoint: string): Rpc {
   return {
     endpoint,
     request: async (
@@ -38,66 +37,18 @@ function createRpcClient(endpoint: string) {
   };
 }
 
-async function requestTx(endpoint: string, method: string, tx: Uint8Array) {
-  const resp = await fetch(endpoint, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      id: 992919398242,
-      jsonrpc: "2.0",
-      method,
-      params: {
-        tx: toBase64(tx),
-      },
-    }),
-  });
-  const json = await resp.json();
-  const error = json["error"];
-  if (error) {
-    throw new Error(`${error["message"]}: ${error["data"]}`);
-  }
-  return json["result"];
-}
-
 export class Query {
-  rpc: ReturnType<typeof createRpcClient>;
+  rpc: Rpc;
 
   constructor(endpoint: string) {
-    this.rpc = createRpcClient(endpoint);
+    this.rpc = createRpc(endpoint);
   }
 
   get endpoint() {
     return this.rpc.endpoint;
   }
 
-  get bank() {
-    return new Bank(this.rpc);
-  }
-
-  get auth() {
-    return new Auth(this.rpc);
-  }
-
-  get tx() {
-    return new Tx(this.rpc);
-  }
-
-  status() {
-    return new Promise((resolve, reject) => {
-      fetch(`${this.rpc.endpoint}/status`)
-        .then((data) =>
-          data
-            .json()
-            .then((json) => resolve(json["result"]))
-            .catch((e) => reject(e))
-        )
-        .catch((e) => reject(e));
-    });
-  }
-
-  checkTx(tx: Uint8Array) {
-    return requestTx(this.endpoint, "check_tx", tx);
+  about<T>(Cls: { new (rpc: Rpc): T }) {
+    return new Cls(this.rpc);
   }
 }

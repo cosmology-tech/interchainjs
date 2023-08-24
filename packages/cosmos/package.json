@@ -15,12 +15,8 @@
     "README.md"
   ],
   "dependencies": {
-    "@cosmjs/math": "^0.31.0",
     "@sign/core": "^1.0.0",
-    "bech32": "^2.0.0",
-    "interchain-query": "0.1.25",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "bech32": "^2.0.0"
   },
   "devDependencies": {
     "@cosmjs/amino": "^0.31.0",

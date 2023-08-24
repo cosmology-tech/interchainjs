@@ -1,8 +1,9 @@
-import { Decimal, Uint53 } from "@cosmjs/math";
-import { Fee } from "interchain-query/cosmos/tx/v1beta1/tx";
+import { Decimal, Uint53 } from "@sign/core";
 
 import { FeeParser } from "../../const";
-import { Coin, StdFee } from "../../types";
+import { Coin } from "../../interchain/proto/base";
+import { Fee } from "../../interchain/proto/tx";
+import { StdFee } from "../../types";
 import feeTokensJson from "../config/fee-tokens.json";
 
 /**
@@ -44,7 +45,7 @@ export class GasPrice {
     if (!matchResult) {
       throw new Error("Invalid gas price string");
     }
-    const [_, amount, denom] = matchResult;
+    const [, amount, denom] = matchResult;
     checkDenom(denom);
     const fractionalDigits = 18;
     const decimalAmount = Decimal.fromUserInput(amount, fractionalDigits);
@@ -107,7 +108,7 @@ export function getAvgGasPrice(chainId: string) {
   return GasPrice.fromString(`${feeToken.average_gas_price}${feeToken.denom}`);
 }
 
-export function standardizeFee(fee: Fee): StdFee {
+export function toStdFee(fee: Fee): StdFee {
   const { gasLimit, payer, granter, ...rest } = fee;
   const stdFee: StdFee = { gas: gasLimit.toString(), ...rest };
   if (payer !== "") stdFee["payer"] = payer;

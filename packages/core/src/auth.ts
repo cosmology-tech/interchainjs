@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 // import { HdPath, Slip10, Slip10Curve, Slip10RawIndex } from "@cosmjs/crypto";
 import { sha256 } from "@noble/hashes/sha256";
 import BN from "bn.js";

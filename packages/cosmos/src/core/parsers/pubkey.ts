@@ -1,6 +1,6 @@
-import { PubKey as PubKeyEd25519 } from "interchain-query/cosmos/crypto/ed25519/keys";
-import { PubKey as PubKeySecp256k1 } from "interchain-query/cosmos/crypto/secp256k1/keys";
-
+import { PubKey as PubKeyEd25519 } from "../../interchain/proto/crypto.ed25519";
+import { PubKey as PubKeySecp256k1 } from "../../interchain/proto/crypto.secp256k1";
+import { PubKey as PubKeySecp256r1 } from "../../interchain/proto/crypto.secp256r1";
 import { ParserData, TelescopeData } from "../../types";
 import { toParserArgs } from "../utils/parser";
 import { BaseParser } from "./base";
@@ -33,10 +33,14 @@ export class PubKeyParser<ProtoT, AminoT> extends BaseParser<ProtoT, AminoT> {
   }
 
   _assertProtoValue(data: ProtoT): boolean {
-    return this._assertKeyType((data as PubKeyEd25519 | PubKeySecp256k1).key);
+    return this._assertKeyType(
+      (data as PubKeyEd25519 | PubKeySecp256k1 | PubKeySecp256r1).key
+    );
   }
 
   _assertAminoValue(data: AminoT): boolean {
-    return this._assertKeyType((data as PubKeyEd25519 | PubKeySecp256k1).key);
+    return this._assertKeyType(
+      (data as PubKeyEd25519 | PubKeySecp256k1 | PubKeySecp256r1).key
+    );
   }
 }

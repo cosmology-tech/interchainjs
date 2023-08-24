@@ -1,9 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { BinaryReader, BinaryWriter } from "interchain-query";
-import {
-  BaseAccount,
-  ModuleAccount,
-} from "interchain-query/cosmos/auth/v1beta1/auth";
 import { Fee, FeeAmino } from "interchain-query/cosmos/tx/v1beta1/tx";
 import {
   BaseVestingAccount,
@@ -13,6 +8,19 @@ import {
 } from "interchain-query/cosmos/vesting/v1beta1/vesting";
 import { DeepPartial } from "interchain-query/helpers";
 
+import { BinaryReader, BinaryWriter } from "./interchain/binary";
+import { BaseAccount, ModuleAccount } from "./interchain/proto/auth";
+import { Coin } from "./interchain/proto/base";
+
+export interface Rpc {
+  endpoint: string;
+  request: (
+    service: string,
+    method: string,
+    data: Uint8Array
+  ) => Promise<Uint8Array>;
+}
+
 export interface WrapTypeUrl<T> {
   typeUrl: string;
   value: T;
@@ -21,11 +29,6 @@ export interface WrapTypeUrl<T> {
 export interface WrapType<T> {
   type: string;
   value: T;
-}
-
-export interface Coin {
-  denom: string;
-  amount: string;
 }
 
 export type Account =

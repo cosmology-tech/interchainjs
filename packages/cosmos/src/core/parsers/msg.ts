@@ -1,7 +1,6 @@
-import { TxResponse } from "interchain-query/cosmos/base/abci/v1beta1/abci";
-import { AuthInfo, TxBody, TxRaw } from "interchain-query/cosmos/tx/v1beta1/tx";
-
 import { TxBodyParser } from "../../const/tx";
+import { AuthInfo, TxBody, TxRaw } from "../../interchain/proto/tx";
+import { TxResponse } from "../../interchain/types";
 import {
   ParserData,
   PartialProtoDoc,
@@ -11,8 +10,8 @@ import {
   WrapType,
   WrapTypeUrl,
 } from "../../types";
+import { toStdFee } from "../utils/fee";
 import { toBytes } from "../utils/json";
-import { standardizeFee } from "../utils/fee";
 import { toParserArgs } from "../utils/parser";
 import { BaseParser } from "./base";
 import { MsgBaseParser } from "./msg.base";
@@ -48,7 +47,7 @@ export class MsgParser<ProtoT, AminoT> extends MsgBaseParser<ProtoT, AminoT> {
         this.protoParser.assertMsg(msg);
         return this.fromProto(msg).toAmino().wrap().pop() as WrapType<AminoT>;
       }),
-      fee: standardizeFee(fee),
+      fee: toStdFee(fee),
       memo,
       account_number: accountNumber.toString(),
       sequence: sequence.toString(),

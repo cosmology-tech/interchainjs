@@ -1,14 +1,10 @@
-import {
-  BaseAccount,
-  ModuleAccount,
-} from "interchain-query/cosmos/auth/v1beta1/auth";
+import { BaseAccount, ModuleAccount } from "../../interchain/proto/auth";
 import {
   BaseVestingAccount,
   ContinuousVestingAccount,
   DelayedVestingAccount,
   PeriodicVestingAccount,
-} from "interchain-query/cosmos/vesting/v1beta1/vesting";
-
+} from "../../interchain/proto/vesting";
 import { Account, ParserData, TelescopeData } from "../../types";
 import { toParserArgs } from "../utils/parser";
 import { BaseParser } from "./base";

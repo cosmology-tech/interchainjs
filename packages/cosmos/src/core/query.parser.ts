@@ -1,8 +1,13 @@
-import { BroadcastMode } from "interchain-query/cosmos/tx/v1beta1/service";
+import { QueryClientImpl as Auth } from "interchain-query/cosmos/auth/v1beta1/query.rpc.Query";
+import { ServiceClientImpl as Tx } from "interchain-query/cosmos/tx/v1beta1/service.rpc.Service";
 
 import { AccountParserMap, BaseAccountParser } from "../const";
+// import { QueryClientImpl as Auth } from "../interchain/query/auth";
+// import { ServiceClientImpl as Tx } from "../interchain/query/tx";
+import { BroadcastMode } from "../interchain/types";
 import { Account } from "../types";
 import { Query } from "./query";
+import { requestTx } from "./utils/request";
 
 export class QueryParser extends Query {
   constructor(endpoint: string) {
@@ -11,6 +16,31 @@ export class QueryParser extends Query {
 
   static fromQuery(query: Query) {
     return new QueryParser(query.rpc.endpoint);
+  }
+
+  get auth() {
+    return this.about(Auth);
+  }
+
+  get tx() {
+    return this.about(Tx);
+  }
+
+  status() {
+    return new Promise((resolve, reject) => {
+      fetch(`${this.rpc.endpoint}/status`)
+        .then((data) =>
+          data
+            .json()
+            .then((json) => resolve(json["result"]))
+            .catch((e) => reject(e))
+        )
+        .catch((e) => reject(e));
+    });
+  }
+
+  checkTx(tx: Uint8Array) {
+    return requestTx(this.endpoint, "check_tx", tx);
   }
 
   async getAccount(address: string) {

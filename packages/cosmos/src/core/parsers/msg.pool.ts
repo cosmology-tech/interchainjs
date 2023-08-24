@@ -1,8 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { TxResponse } from "interchain-query/cosmos/base/abci/v1beta1/abci";
-import { AuthInfo, TxBody, TxRaw } from "interchain-query/cosmos/tx/v1beta1/tx";
-
 import { TxBodyParser } from "../../const/tx";
+import { TxResponse } from "../../interchain/types";
+import { AuthInfo, TxBody, TxRaw } from "../../interchain/proto/tx";
 import {
   PartialProtoDoc,
   ProtoDoc,
@@ -11,9 +9,9 @@ import {
   WrapType,
   WrapTypeUrl,
 } from "../../types";
-import { standardizeFee } from "../utils/fee";
+import { toStdFee } from "../utils/fee";
 import { toBytes } from "../utils/json";
-import { getMsgParser, getMsgParserPool } from "../utils/parser";
+import { toParserArgs } from "../utils/parser";
 import { MsgParser } from "./msg";
 import { MsgBaseParser } from "./msg.base";
 
@@ -27,11 +25,12 @@ export class MsgParserPool extends MsgBaseParser<any, any> {
     );
   }
 
-  static with(...parsers: (MsgParser<any, any> | string)[]) {
-    const _parsers = parsers.map((parser) => {
-      return typeof parser === "string" ? getMsgParser(parser) : parser;
-    });
-    return new MsgParserPool(_parsers);
+  static fromTelescope(data: TelescopeData<any, any>) {
+    return new MsgParserPool([new MsgParser(toParserArgs(data))]);
+  }
+
+  static with(...parsers: MsgParser<any, any>[]) {
+    return new MsgParserPool(parsers);
   }
 
   static withTelescope(...data: TelescopeData<any, any>[]) {
@@ -41,25 +40,15 @@ export class MsgParserPool extends MsgBaseParser<any, any> {
     return new MsgParserPool(parsers);
   }
 
-  add(...parsers: (MsgParser<any, any> | string)[]) {
+  add(...parsers: MsgParser<any, any>[]) {
     parsers.forEach((parser) => {
-      if (typeof parser === "string") {
-        const _parser = getMsgParser(parser);
-        this._pool[_parser.protoType] = _parser;
-      } else {
-        this._pool[parser.protoType] = parser;
-      }
+      this._pool[parser.protoType] = parser;
     });
   }
 
-  merge(...pools: (MsgParserPool | string)[]) {
+  merge(...pools: MsgParserPool[]) {
     pools.forEach((pool) => {
-      if (typeof pool === "string") {
-        const _pool = getMsgParserPool(pool);
-        this.add(..._pool.parsers);
-      } else {
-        this.add(...pool.parsers);
-      }
+      this.add(...pool.parsers);
     });
   }
 
@@ -90,7 +79,7 @@ export class MsgParserPool extends MsgBaseParser<any, any> {
         const parser = this._getParser(msg.typeUrl);
         return parser.fromProto(msg).toAmino().pop() as WrapType<any>;
       }),
-      fee: standardizeFee(fee),
+      fee: toStdFee(fee),
       memo,
       account_number: accountNumber.toString(),
       sequence: sequence.toString(),

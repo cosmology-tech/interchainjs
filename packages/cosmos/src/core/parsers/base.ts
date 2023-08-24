@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { DeepPartial } from "interchain-query/helpers";
-
+import { DeepPartial } from "../../interchain/helpers";
 import {
   Converter,
   ParserData,

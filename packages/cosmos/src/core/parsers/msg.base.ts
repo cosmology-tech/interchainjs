@@ -1,15 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { Uint53 } from "@cosmjs/math";
-import { Auth } from "@sign/core";
-import { TxResponse } from "interchain-query/cosmos/base/abci/v1beta1/abci";
-import { SignMode } from "interchain-query/cosmos/tx/signing/v1beta1/signing";
-import { BroadcastMode } from "interchain-query/cosmos/tx/v1beta1/service";
-import {
-  AuthInfo,
-  Fee,
-  TxBody,
-  TxRaw,
-} from "interchain-query/cosmos/tx/v1beta1/tx";
+import { Auth, Uint53 } from "@sign/core";
 
 import {
   AuthInfoParser,
@@ -19,6 +8,8 @@ import {
   TxParser,
   TxRawParser,
 } from "../../const";
+import { AuthInfo, Fee, TxBody, TxRaw } from "../../interchain/proto/tx";
+import { BroadcastMode, SignMode, TxResponse } from "../../interchain/types";
 import {
   ParserData,
   PartialProtoDoc,

@@ -1,10 +1,10 @@
-import { Uint32, Uint53 } from "@cosmjs/math";
 import { hmac } from "@noble/hashes/hmac";
 import { sha512 } from "@noble/hashes/sha512";
 import BN from "bn.js";
 import elliptic from "elliptic";
 
 import { fromAscii, fromHex } from "./encoding";
+import { Uint32, Uint53 } from "./int";
 
 export interface Slip10Result {
   readonly chainCode: Uint8Array;

@@ -1,17 +1,12 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import {
-  BaseAccount,
-  ModuleAccount,
-} from "interchain-query/cosmos/auth/v1beta1/auth";
+import { AccountParser } from "../core/parsers/account";
+import { BaseParser } from "../core/parsers/base";
+import { BaseAccount, ModuleAccount } from "../interchain/proto/auth";
 import {
   BaseVestingAccount,
   ContinuousVestingAccount,
   DelayedVestingAccount,
   PeriodicVestingAccount,
-} from "interchain-query/cosmos/vesting/v1beta1/vesting";
-
-import { AccountParser } from "../core/parsers/account";
-import { BaseParser } from "../core/parsers/base";
+} from "../interchain/proto/vesting";
 
 // account
 export const BaseAccountParser = AccountParser.fromParser(

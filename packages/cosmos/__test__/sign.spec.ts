@@ -7,17 +7,18 @@ import { Secp256k1HdWallet } from "@cosmjs/amino";
 import { calculateFee, SigningStargateClient } from "@cosmjs/stargate";
 import { toBase64 } from "@sign/core";
 import { Auth } from "@sign/core";
-import { MsgSend } from "interchain-query/cosmos/bank/v1beta1/tx";
+import { MsgMultiSend, MsgSend } from "interchain-query/cosmos/bank/v1beta1/tx";
 
-import { MsgSendParser, StargateMsgParserPool } from "../src/const";
+import { cosmoshubAddress2, mnemonic2 } from "../../../test-data";
 import { Secp256k1Auth } from "../src/core/auth";
+import { MsgParser, MsgParserPool } from "../src/core/parsers";
 import { WrapTypeUrl } from "../src/types";
-import { mnemonic2 } from "./test-data";
 
 const timeout = 50000;
 
 describe("MsgSend Sign", () => {
-  const address = "cosmos1k0c55lcmsrvrj2j39tz4d5yeysvdd2pk20ae3t";
+  const MsgSendParser = MsgParser.fromTelescope(MsgSend);
+  const BankParserPool = MsgParserPool.withTelescope(MsgMultiSend, MsgSend);
   const msgSend = {
     amount: [
       {
@@ -25,8 +26,8 @@ describe("MsgSend Sign", () => {
         denom: "uatom",
       },
     ],
-    fromAddress: address,
-    toAddress: address,
+    fromAddress: cosmoshubAddress2,
+    toAddress: cosmoshubAddress2,
   };
   const msgs = [msgSend];
   const wrappedMsgs = [
@@ -53,12 +54,21 @@ describe("MsgSend Sign", () => {
         rpcEndpoint,
         wallet
       );
-      const gasEstimation = await client.simulate(address, wrappedMsgs, "");
+      const gasEstimation = await client.simulate(
+        cosmoshubAddress2,
+        wrappedMsgs,
+        ""
+      );
       const usedFee = calculateFee(
         Math.round(gasEstimation * 1.3),
         "0.025uatom"
       );
-      const txRaw = await client.sign(address, wrappedMsgs, usedFee, "");
+      const txRaw = await client.sign(
+        cosmoshubAddress2,
+        wrappedMsgs,
+        usedFee,
+        ""
+      );
       bodyBytes = toBase64(txRaw.bodyBytes);
       authInfoBytes = toBase64(txRaw.authInfoBytes);
       signature = toBase64(txRaw.signatures[0]);
@@ -86,7 +96,7 @@ describe("MsgSend Sign", () => {
   test(
     "should equals to result with MsgParserPool",
     async () => {
-      const txRaw = await StargateMsgParserPool.on(rpcEndpoint).by(auth).sign({
+      const txRaw = await BankParserPool.on(rpcEndpoint).by(auth).sign({
         msgs: wrappedMsgs,
       });
       expect(toBase64(txRaw.bodyBytes)).toEqual(bodyBytes);
