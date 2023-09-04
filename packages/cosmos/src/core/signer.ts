@@ -270,7 +270,7 @@ export class Signer extends BaseSigner<QueryParser> {
     return fee;
   }
 
-  sign(txData: TxData<WrapTypeUrl<any>>): Signed<Promise<TxRaw>> {
+  sign(txData: TxData<any>): Signed<Promise<TxRaw>> {
     const getSigned = async () => {
       const protoDoc = await this._createProtoDoc(txData);
       return this._signOffline(protoDoc);

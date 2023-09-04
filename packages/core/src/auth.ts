@@ -5,6 +5,7 @@ import elliptic from "elliptic";
 
 import { Auth, SigObj } from "./types";
 import { getCompressedPubkey, toAddress } from "./utils/key";
+import { getSeedFromMnemonic } from "./utils/mnemonic";
 import { toSigObj } from "./utils/signature";
 import {
   HdPath,
@@ -47,6 +48,27 @@ export class Secp256k1Auth implements Auth {
   protected _hdPath?: HdPath;
 
   readonly algo = "secp256k1";
+
+  constructor() {}
+
+  static fromMnemonic(mnemonic: string, password?: string) {
+    const auth = new Secp256k1Auth();
+    auth.updateSeed(getSeedFromMnemonic(mnemonic, password));
+    auth.updateHdPath(defaultHdPath);
+    return auth;
+  }
+
+  static fromPrivKey(privkey: Uint8Array) {
+    const auth = new Secp256k1Auth();
+    auth.updatePrivKey(privkey);
+    return auth;
+  }
+
+  static fromPubKey(pubkey: Uint8Array) {
+    const auth = new Secp256k1Auth();
+    auth.updatePubKey(pubkey);
+    return auth;
+  }
 
   get key() {
     return this._key;

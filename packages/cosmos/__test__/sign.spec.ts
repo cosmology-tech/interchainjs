@@ -5,19 +5,17 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 import { Secp256k1HdWallet } from "@cosmjs/amino";
 import { calculateFee, SigningStargateClient } from "@cosmjs/stargate";
-import { toBase64 } from "@sign/core";
+import { Secp256k1Auth, toBase64 } from "@sign/core";
 import { Auth } from "@sign/core";
 import { MsgMultiSend, MsgSend } from "interchain-query/cosmos/bank/v1beta1/tx";
 
 import { cosmoshubAddress, mnemonic } from "../../../test-data";
-import { Secp256k1Auth } from "../src/core/auth";
-import { MsgParser, MsgParserPool } from "../src/core/parsers";
+import { Signer } from "../src/core/signer";
 
 const timeout = 50000;
 
 describe("Signing MsgSend", () => {
-  const MsgSendParser = MsgParser.fromTelescope(MsgSend);
-  const BankClient = MsgParserPool.fromTelescope(MsgMultiSend, MsgSend);
+  const signer = new Signer(MsgMultiSend, MsgSend);
   const msgSend = {
     amount: [
       {
@@ -79,22 +77,11 @@ describe("Signing MsgSend", () => {
   });
 
   test(
-    "should equals to result with MsgParser",
+    "should equals to result with Signer",
     async () => {
-      const txRaw = await MsgSendParser.on(rpcEndpoint).by(auth).sign({ msgs });
-      expect(toBase64(txRaw.bodyBytes)).toEqual(bodyBytes);
-      expect(toBase64(txRaw.authInfoBytes)).toEqual(authInfoBytes);
-      expect(toBase64(txRaw.signatures[0])).toEqual(signature);
-    },
-    timeout
-  );
-
-  test(
-    "should equals to result with MsgParserPool",
-    async () => {
-      const txRaw = await BankClient.on(rpcEndpoint).by(auth).sign({
+      const txRaw = await signer.on(rpcEndpoint).by(auth).sign({
         msgs: wrappedMsgs,
-      });
+      }).signed;
       expect(toBase64(txRaw.bodyBytes)).toEqual(bodyBytes);
       expect(toBase64(txRaw.authInfoBytes)).toEqual(authInfoBytes);
       expect(toBase64(txRaw.signatures[0])).toEqual(signature);

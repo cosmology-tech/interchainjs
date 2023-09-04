@@ -5,12 +5,10 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 import { Secp256k1HdWallet } from "@cosmjs/amino";
 import { calculateFee, SigningStargateClient } from "@cosmjs/stargate";
-import { toBase64 } from "@sign/core";
-import { Auth } from "@sign/core";
-import { Secp256k1Auth } from "@sign/cosmos";
+import { Auth, Secp256k1Auth, toBase64 } from "@sign/core";
 
 import { cosmoshubAddress, mnemonic } from "../../../test-data";
-import { MsgSendParser, MsgStargateParser } from "../src/msg.stargate";
+import { stargateSigner } from "../src/stargate";
 
 const timeout = 50000;
 
@@ -25,8 +23,7 @@ describe("Signing MsgSend", () => {
     fromAddress: cosmoshubAddress,
     toAddress: cosmoshubAddress,
   };
-  const msgs = [msgSend];
-  const wrappedMsgs = [
+  const msgs = [
     {
       typeUrl: "/cosmos.bank.v1beta1.MsgSend",
       value: msgSend,
@@ -47,21 +44,12 @@ describe("Signing MsgSend", () => {
         rpcEndpoint,
         wallet
       );
-      const gasEstimation = await client.simulate(
-        cosmoshubAddress,
-        wrappedMsgs,
-        ""
-      );
+      const gasEstimation = await client.simulate(cosmoshubAddress, msgs, "");
       const usedFee = calculateFee(
         Math.round(gasEstimation * 1.3),
         "0.025uatom"
       );
-      const txRaw = await client.sign(
-        cosmoshubAddress,
-        wrappedMsgs,
-        usedFee,
-        ""
-      );
+      const txRaw = await client.sign(cosmoshubAddress, msgs, usedFee, "");
       bodyBytes = toBase64(txRaw.bodyBytes);
       authInfoBytes = toBase64(txRaw.authInfoBytes);
       signature = toBase64(txRaw.signatures[0]);
@@ -76,22 +64,11 @@ describe("Signing MsgSend", () => {
   });
 
   test(
-    "should equals to result with MsgParser",
+    "should equals to result with Signer",
     async () => {
-      const txRaw = await MsgSendParser.on(rpcEndpoint).by(auth).sign({ msgs });
-      expect(toBase64(txRaw.bodyBytes)).toEqual(bodyBytes);
-      expect(toBase64(txRaw.authInfoBytes)).toEqual(authInfoBytes);
-      expect(toBase64(txRaw.signatures[0])).toEqual(signature);
-    },
-    timeout
-  );
-
-  test(
-    "should equals to result with MsgParserPool",
-    async () => {
-      const txRaw = await MsgStargateParser.on(rpcEndpoint).by(auth).sign({
-        msgs: wrappedMsgs,
-      });
+      const txRaw = await stargateSigner.on(rpcEndpoint).by(auth).sign({
+        msgs,
+      }).signed;
       expect(toBase64(txRaw.bodyBytes)).toEqual(bodyBytes);
       expect(toBase64(txRaw.authInfoBytes)).toEqual(authInfoBytes);
       expect(toBase64(txRaw.signatures[0])).toEqual(signature);

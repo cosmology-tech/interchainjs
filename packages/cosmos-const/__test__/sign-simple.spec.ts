@@ -4,11 +4,10 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
  * if met certificate error, run `export NODE_TLS_REJECT_UNAUTHORIZED=0` in terminal
  */
 
-import { toBase64 } from "@sign/core";
-import { Secp256k1Auth } from "@sign/cosmos";
+import { Secp256k1Auth, toBase64 } from "@sign/core";
 
 import { cosmoshubAddress, mnemonic } from "../../../test-data";
-import { MsgSendParser } from "../src/msg.stargate";
+import { stargateSigner } from "../src/stargate";
 
 const timeout = 50000;
 
@@ -23,7 +22,12 @@ describe("MsgSend Sign", () => {
     fromAddress: cosmoshubAddress,
     toAddress: cosmoshubAddress,
   };
-  const msgs = [msgSend];
+  const msgs = [
+    {
+      typeUrl: "/cosmos.bank.v1beta1.MsgSend",
+      value: msgSend,
+    },
+  ];
   // const rpcEndpoint = "https://rpc-cosmoshub.blockapsis.com";
   const rpcEndpoint = "https://cosmos-rpc.quickapi.com:443";
 
@@ -31,7 +35,8 @@ describe("MsgSend Sign", () => {
     "should successfully run",
     async () => {
       const auth = await Secp256k1Auth.fromMnemonic(mnemonic);
-      const txRaw = await MsgSendParser.on(rpcEndpoint).by(auth).sign({ msgs });
+      const txRaw = await stargateSigner.on(rpcEndpoint).by(auth).sign({ msgs })
+        .signed;
       console.log(toBase64(txRaw.bodyBytes));
       console.log(toBase64(txRaw.authInfoBytes));
       console.log(toBase64(txRaw.signatures[0]));
