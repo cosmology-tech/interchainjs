@@ -2,8 +2,6 @@ import { QueryClientImpl as Auth } from "interchain-query/cosmos/auth/v1beta1/qu
 import { ServiceClientImpl as Tx } from "interchain-query/cosmos/tx/v1beta1/service.rpc.Service";
 
 import { AccountParserMap, BaseAccountParser } from "../const";
-// import { QueryClientImpl as Auth } from "../interchain/query/auth";
-// import { ServiceClientImpl as Tx } from "../interchain/query/tx";
 import { BroadcastMode } from "../interchain/types";
 import { Account } from "../types";
 import { Query } from "./query";

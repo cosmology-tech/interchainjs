@@ -6,10 +6,16 @@ export interface Key {
 export interface SigObj {
   r: Uint8Array;
   s: Uint8Array;
-  recoveryId: number;
+  recoveryId: bigint;
 }
 
 export interface Auth {
   readonly key: Key;
-  sign: (message: Uint8Array) => Uint8Array;
+  sign: (hash: Uint8Array) => SigObj;
+  verify: (hash: Uint8Array, sigObj: SigObj) => boolean;
+}
+
+export interface Signed<T, R> {
+  signed: T;
+  broadcast: () => Promise<R>;
 }

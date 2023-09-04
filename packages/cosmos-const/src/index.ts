@@ -1,12 +1,11 @@
-import { MsgParserPool } from "@sign/cosmos";
+import { Signer } from "@sign/cosmos";
 
-import { MsgStargateParser } from "./msg.stargate";
-import { MsgWasmParser } from "./msg.wasm";
+import { stargateSigner } from "./stargate";
+import { wasmSigner } from "./wasm";
 
-export * from "./msg.stargate";
-export * from "./msg.wasm";
+export * from "./stargate";
 
-export const MsgCosmWasmParser = MsgParserPool.fromPools(
-  MsgStargateParser,
-  MsgWasmParser
+export const cosmwasmSigner = Signer.fromParsers(
+  ...stargateSigner.parsers,
+  ...wasmSigner.parsers
 );

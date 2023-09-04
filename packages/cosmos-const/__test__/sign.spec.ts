@@ -9,7 +9,7 @@ import { toBase64 } from "@sign/core";
 import { Auth } from "@sign/core";
 import { Secp256k1Auth } from "@sign/cosmos";
 
-import { cosmoshubAddress2, mnemonic2 } from "../../../test-data";
+import { cosmoshubAddress, mnemonic } from "../../../test-data";
 import { MsgSendParser, MsgStargateParser } from "../src/msg.stargate";
 
 const timeout = 50000;
@@ -22,8 +22,8 @@ describe("Signing MsgSend", () => {
         denom: "uatom",
       },
     ],
-    fromAddress: cosmoshubAddress2,
-    toAddress: cosmoshubAddress2,
+    fromAddress: cosmoshubAddress,
+    toAddress: cosmoshubAddress,
   };
   const msgs = [msgSend];
   const wrappedMsgs = [
@@ -42,13 +42,13 @@ describe("Signing MsgSend", () => {
   test(
     "prepare sign result with `cosmjs`",
     async () => {
-      const wallet = await Secp256k1HdWallet.fromMnemonic(mnemonic2);
+      const wallet = await Secp256k1HdWallet.fromMnemonic(mnemonic);
       const client = await SigningStargateClient.connectWithSigner(
         rpcEndpoint,
         wallet
       );
       const gasEstimation = await client.simulate(
-        cosmoshubAddress2,
+        cosmoshubAddress,
         wrappedMsgs,
         ""
       );
@@ -57,7 +57,7 @@ describe("Signing MsgSend", () => {
         "0.025uatom"
       );
       const txRaw = await client.sign(
-        cosmoshubAddress2,
+        cosmoshubAddress,
         wrappedMsgs,
         usedFee,
         ""
@@ -72,7 +72,7 @@ describe("Signing MsgSend", () => {
   let auth: Auth;
 
   test("prepare auth", async () => {
-    auth = await Secp256k1Auth.fromMnemonic(mnemonic2);
+    auth = await Secp256k1Auth.fromMnemonic(mnemonic);
   });
 
   test(

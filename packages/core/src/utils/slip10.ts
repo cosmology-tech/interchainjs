@@ -4,7 +4,6 @@ import BN from "bn.js";
 import elliptic from "elliptic";
 
 import { fromAscii, fromHex } from "./encoding";
-import { Uint32, Uint53 } from "./int";
 
 export interface Slip10Result {
   readonly chainCode: Uint8Array;
@@ -35,17 +34,38 @@ export function slip10CurveFromString(curveString: string): Slip10Curve {
   }
 }
 
-export class Slip10RawIndex extends Uint32 {
-  public static hardened(hardenedIndex: number): Slip10RawIndex {
+export class Slip10RawIndex {
+  readonly data: number;
+
+  constructor(input: number) {
+    if (Number.isNaN(input)) {
+      throw new Error("Input is not a number");
+    }
+
+    if (!Number.isInteger(input)) {
+      throw new Error("Input is not an integer");
+    }
+
+    if (input < 0 || input > 4294967295) {
+      throw new Error("Input not in uint32 range: " + input.toString());
+    }
+    this.data = input;
+  }
+
+  static hardened(hardenedIndex: number): Slip10RawIndex {
     return new Slip10RawIndex(hardenedIndex + 2 ** 31);
   }
 
-  public static normal(normalIndex: number): Slip10RawIndex {
+  static normal(normalIndex: number): Slip10RawIndex {
     return new Slip10RawIndex(normalIndex);
   }
 
-  public isHardened(): boolean {
+  isHardened(): boolean {
     return this.data >= 2 ** 31;
+  }
+
+  toBytesBigEndian(): Uint8Array {
+    return fromHex(this.data.toString(16).padStart(8, "0"));
   }
 }
 
@@ -55,7 +75,6 @@ export class Slip10RawIndex extends Uint32 {
  * This can be constructed via string parsing:
  *
  * ```ts
- * import { stringToPath } from "@cosmjs/crypto";
  *
  * const path = stringToPath("m/0'/1/2'/2/1000000000");
  * ```
@@ -63,7 +82,6 @@ export class Slip10RawIndex extends Uint32 {
  * or manually:
  *
  * ```ts
- * import { HdPath, Slip10RawIndex } from "@cosmjs/crypto";
  *
  * // m/0'/1/2'/2/1000000000
  * const path: HdPath = [
@@ -233,15 +251,6 @@ export class Slip10 {
   }
 }
 
-export function pathToString(path: HdPath): string {
-  return path.reduce((current, component): string => {
-    const componentString = component.isHardened()
-      ? `${component.toNumber() - 2 ** 31}'`
-      : component.toString();
-    return current + "/" + componentString;
-  }, "m");
-}
-
 export function stringToPath(input: string): HdPath {
   if (!input.startsWith("m"))
     throw new Error("Path string must start with 'm'");
@@ -252,7 +261,7 @@ export function stringToPath(input: string): HdPath {
     const match = rest.match(/^\/([0-9]+)('?)/);
     if (!match) throw new Error("Syntax error while reading path component");
     const [fullMatch, numberString, apostrophe] = match;
-    const value = Uint53.fromString(numberString).toNumber();
+    const value = Number.parseInt(numberString);
     if (value >= 2 ** 31)
       throw new Error("Component value too high. Must not exceed 2**31-1.");
     if (apostrophe) out.push(Slip10RawIndex.hardened(value));

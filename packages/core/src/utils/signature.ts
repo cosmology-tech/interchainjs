@@ -41,7 +41,7 @@ export function toSigObj({
   return {
     r: rbytes,
     s: sbytes,
-    recoveryId: recoveryParam,
+    recoveryId: BigInt(recoveryParam),
   };
 }
 

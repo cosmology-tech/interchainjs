@@ -4,7 +4,7 @@ import {
   Converter,
   ParserData,
   Proto,
-  TelescopeData,
+  TelescopeConst,
   WrapType,
   WrapTypeUrl,
 } from "../../types";
@@ -15,7 +15,7 @@ type ProtoData<T> = T | Uint8Array | WrapTypeUrl<T | Uint8Array>;
 class ProtoParser<ProtoT, AminoT> {
   readonly type: string;
   private readonly _proto: Proto<ProtoT>;
-  private _target?: ProtoData<ProtoT>;
+  protected _target?: ProtoData<ProtoT>;
   readonly aminoParser?: AminoParser<ProtoT, AminoT>;
 
   constructor(args: ParserData<ProtoT, AminoT>) {
@@ -166,7 +166,7 @@ type AminoData<T> = T | WrapType<T>;
 
 class AminoParser<ProtoT, AminoT> {
   readonly type: string;
-  private _target?: AminoData<AminoT>;
+  protected _target?: AminoData<AminoT>;
   converter: Converter<ProtoT, AminoT>;
 
   constructor(args: Required<ParserData<ProtoT, AminoT>>) {
@@ -252,7 +252,7 @@ export class BaseParser<ProtoT, AminoT> {
     }
   }
 
-  static fromTelescope<ProtoT, AminoT>(data: TelescopeData<ProtoT, AminoT>) {
+  static fromTelescope<ProtoT, AminoT>(data: TelescopeConst<ProtoT, AminoT>) {
     return new BaseParser(toParserArgs(data));
   }
 

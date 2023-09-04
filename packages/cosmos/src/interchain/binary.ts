@@ -67,7 +67,7 @@ export enum WireType {
 }
 
 // Reader
-export interface IBinaryReader{
+export interface IBinaryReader {
   buf: Uint8Array;
   pos: number;
   type: number;
@@ -92,7 +92,7 @@ export interface IBinaryReader{
   string(): string;
 }
 
-export class BinaryReader implements IBinaryReader{
+export class BinaryReader implements IBinaryReader {
   buf: Uint8Array;
   pos: number;
   type: number;
@@ -240,7 +240,7 @@ export class BinaryReader implements IBinaryReader{
 }
 
 // Writer
-export interface IBinaryWriter{
+export interface IBinaryWriter {
   len: number;
   head: Op;
   tail: Op;
@@ -329,7 +329,7 @@ export class BinaryWriter {
     }
   }
 
-  private _push(
+  protected _push(
     fn: (val: OpVal, buf: Uint8Array | number[], pos: number) => void,
     len: number,
     val: OpVal

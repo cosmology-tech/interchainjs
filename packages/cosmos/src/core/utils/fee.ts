@@ -1,7 +1,6 @@
-import { Decimal, Uint53 } from "@sign/core";
+import { Decimal } from "@sign/core";
 
 import { FeeParser } from "../../const";
-import { Coin } from "../../interchain/proto/base";
 import { Fee } from "../../interchain/proto/tx";
 import { StdFee } from "../../types";
 import feeTokensJson from "../config/fee-tokens.json";
@@ -33,11 +32,6 @@ export class GasPrice {
 
   /**
    * Parses a gas price formatted as `<amount><denom>`, e.g. `GasPrice.fromString("0.012utoken")`.
-   *
-   * The denom must match the Cosmos SDK 0.42 pattern (https://github.com/cosmos/cosmos-sdk/blob/v0.42.4/types/coin.go#L599-L601).
-   * See `GasPrice` in @cosmjs/stargate for a more generic matcher.
-   *
-   * Separators are not yet supported.
    */
   public static fromString(gasPrice: string): GasPrice {
     // Use Decimal.fromUserInput and checkDenom for detailed checks and helpful error messages
@@ -47,8 +41,7 @@ export class GasPrice {
     }
     const [, amount, denom] = matchResult;
     checkDenom(denom);
-    const fractionalDigits = 18;
-    const decimalAmount = Decimal.fromUserInput(amount, fractionalDigits);
+    const decimalAmount = Decimal.fromString(amount);
     return new GasPrice(decimalAmount, denom);
   }
 
@@ -61,42 +54,17 @@ export class GasPrice {
   }
 }
 
-function coin(amount: number | string, denom: string): Coin {
-  let outAmount: string;
-  if (typeof amount === "number") {
-    try {
-      outAmount = new Uint53(amount).toString();
-    } catch (_err) {
-      throw new Error(
-        "Given amount is not a safe integer. Consider using a string instead to overcome the limitations of JS numbers."
-      );
-    }
-  } else {
-    if (!amount.match(/^[0-9]+$/)) {
-      throw new Error("Invalid unsigned integer string format");
-    }
-    outAmount = amount.replace(/^0*/, "") || "0";
-  }
-  return {
-    amount: outAmount,
-    denom: denom,
-  };
-}
-
 export function calculateFee(
-  gasLimit: number,
+  gasLimit: bigint,
   gasPrice: GasPrice | string
 ): Fee {
   const processedGasPrice =
     typeof gasPrice === "string" ? GasPrice.fromString(gasPrice) : gasPrice;
   const { denom, amount: gasPriceAmount } = processedGasPrice;
-  const amount = gasPriceAmount
-    .multiply(new Uint53(gasLimit))
-    .ceil()
-    .toString();
+  const amount = gasPriceAmount.multiply(gasLimit).ceil().toString();
   return FeeParser.createProtoData({
-    amount: [coin(amount, denom)],
-    gasLimit: BigInt(gasLimit.toString()),
+    amount: [{ amount, denom }],
+    gasLimit,
   }) as Fee;
 }
 

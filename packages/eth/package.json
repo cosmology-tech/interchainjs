@@ -15,6 +15,14 @@
     "README.md"
   ],
   "dependencies": {
-    "@sign/core": "^1.0.0"
+    "@ethereumjs/tx": "^5.0.0",
+    "@sign/core": "^1.0.0",
+    "web3-eth": "^4.1.1"
+  },
+  "peerDependencies": {
+    "web3-types": "^1.1.1"
+  },
+  "devDependencies": {
+    "eth-crypto": "^2.6.0"
   }
 }

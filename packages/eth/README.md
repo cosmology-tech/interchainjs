@@ -1,3 +1,0 @@
-# ETH Sign
-
-## Quick Start

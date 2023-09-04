@@ -16,6 +16,13 @@
   ],
   "dependencies": {
     "@sign/cosmos": "^1.0.0",
+    "interchain": "^1.8.7",
     "interchain-query": "0.1.25"
+  },
+  "devDependencies": {
+    "@cosmjs/amino": "^0.31.0",
+    "@cosmjs/stargate": "^0.31.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   }
 }

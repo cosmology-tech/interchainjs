@@ -1,19 +1,25 @@
+/* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { sha256 } from "@noble/hashes/sha256";
 import BN from "bn.js";
 import elliptic from "elliptic";
 
 import { Auth, SigObj } from "./types";
 import { getCompressedPubkey, toAddress } from "./utils/key";
-import { getSeedFromMnemonic } from "./utils/mnemonic";
 import { toSigObj } from "./utils/signature";
-import { HdPath, Slip10, Slip10Curve, Slip10RawIndex } from "./utils/slip10";
+import {
+  HdPath,
+  Slip10,
+  Slip10Curve,
+  Slip10RawIndex,
+  stringToPath,
+} from "./utils/slip10";
 
 const secp256k1 = new elliptic.ec("secp256k1");
 const secp256k1N = new BN(
   "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141",
   "hex"
 );
+const derTagInteger = 0x02;
 
 export const defaultHdPath = [
   Slip10RawIndex.hardened(44),
@@ -23,72 +29,90 @@ export const defaultHdPath = [
   Slip10RawIndex.normal(0),
 ];
 
-interface KeyData {
-  keypair: elliptic.ec.KeyPair;
-  privkey: Uint8Array;
+interface KeyPair {
+  fromPrivKey?: elliptic.ec.KeyPair;
+  fromPubKey?: elliptic.ec.KeyPair;
+}
+
+interface Key {
   pubkey: Uint8Array;
   address: Uint8Array;
 }
 
-export class Secp256k1AuthBase implements Auth {
-  private _seed: Uint8Array;
-  private _keyData!: KeyData;
-  algo = "secp256k1";
+export class Secp256k1Auth implements Auth {
+  protected _keyPair: KeyPair = {};
+  protected _key: Key;
+  protected _privkey?: Uint8Array;
+  protected _seed?: Uint8Array;
+  protected _hdPath?: HdPath;
 
-  static async fromMnemonic(mnemonic: string, password?: string) {
-    return new Secp256k1AuthBase(await getSeedFromMnemonic(mnemonic, password));
-  }
-
-  constructor(seed: Uint8Array) {
-    this._seed = seed;
-    this.deriveFrom(defaultHdPath);
-  }
-
-  deriveFrom(path: HdPath) {
-    this._updateKeyData(path);
-    return this;
-  }
+  readonly algo = "secp256k1";
 
   get key() {
-    return {
-      pubkey: this._keyData.pubkey,
-      address: this._keyData.address,
-    };
+    return this._key;
   }
 
-  private _assertPrivateKey(privkey: Uint8Array) {
-    if (privkey.length !== 32) {
-      throw new Error("input data is not a valid secp256k1 private key");
-    }
-    const privkeyAsBigInteger = new BN(privkey);
-    if (privkeyAsBigInteger.gte(secp256k1N)) {
-      throw new Error("input data is not a valid secp256k1 private key");
+  updateSeed(seed: Uint8Array) {
+    this._seed = seed;
+    if (this._hdPath) {
+      this.updateHdPath(this._hdPath);
     }
   }
 
-  private _updateKeyData(hdPath: HdPath) {
-    const { privkey } = Slip10.derivePath(
-      Slip10Curve.Secp256k1,
-      this._seed,
-      hdPath
-    );
-    this._assertPrivateKey(privkey);
+  /**
+   *
+   * @param hdPath string format example: "m/0'/1/2'/2/1000000000"
+   */
+  updateHdPath(hdPath: HdPath | string) {
+    if (typeof hdPath === "string") {
+      this._hdPath = stringToPath(hdPath);
+    } else {
+      this._hdPath = hdPath;
+    }
+    if (this._seed) {
+      const { privkey } = Slip10.derivePath(
+        Slip10Curve.Secp256k1,
+        this._seed,
+        this._hdPath
+      );
+      this.updatePrivKey(privkey);
+    }
+  }
+
+  updatePrivKey(privkey: Uint8Array) {
+    this._assertPrivKey(privkey);
+    this._privkey = privkey;
 
     const keypair = secp256k1.keyFromPrivate(privkey);
     if (keypair.validate().result !== true) {
       throw new Error("input data is not a valid secp256k1 private key");
     }
-    const pubkey = getCompressedPubkey(secp256k1, keypair);
+    this._keyPair["fromPrivKey"] = keypair;
 
-    this._keyData = {
-      keypair,
-      privkey,
+    const pubkey = getCompressedPubkey(secp256k1, keypair);
+    this.updatePubKey(pubkey);
+  }
+
+  updatePubKey(pubkey: Uint8Array) {
+    const keypair = secp256k1.keyFromPublic(pubkey);
+    this._keyPair["fromPubKey"] = keypair;
+    this._key = {
       pubkey,
       address: toAddress(pubkey),
     };
   }
 
-  private _assertMessageHash(hash: Uint8Array) {
+  protected _assertPrivKey(privkey: Uint8Array) {
+    if (privkey.length !== 32) {
+      throw new Error("Input data is not a valid secp256k1 private key");
+    }
+    const privkeyAsBigInteger = new BN(privkey);
+    if (privkeyAsBigInteger.gte(secp256k1N)) {
+      throw new Error("Input data is not a valid secp256k1 private key");
+    }
+  }
+
+  protected _assertHash(hash: Uint8Array) {
     if (hash.length === 0) {
       throw new Error("Message hash must not be empty");
     }
@@ -97,17 +121,54 @@ export class Secp256k1AuthBase implements Auth {
     }
   }
 
-  protected _toSignature(sigObj: SigObj): Uint8Array {
-    throw new Error("Protected method `_toSignature` not implemented yet.");
+  protected _toDer(r: Uint8Array, s: Uint8Array): Uint8Array {
+    // DER supports negative integers but our data is unsigned. Thus we need to prepend
+    // a leading 0 byte when the higest bit is set to differentiate nagative values
+    const rEncoded = r[0] >= 0x80 ? new Uint8Array([0, ...r]) : r;
+    const sEncoded = s[0] >= 0x80 ? new Uint8Array([0, ...s]) : s;
+
+    const rLength = rEncoded.length;
+    const sLength = sEncoded.length;
+    const data = new Uint8Array([
+      derTagInteger,
+      rLength,
+      ...rEncoded,
+      derTagInteger,
+      sLength,
+      ...sEncoded,
+    ]);
+
+    return new Uint8Array([0x30, data.length, ...data]);
   }
 
-  sign(message: Uint8Array) {
-    const { keypair: keyClient } = this._keyData;
-    const messageHash = sha256(message);
-    this._assertMessageHash(messageHash);
-    const sigObj: elliptic.ec.Signature = keyClient.sign(messageHash, {
+  sign(hash: Uint8Array): SigObj {
+    if (!this._keyPair.fromPrivKey) {
+      throw new Error(
+        "No keyPair from private key initialized. Please try `updateSeed`, `updateHdPath` or `updatePrivKey` before signing."
+      );
+    }
+    this._assertHash(hash);
+    const sigObj: elliptic.ec.Signature = this._keyPair.fromPrivKey.sign(hash, {
+      // the `canonical` option ensures creation of lowS signature representations
       canonical: true,
     });
-    return this._toSignature(toSigObj(sigObj));
+    return toSigObj(sigObj);
+  }
+
+  verify(hash: Uint8Array, sigObj: SigObj) {
+    if (!this._keyPair.fromPubKey) {
+      throw new Error(
+        "No keyPair from public key initialized. Please try `updateSeed`, `updateHdPath` or `updatePrivKey` before signing."
+      );
+    }
+    this._assertHash(hash);
+    try {
+      return this._keyPair.fromPubKey.verify(
+        hash,
+        this._toDer(sigObj.r, sigObj.s)
+      );
+    } catch (error) {
+      return false;
+    }
   }
 }

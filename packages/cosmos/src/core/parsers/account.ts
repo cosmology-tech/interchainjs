@@ -5,7 +5,7 @@ import {
   DelayedVestingAccount,
   PeriodicVestingAccount,
 } from "../../interchain/proto/vesting";
-import { Account, ParserData, TelescopeData } from "../../types";
+import { Account, ParserData, TelescopeConst } from "../../types";
 import { toParserArgs } from "../utils/parser";
 import { BaseParser } from "./base";
 
@@ -18,7 +18,7 @@ export class AccountParser<ProtoT, AminoT> extends BaseParser<ProtoT, AminoT> {
     return new AccountParser(parser.args);
   }
 
-  static fromTelescope<ProtoT, AminoT>(data: TelescopeData<ProtoT, AminoT>) {
+  static fromTelescope<ProtoT, AminoT>(data: TelescopeConst<ProtoT, AminoT>) {
     return new AccountParser(toParserArgs(data));
   }
 

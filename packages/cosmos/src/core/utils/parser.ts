@@ -1,7 +1,7 @@
-import { TelescopeData } from "../../types";
+import { TelescopeConst } from "../../types";
 
 export function toParserArgs<ProtoT, AminoT>(
-  data: TelescopeData<ProtoT, AminoT>
+  data: TelescopeConst<ProtoT, AminoT>
 ) {
   const {
     typeUrl,
