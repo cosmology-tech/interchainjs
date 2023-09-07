@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Fee, FeeAmino } from "interchain-query/cosmos/tx/v1beta1/tx";
+import { GeneralSigned } from "@sign/core";
+import { Fee } from "interchain-query/cosmos/tx/v1beta1/tx";
 import {
   BaseVestingAccount,
   ContinuousVestingAccount,
@@ -46,10 +47,14 @@ export interface SignerData {
   chainId: string;
 }
 
-export interface TxData<T> extends Partial<SignerData> {
-  msgs: WrapTypeUrl<T>[];
-  fee?: Fee;
-  memo?: string;
+/**
+ * is `StdFee` in "@cosmjs/amino"
+ */
+export interface AminoFee {
+  amount: Coin[];
+  gas: string;
+  granter?: string;
+  payer?: string;
 }
 
 export interface OfflineTxData<T> extends SignerData {
@@ -58,29 +63,51 @@ export interface OfflineTxData<T> extends SignerData {
   memo: string;
 }
 
-export interface StdFee {
-  amount: readonly Coin[];
-  gas: string;
-  granter?: string;
-  payer?: string;
+/**
+ * is proto type of AminoTxData
+ */
+export interface TxData<T> extends Partial<SignerData> {
+  msgs: WrapTypeUrl<T>[];
+  fee?: Fee;
+  memo?: string;
 }
 
-export interface StdSignDoc<T> {
+/**
+ * is `StdSignDoc` in "@cosmjs/amino"
+ */
+export interface OfflineAminoTxData<T> {
   msgs: WrapType<T>[];
-  fee: StdFee;
+  fee: AminoFee;
   memo: string;
   account_number: string;
   sequence: string;
   chain_id: string;
 }
 
-export interface AminoDoc<T> {
-  msgs: T[];
-  fee: FeeAmino;
+export interface AminoTxData<T> {
+  msgs: WrapType<T>[];
+  fee: AminoFee;
   memo: string;
-  account_number: string;
-  sequence: string;
-  chain_id: string;
+  account_number?: string;
+  sequence?: string;
+  chain_id?: string;
+}
+
+/**
+ * is `DirectSignDoc` in "@cosmjs/proto-signing"
+ */
+export interface OfflineDirectTxData {
+  bodyBytes: Uint8Array;
+  authInfoBytes: Uint8Array;
+  chainId: string;
+  accountNumber: bigint;
+}
+
+export interface DirectTxData {
+  bodyBytes: Uint8Array;
+  authInfoBytes: Uint8Array;
+  chainId?: string;
+  accountNumber?: bigint;
 }
 
 export interface Converter<ProtoT, AminoT> {
@@ -101,7 +128,7 @@ export interface ParserData<ProtoT, AminoT> {
   converter?: Converter<ProtoT, AminoT>;
 }
 
-export interface TelescopeConst<ProtoT, AminoT> {
+export interface Meta<ProtoT, AminoT> {
   typeUrl: string;
   aminoType: string;
   encode(message: ProtoT, writer?: IBinaryWriter): IBinaryWriter;
@@ -111,7 +138,6 @@ export interface TelescopeConst<ProtoT, AminoT> {
   toAmino(message: ProtoT): AminoT;
 }
 
-export interface Signed<T> {
-  signed: T;
+export interface Signed<T> extends GeneralSigned<T> {
   broadcast: () => Promise<TxResponse | undefined>;
 }

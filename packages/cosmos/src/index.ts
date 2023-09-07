@@ -1,3 +1,3 @@
-export * from "./core/query";
-export * from "./core/signer";
+export * from "./query";
+export * from "./signer";
 export * from "./types";

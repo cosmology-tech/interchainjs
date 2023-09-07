@@ -1,5 +1,3 @@
-import { AccountParser } from "../core/parsers/account";
-import { BaseParser } from "../core/parsers/base";
 import { BaseAccount, ModuleAccount } from "../interchain/proto/auth";
 import {
   BaseVestingAccount,
@@ -7,34 +5,25 @@ import {
   DelayedVestingAccount,
   PeriodicVestingAccount,
 } from "../interchain/proto/vesting";
+import { AccountParser } from "../parsers/account";
+import { BaseParser } from "../parsers/base";
 
 // account
 export const BaseAccountParser = AccountParser.fromParser(
-  BaseParser.fromTelescope(BaseAccount)
+  BaseParser.fromMeta(BaseAccount)
 );
 export const ModuleAccountParser = AccountParser.fromParser(
-  BaseParser.fromTelescope(ModuleAccount)
+  BaseParser.fromMeta(ModuleAccount)
 );
 export const BaseVestingAccountParser = AccountParser.fromParser(
-  BaseParser.fromTelescope(BaseVestingAccount)
+  BaseParser.fromMeta(BaseVestingAccount)
 );
 export const ContinuousVestingAccountParser = AccountParser.fromParser(
-  BaseParser.fromTelescope(ContinuousVestingAccount)
+  BaseParser.fromMeta(ContinuousVestingAccount)
 );
 export const DelayedVestingAccountParser = AccountParser.fromParser(
-  BaseParser.fromTelescope(DelayedVestingAccount)
+  BaseParser.fromMeta(DelayedVestingAccount)
 );
 export const PeriodicVestingAccountParser = AccountParser.fromParser(
-  BaseParser.fromTelescope(PeriodicVestingAccount)
+  BaseParser.fromMeta(PeriodicVestingAccount)
 );
-
-// *************************** COLLECTIONS ***************************
-
-export const AccountParserMap = {
-  BaseAccount: BaseAccountParser,
-  ModuleAccount: ModuleAccountParser,
-  BaseVestingAccount: BaseVestingAccountParser,
-  ContinuousVestingAccount: ContinuousVestingAccountParser,
-  DelayedVestingAccount: DelayedVestingAccountParser,
-  PeriodicVestingAccount: PeriodicVestingAccountParser,
-};

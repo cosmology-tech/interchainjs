@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { DeepPartial } from "../../interchain/helpers";
+import { DeepPartial } from "../interchain/helpers";
 import {
   Converter,
+  Meta,
   ParserData,
   Proto,
-  TelescopeConst,
   WrapType,
   WrapTypeUrl,
-} from "../../types";
+} from "../types";
 import { toParserArgs } from "../utils/parser";
 
 type ProtoData<T> = T | Uint8Array | WrapTypeUrl<T | Uint8Array>;
@@ -252,8 +252,17 @@ export class BaseParser<ProtoT, AminoT> {
     }
   }
 
-  static fromTelescope<ProtoT, AminoT>(data: TelescopeConst<ProtoT, AminoT>) {
+  static fromMeta<ProtoT, AminoT>(data: Meta<ProtoT, AminoT>) {
     return new BaseParser(toParserArgs(data));
+  }
+
+  get converter() {
+    if (!this.args.converter) {
+      throw new Error(
+        `No such amino type for proto type (typeUrl) ${this.protoType}`
+      );
+    }
+    return this.args.converter;
   }
 
   createProtoData(data: DeepPartial<ProtoT>) {

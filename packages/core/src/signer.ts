@@ -1,4 +1,4 @@
-import { Auth } from "./types";
+import { Auth, SigObj } from "./types";
 
 export abstract class BaseSigner<T> {
   private _Query?: { new (endpoint: string): T };
@@ -44,5 +44,22 @@ export abstract class BaseSigner<T> {
         "Please provide auth info before signing (using `by` method)."
       );
     }
+  }
+
+  protected abstract _hash(raw: Uint8Array): Uint8Array;
+  protected abstract _toSignature(sigObj: SigObj): Uint8Array;
+  protected abstract _toSigObj(signature: Uint8Array): SigObj;
+
+  protected _signArbitrary(raw: Uint8Array): Uint8Array {
+    const rawHash = this._hash(raw);
+    const sigObj = this.auth.sign(rawHash);
+    const signature = this._toSignature(sigObj);
+    return signature;
+  }
+
+  verifyArbitrary(raw: Uint8Array, signature: Uint8Array): boolean {
+    const rawHash = this._hash(raw);
+    const sigObj = this._toSigObj(signature);
+    return this.auth.verify(rawHash, sigObj);
   }
 }

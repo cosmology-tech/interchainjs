@@ -5,12 +5,11 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 import { Secp256k1HdWallet } from "@cosmjs/amino";
 import { calculateFee, SigningStargateClient } from "@cosmjs/stargate";
-import { Secp256k1Auth, toBase64 } from "@sign/core";
-import { Auth } from "@sign/core";
+import { Auth, Secp256k1Auth, toBase64 } from "@sign/core";
 import { MsgMultiSend, MsgSend } from "interchain-query/cosmos/bank/v1beta1/tx";
 
 import { cosmoshubAddress, mnemonic } from "../../../test-data";
-import { Signer } from "../src/core/signer";
+import { Signer } from "../src";
 
 const timeout = 50000;
 
@@ -26,7 +25,6 @@ describe("Signing MsgSend", () => {
     fromAddress: cosmoshubAddress,
     toAddress: cosmoshubAddress,
   };
-  const msgs = [msgSend];
   const wrappedMsgs = [
     {
       typeUrl: "/cosmos.bank.v1beta1.MsgSend",
@@ -35,6 +33,8 @@ describe("Signing MsgSend", () => {
   ];
   // const rpcEndpoint = "https://rpc-cosmoshub.blockapsis.com";
   const rpcEndpoint = "https://cosmos-rpc.quickapi.com:443";
+
+  const auth: Auth = Secp256k1Auth.fromMnemonic(mnemonic);
 
   let bodyBytes: string;
   let authInfoBytes: string;
@@ -69,12 +69,6 @@ describe("Signing MsgSend", () => {
     },
     timeout
   );
-
-  let auth: Auth;
-
-  test("prepare auth", async () => {
-    auth = await Secp256k1Auth.fromMnemonic(mnemonic);
-  });
 
   test(
     "should equals to result with Signer",

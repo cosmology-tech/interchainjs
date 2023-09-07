@@ -6,10 +6,16 @@ import {
   Capability,
   FeeMarketEIP1559Transaction,
   FeeMarketEIP1559TxData,
+  isAccessListEIP2930TxData,
+  isBlobEIP4844TxData,
+  isFeeMarketEIP1559TxData,
+  isLegacyTxData,
   LegacyTransaction,
   LegacyTxData,
   TxOptions,
 } from "@ethereumjs/tx";
+
+import { TxData } from "./types";
 
 export class LegacyTransactionExt extends LegacyTransaction {
   constructor(txData: LegacyTxData, opts: TxOptions = {}) {
@@ -77,4 +83,20 @@ export class BlobEIP4844TransactionExt extends BlobEIP4844Transaction {
   get processSignature() {
     return this._processSignature;
   }
+}
+
+export function constructTransactionExt(txData: TxData) {
+  let tx;
+  if (isLegacyTxData(txData)) {
+    tx = LegacyTransactionExt.fromTxData(txData);
+  } else if (isFeeMarketEIP1559TxData(txData)) {
+    tx = FeeMarketEIP1559TransactionExt.fromTxData(txData);
+  } else if (isAccessListEIP2930TxData(txData)) {
+    tx = AccessListEIP2930TransactionExt.fromTxData(txData);
+  } else if (isBlobEIP4844TxData(txData)) {
+    tx = BlobEIP4844TransactionExt.fromTxData(txData);
+  } else {
+    throw new Error("Unknown txData type");
+  }
+  return tx;
 }

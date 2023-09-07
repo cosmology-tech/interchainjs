@@ -18,7 +18,7 @@ export class AccountParser<ProtoT, AminoT> extends BaseParser<ProtoT, AminoT> {
     return new AccountParser(parser.args);
   }
 
-  static fromTelescope<ProtoT, AminoT>(data: TelescopeConst<ProtoT, AminoT>) {
+  static fromMeta<ProtoT, AminoT>(data: TelescopeConst<ProtoT, AminoT>) {
     return new AccountParser(toParserArgs(data));
   }
 

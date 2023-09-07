@@ -1,8 +1,16 @@
-import { BaseParser } from "../core/parsers/base";
-import { AuthInfo, Fee, Tx, TxBody, TxRaw } from "../interchain/proto/tx";
+import {
+  AuthInfo,
+  Fee,
+  SignDoc,
+  Tx,
+  TxBody,
+  TxRaw,
+} from "../interchain/proto/tx";
+import { BaseParser } from "../parsers/base";
 
-export const TxParser = BaseParser.fromTelescope(Tx);
-export const TxRawParser = BaseParser.fromTelescope(TxRaw);
-export const TxBodyParser = BaseParser.fromTelescope(TxBody);
-export const AuthInfoParser = BaseParser.fromTelescope(AuthInfo);
-export const FeeParser = BaseParser.fromTelescope(Fee);
+export const TxParser = BaseParser.fromMeta(Tx);
+export const TxRawParser = BaseParser.fromMeta(TxRaw);
+export const TxBodyParser = BaseParser.fromMeta(TxBody);
+export const AuthInfoParser = BaseParser.fromMeta(AuthInfo);
+export const FeeParser = BaseParser.fromMeta(Fee);
+export const SignDocParser = BaseParser.fromMeta(SignDoc);

@@ -1,3 +1,10 @@
+import {
+  AccessListEIP2930TxData,
+  BlobEIP4844TxData,
+  FeeMarketEIP1559TxData,
+  LegacyTxData,
+} from "@ethereumjs/tx";
+import { GeneralSigned } from "@sign/core";
 import { TransactionReceipt } from "web3-types";
 
 type PrefixedHexString = string;
@@ -11,7 +18,12 @@ export interface LegacyTx {
   code?: string;
 }
 
-export interface Signed<T> {
-  signed: T;
+export type TxData =
+  | LegacyTxData
+  | FeeMarketEIP1559TxData
+  | AccessListEIP2930TxData
+  | BlobEIP4844TxData;
+
+export interface Signed<T> extends GeneralSigned<T> {
   broadcast: () => Promise<TransactionReceipt>;
 }

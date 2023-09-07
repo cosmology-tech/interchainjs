@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-types */
 export interface Key {
   pubkey: Uint8Array;
   address: Uint8Array;
@@ -6,7 +7,7 @@ export interface Key {
 export interface SigObj {
   r: Uint8Array;
   s: Uint8Array;
-  recoveryId: bigint;
+  recoveryId: bigint | null;
 }
 
 export interface Auth {
@@ -15,7 +16,7 @@ export interface Auth {
   verify: (hash: Uint8Array, sigObj: SigObj) => boolean;
 }
 
-export interface Signed<T, R> {
+export interface GeneralSigned<T> {
   signed: T;
-  broadcast: () => Promise<R>;
+  broadcast: Function;
 }

@@ -32,6 +32,8 @@ describe("Signing MsgSend", () => {
   // const rpcEndpoint = "https://rpc-cosmoshub.blockapsis.com";
   const rpcEndpoint = "https://cosmos-rpc.quickapi.com:443";
 
+  const auth: Auth = Secp256k1Auth.fromMnemonic(mnemonic);
+
   let bodyBytes: string;
   let authInfoBytes: string;
   let signature: string;
@@ -56,12 +58,6 @@ describe("Signing MsgSend", () => {
     },
     timeout
   );
-
-  let auth: Auth;
-
-  test("prepare auth", async () => {
-    auth = await Secp256k1Auth.fromMnemonic(mnemonic);
-  });
 
   test(
     "should equals to result with Signer",
