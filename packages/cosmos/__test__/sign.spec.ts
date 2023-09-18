@@ -8,7 +8,7 @@ import { calculateFee, SigningStargateClient } from "@cosmjs/stargate";
 import { Auth, Secp256k1Auth, toBase64 } from "@sign/core";
 import { MsgMultiSend, MsgSend } from "interchain-query/cosmos/bank/v1beta1/tx";
 
-import { cosmoshubAddress, mnemonic } from "../../../test-data";
+import { cosmoshubAddress, mnemonic, rpcEndpoint } from "../../../test-data";
 import { Signer } from "../src";
 
 const timeout = 50000;
@@ -31,8 +31,6 @@ describe("Signing MsgSend", () => {
       value: msgSend,
     },
   ];
-  // const rpcEndpoint = "https://rpc-cosmoshub.blockapsis.com";
-  const rpcEndpoint = "https://cosmos-rpc.quickapi.com:443";
 
   const auth: Auth = Secp256k1Auth.fromMnemonic(mnemonic);
 

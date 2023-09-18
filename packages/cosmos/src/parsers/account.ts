@@ -1,11 +1,11 @@
-import { BaseAccount, ModuleAccount } from "../../interchain/proto/auth";
+import { BaseAccount, ModuleAccount } from "../interchain/proto/auth";
 import {
   BaseVestingAccount,
   ContinuousVestingAccount,
   DelayedVestingAccount,
   PeriodicVestingAccount,
-} from "../../interchain/proto/vesting";
-import { Account, ParserData, TelescopeConst } from "../../types";
+} from "../interchain/proto/vesting";
+import { Account, Meta, ParserData } from "../types";
 import { toParserArgs } from "../utils/parser";
 import { BaseParser } from "./base";
 
@@ -18,7 +18,7 @@ export class AccountParser<ProtoT, AminoT> extends BaseParser<ProtoT, AminoT> {
     return new AccountParser(parser.args);
   }
 
-  static fromMeta<ProtoT, AminoT>(data: TelescopeConst<ProtoT, AminoT>) {
+  static fromMeta<ProtoT, AminoT>(data: Meta<ProtoT, AminoT>) {
     return new AccountParser(toParserArgs(data));
   }
 

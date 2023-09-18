@@ -16,7 +16,7 @@
   ],
   "dependencies": {
     "@sign/cosmos": "^1.0.0",
-    "interchain": "^1.8.7",
+    "interchain": "^1.9.1",
     "interchain-query": "0.1.25"
   },
   "devDependencies": {

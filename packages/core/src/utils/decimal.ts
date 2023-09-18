@@ -64,8 +64,8 @@ export class Decimal {
     let gStr = this.ground.toString();
     const uidx = gStr.length - this.level; // the unit digit index
     if (uidx <= 0) {
-      gStr = gStr.padStart(this.level + 1, "0");
-      return `.${gStr.slice(uidx)}`;
+      gStr = gStr.padStart(this.level, "0");
+      return `0.${gStr}`;
     }
     return `${gStr.slice(0, uidx)}.${gStr.slice(uidx)}`;
   }

@@ -1,4 +1,4 @@
-import { ParserData } from "../../types";
+import { ParserData } from "../types";
 import { BaseParser } from "./base";
 
 export class MsgParser<ProtoT, AminoT> extends BaseParser<ProtoT, AminoT> {

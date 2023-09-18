@@ -15,7 +15,6 @@ import { Coin } from "./interchain/proto/base";
 import { TxResponse } from "./interchain/types";
 
 export interface Rpc {
-  endpoint: string;
   request: (
     service: string,
     method: string,
@@ -139,5 +138,8 @@ export interface Meta<ProtoT, AminoT> {
 }
 
 export interface Signed<T> extends GeneralSigned<T> {
-  broadcast: () => Promise<TxResponse | undefined>;
+  broadcast: (
+    checkTx?: boolean, // default to be true
+    commitTx?: boolean // default to be false
+  ) => Promise<TxResponse | undefined>;
 }

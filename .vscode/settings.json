@@ -10,5 +10,6 @@
     "typescript",
     "typescriptreact"
   ],
-  "eslint.format.enable": false
+  "eslint.format.enable": false,
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

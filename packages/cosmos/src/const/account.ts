@@ -27,3 +27,14 @@ export const DelayedVestingAccountParser = AccountParser.fromParser(
 export const PeriodicVestingAccountParser = AccountParser.fromParser(
   BaseParser.fromMeta(PeriodicVestingAccount)
 );
+
+// *************************** COLLECTIONS ***************************
+
+export const AccountParserMap = {
+  BaseAccount: BaseAccountParser,
+  ModuleAccount: ModuleAccountParser,
+  BaseVestingAccount: BaseVestingAccountParser,
+  ContinuousVestingAccount: ContinuousVestingAccountParser,
+  DelayedVestingAccount: DelayedVestingAccountParser,
+  PeriodicVestingAccount: PeriodicVestingAccountParser,
+};

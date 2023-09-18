@@ -6,7 +6,7 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 import { Secp256k1Auth, toBase64 } from "@sign/core";
 
-import { cosmoshubAddress, mnemonic } from "../../../test-data";
+import { cosmoshubAddress, mnemonic, rpcEndpoint } from "../../../test-data";
 import { stargateSigner } from "../src/stargate";
 
 const timeout = 50000;
@@ -28,8 +28,6 @@ describe("MsgSend Sign", () => {
       value: msgSend,
     },
   ];
-  // const rpcEndpoint = "https://rpc-cosmoshub.blockapsis.com";
-  const rpcEndpoint = "https://cosmos-rpc.quickapi.com:443";
 
   test(
     "should successfully run",

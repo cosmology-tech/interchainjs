@@ -1,9 +1,9 @@
 import { Decimal } from "@sign/core";
 
-import { FeeParser } from "../../const";
-import { Fee } from "../../interchain/proto/tx";
-import { StdFee } from "../../types";
 import feeTokensJson from "../config/fee-tokens.json";
+import { FeeParser } from "../const/tx";
+import { Fee } from "../interchain/proto/tx";
+import { AminoFee } from "../types";
 
 /**
  * Denom checker for the Cosmos SDK 0.42 denom pattern
@@ -76,9 +76,25 @@ export function getAvgGasPrice(chainId: string) {
   return GasPrice.fromString(`${feeToken.average_gas_price}${feeToken.denom}`);
 }
 
-export function toStdFee(fee: Fee): StdFee {
+export function getLowGasPrice(chainId: string) {
+  const feeToken = (feeTokensJson as any)[chainId]?.[0];
+  if (typeof feeToken?.low_gas_price === "undefined") {
+    throw new Error(`No average_gas_price found for chain ${chainId}`);
+  }
+  return GasPrice.fromString(`${feeToken.low_gas_price}${feeToken.denom}`);
+}
+
+export function getHighGasPrice(chainId: string) {
+  const feeToken = (feeTokensJson as any)[chainId]?.[0];
+  if (typeof feeToken?.high_gas_price === "undefined") {
+    throw new Error(`No average_gas_price found for chain ${chainId}`);
+  }
+  return GasPrice.fromString(`${feeToken.high_gas_price}${feeToken.denom}`);
+}
+
+export function toAminoFee(fee: Fee): AminoFee {
   const { gasLimit, payer, granter, ...rest } = fee;
-  const stdFee: StdFee = { gas: gasLimit.toString(), ...rest };
+  const stdFee: AminoFee = { gas: gasLimit.toString(), ...rest };
   if (payer !== "") stdFee["payer"] = payer;
   if (granter !== "") stdFee["granter"] = granter;
   return stdFee;

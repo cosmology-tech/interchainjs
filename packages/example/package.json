@@ -1,0 +1,45 @@
+{
+  "name": "@sign/example",
+  "version": "1.0.0",
+  "private": true,
+  "description": "sign client for cosmos network",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "author": "liujun93 <ljun8575@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "dependencies": {
+    "@chakra-ui/icons": "^2.1.1",
+    "@chakra-ui/next-js": "^2.1.5",
+    "@chakra-ui/react": "^2.8.1",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@loadable/component": "^5.15.3",
+    "@sign/core": "^1.0.0",
+    "@sign/cosmos": "^1.0.0",
+    "@sign/cosmos-const": "^1.0.0",
+    "framer-motion": "^10.16.4",
+    "next": "^12.3.4",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-json-view": "^1.21.3"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.22.15",
+    "@babel/preset-react": "^7.22.15",
+    "@babel/preset-typescript": "^7.22.15",
+    "@types/react": "18.2.21",
+    "babel-loader": "^9.1.3",
+    "babel-plugin-inline-import-data-uri": "^1.0.1"
+  }
+}

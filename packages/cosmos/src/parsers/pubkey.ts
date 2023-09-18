@@ -1,7 +1,7 @@
-import { PubKey as PubKeyEd25519 } from "../../interchain/proto/crypto.ed25519";
-import { PubKey as PubKeySecp256k1 } from "../../interchain/proto/crypto.secp256k1";
-import { PubKey as PubKeySecp256r1 } from "../../interchain/proto/crypto.secp256r1";
-import { ParserData, TelescopeConst } from "../../types";
+import { PubKey as PubKeyEd25519 } from "../interchain/proto/crypto.ed25519";
+import { PubKey as PubKeySecp256k1 } from "../interchain/proto/crypto.secp256k1";
+import { PubKey as PubKeySecp256r1 } from "../interchain/proto/crypto.secp256r1";
+import { Meta, ParserData } from "../types";
 import { toParserArgs } from "../utils/parser";
 import { BaseParser } from "./base";
 
@@ -14,7 +14,7 @@ export class PubKeyParser<ProtoT, AminoT> extends BaseParser<ProtoT, AminoT> {
     return new PubKeyParser(parser.args);
   }
 
-  static fromMeta<ProtoT, AminoT>(data: TelescopeConst<ProtoT, AminoT>) {
+  static fromMeta<ProtoT, AminoT>(data: Meta<ProtoT, AminoT>) {
     return new PubKeyParser(toParserArgs(data));
   }
 

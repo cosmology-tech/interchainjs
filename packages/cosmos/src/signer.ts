@@ -12,7 +12,7 @@ import {
   TxRawParser,
 } from "./const/tx";
 import { AuthInfo, Fee, TxBody, TxRaw } from "./interchain/proto/tx";
-import { BroadcastMode, SignMode, TxResponse } from "./interchain/types";
+import { BroadcastMode, SignMode } from "./interchain/types";
 import { MsgParser } from "./parsers/msg";
 import { QueryParser } from "./query.parser";
 import {
@@ -29,7 +29,12 @@ import {
   WrapTypeUrl,
 } from "./types";
 import { toBech32 } from "./utils/bech";
-import { calculateFee, GasPrice, getAvgGasPrice, toStdFee } from "./utils/fee";
+import {
+  calculateFee,
+  GasPrice,
+  getLowGasPrice,
+  toAminoFee,
+} from "./utils/fee";
 import { toBytes } from "./utils/json";
 
 export class Signer extends BaseSigner<QueryParser> {
@@ -182,7 +187,7 @@ export class Signer extends BaseSigner<QueryParser> {
         const parser = this._getParserFromAmino(msg.type);
         return {
           typeUrl: parser.protoType,
-          value: parser.converter,
+          value: parser.converter.toProto(msg.value),
         };
       }),
       fee:
@@ -218,7 +223,7 @@ export class Signer extends BaseSigner<QueryParser> {
         const parser = this._getParserFromProto(msg.typeUrl);
         return parser.fromProto(msg).toAmino().pop() as WrapType<any>;
       }),
-      fee: toStdFee(fee),
+      fee: toAminoFee(fee),
       memo,
       account_number: accountNumber.toString(),
       sequence: sequence.toString(),
@@ -327,9 +332,15 @@ export class Signer extends BaseSigner<QueryParser> {
     const gasInfo = await this.query.estimateGas(txBytes);
     const fee = calculateFee(
       Decimal.fromBigInt(gasInfo.gasUsed).multiply(multiplier).round(),
-      gasPrice || getAvgGasPrice(signerData.chainId)
+      gasPrice || this.getGasPrice(signerData.chainId)
     );
     return fee;
+  }
+
+  getGasPrice(chainId: string) {
+    return getLowGasPrice(chainId);
+    // return getAvgGasPrice(chainId);
+    // return getHighGasPrice(chainId);
   }
 
   sign(tx: TxData<any>): Signed<Promise<TxRaw>> {
@@ -399,7 +410,8 @@ export class Signer extends BaseSigner<QueryParser> {
     txRaw: TxRaw,
     checkTx = true,
     commitTx = false
-  ): Promise<TxResponse | undefined> {
+    // ): Promise<TxResponse | undefined> {
+  ) {
     const txBytes = TxRawParser.fromProto(txRaw).encode().pop() as Uint8Array;
     return this.broadcastArbitrary(txBytes, checkTx, commitTx);
   }
@@ -408,7 +420,8 @@ export class Signer extends BaseSigner<QueryParser> {
     raw: Uint8Array,
     checkTx = true,
     commitTx = false
-  ): Promise<TxResponse | undefined> {
+    // ): Promise<TxResponse | undefined> {
+  ) {
     const mode =
       checkTx && commitTx
         ? BroadcastMode.BROADCAST_MODE_BLOCK
