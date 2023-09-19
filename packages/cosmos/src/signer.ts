@@ -48,6 +48,14 @@ export class Signer extends BaseSigner<QueryParser> {
     this.addParsers(parsers);
   }
 
+  // static connectWithSigner(rpcEndpoint, signer, {
+  //   registry: (registry as any),
+  //   aminoTypes
+  // }) {
+
+  //   return
+  // }
+
   static fromParsers(...parsers: MsgParser<any, any>[]) {
     const signer = new Signer();
     signer.addParsers(parsers);
