@@ -1,4 +1,4 @@
-import { BroadcastMode } from "../interchain/types";
+import { BroadcastMode } from "../codegen/types";
 
 export function broadcastModeToString(mode: BroadcastMode): string {
   switch (mode) {

@@ -1,18 +1,18 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { GeneralSigned } from "@sign/core";
-import { Fee } from "interchain-query/cosmos/tx/v1beta1/tx";
+import { Fee } from "codegen-query/cosmos/tx/v1beta1/tx";
 import {
   BaseVestingAccount,
   ContinuousVestingAccount,
   DelayedVestingAccount,
   PeriodicVestingAccount,
-} from "interchain-query/cosmos/vesting/v1beta1/vesting";
-import { DeepPartial } from "interchain-query/helpers";
+} from "codegen-query/cosmos/vesting/v1beta1/vesting";
+import { DeepPartial } from "codegen-query/helpers";
 
-import { IBinaryReader, IBinaryWriter } from "./interchain/binary";
-import { BaseAccount, ModuleAccount } from "./interchain/proto/auth";
-import { Coin } from "./interchain/proto/base";
-import { TxResponse } from "./interchain/types";
+import { IBinaryReader, IBinaryWriter } from "./codegen/binary";
+import { BaseAccount, ModuleAccount } from "./codegen/proto/auth";
+import { Coin } from "./codegen/proto/base";
+import { TxResponse } from "./codegen/types";
 
 export interface Rpc {
   request: (

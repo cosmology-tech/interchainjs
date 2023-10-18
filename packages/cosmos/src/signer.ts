@@ -11,8 +11,8 @@ import {
   TxParser,
   TxRawParser,
 } from "./const/tx";
-import { AuthInfo, Fee, TxBody, TxRaw } from "./interchain/proto/tx";
-import { BroadcastMode, SignMode } from "./interchain/types";
+import { AuthInfo, Fee, TxBody, TxRaw } from "./codegen/proto/tx";
+import { BroadcastMode, SignMode } from "./codegen/types";
 import { MsgParser } from "./parsers/msg";
 import { QueryParser } from "./query.parser";
 import {

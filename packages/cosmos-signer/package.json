@@ -1,0 +1,28 @@
+{
+  "name": "@sign/cosmos-signer",
+  "version": "1.0.0",
+  "description": "Cosmos sign and broadcast instances",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "author": "liujun93 <ljun8575@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "build": "rm -rf dist && tsc",
+    "proto:download": "rm -rf ./proto && ./scripts/download-proto.sh",
+    "proto:codegen": "rm -rf ./src && npx telescope transpile --config .telescope.json",
+    "proto:update": "yarn proto:download && yarn proto:codegen"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "dependencies": {
+    "@sign/cosmos": "^1.0.0"
+  },
+  "devDependencies": {
+    "@cosmology/telescope": "^1.0.1",
+    "axios": "^1.5.1",
+    "rimraf": "^5.0.1"
+  }
+}

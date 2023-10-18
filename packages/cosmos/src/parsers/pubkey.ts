@@ -1,6 +1,6 @@
-import { PubKey as PubKeyEd25519 } from "../interchain/proto/crypto.ed25519";
-import { PubKey as PubKeySecp256k1 } from "../interchain/proto/crypto.secp256k1";
-import { PubKey as PubKeySecp256r1 } from "../interchain/proto/crypto.secp256r1";
+import { PubKey as PubKeyEd25519 } from "../codegen/cosmos/crypto/ed25519/keys";
+import { PubKey as PubKeySecp256k1 } from "../codegen/cosmos/crypto/secp256k1/keys";
+import { PubKey as PubKeySecp256r1 } from "../codegen/cosmos/crypto/secp256r1/keys";
 import { Meta, ParserData } from "../types";
 import { toParserArgs } from "../utils/parser";
 import { BaseParser } from "./base";

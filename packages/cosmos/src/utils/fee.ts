@@ -2,7 +2,7 @@ import { Decimal } from "@sign/core";
 
 import feeTokensJson from "../config/fee-tokens.json";
 import { FeeParser } from "../const/tx";
-import { Fee } from "../interchain/proto/tx";
+import { Fee } from "../codegen/proto/tx";
 import { AminoFee } from "../types";
 
 /**

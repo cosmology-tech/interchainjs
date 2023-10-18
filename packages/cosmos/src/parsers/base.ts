@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { DeepPartial } from "../interchain/helpers";
+import { DeepPartial } from "../codegen/helpers";
 import {
   Converter,
   Meta,

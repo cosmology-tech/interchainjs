@@ -1,0 +1,74 @@
+{
+  "protoDirs": [
+    "./proto/cosmos-sdk"
+  ],
+  "outPath": "./src/codegen",
+  "options": {
+    "useSDKTypes": false,
+    "interfaces": {
+      "enabled": false,
+      "useUnionTypes": false
+    },
+    "prototypes": {
+      "enabled": true,
+      "parser": {
+        "keepCase": false
+      },
+      "methods": {
+        "fromJSON": true,
+        "toJSON": true,
+        "encode": true,
+        "decode": true,
+        "fromPartial": true,
+        "toAmino": true,
+        "fromAmino": true,
+        "fromProto": true,
+        "toProto": true
+      },
+      "addTypeUrlToDecoders": false,
+      "addTypeUrlToObjects": false,
+      "typingsFormat": {
+        "duration": "duration",
+        "timestamp": "date",
+        "useExact": false,
+        "useDeepPartial": true,
+        "num64": "bigint",
+        "customTypes": {
+          "useCosmosSDKDec": false
+        }
+      }
+    },
+    "bundle": {
+      "enabled": false
+    },
+    "tsDisable": {
+      "patterns": [
+        "**/tx.registry.ts"
+      ]
+    },
+    "stargateClients": {
+      "enabled": false,
+      "includeCosmosDefaultTypes": true
+    },
+    "aminoEncoding": {
+      "enabled": true,
+      "useLegacyInlineEncoding": false
+    },
+    "lcdClients": {
+      "enabled": false
+    },
+    "rpcClients": {
+      "enabled": true,
+      "inline": false,
+      "extensions": false,
+      "camelCase": false,
+      "enabledServices": [
+        "Msg",
+        "Query",
+        "Service",
+        "ReflectionService",
+        "ABCIApplication"
+      ]
+    }
+  }
+}

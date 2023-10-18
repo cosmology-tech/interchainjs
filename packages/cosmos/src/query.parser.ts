@@ -1,8 +1,9 @@
 import { toBase64 } from "@sign/core";
-import { QueryClientImpl as Auth } from "interchain-query/cosmos/auth/v1beta1/query.rpc.Query";
+import { QueryClientImpl as Auth } from "codegen-query/cosmos/auth/v1beta1/query.rpc.Query";
+import { ServiceClientImpl as Tx } from "codegen-query/cosmos/tx/v1beta1/service.rpc.Service";
 
 import { AccountParserMap, BaseAccountParser } from "./const/account";
-import { BroadcastMode } from "./interchain/types";
+import { BroadcastMode } from "./codegen/types";
 import { Server } from "./query";
 import { Account } from "./types";
 import { randomId } from "./utils/random-id";
@@ -19,6 +20,10 @@ export class QueryParser extends Server {
 
   get auth() {
     return this.about(Auth);
+  }
+
+  get tx() {
+    return this.about(Tx);
   }
 
   status() {
@@ -88,21 +93,21 @@ export class QueryParser extends Server {
   }
 
   async broadcast(tx: Uint8Array, mode: BroadcastMode) {
-    const req = { params: { tx }, method: "broadcast_tx_sync" };
-    const request = createJsonRpcRequest(
-      req.method,
-      encodeBroadcastTxParams(req.params)
-    );
-    const resp = await fetch(this.endpoint, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(request),
-    });
-    const json = await resp.json();
-    return json;
-    // return await this.tx.broadcastTx({ txBytes: tx, mode });
+    // const req = { params: { tx }, method: "broadcast_tx_sync" };
+    // const request = createJsonRpcRequest(
+    //   req.method,
+    //   encodeBroadcastTxParams(req.params)
+    // );
+    // const resp = await fetch(this.endpoint, {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify(request),
+    // });
+    // const json = await resp.json();
+    // return json;
+    return await this.tx.broadcastTx({ txBytes: tx, mode });
   }
 }
 

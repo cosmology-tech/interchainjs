@@ -1,10 +1,13 @@
-import { BaseAccount, ModuleAccount } from "../interchain/proto/auth";
+import {
+  BaseAccount,
+  ModuleAccount,
+} from "../codegen/cosmos/auth/v1beta1/auth";
 import {
   BaseVestingAccount,
   ContinuousVestingAccount,
   DelayedVestingAccount,
   PeriodicVestingAccount,
-} from "../interchain/proto/vesting";
+} from "../codegen/cosmos/vesting/v1beta1/vesting";
 import { AccountParser } from "../parsers/account";
 import { BaseParser } from "../parsers/base";
 

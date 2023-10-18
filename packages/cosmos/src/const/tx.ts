@@ -5,7 +5,7 @@ import {
   Tx,
   TxBody,
   TxRaw,
-} from "../interchain/proto/tx";
+} from "../codegen/cosmos/tx/v1beta1/tx";
 import { BaseParser } from "../parsers/base";
 
 export const TxParser = BaseParser.fromMeta(Tx);
