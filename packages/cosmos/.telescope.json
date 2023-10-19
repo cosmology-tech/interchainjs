@@ -1,6 +1,6 @@
 {
   "protoDirs": [
-    "./proto/cosmos-sdk"
+    "./proto"
   ],
   "outPath": "./src/codegen",
   "options": {

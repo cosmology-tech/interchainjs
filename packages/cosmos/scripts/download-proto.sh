@@ -1,4 +1,4 @@
-#!/bin/bash
+ #/usr/bin/env bash
 
 source ../../scripts/download-proto.sh
 
@@ -13,4 +13,4 @@ cosmosSdkFiles=(
     "cosmos/crypto/secp256r1/keys.proto"
     )
 
-download-proto cosmos/cosmos-sdk@v0.47.5 ./proto/cosmos-sdk "${cosmosSdkFiles[@]}"
+downloadProto cosmos/cosmos-sdk@"${COSMOS_SDK_VERSION}" ./proto "${cosmosSdkFiles[@]}"

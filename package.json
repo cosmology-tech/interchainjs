@@ -10,7 +10,8 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "lerna run build"
+    "build": "lerna run build",
+    "proto:update": "lerna run proto:update"
   },
   "devDependencies": {
     "@cosmology/telescope": "^1.0.3",

@@ -1,4 +1,4 @@
-#!/bin/bash
+ #/usr/bin/env bash
 
 source ../../scripts/download-proto.sh
 
@@ -25,6 +25,6 @@ wasmdFiles=(
     "cosmwasm/wasm/v1/tx.proto"
     )
 
-download-proto cosmos/cosmos-sdk@v0.47.5 ./proto/cosmos-sdk "${cosmosSdkFiles[@]}"
-download-proto cosmos/ibc-go@v7.3.0 ./proto/ibc-go "${ibcGoFiles[@]}"
-download-proto CosmWasm/wasmd@v0.43.0 ./proto/wasmd "${wasmdFiles[@]}"
+downloadProto cosmos/cosmos-sdk@${COSMOS_SDK_VERSION} ./proto "${cosmosSdkFiles[@]}"
+downloadProto cosmos/ibc-go@${IBC_GO_VERSION} ./proto "${ibcGoFiles[@]}"
+downloadProto CosmWasm/wasmd@${WASMD_VERSION} ./proto "${wasmdFiles[@]}"

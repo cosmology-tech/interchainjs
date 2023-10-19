@@ -1,5 +1,7 @@
 {
-  "protoDirs": ["./proto/cosmos-sdk"],
+  "protoDirs": [
+    "./proto"
+  ],
   "outPath": "./src/codegen",
   "options": {
     "useSDKTypes": false,
@@ -40,7 +42,9 @@
       "enabled": false
     },
     "tsDisable": {
-      "patterns": ["**/tx.registry.ts"]
+      "patterns": [
+        "**/tx.registry.ts"
+      ]
     },
     "stargateClients": {
       "enabled": false,

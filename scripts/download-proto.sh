@@ -1,9 +1,13 @@
-#!/bin/bash
+ #/usr/bin/env bash
 
 GIT="https://raw.githubusercontent.com"
 NEWLINE=$'\n'
 
-download-local-deps() {
+COSMOS_SDK_VERSION="v0.47.5"
+IBC_GO_VERSION="v7.3.0"
+WASMD_VERSION="v0.43.0"
+
+downloadLocalDeps() {
     local FILES=("$@")
     deps=""
     for FILE in "${FILES[@]}"; do
@@ -16,9 +20,52 @@ download-local-deps() {
         if [[ "${FILE}" = "" || "${allDownloaded[@]}" =~ "$FILE" ]]; then
             continue
         fi
-        content=`curl ${GIT}/${REPO}/${VERSION}/proto/${FILE} -s`
-        if [ "$content" != "404: Not Found" ]; then
-            echo "[dependency:local] ${GIT}/${REPO}/${VERSION}/proto/${FILE}"
+
+        case $(echo "$FILE" | cut -d "/" -f1) in
+            "cosmos_proto")
+            repo="cosmos/cosmos-proto"
+            commit=$(curl -s https://api.github.com/repos/$repo/commits/main | jq -r '.sha')
+            GIT_PATH="$repo/$commit/proto/${FILE}"
+            ;;
+            "gogoproto")
+            repo="cosmos/gogoproto"
+            commit=$(curl -s https://api.github.com/repos/$repo/commits/main | jq -r '.sha')
+            GIT_PATH="$repo/$commit/${FILE}"
+            ;;
+        esac
+
+        case $(echo "$FILE" | cut -d "/" -f1,2 -s) in
+            "google/protobuf")
+            repo="protocolbuffers/protobuf"
+            commit=$(curl -s https://api.github.com/repos/$repo/commits/main | jq -r '.sha')
+            GIT_PATH="$repo/$commit/src/${FILE}"
+            ;;
+            google/*)
+            repo="googleapis/googleapis"
+            commit=$(curl -s https://api.github.com/repos/$repo/commits/master | jq -r '.sha')
+            GIT_PATH="$repo/$commit/${FILE}"
+            ;;
+            "cosmos/ics23")
+            repo="cosmos/ics23"
+            commit=$(curl -s https://api.github.com/repos/$repo/commits/master | jq -r '.sha')
+            GIT_PATH="$repo/$commit/proto/${FILE}"
+            ;;
+            cosmos/*|amino/*|tendermint/*)
+            repo="cosmos/cosmos-sdk"
+            commit="${COSMOS_SDK_VERSION}"
+            GIT_PATH="$repo/$commit/proto/${FILE}"
+            ;;
+        esac
+        
+        SRC=${GIT}/${GIT_PATH}
+        content=`curl ${SRC} -s`
+
+        if [ "$content" = "404: Not Found" ]; then
+            echo "|[${FILE}](${SRC})|$repo|$commit|dependency|404|" >> ${OUT}/README.md
+            printf "\n\e[1;31m%s\e[0m\n%-12s \e[1;36m%s\e[0m\n\n" "Failed to get proto [${FILE}]" "" ${SRC}
+        else
+            echo "|[${FILE}](${SRC})|$repo|$commit|dependency|200|" >> ${OUT}/README.md
+            printf "\e[1;33m%-12s\e[0m \e[1;35m%s\e[0m\n%-12s \e[1;36m%s\e[0m\n" [dependency] ${FILE} "" ${SRC}
             mkdir -p `dirname ${OUT}/${FILE}`
             echo "$content" > ${OUT}/${FILE}
             newDownloaded=("${newDownloaded[@]}" "${FILE}")
@@ -27,11 +74,11 @@ download-local-deps() {
     done <<< "$deps"
 
     if [ ${#newDownloaded[@]} -ne 0 ]; then
-        download-local-deps "${newDownloaded[@]}"
+        downloadLocalDeps "${newDownloaded[@]}"
     fi
 }
 
-download-proto() {
+downloadProto() {
     if [[ $1 =~ ^(.*)@(.*)$ ]]; then
         REPO=${BASH_REMATCH[1]}
         VERSION=${BASH_REMATCH[2]}
@@ -40,56 +87,25 @@ download-proto() {
     fi
     local OUT="$2"
     shift 2
-    local FILES=("buf.lock" "$@")
+    local FILES=("$@")
 
-    echo "**** Downloading from git repository $REPO@$VERSION to $OUT ****"
+    printf "\n\e[1;33m%s\e[0m\n\n" "**** Downloading from git repository $REPO@$VERSION to $OUT ****"
+    mkdir -p ${OUT}
+    echo "## ${REPO}@${VERSION}" >> ${OUT}/README.md
+    echo "|file|repo|commit|type|code|" >> ${OUT}/README.md
+    echo "|--|--|--|--|--|" >> ${OUT}/README.md
 
     ## targets
     for FILE in "${FILES[@]}"; do
-        echo "[target] ${GIT}/${REPO}/${VERSION}/proto/${FILE}"
-        curl ${GIT}/${REPO}/${VERSION}/proto/${FILE} -o ${OUT}/${FILE} --create-dirs -s
+        SRC=${GIT}/${REPO}/${VERSION}/proto/${FILE}
+        printf "\e[1;33m%-12s\e[0m \e[1;35m%s\e[0m\n%-12s \e[1;36m%s\e[0m\n" [target] ${FILE} "" ${SRC}
+        echo "|[${FILE}](${SRC})|${REPO}|${VERSION}|target|200|" >> ${OUT}/README.md
+        curl ${SRC} -o ${OUT}/${FILE} --create-dirs -s
     done
-
-    ## remote dependencies
-    while read -r; do
-        if [[ $REPLY =~ ^[[:space:]]*-[[:space:]]remote:[[:space:]](.*)$ ]]; then
-            remote=${BASH_REMATCH[1]}
-        elif [[ $REPLY =~ ^[[:space:]]*[[:space:]]owner:[[:space:]](.*)$ ]]; then
-            owner=${BASH_REMATCH[1]}
-        elif [[ $REPLY =~ ^[[:space:]]*[[:space:]]repository:[[:space:]](.*)$ ]]; then
-            repository=${BASH_REMATCH[1]}
-        elif [[ $REPLY =~ ^[[:space:]]*[[:space:]]commit:[[:space:]](.*)$ ]]; then
-            commit=${BASH_REMATCH[1]}
-            echo "[dependency:remote] $remote/$owner/$repository:$commit"
-            result=`buf export $remote/$owner/$repository:$commit --output ${OUT}`
-            if [ "$result" = "Failure: the server hosted at that remote is unavailable." ]; then
-                echo "$result"
-                exit 1
-            fi;
-        fi;
-    done < ${OUT}/buf.lock
 
     ## local dependencies
-    deps=""
-    for FILE in "${FILES[@]}"; do
-        deps="$deps${NEWLINE}$(sed -n 's/^import "\(.*\)";$/\1/p' ${OUT}/${FILE})"
-    done
-    deps=`echo "$deps" | sort | uniq`
-
-    echo "$deps" | while read FILE; do
-        if [[ "${FILE}" = "" || "${FILES[@]}" =~ "$FILE" ]]; then
-            continue
-        fi
-        content=`curl ${GIT}/${REPO}/${VERSION}/proto/${FILE} -s`
-        if [ "$content" != "404: Not Found" ]; then
-            echo "[dependency:local] ${GIT}/${REPO}/${VERSION}/proto/${FILE}"
-            mkdir -p `dirname ${OUT}/${FILE}`
-            echo "$content" > ${OUT}/${FILE}
-        fi
-    done
-
     allDownloaded=("${FILES[@]}")
-    download-local-deps "${FILES[@]}"
+    downloadLocalDeps "${FILES[@]}"
 
-    echo "Autodownloaded from github repository ${REPO}@${VERSION}, see scripts/download-proto.sh" > ${OUT}/README.md
+    printf "\nAutodownloaded from github repository, see \`scripts/download-proto.sh\`\n\n" >> ${OUT}/README.md
 }

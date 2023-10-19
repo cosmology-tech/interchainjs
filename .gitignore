@@ -1,4 +1,5 @@
 node_modules
 test-data.ts
 test.ts
+scripts/test.sh
 **/.DS_Store
