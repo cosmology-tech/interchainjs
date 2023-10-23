@@ -5,7 +5,7 @@
 	path = packages/cosmos-const/protos/ibc-go
 	url = git@github.com:cosmos/ibc-go.git
 [submodule "packages/cosmos-const/protos/ics23"]
-	path = packages/cosmos-const/ics23
+	path = packages/cosmos-const/protos/ics23
 	url = git@github.com:cosmos/ics23.git
 [submodule "packages/cosmos-const/protos/wasmd"]
 	path = packages/cosmos-const/protos/wasmd
