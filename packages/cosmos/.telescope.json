@@ -4,6 +4,7 @@
   ],
   "outPath": "./src/codegen",
   "options": {
+    "env": "v-next",
     "useSDKTypes": false,
     "interfaces": {
       "enabled": false,
@@ -26,7 +27,8 @@
         "toProto": true
       },
       "addTypeUrlToDecoders": false,
-      "addTypeUrlToObjects": false,
+      "addTypeUrlToObjects": true,
+      "addAminoTypeToObjects": true,
       "typingsFormat": {
         "duration": "duration",
         "timestamp": "date",

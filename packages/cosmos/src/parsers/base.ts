@@ -2,9 +2,9 @@
 import { DeepPartial } from "../codegen/helpers";
 import {
   Converter,
-  Meta,
   ParserData,
   Proto,
+  TelescopeGeneratedType,
   WrapType,
   WrapTypeUrl,
 } from "../types";
@@ -252,7 +252,9 @@ export class BaseParser<ProtoT, AminoT> {
     }
   }
 
-  static fromMeta<ProtoT, AminoT>(data: Meta<ProtoT, AminoT>) {
+  static fromTelescopeGeneratedType<ProtoT, AminoT>(
+    data: TelescopeGeneratedType<ProtoT, AminoT>
+  ) {
     return new BaseParser(toParserArgs(data));
   }
 

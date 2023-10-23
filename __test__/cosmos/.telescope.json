@@ -58,7 +58,7 @@
       "enabled": false
     },
     "rpcClients": {
-      "enabled": true,
+      "enabled": false,
       "inline": false,
       "extensions": false,
       "camelCase": true,

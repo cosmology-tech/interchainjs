@@ -1,6 +1,9 @@
 import { sha256 } from "@noble/hashes/sha256";
 import { BaseSigner, Decimal, SigObj } from "@sign/core";
 
+import { SignMode } from "./codegen/cosmos/tx/signing/v1beta1/signing";
+import { BroadcastMode } from "./codegen/cosmos/tx/v1beta1/service";
+import { AuthInfo, Fee, TxBody, TxRaw } from "./codegen/cosmos/tx/v1beta1/tx";
 import prefixJson from "./config/prefix.json";
 import { PubKeySecp256k1Parser } from "./const/pubkey";
 import {
@@ -11,23 +14,22 @@ import {
   TxParser,
   TxRawParser,
 } from "./const/tx";
-import { AuthInfo, Fee, TxBody, TxRaw } from "./codegen/proto/tx";
-import { BroadcastMode, SignMode } from "./codegen/types";
 import { MsgParser } from "./parsers/msg";
 import { QueryParser } from "./query.parser";
 import {
   AminoTxData,
   DirectTxData,
-  Meta as Meta,
   OfflineAminoTxData,
   OfflineDirectTxData,
   OfflineTxData,
   Signed,
   SignerData,
+  TelescopeGeneratedType,
   TxData,
   WrapType,
   WrapTypeUrl,
 } from "./types";
+import { AminoConverters, RegistryTypes } from "./types.cosmjs";
 import { toBech32 } from "./utils/bech";
 import {
   calculateFee,
@@ -40,12 +42,25 @@ import { toBytes } from "./utils/json";
 export class Signer extends BaseSigner<QueryParser> {
   protected _pool: Record<string, MsgParser<any, any>> = {};
 
-  constructor(...data: Meta<any, any>[]) {
+  constructor(...data: TelescopeGeneratedType<any, any>[]) {
     super(QueryParser);
     const parsers = data.map((d) => {
-      return MsgParser.fromMeta(d);
+      return MsgParser.fromTelescopeGeneratedType(d);
     });
     this.addParsers(parsers);
+  }
+
+  /**
+   * using argument interfaces like cosmjs
+   */
+  register(registry: RegistryTypes, aminoConverters: AminoConverters) {
+    registry.forEach(([typeUrl, type]) => {
+      this._pool[typeUrl] = MsgParser.fromRegistry(
+        typeUrl,
+        type,
+        aminoConverters[typeUrl]
+      );
+    });
   }
 
   // static connectWithSigner(rpcEndpoint, signer, {

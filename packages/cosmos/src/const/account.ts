@@ -13,22 +13,22 @@ import { BaseParser } from "../parsers/base";
 
 // account
 export const BaseAccountParser = AccountParser.fromParser(
-  BaseParser.fromMeta(BaseAccount)
+  BaseParser.fromTelescopeGeneratedType(BaseAccount)
 );
 export const ModuleAccountParser = AccountParser.fromParser(
-  BaseParser.fromMeta(ModuleAccount)
+  BaseParser.fromTelescopeGeneratedType(ModuleAccount)
 );
 export const BaseVestingAccountParser = AccountParser.fromParser(
-  BaseParser.fromMeta(BaseVestingAccount)
+  BaseParser.fromTelescopeGeneratedType(BaseVestingAccount)
 );
 export const ContinuousVestingAccountParser = AccountParser.fromParser(
-  BaseParser.fromMeta(ContinuousVestingAccount)
+  BaseParser.fromTelescopeGeneratedType(ContinuousVestingAccount)
 );
 export const DelayedVestingAccountParser = AccountParser.fromParser(
-  BaseParser.fromMeta(DelayedVestingAccount)
+  BaseParser.fromTelescopeGeneratedType(DelayedVestingAccount)
 );
 export const PeriodicVestingAccountParser = AccountParser.fromParser(
-  BaseParser.fromMeta(PeriodicVestingAccount)
+  BaseParser.fromTelescopeGeneratedType(PeriodicVestingAccount)
 );
 
 // *************************** COLLECTIONS ***************************

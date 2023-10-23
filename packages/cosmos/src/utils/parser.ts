@@ -1,6 +1,8 @@
-import { Meta } from "../types";
+import { GeneratedType } from "../types";
 
-export function toParserArgs<ProtoT, AminoT>(data: Meta<ProtoT, AminoT>) {
+export function toParserArgs<ProtoT, AminoT>(
+  data: GeneratedType<ProtoT, AminoT>
+) {
   const {
     typeUrl,
     aminoType,

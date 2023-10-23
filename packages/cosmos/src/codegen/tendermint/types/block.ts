@@ -31,6 +31,7 @@ function createBaseBlock(): Block {
   };
 }
 export const Block = {
+  typeUrl: "/tendermint.types.Block",
   encode(message: Block, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.header !== undefined) {
       Header.encode(message.header, writer.uint32(10).fork()).ldelim();

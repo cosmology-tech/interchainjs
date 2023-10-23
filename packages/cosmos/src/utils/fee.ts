@@ -1,8 +1,8 @@
 import { Decimal } from "@sign/core";
 
+import { Fee } from "../codegen/cosmos/tx/v1beta1/tx";
 import feeTokensJson from "../config/fee-tokens.json";
 import { FeeParser } from "../const/tx";
-import { Fee } from "../codegen/proto/tx";
 import { AminoFee } from "../types";
 
 /**

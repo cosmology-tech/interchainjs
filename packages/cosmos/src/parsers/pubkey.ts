@@ -1,7 +1,7 @@
 import { PubKey as PubKeyEd25519 } from "../codegen/cosmos/crypto/ed25519/keys";
 import { PubKey as PubKeySecp256k1 } from "../codegen/cosmos/crypto/secp256k1/keys";
 import { PubKey as PubKeySecp256r1 } from "../codegen/cosmos/crypto/secp256r1/keys";
-import { Meta, ParserData } from "../types";
+import { GeneratedType, ParserData } from "../types";
 import { toParserArgs } from "../utils/parser";
 import { BaseParser } from "./base";
 
@@ -14,7 +14,7 @@ export class PubKeyParser<ProtoT, AminoT> extends BaseParser<ProtoT, AminoT> {
     return new PubKeyParser(parser.args);
   }
 
-  static fromMeta<ProtoT, AminoT>(data: Meta<ProtoT, AminoT>) {
+  static fromMeta<ProtoT, AminoT>(data: GeneratedType<ProtoT, AminoT>) {
     return new PubKeyParser(toParserArgs(data));
   }
 

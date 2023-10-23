@@ -236,6 +236,8 @@ function createBaseSignatureDescriptors(): SignatureDescriptors {
   };
 }
 export const SignatureDescriptors = {
+  typeUrl: "/cosmos.tx.signing.v1beta1.SignatureDescriptors",
+  aminoType: "cosmos-sdk/SignatureDescriptors",
   encode(message: SignatureDescriptors, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     for (const v of message.signatures) {
       SignatureDescriptor.encode(v!, writer.uint32(10).fork()).ldelim();
@@ -322,6 +324,8 @@ function createBaseSignatureDescriptor(): SignatureDescriptor {
   };
 }
 export const SignatureDescriptor = {
+  typeUrl: "/cosmos.tx.signing.v1beta1.SignatureDescriptor",
+  aminoType: "cosmos-sdk/SignatureDescriptor",
   encode(message: SignatureDescriptor, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.publicKey !== undefined) {
       Any.encode(message.publicKey, writer.uint32(10).fork()).ldelim();
@@ -421,6 +425,8 @@ function createBaseSignatureDescriptor_Data(): SignatureDescriptor_Data {
   };
 }
 export const SignatureDescriptor_Data = {
+  typeUrl: "/cosmos.tx.signing.v1beta1.Data",
+  aminoType: "cosmos-sdk/Data",
   encode(message: SignatureDescriptor_Data, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.single !== undefined) {
       SignatureDescriptor_Data_Single.encode(message.single, writer.uint32(10).fork()).ldelim();
@@ -509,6 +515,8 @@ function createBaseSignatureDescriptor_Data_Single(): SignatureDescriptor_Data_S
   };
 }
 export const SignatureDescriptor_Data_Single = {
+  typeUrl: "/cosmos.tx.signing.v1beta1.Single",
+  aminoType: "cosmos-sdk/Single",
   encode(message: SignatureDescriptor_Data_Single, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.mode !== 0) {
       writer.uint32(8).int32(message.mode);
@@ -597,6 +605,8 @@ function createBaseSignatureDescriptor_Data_Multi(): SignatureDescriptor_Data_Mu
   };
 }
 export const SignatureDescriptor_Data_Multi = {
+  typeUrl: "/cosmos.tx.signing.v1beta1.Multi",
+  aminoType: "cosmos-sdk/Multi",
   encode(message: SignatureDescriptor_Data_Multi, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.bitarray !== undefined) {
       CompactBitArray.encode(message.bitarray, writer.uint32(10).fork()).ldelim();

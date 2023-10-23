@@ -5,11 +5,11 @@ import { BaseParser } from "../parsers/base";
 import { PubKeyParser } from "../parsers/pubkey";
 
 export const PubKeyEd25519Parser = PubKeyParser.fromParser(
-  BaseParser.fromMeta(PubKeyEd25519)
+  BaseParser.fromTelescopeGeneratedType(PubKeyEd25519)
 );
 export const PubKeySecp256k1Parser = PubKeyParser.fromParser(
-  BaseParser.fromMeta(PubKeySecp256k1)
+  BaseParser.fromTelescopeGeneratedType(PubKeySecp256k1)
 );
 export const PubKeySecp256r1Parser = PubKeyParser.fromParser(
-  BaseParser.fromMeta(PubKeySecp256r1)
+  BaseParser.fromTelescopeGeneratedType(PubKeySecp256r1)
 );

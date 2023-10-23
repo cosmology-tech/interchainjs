@@ -58,6 +58,8 @@ function createBaseMultiSignature(): MultiSignature {
   };
 }
 export const MultiSignature = {
+  typeUrl: "/cosmos.crypto.multisig.v1beta1.MultiSignature",
+  aminoType: "cosmos-sdk/MultiSignature",
   encode(message: MultiSignature, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     for (const v of message.signatures) {
       writer.uint32(10).bytes(v!);
@@ -143,6 +145,8 @@ function createBaseCompactBitArray(): CompactBitArray {
   };
 }
 export const CompactBitArray = {
+  typeUrl: "/cosmos.crypto.multisig.v1beta1.CompactBitArray",
+  aminoType: "cosmos-sdk/CompactBitArray",
   encode(message: CompactBitArray, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.extraBitsStored !== 0) {
       writer.uint32(8).uint32(message.extraBitsStored);
