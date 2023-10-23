@@ -1,4 +1,4 @@
- #/usr/bin/env bash
+#/usr/bin/env bash
 
 rm -rf ./proto
 rm -rf ./codegen
