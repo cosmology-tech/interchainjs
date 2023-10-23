@@ -5,11 +5,14 @@
   "outPath": "./codegen",
   "options": {
     "useSDKTypes": false,
+    "useOptionalNullable": true,
     "interfaces": {
       "enabled": false,
       "useUnionTypes": false
     },
     "prototypes": {
+      "enableRegistryLoader": false,
+      "enableMessageComposer": false,
       "enabled": true,
       "parser": {
         "keepCase": false
@@ -25,8 +28,8 @@
         "fromProto": true,
         "toProto": true
       },
-      "addTypeUrlToDecoders": false,
-      "addTypeUrlToObjects": false,
+      "addTypeUrlToDecoders": true,
+      "addTypeUrlToObjects": true,
       "typingsFormat": {
         "duration": "duration",
         "timestamp": "date",
@@ -35,16 +38,12 @@
         "num64": "bigint",
         "customTypes": {
           "useCosmosSDKDec": false
-        }
+        },
+        "useTelescopeGeneratedType": true
       }
     },
     "bundle": {
       "enabled": false
-    },
-    "tsDisable": {
-      "patterns": [
-        "**/tx.registry.ts"
-      ]
     },
     "stargateClients": {
       "enabled": false,
@@ -58,16 +57,12 @@
       "enabled": false
     },
     "rpcClients": {
-      "enabled": false,
+      "enabled": true,
       "inline": false,
       "extensions": false,
       "camelCase": true,
       "enabledServices": [
-        "Msg",
-        "Query",
-        "Service",
-        "ReflectionService",
-        "ABCIApplication"
+        "Query"
       ]
     }
   }

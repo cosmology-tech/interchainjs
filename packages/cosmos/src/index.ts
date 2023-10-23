@@ -1,3 +1,4 @@
+export { TxRaw } from "./codegen/cosmos/tx/v1beta1/tx";
 export * from "./query";
 export * from "./query.parser";
 export * from "./signer";

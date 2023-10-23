@@ -929,14 +929,14 @@ export interface FileDescriptorProto {
   enumType: EnumDescriptorProto[];
   service: ServiceDescriptorProto[];
   extension: FieldDescriptorProto[];
-  options: FileOptions;
+  options?: FileOptions;
   /**
    * This field contains optional information about the original source code.
    * You may safely remove this entire field without harming runtime
    * functionality of the descriptors -- the information is needed only by
    * development tools.
    */
-  sourceCodeInfo: SourceCodeInfo;
+  sourceCodeInfo?: SourceCodeInfo;
   /**
    * The syntax of the proto file.
    * The supported values are "proto2", "proto3", and "editions".
@@ -1001,7 +1001,7 @@ export interface DescriptorProto {
   enumType: EnumDescriptorProto[];
   extensionRange: DescriptorProto_ExtensionRange[];
   oneofDecl: OneofDescriptorProto[];
-  options: MessageOptions;
+  options?: MessageOptions;
   reservedRange: DescriptorProto_ReservedRange[];
   /**
    * Reserved field names, which may not be used by fields in the same message.
@@ -1039,7 +1039,7 @@ export interface DescriptorProto_ExtensionRange {
   start: number;
   /** Exclusive. */
   end: number;
-  options: ExtensionRangeOptions;
+  options?: ExtensionRangeOptions;
 }
 export interface DescriptorProto_ExtensionRangeProtoMsg {
   typeUrl: "/google.protobuf.ExtensionRange";
@@ -1096,7 +1096,7 @@ export interface ExtensionRangeOptions {
    */
   declaration: ExtensionRangeOptions_Declaration[];
   /** Any features defined in the specific edition. */
-  features: FeatureSet;
+  features?: FeatureSet;
   /**
    * The verification state of the range.
    * TODO: flip the default to DECLARATION once all empty ranges
@@ -1232,7 +1232,7 @@ export interface FieldDescriptorProto {
    * it to camelCase.
    */
   jsonName: string;
-  options: FieldOptions;
+  options?: FieldOptions;
   /**
    * If true, this is a proto3 "optional". When a proto3 field is optional, it
    * tracks presence regardless of field type.
@@ -1337,7 +1337,7 @@ export interface FieldDescriptorProtoAminoMsg {
 /** Describes a oneof. */
 export interface OneofDescriptorProto {
   name: string;
-  options: OneofOptions;
+  options?: OneofOptions;
 }
 export interface OneofDescriptorProtoProtoMsg {
   typeUrl: "/google.protobuf.OneofDescriptorProto";
@@ -1356,7 +1356,7 @@ export interface OneofDescriptorProtoAminoMsg {
 export interface EnumDescriptorProto {
   name: string;
   value: EnumValueDescriptorProto[];
-  options: EnumOptions;
+  options?: EnumOptions;
   /**
    * Range of reserved numeric values. Reserved numeric values may not be used
    * by enum values in the same enum declaration. Reserved ranges may not
@@ -1434,7 +1434,7 @@ export interface EnumDescriptorProto_EnumReservedRangeAminoMsg {
 export interface EnumValueDescriptorProto {
   name: string;
   number: number;
-  options: EnumValueOptions;
+  options?: EnumValueOptions;
 }
 export interface EnumValueDescriptorProtoProtoMsg {
   typeUrl: "/google.protobuf.EnumValueDescriptorProto";
@@ -1454,7 +1454,7 @@ export interface EnumValueDescriptorProtoAminoMsg {
 export interface ServiceDescriptorProto {
   name: string;
   method: MethodDescriptorProto[];
-  options: ServiceOptions;
+  options?: ServiceOptions;
 }
 export interface ServiceDescriptorProtoProtoMsg {
   typeUrl: "/google.protobuf.ServiceDescriptorProto";
@@ -1479,7 +1479,7 @@ export interface MethodDescriptorProto {
    */
   inputType: string;
   outputType: string;
-  options: MethodOptions;
+  options?: MethodOptions;
   /** Identifies if client streams multiple client messages */
   clientStreaming: boolean;
   /** Identifies if server streams multiple server messages */
@@ -1620,7 +1620,7 @@ export interface FileOptions {
    */
   rubyPackage: string;
   /** Any features defined in the specific edition. */
-  features: FeatureSet;
+  features?: FeatureSet;
   /**
    * The parser stores options it doesn't recognize here.
    * See the documentation for the "Options" section above.
@@ -1828,7 +1828,7 @@ export interface MessageOptions {
   /** @deprecated */
   deprecatedLegacyJsonFieldConflicts: boolean;
   /** Any features defined in the specific edition. */
-  features: FeatureSet;
+  features?: FeatureSet;
   /** The parser stores options it doesn't recognize here. See above. */
   uninterpretedOption: UninterpretedOption[];
 }
@@ -2009,7 +2009,7 @@ export interface FieldOptions {
   targets: FieldOptions_OptionTargetType[];
   editionDefaults: FieldOptions_EditionDefault[];
   /** Any features defined in the specific edition. */
-  features: FeatureSet;
+  features?: FeatureSet;
   /** The parser stores options it doesn't recognize here. See above. */
   uninterpretedOption: UninterpretedOption[];
 }
@@ -2136,7 +2136,7 @@ export interface FieldOptions_EditionDefaultAminoMsg {
 }
 export interface OneofOptions {
   /** Any features defined in the specific edition. */
-  features: FeatureSet;
+  features?: FeatureSet;
   /** The parser stores options it doesn't recognize here. See above. */
   uninterpretedOption: UninterpretedOption[];
 }
@@ -2178,7 +2178,7 @@ export interface EnumOptions {
   /** @deprecated */
   deprecatedLegacyJsonFieldConflicts: boolean;
   /** Any features defined in the specific edition. */
-  features: FeatureSet;
+  features?: FeatureSet;
   /** The parser stores options it doesn't recognize here. See above. */
   uninterpretedOption: UninterpretedOption[];
 }
@@ -2227,7 +2227,7 @@ export interface EnumValueOptions {
    */
   deprecated: boolean;
   /** Any features defined in the specific edition. */
-  features: FeatureSet;
+  features?: FeatureSet;
   /**
    * Indicate that fields annotated with this enum value should not be printed
    * out when using debug formats, e.g. when the field contains sensitive
@@ -2266,7 +2266,7 @@ export interface EnumValueOptionsAminoMsg {
 }
 export interface ServiceOptions {
   /** Any features defined in the specific edition. */
-  features: FeatureSet;
+  features?: FeatureSet;
   /**
    * Is this service deprecated?
    * Depending on the target platform, this can emit Deprecated annotations
@@ -2308,7 +2308,7 @@ export interface MethodOptions {
   deprecated: boolean;
   idempotencyLevel: MethodOptions_IdempotencyLevel;
   /** Any features defined in the specific edition. */
-  features: FeatureSet;
+  features?: FeatureSet;
   /** The parser stores options it doesn't recognize here. See above. */
   uninterpretedOption: UninterpretedOption[];
 }
@@ -2508,7 +2508,7 @@ export interface FeatureSetDefaultsAminoMsg {
  */
 export interface FeatureSetDefaults_FeatureSetEditionDefault {
   edition: Edition;
-  features: FeatureSet;
+  features?: FeatureSet;
 }
 export interface FeatureSetDefaults_FeatureSetEditionDefaultProtoMsg {
   typeUrl: "/google.protobuf.FeatureSetEditionDefault";
@@ -2912,6 +2912,7 @@ function createBaseFileDescriptorSet(): FileDescriptorSet {
   };
 }
 export const FileDescriptorSet = {
+  typeUrl: "/google.protobuf.FileDescriptorSet",
   encode(message: FileDescriptorSet, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     for (const v of message.file) {
       FileDescriptorProto.encode(v!, writer.uint32(10).fork()).ldelim();
@@ -2995,13 +2996,14 @@ function createBaseFileDescriptorProto(): FileDescriptorProto {
     enumType: [],
     service: [],
     extension: [],
-    options: FileOptions.fromPartial({}),
-    sourceCodeInfo: SourceCodeInfo.fromPartial({}),
+    options: undefined,
+    sourceCodeInfo: undefined,
     syntax: "",
     edition: 1
   };
 }
 export const FileDescriptorProto = {
+  typeUrl: "/google.protobuf.FileDescriptorProto",
   encode(message: FileDescriptorProto, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
@@ -3281,12 +3283,13 @@ function createBaseDescriptorProto(): DescriptorProto {
     enumType: [],
     extensionRange: [],
     oneofDecl: [],
-    options: MessageOptions.fromPartial({}),
+    options: undefined,
     reservedRange: [],
     reservedName: []
   };
 }
 export const DescriptorProto = {
+  typeUrl: "/google.protobuf.DescriptorProto",
   encode(message: DescriptorProto, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
@@ -3518,10 +3521,11 @@ function createBaseDescriptorProto_ExtensionRange(): DescriptorProto_ExtensionRa
   return {
     start: 0,
     end: 0,
-    options: ExtensionRangeOptions.fromPartial({})
+    options: undefined
   };
 }
 export const DescriptorProto_ExtensionRange = {
+  typeUrl: "/google.protobuf.ExtensionRange",
   encode(message: DescriptorProto_ExtensionRange, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.start !== 0) {
       writer.uint32(8).int32(message.start);
@@ -3615,6 +3619,7 @@ function createBaseDescriptorProto_ReservedRange(): DescriptorProto_ReservedRang
   };
 }
 export const DescriptorProto_ReservedRange = {
+  typeUrl: "/google.protobuf.ReservedRange",
   encode(message: DescriptorProto_ReservedRange, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.start !== 0) {
       writer.uint32(8).int32(message.start);
@@ -3694,11 +3699,12 @@ function createBaseExtensionRangeOptions(): ExtensionRangeOptions {
   return {
     uninterpretedOption: [],
     declaration: [],
-    features: FeatureSet.fromPartial({}),
+    features: undefined,
     verification: 1
   };
 }
 export const ExtensionRangeOptions = {
+  typeUrl: "/google.protobuf.ExtensionRangeOptions",
   encode(message: ExtensionRangeOptions, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     for (const v of message.uninterpretedOption) {
       UninterpretedOption.encode(v!, writer.uint32(7994).fork()).ldelim();
@@ -3822,6 +3828,7 @@ function createBaseExtensionRangeOptions_Declaration(): ExtensionRangeOptions_De
   };
 }
 export const ExtensionRangeOptions_Declaration = {
+  typeUrl: "/google.protobuf.Declaration",
   encode(message: ExtensionRangeOptions_Declaration, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.number !== 0) {
       writer.uint32(8).int32(message.number);
@@ -3941,11 +3948,12 @@ function createBaseFieldDescriptorProto(): FieldDescriptorProto {
     defaultValue: "",
     oneofIndex: 0,
     jsonName: "",
-    options: FieldOptions.fromPartial({}),
+    options: undefined,
     proto3Optional: false
   };
 }
 export const FieldDescriptorProto = {
+  typeUrl: "/google.protobuf.FieldDescriptorProto",
   encode(message: FieldDescriptorProto, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
@@ -4123,10 +4131,11 @@ export const FieldDescriptorProto = {
 function createBaseOneofDescriptorProto(): OneofDescriptorProto {
   return {
     name: "",
-    options: OneofOptions.fromPartial({})
+    options: undefined
   };
 }
 export const OneofDescriptorProto = {
+  typeUrl: "/google.protobuf.OneofDescriptorProto",
   encode(message: OneofDescriptorProto, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
@@ -4206,12 +4215,13 @@ function createBaseEnumDescriptorProto(): EnumDescriptorProto {
   return {
     name: "",
     value: [],
-    options: EnumOptions.fromPartial({}),
+    options: undefined,
     reservedRange: [],
     reservedName: []
   };
 }
 export const EnumDescriptorProto = {
+  typeUrl: "/google.protobuf.EnumDescriptorProto",
   encode(message: EnumDescriptorProto, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
@@ -4351,6 +4361,7 @@ function createBaseEnumDescriptorProto_EnumReservedRange(): EnumDescriptorProto_
   };
 }
 export const EnumDescriptorProto_EnumReservedRange = {
+  typeUrl: "/google.protobuf.EnumReservedRange",
   encode(message: EnumDescriptorProto_EnumReservedRange, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.start !== 0) {
       writer.uint32(8).int32(message.start);
@@ -4430,10 +4441,11 @@ function createBaseEnumValueDescriptorProto(): EnumValueDescriptorProto {
   return {
     name: "",
     number: 0,
-    options: EnumValueOptions.fromPartial({})
+    options: undefined
   };
 }
 export const EnumValueDescriptorProto = {
+  typeUrl: "/google.protobuf.EnumValueDescriptorProto",
   encode(message: EnumValueDescriptorProto, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
@@ -4524,10 +4536,11 @@ function createBaseServiceDescriptorProto(): ServiceDescriptorProto {
   return {
     name: "",
     method: [],
-    options: ServiceOptions.fromPartial({})
+    options: undefined
   };
 }
 export const ServiceDescriptorProto = {
+  typeUrl: "/google.protobuf.ServiceDescriptorProto",
   encode(message: ServiceDescriptorProto, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
@@ -4627,12 +4640,13 @@ function createBaseMethodDescriptorProto(): MethodDescriptorProto {
     name: "",
     inputType: "",
     outputType: "",
-    options: MethodOptions.fromPartial({}),
+    options: undefined,
     clientStreaming: false,
     serverStreaming: false
   };
 }
 export const MethodDescriptorProto = {
+  typeUrl: "/google.protobuf.MethodDescriptorProto",
   encode(message: MethodDescriptorProto, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
@@ -4774,11 +4788,12 @@ function createBaseFileOptions(): FileOptions {
     phpNamespace: "",
     phpMetadataNamespace: "",
     rubyPackage: "",
-    features: FeatureSet.fromPartial({}),
+    features: undefined,
     uninterpretedOption: []
   };
 }
 export const FileOptions = {
+  typeUrl: "/google.protobuf.FileOptions",
   encode(message: FileOptions, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.javaPackage !== "") {
       writer.uint32(10).string(message.javaPackage);
@@ -5089,11 +5104,12 @@ function createBaseMessageOptions(): MessageOptions {
     deprecated: false,
     mapEntry: false,
     deprecatedLegacyJsonFieldConflicts: false,
-    features: FeatureSet.fromPartial({}),
+    features: undefined,
     uninterpretedOption: []
   };
 }
 export const MessageOptions = {
+  typeUrl: "/google.protobuf.MessageOptions",
   encode(message: MessageOptions, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.messageSetWireFormat === true) {
       writer.uint32(8).bool(message.messageSetWireFormat);
@@ -5245,11 +5261,12 @@ function createBaseFieldOptions(): FieldOptions {
     retention: 1,
     targets: [],
     editionDefaults: [],
-    features: FeatureSet.fromPartial({}),
+    features: undefined,
     uninterpretedOption: []
   };
 }
 export const FieldOptions = {
+  typeUrl: "/google.protobuf.FieldOptions",
   encode(message: FieldOptions, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.ctype !== 1) {
       writer.uint32(8).int32(message.ctype);
@@ -5486,6 +5503,7 @@ function createBaseFieldOptions_EditionDefault(): FieldOptions_EditionDefault {
   };
 }
 export const FieldOptions_EditionDefault = {
+  typeUrl: "/google.protobuf.EditionDefault",
   encode(message: FieldOptions_EditionDefault, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.edition !== 1) {
       writer.uint32(24).int32(message.edition);
@@ -5563,11 +5581,12 @@ export const FieldOptions_EditionDefault = {
 };
 function createBaseOneofOptions(): OneofOptions {
   return {
-    features: FeatureSet.fromPartial({}),
+    features: undefined,
     uninterpretedOption: []
   };
 }
 export const OneofOptions = {
+  typeUrl: "/google.protobuf.OneofOptions",
   encode(message: OneofOptions, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.features !== undefined) {
       FeatureSet.encode(message.features, writer.uint32(10).fork()).ldelim();
@@ -5656,11 +5675,12 @@ function createBaseEnumOptions(): EnumOptions {
     allowAlias: false,
     deprecated: false,
     deprecatedLegacyJsonFieldConflicts: false,
-    features: FeatureSet.fromPartial({}),
+    features: undefined,
     uninterpretedOption: []
   };
 }
 export const EnumOptions = {
+  typeUrl: "/google.protobuf.EnumOptions",
   encode(message: EnumOptions, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.allowAlias === true) {
       writer.uint32(16).bool(message.allowAlias);
@@ -5780,12 +5800,13 @@ export const EnumOptions = {
 function createBaseEnumValueOptions(): EnumValueOptions {
   return {
     deprecated: false,
-    features: FeatureSet.fromPartial({}),
+    features: undefined,
     debugRedact: false,
     uninterpretedOption: []
   };
 }
 export const EnumValueOptions = {
+  typeUrl: "/google.protobuf.EnumValueOptions",
   encode(message: EnumValueOptions, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.deprecated === true) {
       writer.uint32(8).bool(message.deprecated);
@@ -5893,12 +5914,13 @@ export const EnumValueOptions = {
 };
 function createBaseServiceOptions(): ServiceOptions {
   return {
-    features: FeatureSet.fromPartial({}),
+    features: undefined,
     deprecated: false,
     uninterpretedOption: []
   };
 }
 export const ServiceOptions = {
+  typeUrl: "/google.protobuf.ServiceOptions",
   encode(message: ServiceOptions, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.features !== undefined) {
       FeatureSet.encode(message.features, writer.uint32(274).fork()).ldelim();
@@ -5997,11 +6019,12 @@ function createBaseMethodOptions(): MethodOptions {
   return {
     deprecated: false,
     idempotencyLevel: 1,
-    features: FeatureSet.fromPartial({}),
+    features: undefined,
     uninterpretedOption: []
   };
 }
 export const MethodOptions = {
+  typeUrl: "/google.protobuf.MethodOptions",
   encode(message: MethodOptions, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.deprecated === true) {
       writer.uint32(264).bool(message.deprecated);
@@ -6119,6 +6142,7 @@ function createBaseUninterpretedOption(): UninterpretedOption {
   };
 }
 export const UninterpretedOption = {
+  typeUrl: "/google.protobuf.UninterpretedOption",
   encode(message: UninterpretedOption, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     for (const v of message.name) {
       UninterpretedOption_NamePart.encode(v!, writer.uint32(18).fork()).ldelim();
@@ -6264,6 +6288,7 @@ function createBaseUninterpretedOption_NamePart(): UninterpretedOption_NamePart 
   };
 }
 export const UninterpretedOption_NamePart = {
+  typeUrl: "/google.protobuf.NamePart",
   encode(message: UninterpretedOption_NamePart, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.namePart !== "") {
       writer.uint32(10).string(message.namePart);
@@ -6350,6 +6375,7 @@ function createBaseFeatureSet(): FeatureSet {
   };
 }
 export const FeatureSet = {
+  typeUrl: "/google.protobuf.FeatureSet",
   encode(message: FeatureSet, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.fieldPresence !== 1) {
       writer.uint32(8).int32(message.fieldPresence);
@@ -6477,6 +6503,7 @@ function createBaseFeatureSetDefaults(): FeatureSetDefaults {
   };
 }
 export const FeatureSetDefaults = {
+  typeUrl: "/google.protobuf.FeatureSetDefaults",
   encode(message: FeatureSetDefaults, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     for (const v of message.defaults) {
       FeatureSetDefaults_FeatureSetEditionDefault.encode(v!, writer.uint32(10).fork()).ldelim();
@@ -6574,10 +6601,11 @@ export const FeatureSetDefaults = {
 function createBaseFeatureSetDefaults_FeatureSetEditionDefault(): FeatureSetDefaults_FeatureSetEditionDefault {
   return {
     edition: 1,
-    features: FeatureSet.fromPartial({})
+    features: undefined
   };
 }
 export const FeatureSetDefaults_FeatureSetEditionDefault = {
+  typeUrl: "/google.protobuf.FeatureSetEditionDefault",
   encode(message: FeatureSetDefaults_FeatureSetEditionDefault, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.edition !== 1) {
       writer.uint32(24).int32(message.edition);
@@ -6659,6 +6687,7 @@ function createBaseSourceCodeInfo(): SourceCodeInfo {
   };
 }
 export const SourceCodeInfo = {
+  typeUrl: "/google.protobuf.SourceCodeInfo",
   encode(message: SourceCodeInfo, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     for (const v of message.location) {
       SourceCodeInfo_Location.encode(v!, writer.uint32(10).fork()).ldelim();
@@ -6741,6 +6770,7 @@ function createBaseSourceCodeInfo_Location(): SourceCodeInfo_Location {
   };
 }
 export const SourceCodeInfo_Location = {
+  typeUrl: "/google.protobuf.Location",
   encode(message: SourceCodeInfo_Location, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     writer.uint32(10).fork();
     for (const v of message.path) {
@@ -6897,6 +6927,7 @@ function createBaseGeneratedCodeInfo(): GeneratedCodeInfo {
   };
 }
 export const GeneratedCodeInfo = {
+  typeUrl: "/google.protobuf.GeneratedCodeInfo",
   encode(message: GeneratedCodeInfo, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     for (const v of message.annotation) {
       GeneratedCodeInfo_Annotation.encode(v!, writer.uint32(10).fork()).ldelim();
@@ -6979,6 +7010,7 @@ function createBaseGeneratedCodeInfo_Annotation(): GeneratedCodeInfo_Annotation 
   };
 }
 export const GeneratedCodeInfo_Annotation = {
+  typeUrl: "/google.protobuf.Annotation",
   encode(message: GeneratedCodeInfo_Annotation, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     writer.uint32(10).fork();
     for (const v of message.path) {

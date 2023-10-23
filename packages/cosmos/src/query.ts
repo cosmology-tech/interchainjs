@@ -1,4 +1,4 @@
-import { fromBase64, toHex } from "@sign/core";
+import { fromBase64, toBase64, toHex } from "@sign/core";
 
 import { Rpc } from "./types";
 import { randomId } from "./utils/random-id";
@@ -10,7 +10,7 @@ function createAbciQuery(endpoint: string): Rpc {
       method: string,
       data: Uint8Array
     ): Promise<Uint8Array> => {
-      const resp = await fetch(endpoint, {
+      const req = {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -25,7 +25,10 @@ function createAbciQuery(endpoint: string): Rpc {
             prove: false,
           },
         }),
-      });
+      };
+      console.log("%cquery.ts line:29 endpoint", "color: #007acc;", endpoint);
+      console.log("%cquery.ts line:30 req", "color: #007acc;", req);
+      const resp = await fetch(endpoint, req);
       const json = await resp.json();
       try {
         const result = fromBase64(json["result"]["response"]["value"]);
@@ -54,18 +57,23 @@ function createTxService(endpoint: string): Rpc {
           jsonrpc: "2.0",
           method,
           params: {
-            tx: data,
+            tx: toBase64(data),
           },
         }),
       });
       const json = await resp.json();
       console.log("%cquery.ts line:62 json", "color: #007acc;", json);
-      return json;
+      try {
+        const result = fromBase64(json["result"]["response"]["value"]);
+        return result;
+      } catch (error) {
+        throw new Error(`Request Error: ${json["result"]["response"]["log"]}`);
+      }
     },
   };
 }
 
-export class Server {
+export class Query {
   readonly endpoint: string;
   abciQuery: Rpc;
   txService: Rpc;

@@ -158,6 +158,7 @@ function createBaseInterfaceDescriptor(): InterfaceDescriptor {
   };
 }
 export const InterfaceDescriptor = {
+  typeUrl: "/cosmos_proto.InterfaceDescriptor",
   encode(message: InterfaceDescriptor, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
@@ -241,6 +242,7 @@ function createBaseScalarDescriptor(): ScalarDescriptor {
   };
 }
 export const ScalarDescriptor = {
+  typeUrl: "/cosmos_proto.ScalarDescriptor",
   encode(message: ScalarDescriptor, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);

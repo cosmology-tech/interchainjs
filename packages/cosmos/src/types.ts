@@ -3,7 +3,6 @@ import { GeneralSigned } from "@sign/core";
 
 import { IBinaryReader, IBinaryWriter } from "./codegen/binary";
 import { BaseAccount, ModuleAccount } from "./codegen/cosmos/auth/v1beta1/auth";
-import { TxResponse } from "./codegen/cosmos/base/abci/v1beta1/abci";
 import { Coin } from "./codegen/cosmos/base/v1beta1/coin";
 import { Fee } from "./codegen/cosmos/tx/v1beta1/tx";
 import {
@@ -144,5 +143,6 @@ export interface Signed<T> extends GeneralSigned<T> {
   broadcast: (
     checkTx?: boolean, // default to be true
     commitTx?: boolean // default to be false
-  ) => Promise<TxResponse | undefined>;
+    // ) => Promise<TxResponse | undefined>;
+  ) => Promise<any | undefined>;
 }

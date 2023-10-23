@@ -8,6 +8,7 @@ rm -rf ./codegen
 source ../../scripts/download-proto.sh
 
 cosmosSdkFiles=(
+    "cosmos/bank/v1beta1/query.proto"
     "cosmos/bank/v1beta1/tx.proto"
     )
 

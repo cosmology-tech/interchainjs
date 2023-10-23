@@ -429,29 +429,19 @@ export class Signer extends BaseSigner<QueryParser> {
     };
   }
 
-  async broadcast(
-    txRaw: TxRaw,
-    checkTx = true,
-    commitTx = false
-    // ): Promise<TxResponse | undefined> {
-  ) {
+  async broadcast(txRaw: TxRaw, checkTx = true, commitTx = false) {
     const txBytes = TxRawParser.fromProto(txRaw).encode().pop() as Uint8Array;
     return this.broadcastArbitrary(txBytes, checkTx, commitTx);
   }
 
-  async broadcastArbitrary(
-    raw: Uint8Array,
-    checkTx = true,
-    commitTx = false
-    // ): Promise<TxResponse | undefined> {
-  ) {
+  async broadcastArbitrary(raw: Uint8Array, checkTx = true, commitTx = false) {
     const mode =
       checkTx && commitTx
         ? BroadcastMode.BROADCAST_MODE_BLOCK
         : checkTx
         ? BroadcastMode.BROADCAST_MODE_SYNC
         : BroadcastMode.BROADCAST_MODE_ASYNC;
-    const { txResponse } = await this.query.broadcast(raw, mode);
+    const txResponse = await this.query.broadcast(raw, mode);
     return txResponse;
   }
 }

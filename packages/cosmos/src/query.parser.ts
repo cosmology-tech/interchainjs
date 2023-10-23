@@ -1,20 +1,17 @@
-import { toBase64 } from "@sign/core";
-
 import { QueryClientImpl as Auth } from "./codegen/cosmos/auth/v1beta1/query.rpc.Query";
 import { BroadcastMode } from "./codegen/cosmos/tx/v1beta1/service";
 import { ServiceClientImpl as Tx } from "./codegen/cosmos/tx/v1beta1/service.rpc.Service";
 import { AccountParserMap, BaseAccountParser } from "./const/account";
-import { Server } from "./query";
+import { Query } from "./query";
 import { Account } from "./types";
-import { randomId } from "./utils/random-id";
 import { requestTx } from "./utils/request";
 
-export class QueryParser extends Server {
+export class QueryParser extends Query {
   constructor(endpoint: string) {
     super(endpoint);
   }
 
-  static fromQuery(query: Server) {
+  static fromQuery(query: Query) {
     return new QueryParser(query.endpoint);
   }
 
@@ -92,46 +89,24 @@ export class QueryParser extends Server {
   }
 
   async broadcast(tx: Uint8Array, mode: BroadcastMode) {
-    // const req = { params: { tx }, method: "broadcast_tx_sync" };
-    // const request = createJsonRpcRequest(
-    //   req.method,
-    //   encodeBroadcastTxParams(req.params)
-    // );
-    // const resp = await fetch(this.endpoint, {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify(request),
-    // });
-    // const json = await resp.json();
-    // return json;
-    return await this.tx.broadcastTx({ txBytes: tx, mode });
+    let method: string;
+    switch (mode) {
+      case BroadcastMode.BROADCAST_MODE_ASYNC:
+        method = "broadcast_tx_async";
+        break;
+      case BroadcastMode.BROADCAST_MODE_SYNC:
+        method = "broadcast_tx_sync";
+        break;
+      case BroadcastMode.BROADCAST_MODE_BLOCK:
+        method = "broadcast_tx_block";
+        break;
+      case BroadcastMode.BROADCAST_MODE_UNSPECIFIED:
+      case BroadcastMode.UNRECOGNIZED:
+        method = "broadcast_tx_sync";
+    }
+    const resp = await this.txService.request("", method, tx);
+    return resp;
   }
-}
-
-/** Creates a JSON-RPC request with random ID */
-// eslint-disable-next-line @typescript-eslint/ban-types
-export function createJsonRpcRequest(method: string, params?: {}) {
-  const paramsCopy = params ? { ...params } : {};
-  return {
-    jsonrpc: "2.0",
-    id: randomId(),
-    method: method,
-    params: paramsCopy,
-  };
-}
-
-interface RpcBroadcastTxParams {
-  /** base64 encoded */
-  readonly tx: string;
-}
-function encodeBroadcastTxParams(params: {
-  tx: Uint8Array;
-}): RpcBroadcastTxParams {
-  return {
-    tx: toBase64(params.tx),
-  };
 }
 
 // interface RpcBroadcastTxSyncResponse extends RpcTxData {

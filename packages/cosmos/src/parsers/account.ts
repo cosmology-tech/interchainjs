@@ -8,7 +8,7 @@ import {
   DelayedVestingAccount,
   PeriodicVestingAccount,
 } from "../codegen/cosmos/vesting/v1beta1/vesting";
-import { Account, GeneratedType, ParserData } from "../types";
+import { Account, ParserData, TelescopeGeneratedType } from "../types";
 import { toParserArgs } from "../utils/parser";
 import { BaseParser } from "./base";
 
@@ -21,7 +21,9 @@ export class AccountParser<ProtoT, AminoT> extends BaseParser<ProtoT, AminoT> {
     return new AccountParser(parser.args);
   }
 
-  static fromMeta<ProtoT, AminoT>(data: GeneratedType<ProtoT, AminoT>) {
+  static fromTelescopeGeneratedType<ProtoT, AminoT>(
+    data: TelescopeGeneratedType<ProtoT, AminoT>
+  ) {
     return new AccountParser(toParserArgs(data));
   }
 
