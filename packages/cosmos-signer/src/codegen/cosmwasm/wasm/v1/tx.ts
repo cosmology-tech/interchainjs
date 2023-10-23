@@ -1,3 +1,4 @@
+import { AccessConfig, AccessConfigAmino, Params, ParamsAmino } from "./types";
 import { Coin, CoinAmino } from "../../../cosmos/base/v1beta1/coin";
 import { BinaryReader, BinaryWriter } from "../../../binary";
 import { isSet, bytesFromBase64, base64FromBytes, DeepPartial } from "../../../helpers";
@@ -8,6 +9,11 @@ export interface MsgStoreCode {
   sender: string;
   /** WASMByteCode can be raw or gzip compressed */
   wasmByteCode: Uint8Array;
+  /**
+   * InstantiatePermission access control to apply on contract creation,
+   * optional
+   */
+  instantiatePermission: AccessConfig;
 }
 export interface MsgStoreCodeProtoMsg {
   typeUrl: "/cosmwasm.wasm.v1.MsgStoreCode";
@@ -19,6 +25,11 @@ export interface MsgStoreCodeAmino {
   sender: string;
   /** WASMByteCode can be raw or gzip compressed */
   wasm_byte_code: string;
+  /**
+   * InstantiatePermission access control to apply on contract creation,
+   * optional
+   */
+  instantiate_permission?: AccessConfigAmino;
 }
 export interface MsgStoreCodeAminoMsg {
   type: "wasm/MsgStoreCode";
@@ -373,6 +384,8 @@ export interface MsgClearAdminResponseAminoMsg {
 export interface AccessConfigUpdate {
   /** CodeID is the reference to the stored WASM code to be updated */
   codeId: bigint;
+  /** InstantiatePermission to apply to the set of code ids */
+  instantiatePermission: AccessConfig;
 }
 export interface AccessConfigUpdateProtoMsg {
   typeUrl: "/cosmwasm.wasm.v1.AccessConfigUpdate";
@@ -385,6 +398,8 @@ export interface AccessConfigUpdateProtoMsg {
 export interface AccessConfigUpdateAmino {
   /** CodeID is the reference to the stored WASM code to be updated */
   code_id: string;
+  /** InstantiatePermission to apply to the set of code ids */
+  instantiate_permission?: AccessConfigAmino;
 }
 export interface AccessConfigUpdateAminoMsg {
   type: "wasm/AccessConfigUpdate";
@@ -396,6 +411,8 @@ export interface MsgUpdateInstantiateConfig {
   sender: string;
   /** CodeID references the stored WASM code */
   codeId: bigint;
+  /** NewInstantiatePermission is the new access control */
+  newInstantiatePermission: AccessConfig;
 }
 export interface MsgUpdateInstantiateConfigProtoMsg {
   typeUrl: "/cosmwasm.wasm.v1.MsgUpdateInstantiateConfig";
@@ -407,6 +424,8 @@ export interface MsgUpdateInstantiateConfigAmino {
   sender: string;
   /** CodeID references the stored WASM code */
   code_id: string;
+  /** NewInstantiatePermission is the new access control */
+  new_instantiate_permission?: AccessConfigAmino;
 }
 export interface MsgUpdateInstantiateConfigAminoMsg {
   type: "wasm/MsgUpdateInstantiateConfig";
@@ -432,6 +451,12 @@ export interface MsgUpdateInstantiateConfigResponseAminoMsg {
 export interface MsgUpdateParams {
   /** Authority is the address of the governance account. */
   authority: string;
+  /**
+   * params defines the x/wasm parameters to update.
+   * 
+   * NOTE: All parameters must be supplied.
+   */
+  params: Params;
 }
 export interface MsgUpdateParamsProtoMsg {
   typeUrl: "/cosmwasm.wasm.v1.MsgUpdateParams";
@@ -445,6 +470,12 @@ export interface MsgUpdateParamsProtoMsg {
 export interface MsgUpdateParamsAmino {
   /** Authority is the address of the governance account. */
   authority: string;
+  /**
+   * params defines the x/wasm parameters to update.
+   * 
+   * NOTE: All parameters must be supplied.
+   */
+  params?: ParamsAmino;
 }
 export interface MsgUpdateParamsAminoMsg {
   type: "wasm/MsgUpdateParams";
@@ -649,6 +680,8 @@ export interface MsgStoreAndInstantiateContract {
   authority: string;
   /** WASMByteCode can be raw or gzip compressed */
   wasmByteCode: Uint8Array;
+  /** InstantiatePermission to apply on contract creation, optional */
+  instantiatePermission: AccessConfig;
   /**
    * UnpinCode code on upload, optional. As default the uploaded contract is
    * pinned to cache.
@@ -693,6 +726,8 @@ export interface MsgStoreAndInstantiateContractAmino {
   authority: string;
   /** WASMByteCode can be raw or gzip compressed */
   wasm_byte_code: string;
+  /** InstantiatePermission to apply on contract creation, optional */
+  instantiate_permission?: AccessConfigAmino;
   /**
    * UnpinCode code on upload, optional. As default the uploaded contract is
    * pinned to cache.
@@ -857,6 +892,8 @@ export interface MsgStoreAndMigrateContract {
   authority: string;
   /** WASMByteCode can be raw or gzip compressed */
   wasmByteCode: Uint8Array;
+  /** InstantiatePermission to apply on contract creation, optional */
+  instantiatePermission: AccessConfig;
   /** Contract is the address of the smart contract */
   contract: string;
   /** Msg json encoded message to be passed to the contract on migration */
@@ -877,6 +914,8 @@ export interface MsgStoreAndMigrateContractAmino {
   authority: string;
   /** WASMByteCode can be raw or gzip compressed */
   wasm_byte_code: string;
+  /** InstantiatePermission to apply on contract creation, optional */
+  instantiate_permission?: AccessConfigAmino;
   /** Contract is the address of the smart contract */
   contract: string;
   /** Msg json encoded message to be passed to the contract on migration */
@@ -963,7 +1002,8 @@ export interface MsgUpdateContractLabelResponseAminoMsg {
 function createBaseMsgStoreCode(): MsgStoreCode {
   return {
     sender: "",
-    wasmByteCode: new Uint8Array()
+    wasmByteCode: new Uint8Array(),
+    instantiatePermission: AccessConfig.fromPartial({})
   };
 }
 export const MsgStoreCode = {
@@ -973,6 +1013,9 @@ export const MsgStoreCode = {
     }
     if (message.wasmByteCode.length !== 0) {
       writer.uint32(18).bytes(message.wasmByteCode);
+    }
+    if (message.instantiatePermission !== undefined) {
+      AccessConfig.encode(message.instantiatePermission, writer.uint32(42).fork()).ldelim();
     }
     return writer;
   },
@@ -989,6 +1032,9 @@ export const MsgStoreCode = {
         case 2:
           message.wasmByteCode = reader.bytes();
           break;
+        case 5:
+          message.instantiatePermission = AccessConfig.decode(reader, reader.uint32());
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -999,31 +1045,36 @@ export const MsgStoreCode = {
   fromJSON(object: any): MsgStoreCode {
     return {
       sender: isSet(object.sender) ? String(object.sender) : "",
-      wasmByteCode: isSet(object.wasmByteCode) ? bytesFromBase64(object.wasmByteCode) : new Uint8Array()
+      wasmByteCode: isSet(object.wasmByteCode) ? bytesFromBase64(object.wasmByteCode) : new Uint8Array(),
+      instantiatePermission: isSet(object.instantiatePermission) ? AccessConfig.fromJSON(object.instantiatePermission) : undefined
     };
   },
   toJSON(message: MsgStoreCode): unknown {
     const obj: any = {};
     message.sender !== undefined && (obj.sender = message.sender);
     message.wasmByteCode !== undefined && (obj.wasmByteCode = base64FromBytes(message.wasmByteCode !== undefined ? message.wasmByteCode : new Uint8Array()));
+    message.instantiatePermission !== undefined && (obj.instantiatePermission = message.instantiatePermission ? AccessConfig.toJSON(message.instantiatePermission) : undefined);
     return obj;
   },
   fromPartial(object: DeepPartial<MsgStoreCode>): MsgStoreCode {
     const message = createBaseMsgStoreCode();
     message.sender = object.sender ?? "";
     message.wasmByteCode = object.wasmByteCode ?? new Uint8Array();
+    message.instantiatePermission = object.instantiatePermission !== undefined && object.instantiatePermission !== null ? AccessConfig.fromPartial(object.instantiatePermission) : undefined;
     return message;
   },
   fromAmino(object: MsgStoreCodeAmino): MsgStoreCode {
     return {
       sender: object.sender,
-      wasmByteCode: fromBase64(object.wasm_byte_code)
+      wasmByteCode: fromBase64(object.wasm_byte_code),
+      instantiatePermission: object?.instantiate_permission ? AccessConfig.fromAmino(object.instantiate_permission) : undefined
     };
   },
   toAmino(message: MsgStoreCode): MsgStoreCodeAmino {
     const obj: any = {};
     obj.sender = message.sender;
     obj.wasm_byte_code = message.wasmByteCode ? toBase64(message.wasmByteCode) : undefined;
+    obj.instantiate_permission = message.instantiatePermission ? AccessConfig.toAmino(message.instantiatePermission) : undefined;
     return obj;
   },
   fromAminoMsg(object: MsgStoreCodeAminoMsg): MsgStoreCode {
@@ -2320,13 +2371,17 @@ export const MsgClearAdminResponse = {
 };
 function createBaseAccessConfigUpdate(): AccessConfigUpdate {
   return {
-    codeId: BigInt(0)
+    codeId: BigInt(0),
+    instantiatePermission: AccessConfig.fromPartial({})
   };
 }
 export const AccessConfigUpdate = {
   encode(message: AccessConfigUpdate, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.codeId !== BigInt(0)) {
       writer.uint32(8).uint64(message.codeId);
+    }
+    if (message.instantiatePermission !== undefined) {
+      AccessConfig.encode(message.instantiatePermission, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -2340,6 +2395,9 @@ export const AccessConfigUpdate = {
         case 1:
           message.codeId = reader.uint64();
           break;
+        case 2:
+          message.instantiatePermission = AccessConfig.decode(reader, reader.uint32());
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -2349,27 +2407,32 @@ export const AccessConfigUpdate = {
   },
   fromJSON(object: any): AccessConfigUpdate {
     return {
-      codeId: isSet(object.codeId) ? BigInt(object.codeId.toString()) : BigInt(0)
+      codeId: isSet(object.codeId) ? BigInt(object.codeId.toString()) : BigInt(0),
+      instantiatePermission: isSet(object.instantiatePermission) ? AccessConfig.fromJSON(object.instantiatePermission) : undefined
     };
   },
   toJSON(message: AccessConfigUpdate): unknown {
     const obj: any = {};
     message.codeId !== undefined && (obj.codeId = (message.codeId || BigInt(0)).toString());
+    message.instantiatePermission !== undefined && (obj.instantiatePermission = message.instantiatePermission ? AccessConfig.toJSON(message.instantiatePermission) : undefined);
     return obj;
   },
   fromPartial(object: DeepPartial<AccessConfigUpdate>): AccessConfigUpdate {
     const message = createBaseAccessConfigUpdate();
     message.codeId = object.codeId !== undefined && object.codeId !== null ? BigInt(object.codeId.toString()) : BigInt(0);
+    message.instantiatePermission = object.instantiatePermission !== undefined && object.instantiatePermission !== null ? AccessConfig.fromPartial(object.instantiatePermission) : undefined;
     return message;
   },
   fromAmino(object: AccessConfigUpdateAmino): AccessConfigUpdate {
     return {
-      codeId: BigInt(object.code_id)
+      codeId: BigInt(object.code_id),
+      instantiatePermission: object?.instantiate_permission ? AccessConfig.fromAmino(object.instantiate_permission) : undefined
     };
   },
   toAmino(message: AccessConfigUpdate): AccessConfigUpdateAmino {
     const obj: any = {};
     obj.code_id = message.codeId ? message.codeId.toString() : undefined;
+    obj.instantiate_permission = message.instantiatePermission ? AccessConfig.toAmino(message.instantiatePermission) : undefined;
     return obj;
   },
   fromAminoMsg(object: AccessConfigUpdateAminoMsg): AccessConfigUpdate {
@@ -2397,7 +2460,8 @@ export const AccessConfigUpdate = {
 function createBaseMsgUpdateInstantiateConfig(): MsgUpdateInstantiateConfig {
   return {
     sender: "",
-    codeId: BigInt(0)
+    codeId: BigInt(0),
+    newInstantiatePermission: AccessConfig.fromPartial({})
   };
 }
 export const MsgUpdateInstantiateConfig = {
@@ -2407,6 +2471,9 @@ export const MsgUpdateInstantiateConfig = {
     }
     if (message.codeId !== BigInt(0)) {
       writer.uint32(16).uint64(message.codeId);
+    }
+    if (message.newInstantiatePermission !== undefined) {
+      AccessConfig.encode(message.newInstantiatePermission, writer.uint32(26).fork()).ldelim();
     }
     return writer;
   },
@@ -2423,6 +2490,9 @@ export const MsgUpdateInstantiateConfig = {
         case 2:
           message.codeId = reader.uint64();
           break;
+        case 3:
+          message.newInstantiatePermission = AccessConfig.decode(reader, reader.uint32());
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -2433,31 +2503,36 @@ export const MsgUpdateInstantiateConfig = {
   fromJSON(object: any): MsgUpdateInstantiateConfig {
     return {
       sender: isSet(object.sender) ? String(object.sender) : "",
-      codeId: isSet(object.codeId) ? BigInt(object.codeId.toString()) : BigInt(0)
+      codeId: isSet(object.codeId) ? BigInt(object.codeId.toString()) : BigInt(0),
+      newInstantiatePermission: isSet(object.newInstantiatePermission) ? AccessConfig.fromJSON(object.newInstantiatePermission) : undefined
     };
   },
   toJSON(message: MsgUpdateInstantiateConfig): unknown {
     const obj: any = {};
     message.sender !== undefined && (obj.sender = message.sender);
     message.codeId !== undefined && (obj.codeId = (message.codeId || BigInt(0)).toString());
+    message.newInstantiatePermission !== undefined && (obj.newInstantiatePermission = message.newInstantiatePermission ? AccessConfig.toJSON(message.newInstantiatePermission) : undefined);
     return obj;
   },
   fromPartial(object: DeepPartial<MsgUpdateInstantiateConfig>): MsgUpdateInstantiateConfig {
     const message = createBaseMsgUpdateInstantiateConfig();
     message.sender = object.sender ?? "";
     message.codeId = object.codeId !== undefined && object.codeId !== null ? BigInt(object.codeId.toString()) : BigInt(0);
+    message.newInstantiatePermission = object.newInstantiatePermission !== undefined && object.newInstantiatePermission !== null ? AccessConfig.fromPartial(object.newInstantiatePermission) : undefined;
     return message;
   },
   fromAmino(object: MsgUpdateInstantiateConfigAmino): MsgUpdateInstantiateConfig {
     return {
       sender: object.sender,
-      codeId: BigInt(object.code_id)
+      codeId: BigInt(object.code_id),
+      newInstantiatePermission: object?.new_instantiate_permission ? AccessConfig.fromAmino(object.new_instantiate_permission) : undefined
     };
   },
   toAmino(message: MsgUpdateInstantiateConfig): MsgUpdateInstantiateConfigAmino {
     const obj: any = {};
     obj.sender = message.sender;
     obj.code_id = message.codeId ? message.codeId.toString() : undefined;
+    obj.new_instantiate_permission = message.newInstantiatePermission ? AccessConfig.toAmino(message.newInstantiatePermission) : undefined;
     return obj;
   },
   fromAminoMsg(object: MsgUpdateInstantiateConfigAminoMsg): MsgUpdateInstantiateConfig {
@@ -2545,13 +2620,17 @@ export const MsgUpdateInstantiateConfigResponse = {
 };
 function createBaseMsgUpdateParams(): MsgUpdateParams {
   return {
-    authority: ""
+    authority: "",
+    params: Params.fromPartial({})
   };
 }
 export const MsgUpdateParams = {
   encode(message: MsgUpdateParams, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.authority !== "") {
       writer.uint32(10).string(message.authority);
+    }
+    if (message.params !== undefined) {
+      Params.encode(message.params, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -2565,6 +2644,9 @@ export const MsgUpdateParams = {
         case 1:
           message.authority = reader.string();
           break;
+        case 2:
+          message.params = Params.decode(reader, reader.uint32());
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -2574,27 +2656,32 @@ export const MsgUpdateParams = {
   },
   fromJSON(object: any): MsgUpdateParams {
     return {
-      authority: isSet(object.authority) ? String(object.authority) : ""
+      authority: isSet(object.authority) ? String(object.authority) : "",
+      params: isSet(object.params) ? Params.fromJSON(object.params) : undefined
     };
   },
   toJSON(message: MsgUpdateParams): unknown {
     const obj: any = {};
     message.authority !== undefined && (obj.authority = message.authority);
+    message.params !== undefined && (obj.params = message.params ? Params.toJSON(message.params) : undefined);
     return obj;
   },
   fromPartial(object: DeepPartial<MsgUpdateParams>): MsgUpdateParams {
     const message = createBaseMsgUpdateParams();
     message.authority = object.authority ?? "";
+    message.params = object.params !== undefined && object.params !== null ? Params.fromPartial(object.params) : undefined;
     return message;
   },
   fromAmino(object: MsgUpdateParamsAmino): MsgUpdateParams {
     return {
-      authority: object.authority
+      authority: object.authority,
+      params: object?.params ? Params.fromAmino(object.params) : undefined
     };
   },
   toAmino(message: MsgUpdateParams): MsgUpdateParamsAmino {
     const obj: any = {};
     obj.authority = message.authority;
+    obj.params = message.params ? Params.toAmino(message.params) : undefined;
     return obj;
   },
   fromAminoMsg(object: MsgUpdateParamsAminoMsg): MsgUpdateParams {
@@ -3192,6 +3279,7 @@ function createBaseMsgStoreAndInstantiateContract(): MsgStoreAndInstantiateContr
   return {
     authority: "",
     wasmByteCode: new Uint8Array(),
+    instantiatePermission: AccessConfig.fromPartial({}),
     unpinCode: false,
     admin: "",
     label: "",
@@ -3209,6 +3297,9 @@ export const MsgStoreAndInstantiateContract = {
     }
     if (message.wasmByteCode.length !== 0) {
       writer.uint32(26).bytes(message.wasmByteCode);
+    }
+    if (message.instantiatePermission !== undefined) {
+      AccessConfig.encode(message.instantiatePermission, writer.uint32(34).fork()).ldelim();
     }
     if (message.unpinCode === true) {
       writer.uint32(40).bool(message.unpinCode);
@@ -3249,6 +3340,9 @@ export const MsgStoreAndInstantiateContract = {
         case 3:
           message.wasmByteCode = reader.bytes();
           break;
+        case 4:
+          message.instantiatePermission = AccessConfig.decode(reader, reader.uint32());
+          break;
         case 5:
           message.unpinCode = reader.bool();
           break;
@@ -3284,6 +3378,7 @@ export const MsgStoreAndInstantiateContract = {
     return {
       authority: isSet(object.authority) ? String(object.authority) : "",
       wasmByteCode: isSet(object.wasmByteCode) ? bytesFromBase64(object.wasmByteCode) : new Uint8Array(),
+      instantiatePermission: isSet(object.instantiatePermission) ? AccessConfig.fromJSON(object.instantiatePermission) : undefined,
       unpinCode: isSet(object.unpinCode) ? Boolean(object.unpinCode) : false,
       admin: isSet(object.admin) ? String(object.admin) : "",
       label: isSet(object.label) ? String(object.label) : "",
@@ -3298,6 +3393,7 @@ export const MsgStoreAndInstantiateContract = {
     const obj: any = {};
     message.authority !== undefined && (obj.authority = message.authority);
     message.wasmByteCode !== undefined && (obj.wasmByteCode = base64FromBytes(message.wasmByteCode !== undefined ? message.wasmByteCode : new Uint8Array()));
+    message.instantiatePermission !== undefined && (obj.instantiatePermission = message.instantiatePermission ? AccessConfig.toJSON(message.instantiatePermission) : undefined);
     message.unpinCode !== undefined && (obj.unpinCode = message.unpinCode);
     message.admin !== undefined && (obj.admin = message.admin);
     message.label !== undefined && (obj.label = message.label);
@@ -3316,6 +3412,7 @@ export const MsgStoreAndInstantiateContract = {
     const message = createBaseMsgStoreAndInstantiateContract();
     message.authority = object.authority ?? "";
     message.wasmByteCode = object.wasmByteCode ?? new Uint8Array();
+    message.instantiatePermission = object.instantiatePermission !== undefined && object.instantiatePermission !== null ? AccessConfig.fromPartial(object.instantiatePermission) : undefined;
     message.unpinCode = object.unpinCode ?? false;
     message.admin = object.admin ?? "";
     message.label = object.label ?? "";
@@ -3330,6 +3427,7 @@ export const MsgStoreAndInstantiateContract = {
     return {
       authority: object.authority,
       wasmByteCode: fromBase64(object.wasm_byte_code),
+      instantiatePermission: object?.instantiate_permission ? AccessConfig.fromAmino(object.instantiate_permission) : undefined,
       unpinCode: object.unpin_code,
       admin: object.admin,
       label: object.label,
@@ -3344,6 +3442,7 @@ export const MsgStoreAndInstantiateContract = {
     const obj: any = {};
     obj.authority = message.authority;
     obj.wasm_byte_code = message.wasmByteCode ? toBase64(message.wasmByteCode) : undefined;
+    obj.instantiate_permission = message.instantiatePermission ? AccessConfig.toAmino(message.instantiatePermission) : undefined;
     obj.unpin_code = message.unpinCode;
     obj.admin = message.admin;
     obj.label = message.label;
@@ -3786,6 +3885,7 @@ function createBaseMsgStoreAndMigrateContract(): MsgStoreAndMigrateContract {
   return {
     authority: "",
     wasmByteCode: new Uint8Array(),
+    instantiatePermission: AccessConfig.fromPartial({}),
     contract: "",
     msg: new Uint8Array()
   };
@@ -3797,6 +3897,9 @@ export const MsgStoreAndMigrateContract = {
     }
     if (message.wasmByteCode.length !== 0) {
       writer.uint32(18).bytes(message.wasmByteCode);
+    }
+    if (message.instantiatePermission !== undefined) {
+      AccessConfig.encode(message.instantiatePermission, writer.uint32(26).fork()).ldelim();
     }
     if (message.contract !== "") {
       writer.uint32(34).string(message.contract);
@@ -3819,6 +3922,9 @@ export const MsgStoreAndMigrateContract = {
         case 2:
           message.wasmByteCode = reader.bytes();
           break;
+        case 3:
+          message.instantiatePermission = AccessConfig.decode(reader, reader.uint32());
+          break;
         case 4:
           message.contract = reader.string();
           break;
@@ -3836,6 +3942,7 @@ export const MsgStoreAndMigrateContract = {
     return {
       authority: isSet(object.authority) ? String(object.authority) : "",
       wasmByteCode: isSet(object.wasmByteCode) ? bytesFromBase64(object.wasmByteCode) : new Uint8Array(),
+      instantiatePermission: isSet(object.instantiatePermission) ? AccessConfig.fromJSON(object.instantiatePermission) : undefined,
       contract: isSet(object.contract) ? String(object.contract) : "",
       msg: isSet(object.msg) ? bytesFromBase64(object.msg) : new Uint8Array()
     };
@@ -3844,6 +3951,7 @@ export const MsgStoreAndMigrateContract = {
     const obj: any = {};
     message.authority !== undefined && (obj.authority = message.authority);
     message.wasmByteCode !== undefined && (obj.wasmByteCode = base64FromBytes(message.wasmByteCode !== undefined ? message.wasmByteCode : new Uint8Array()));
+    message.instantiatePermission !== undefined && (obj.instantiatePermission = message.instantiatePermission ? AccessConfig.toJSON(message.instantiatePermission) : undefined);
     message.contract !== undefined && (obj.contract = message.contract);
     message.msg !== undefined && (obj.msg = base64FromBytes(message.msg !== undefined ? message.msg : new Uint8Array()));
     return obj;
@@ -3852,6 +3960,7 @@ export const MsgStoreAndMigrateContract = {
     const message = createBaseMsgStoreAndMigrateContract();
     message.authority = object.authority ?? "";
     message.wasmByteCode = object.wasmByteCode ?? new Uint8Array();
+    message.instantiatePermission = object.instantiatePermission !== undefined && object.instantiatePermission !== null ? AccessConfig.fromPartial(object.instantiatePermission) : undefined;
     message.contract = object.contract ?? "";
     message.msg = object.msg ?? new Uint8Array();
     return message;
@@ -3860,6 +3969,7 @@ export const MsgStoreAndMigrateContract = {
     return {
       authority: object.authority,
       wasmByteCode: fromBase64(object.wasm_byte_code),
+      instantiatePermission: object?.instantiate_permission ? AccessConfig.fromAmino(object.instantiate_permission) : undefined,
       contract: object.contract,
       msg: toUtf8(JSON.stringify(object.msg))
     };
@@ -3868,6 +3978,7 @@ export const MsgStoreAndMigrateContract = {
     const obj: any = {};
     obj.authority = message.authority;
     obj.wasm_byte_code = message.wasmByteCode ? toBase64(message.wasmByteCode) : undefined;
+    obj.instantiate_permission = message.instantiatePermission ? AccessConfig.toAmino(message.instantiatePermission) : undefined;
     obj.contract = message.contract;
     obj.msg = message.msg ? JSON.parse(fromUtf8(message.msg)) : undefined;
     return obj;

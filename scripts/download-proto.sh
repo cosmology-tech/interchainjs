@@ -53,6 +53,12 @@ fi
 cosmosSdkRepo="cosmos/cosmos-sdk"
 cosmosSdkCommit="${COSMOS_SDK_VERSION}"
 
+ibcRepo="cosmos/ibc-go"
+ibcCommit="${IBC_GO_VERSION}"
+
+cosmwasmRepo="CosmWasm/wasmd"
+cosmwasmCommit="${WASMD_VERSION}"
+
 downloadDeps() {
     local FILES=("$@")
     deps=""
@@ -68,6 +74,14 @@ downloadDeps() {
         fi
 
         case $(echo "$FILE" | cut -d "/" -f1) in
+            "ibc")
+            repo=$ibcRepo; commit=$ibcCommit
+            GIT_PATH="$repo/$commit/proto/${FILE}"
+            ;;
+            "cosmwasm")
+            repo=$cosmwasmRepo; commit=$cosmwasmCommit
+            GIT_PATH="$repo/$commit/proto/${FILE}"
+            ;;
             "cosmos_proto") 
             repo=$cosmosProtoRepo; commit=$cosmosProtoCommit
             GIT_PATH="$repo/$commit/proto/${FILE}"
@@ -76,25 +90,29 @@ downloadDeps() {
             repo=$gogoprotoRepo; commit=$gogoprotoCommit
             GIT_PATH="$repo/$commit/${FILE}"
             ;;
-        esac
-
-        case $(echo "$FILE" | cut -d "/" -f1,2 -s) in
-            "google/protobuf")
-            repo=$protobufRepo; commit=$protobufCommit
-            GIT_PATH="$repo/$commit/src/${FILE}"
-            ;;
-            google/*)
-            repo=$googleapisRepo; commit=$googleapisCommit
-             GIT_PATH="$repo/$commit/${FILE}"
-            ;;
-            "cosmos/ics23")
-            repo=$ics23Repo; commit=$ics23Commit
-            GIT_PATH="$repo/$commit/proto/${FILE}"
-            ;;
-            cosmos/*|amino/*|tendermint/*) 
-            repo=$cosmosSdkRepo; commit=$cosmosSdkCommit
-            GIT_PATH="$repo/$commit/proto/${FILE}"
-            ;;
+            *)
+                case $(echo "$FILE" | cut -d "/" -f1,2 -s) in
+                "google/protobuf")
+                repo=$protobufRepo; commit=$protobufCommit
+                GIT_PATH="$repo/$commit/src/${FILE}"
+                ;;
+                google/*)
+                repo=$googleapisRepo; commit=$googleapisCommit
+                GIT_PATH="$repo/$commit/${FILE}"
+                ;;
+                "cosmos/ics23")
+                repo=$ics23Repo; commit=$ics23Commit
+                GIT_PATH="$repo/$commit/proto/${FILE}"
+                ;;
+                cosmos/*|amino/*|tendermint/*) 
+                repo=$cosmosSdkRepo; commit=$cosmosSdkCommit
+                GIT_PATH="$repo/$commit/proto/${FILE}"
+                ;;
+                *)
+                echo "Failed to get matched repo and commit"
+                exit 1
+                ;;
+            esac
         esac
         
         SRC=${GIT}/${GIT_PATH}

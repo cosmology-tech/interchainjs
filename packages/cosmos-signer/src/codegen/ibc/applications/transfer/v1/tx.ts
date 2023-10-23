@@ -1,4 +1,5 @@
 import { Coin, CoinAmino } from "../../../../cosmos/base/v1beta1/coin";
+import { Height, HeightAmino } from "../../../core/client/v1/client";
 import { BinaryReader, BinaryWriter } from "../../../../binary";
 import { isSet, DeepPartial } from "../../../../helpers";
 /**
@@ -17,6 +18,11 @@ export interface MsgTransfer {
   sender: string;
   /** the recipient address on the destination chain */
   receiver: string;
+  /**
+   * Timeout height relative to the current block height.
+   * The timeout is disabled when set to 0.
+   */
+  timeoutHeight: Height;
   /**
    * Timeout timestamp in absolute nanoseconds since unix epoch.
    * The timeout is disabled when set to 0.
@@ -45,6 +51,11 @@ export interface MsgTransferAmino {
   sender: string;
   /** the recipient address on the destination chain */
   receiver: string;
+  /**
+   * Timeout height relative to the current block height.
+   * The timeout is disabled when set to 0.
+   */
+  timeout_height?: HeightAmino;
   /**
    * Timeout timestamp in absolute nanoseconds since unix epoch.
    * The timeout is disabled when set to 0.
@@ -82,6 +93,7 @@ function createBaseMsgTransfer(): MsgTransfer {
     token: Coin.fromPartial({}),
     sender: "",
     receiver: "",
+    timeoutHeight: Height.fromPartial({}),
     timeoutTimestamp: BigInt(0),
     memo: ""
   };
@@ -102,6 +114,9 @@ export const MsgTransfer = {
     }
     if (message.receiver !== "") {
       writer.uint32(42).string(message.receiver);
+    }
+    if (message.timeoutHeight !== undefined) {
+      Height.encode(message.timeoutHeight, writer.uint32(50).fork()).ldelim();
     }
     if (message.timeoutTimestamp !== BigInt(0)) {
       writer.uint32(56).uint64(message.timeoutTimestamp);
@@ -133,6 +148,9 @@ export const MsgTransfer = {
         case 5:
           message.receiver = reader.string();
           break;
+        case 6:
+          message.timeoutHeight = Height.decode(reader, reader.uint32());
+          break;
         case 7:
           message.timeoutTimestamp = reader.uint64();
           break;
@@ -153,6 +171,7 @@ export const MsgTransfer = {
       token: isSet(object.token) ? Coin.fromJSON(object.token) : undefined,
       sender: isSet(object.sender) ? String(object.sender) : "",
       receiver: isSet(object.receiver) ? String(object.receiver) : "",
+      timeoutHeight: isSet(object.timeoutHeight) ? Height.fromJSON(object.timeoutHeight) : undefined,
       timeoutTimestamp: isSet(object.timeoutTimestamp) ? BigInt(object.timeoutTimestamp.toString()) : BigInt(0),
       memo: isSet(object.memo) ? String(object.memo) : ""
     };
@@ -164,6 +183,7 @@ export const MsgTransfer = {
     message.token !== undefined && (obj.token = message.token ? Coin.toJSON(message.token) : undefined);
     message.sender !== undefined && (obj.sender = message.sender);
     message.receiver !== undefined && (obj.receiver = message.receiver);
+    message.timeoutHeight !== undefined && (obj.timeoutHeight = message.timeoutHeight ? Height.toJSON(message.timeoutHeight) : undefined);
     message.timeoutTimestamp !== undefined && (obj.timeoutTimestamp = (message.timeoutTimestamp || BigInt(0)).toString());
     message.memo !== undefined && (obj.memo = message.memo);
     return obj;
@@ -175,6 +195,7 @@ export const MsgTransfer = {
     message.token = object.token !== undefined && object.token !== null ? Coin.fromPartial(object.token) : undefined;
     message.sender = object.sender ?? "";
     message.receiver = object.receiver ?? "";
+    message.timeoutHeight = object.timeoutHeight !== undefined && object.timeoutHeight !== null ? Height.fromPartial(object.timeoutHeight) : undefined;
     message.timeoutTimestamp = object.timeoutTimestamp !== undefined && object.timeoutTimestamp !== null ? BigInt(object.timeoutTimestamp.toString()) : BigInt(0);
     message.memo = object.memo ?? "";
     return message;
@@ -186,6 +207,7 @@ export const MsgTransfer = {
       token: object?.token ? Coin.fromAmino(object.token) : undefined,
       sender: object.sender,
       receiver: object.receiver,
+      timeoutHeight: object?.timeout_height ? Height.fromAmino(object.timeout_height) : undefined,
       timeoutTimestamp: BigInt(object.timeout_timestamp),
       memo: object.memo
     };
@@ -197,6 +219,7 @@ export const MsgTransfer = {
     obj.token = message.token ? Coin.toAmino(message.token) : undefined;
     obj.sender = message.sender;
     obj.receiver = message.receiver;
+    obj.timeout_height = message.timeoutHeight ? Height.toAmino(message.timeoutHeight) : {};
     obj.timeout_timestamp = message.timeoutTimestamp ? message.timeoutTimestamp.toString() : undefined;
     obj.memo = message.memo;
     return obj;

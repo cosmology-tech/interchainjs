@@ -1,97 +1,146 @@
 syntax = "proto3";
-package cosmos_proto;
+package cosmwasm.wasm.v1;
 
-import "google/protobuf/descriptor.proto";
+import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
+import "google/protobuf/any.proto";
+import "amino/amino.proto";
 
-option go_package = "github.com/cosmos/cosmos-proto;cosmos_proto";
+option go_package = "github.com/CosmWasm/wasmd/x/wasm/types";
+option (gogoproto.goproto_getters_all) = false;
+option (gogoproto.equal_all) = true;
 
-extend google.protobuf.MessageOptions {
+// AccessType permission types
+enum AccessType {
+  option (gogoproto.goproto_enum_prefix) = false;
+  option (gogoproto.goproto_enum_stringer) = false;
+  // AccessTypeUnspecified placeholder for empty value
+  ACCESS_TYPE_UNSPECIFIED = 0
+      [ (gogoproto.enumvalue_customname) = "AccessTypeUnspecified" ];
+  // AccessTypeNobody forbidden
+  ACCESS_TYPE_NOBODY = 1
+      [ (gogoproto.enumvalue_customname) = "AccessTypeNobody" ];
 
-    // implements_interface is used to indicate the type name of the interface
-    // that a message implements so that it can be used in google.protobuf.Any
-    // fields that accept that interface. A message can implement multiple
-    // interfaces. Interfaces should be declared using a declare_interface
-    // file option.
-    repeated string implements_interface = 93001;
+  reserved 2; // was AccessTypeOnlyAddress
+
+  // AccessTypeEverybody unrestricted
+  ACCESS_TYPE_EVERYBODY = 3
+      [ (gogoproto.enumvalue_customname) = "AccessTypeEverybody" ];
+  // AccessTypeAnyOfAddresses allow any of the addresses
+  ACCESS_TYPE_ANY_OF_ADDRESSES = 4
+      [ (gogoproto.enumvalue_customname) = "AccessTypeAnyOfAddresses" ];
 }
 
-extend google.protobuf.FieldOptions {
-
-    // accepts_interface is used to annotate that a google.protobuf.Any
-    // field accepts messages that implement the specified interface.
-    // Interfaces should be declared using a declare_interface file option.
-    string accepts_interface = 93001;
-
-    // scalar is used to indicate that this field follows the formatting defined
-    // by the named scalar which should be declared with declare_scalar. Code
-    // generators may choose to use this information to map this field to a
-    // language-specific type representing the scalar.
-    string scalar = 93002;
+// AccessTypeParam
+message AccessTypeParam {
+  option (gogoproto.goproto_stringer) = true;
+  AccessType value = 1 [ (gogoproto.moretags) = "yaml:\"value\"" ];
 }
 
-extend google.protobuf.FileOptions {
+// AccessConfig access control type.
+message AccessConfig {
+  option (gogoproto.goproto_stringer) = true;
+  AccessType permission = 1 [ (gogoproto.moretags) = "yaml:\"permission\"" ];
 
-    // declare_interface declares an interface type to be used with
-    // accepts_interface and implements_interface. Interface names are
-    // expected to follow the following convention such that their declaration
-    // can be discovered by tools: for a given interface type a.b.C, it is
-    // expected that the declaration will be found in a protobuf file named
-    // a/b/interfaces.proto in the file descriptor set.
-    repeated InterfaceDescriptor declare_interface = 793021;
+  reserved 2; // was address
 
-    // declare_scalar declares a scalar type to be used with
-    // the scalar field option. Scalar names are
-    // expected to follow the following convention such that their declaration
-    // can be discovered by tools: for a given scalar type a.b.C, it is
-    // expected that the declaration will be found in a protobuf file named
-    // a/b/scalars.proto in the file descriptor set.
-    repeated ScalarDescriptor declare_scalar = 793022;
+  repeated string addresses = 3 [ (gogoproto.moretags) = "yaml:\"addresses\"" ];
 }
 
-// InterfaceDescriptor describes an interface type to be used with
-// accepts_interface and implements_interface and declared by declare_interface.
-message InterfaceDescriptor {
-
-    // name is the name of the interface. It should be a short-name (without
-    // a period) such that the fully qualified name of the interface will be
-    // package.name, ex. for the package a.b and interface named C, the
-    // fully-qualified name will be a.b.C.
-    string name = 1;
-
-    // description is a human-readable description of the interface and its
-    // purpose.
-    string description = 2;
+// Params defines the set of wasm parameters.
+message Params {
+  option (gogoproto.goproto_stringer) = false;
+  AccessConfig code_upload_access = 1 [
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true,
+    (gogoproto.moretags) = "yaml:\"code_upload_access\""
+  ];
+  AccessType instantiate_default_permission = 2
+      [ (gogoproto.moretags) = "yaml:\"instantiate_default_permission\"" ];
 }
 
-// ScalarDescriptor describes an scalar type to be used with
-// the scalar field option and declared by declare_scalar.
-// Scalars extend simple protobuf built-in types with additional
-// syntax and semantics, for instance to represent big integers.
-// Scalars should ideally define an encoding such that there is only one
-// valid syntactical representation for a given semantic meaning,
-// i.e. the encoding should be deterministic.
-message ScalarDescriptor {
-
-    // name is the name of the scalar. It should be a short-name (without
-    // a period) such that the fully qualified name of the scalar will be
-    // package.name, ex. for the package a.b and scalar named C, the
-    // fully-qualified name will be a.b.C.
-    string name = 1;
-
-    // description is a human-readable description of the scalar and its
-    // encoding format. For instance a big integer or decimal scalar should
-    // specify precisely the expected encoding format.
-    string description = 2;
-
-    // field_type is the type of field with which this scalar can be used.
-    // Scalars can be used with one and only one type of field so that
-    // encoding standards and simple and clear. Currently only string and
-    // bytes fields are supported for scalars.
-    repeated ScalarType field_type = 3;
+// CodeInfo is data for the uploaded contract WASM code
+message CodeInfo {
+  // CodeHash is the unique identifier created by wasmvm
+  bytes code_hash = 1;
+  // Creator address who initially stored the code
+  string creator = 2;
+  // Used in v1beta1
+  reserved 3, 4;
+  // InstantiateConfig access control to apply on contract creation, optional
+  AccessConfig instantiate_config = 5
+      [ (gogoproto.nullable) = false, (amino.dont_omitempty) = true ];
 }
 
-enum ScalarType {
-    SCALAR_TYPE_UNSPECIFIED = 0;
-    SCALAR_TYPE_STRING = 1;
-    SCALAR_TYPE_BYTES = 2;
+// ContractInfo stores a WASM contract instance
+message ContractInfo {
+  option (gogoproto.equal) = true;
+
+  // CodeID is the reference to the stored Wasm code
+  uint64 code_id = 1 [ (gogoproto.customname) = "CodeID" ];
+  // Creator address who initially instantiated the contract
+  string creator = 2;
+  // Admin is an optional address that can execute migrations
+  string admin = 3;
+  // Label is optional metadata to be stored with a contract instance.
+  string label = 4;
+  // Created Tx position when the contract was instantiated.
+  AbsoluteTxPosition created = 5;
+  string ibc_port_id = 6 [ (gogoproto.customname) = "IBCPortID" ];
+
+  // Extension is an extension point to store custom metadata within the
+  // persistence model.
+  google.protobuf.Any extension = 7
+      [ (cosmos_proto.accepts_interface) =
+            "cosmwasm.wasm.v1.ContractInfoExtension" ];
+}
+
+// ContractCodeHistoryOperationType actions that caused a code change
+enum ContractCodeHistoryOperationType {
+  option (gogoproto.goproto_enum_prefix) = false;
+  // ContractCodeHistoryOperationTypeUnspecified placeholder for empty value
+  CONTRACT_CODE_HISTORY_OPERATION_TYPE_UNSPECIFIED = 0
+      [ (gogoproto.enumvalue_customname) =
+            "ContractCodeHistoryOperationTypeUnspecified" ];
+  // ContractCodeHistoryOperationTypeInit on chain contract instantiation
+  CONTRACT_CODE_HISTORY_OPERATION_TYPE_INIT = 1
+      [ (gogoproto.enumvalue_customname) =
+            "ContractCodeHistoryOperationTypeInit" ];
+  // ContractCodeHistoryOperationTypeMigrate code migration
+  CONTRACT_CODE_HISTORY_OPERATION_TYPE_MIGRATE = 2
+      [ (gogoproto.enumvalue_customname) =
+            "ContractCodeHistoryOperationTypeMigrate" ];
+  // ContractCodeHistoryOperationTypeGenesis based on genesis data
+  CONTRACT_CODE_HISTORY_OPERATION_TYPE_GENESIS = 3
+      [ (gogoproto.enumvalue_customname) =
+            "ContractCodeHistoryOperationTypeGenesis" ];
+}
+
+// ContractCodeHistoryEntry metadata to a contract.
+message ContractCodeHistoryEntry {
+  ContractCodeHistoryOperationType operation = 1;
+  // CodeID is the reference to the stored WASM code
+  uint64 code_id = 2 [ (gogoproto.customname) = "CodeID" ];
+  // Updated Tx position when the operation was executed.
+  AbsoluteTxPosition updated = 3;
+  bytes msg = 4 [ (gogoproto.casttype) = "RawContractMessage" ];
+}
+
+// AbsoluteTxPosition is a unique transaction position that allows for global
+// ordering of transactions.
+message AbsoluteTxPosition {
+  // BlockHeight is the block the contract was created at
+  uint64 block_height = 1;
+  // TxIndex is a monotonic counter within the block (actual transaction index,
+  // or gas consumed)
+  uint64 tx_index = 2;
+}
+
+// Model is a struct that holds a KV pair
+message Model {
+  // hex-encode key to read it better (this is often ascii)
+  bytes key = 1 [ (gogoproto.casttype) =
+                      "github.com/cometbft/cometbft/libs/bytes.HexBytes" ];
+  // base64-encode raw value
+  bytes value = 2;
 }

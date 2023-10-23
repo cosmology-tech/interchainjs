@@ -1,162 +1,105 @@
-// Protocol Buffers - Google's data interchange format
-// Copyright 2008 Google Inc.  All rights reserved.
-// https://developers.google.com/protocol-buffers/
-//
-// Redistribution and use in source and binary forms, with or without
-// modification, are permitted provided that the following conditions are
-// met:
-//
-//     * Redistributions of source code must retain the above copyright
-// notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above
-// copyright notice, this list of conditions and the following disclaimer
-// in the documentation and/or other materials provided with the
-// distribution.
-//     * Neither the name of Google Inc. nor the names of its
-// contributors may be used to endorse or promote products derived from
-// this software without specific prior written permission.
-//
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 syntax = "proto3";
 
-package google.protobuf;
+package ibc.core.client.v1;
 
-option go_package = "google.golang.org/protobuf/types/known/anypb";
-option java_package = "com.google.protobuf";
-option java_outer_classname = "AnyProto";
-option java_multiple_files = true;
-option objc_class_prefix = "GPB";
-option csharp_namespace = "Google.Protobuf.WellKnownTypes";
+option go_package = "github.com/cosmos/ibc-go/v7/modules/core/02-client/types";
 
-// `Any` contains an arbitrary serialized protocol buffer message along with a
-// URL that describes the type of the serialized message.
-//
-// Protobuf library provides support to pack/unpack Any values in the form
-// of utility functions or additional generated methods of the Any type.
-//
-// Example 1: Pack and unpack a message in C++.
-//
-//     Foo foo = ...;
-//     Any any;
-//     any.PackFrom(foo);
-//     ...
-//     if (any.UnpackTo(&foo)) {
-//       ...
-//     }
-//
-// Example 2: Pack and unpack a message in Java.
-//
-//     Foo foo = ...;
-//     Any any = Any.pack(foo);
-//     ...
-//     if (any.is(Foo.class)) {
-//       foo = any.unpack(Foo.class);
-//     }
-//     // or ...
-//     if (any.isSameTypeAs(Foo.getDefaultInstance())) {
-//       foo = any.unpack(Foo.getDefaultInstance());
-//     }
-//
-//  Example 3: Pack and unpack a message in Python.
-//
-//     foo = Foo(...)
-//     any = Any()
-//     any.Pack(foo)
-//     ...
-//     if any.Is(Foo.DESCRIPTOR):
-//       any.Unpack(foo)
-//       ...
-//
-//  Example 4: Pack and unpack a message in Go
-//
-//      foo := &pb.Foo{...}
-//      any, err := anypb.New(foo)
-//      if err != nil {
-//        ...
-//      }
-//      ...
-//      foo := &pb.Foo{}
-//      if err := any.UnmarshalTo(foo); err != nil {
-//        ...
-//      }
-//
-// The pack methods provided by protobuf library will by default use
-// 'type.googleapis.com/full.type.name' as the type URL and the unpack
-// methods only use the fully qualified type name after the last '/'
-// in the type URL, for example "foo.bar.com/x/y.z" will yield type
-// name "y.z".
-//
-// JSON
-// ====
-// The JSON representation of an `Any` value uses the regular
-// representation of the deserialized, embedded message, with an
-// additional field `@type` which contains the type URL. Example:
-//
-//     package google.profile;
-//     message Person {
-//       string first_name = 1;
-//       string last_name = 2;
-//     }
-//
-//     {
-//       "@type": "type.googleapis.com/google.profile.Person",
-//       "firstName": <string>,
-//       "lastName": <string>
-//     }
-//
-// If the embedded message type is well-known and has a custom JSON
-// representation, that representation will be embedded adding a field
-// `value` which holds the custom JSON in addition to the `@type`
-// field. Example (for message [google.protobuf.Duration][]):
-//
-//     {
-//       "@type": "type.googleapis.com/google.protobuf.Duration",
-//       "value": "1.212s"
-//     }
-//
-message Any {
-  // A URL/resource name that uniquely identifies the type of the serialized
-  // protocol buffer message. This string must contain at least
-  // one "/" character. The last segment of the URL's path must represent
-  // the fully qualified name of the type (as in
-  // `path/google.protobuf.Duration`). The name should be in a canonical form
-  // (e.g., leading "." is not accepted).
-  //
-  // In practice, teams usually precompile into the binary all types that they
-  // expect it to use in the context of Any. However, for URLs which use the
-  // scheme `http`, `https`, or no scheme, one can optionally set up a type
-  // server that maps type URLs to message definitions as follows:
-  //
-  // * If no scheme is provided, `https` is assumed.
-  // * An HTTP GET on the URL must yield a [google.protobuf.Type][]
-  //   value in binary format, or produce an error.
-  // * Applications are allowed to cache lookup results based on the
-  //   URL, or have them precompiled into a binary to avoid any
-  //   lookup. Therefore, binary compatibility needs to be preserved
-  //   on changes to types. (Use versioned type names to manage
-  //   breaking changes.)
-  //
-  // Note: this functionality is not currently available in the official
-  // protobuf release, and it is not used for type URLs beginning with
-  // type.googleapis.com. As of May 2023, there are no widely used type server
-  // implementations and no plans to implement one.
-  //
-  // Schemes other than `http`, `https` (or the empty scheme) might be
-  // used with implementation specific semantics.
-  //
-  string type_url = 1;
+import "gogoproto/gogo.proto";
+import "google/protobuf/any.proto";
+import "cosmos/upgrade/v1beta1/upgrade.proto";
+import "cosmos_proto/cosmos.proto";
 
-  // Must be a valid serialized protocol buffer of the above specified type.
-  bytes value = 2;
+// IdentifiedClientState defines a client state with an additional client
+// identifier field.
+message IdentifiedClientState {
+  // client identifier
+  string client_id = 1 [(gogoproto.moretags) = "yaml:\"client_id\""];
+  // client state
+  google.protobuf.Any client_state = 2 [(gogoproto.moretags) = "yaml:\"client_state\""];
+}
+
+// ConsensusStateWithHeight defines a consensus state with an additional height
+// field.
+message ConsensusStateWithHeight {
+  // consensus state height
+  Height height = 1 [(gogoproto.nullable) = false];
+  // consensus state
+  google.protobuf.Any consensus_state = 2 [(gogoproto.moretags) = "yaml:\"consensus_state\""];
+}
+
+// ClientConsensusStates defines all the stored consensus states for a given
+// client.
+message ClientConsensusStates {
+  // client identifier
+  string client_id = 1 [(gogoproto.moretags) = "yaml:\"client_id\""];
+  // consensus states and their heights associated with the client
+  repeated ConsensusStateWithHeight consensus_states = 2
+      [(gogoproto.moretags) = "yaml:\"consensus_states\"", (gogoproto.nullable) = false];
+}
+
+// ClientUpdateProposal is a governance proposal. If it passes, the substitute
+// client's latest consensus state is copied over to the subject client. The proposal
+// handler may fail if the subject and the substitute do not match in client and
+// chain parameters (with exception to latest height, frozen height, and chain-id).
+message ClientUpdateProposal {
+  option (gogoproto.goproto_getters)         = false;
+  option (cosmos_proto.implements_interface) = "cosmos.gov.v1beta1.Content";
+  // the title of the update proposal
+  string title = 1;
+  // the description of the proposal
+  string description = 2;
+  // the client identifier for the client to be updated if the proposal passes
+  string subject_client_id = 3 [(gogoproto.moretags) = "yaml:\"subject_client_id\""];
+  // the substitute client identifier for the client standing in for the subject
+  // client
+  string substitute_client_id = 4 [(gogoproto.moretags) = "yaml:\"substitute_client_id\""];
+}
+
+// UpgradeProposal is a gov Content type for initiating an IBC breaking
+// upgrade.
+message UpgradeProposal {
+  option (gogoproto.goproto_getters)         = false;
+  option (gogoproto.goproto_stringer)        = false;
+  option (gogoproto.equal)                   = true;
+  option (cosmos_proto.implements_interface) = "cosmos.gov.v1beta1.Content";
+
+  string                      title       = 1;
+  string                      description = 2;
+  cosmos.upgrade.v1beta1.Plan plan        = 3 [(gogoproto.nullable) = false];
+
+  // An UpgradedClientState must be provided to perform an IBC breaking upgrade.
+  // This will make the chain commit to the correct upgraded (self) client state
+  // before the upgrade occurs, so that connecting chains can verify that the
+  // new upgraded client is valid by verifying a proof on the previous version
+  // of the chain. This will allow IBC connections to persist smoothly across
+  // planned chain upgrades
+  google.protobuf.Any upgraded_client_state = 4 [(gogoproto.moretags) = "yaml:\"upgraded_client_state\""];
+}
+
+// Height is a monotonically increasing data type
+// that can be compared against another Height for the purposes of updating and
+// freezing clients
+//
+// Normally the RevisionHeight is incremented at each height while keeping
+// RevisionNumber the same. However some consensus algorithms may choose to
+// reset the height in certain conditions e.g. hard forks, state-machine
+// breaking changes In these cases, the RevisionNumber is incremented so that
+// height continues to be monitonically increasing even as the RevisionHeight
+// gets reset
+message Height {
+  option (gogoproto.goproto_getters)  = false;
+  option (gogoproto.goproto_stringer) = false;
+
+  // the revision that the client is currently on
+  uint64 revision_number = 1 [(gogoproto.moretags) = "yaml:\"revision_number\""];
+  // the height within the given revision
+  uint64 revision_height = 2 [(gogoproto.moretags) = "yaml:\"revision_height\""];
+}
+
+// Params defines the set of IBC light client parameters.
+message Params {
+  // allowed_clients defines the list of allowed client state types which can be created
+  // and interacted with. If a client type is removed from the allowed clients list, usage
+  // of this client will be disabled until it is added again to the list.
+  repeated string allowed_clients = 1 [(gogoproto.moretags) = "yaml:\"allowed_clients\""];
 }
