@@ -61,7 +61,7 @@
       "enabled": true,
       "inline": false,
       "extensions": false,
-      "camelCase": false,
+      "camelCase": true,
       "enabledServices": [
         "Msg",
         "Query",

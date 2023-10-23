@@ -11,7 +11,8 @@
   ],
   "scripts": {
     "build": "lerna run build",
-    "proto:update": "lerna run proto:update"
+    "proto:update": "lerna run proto:update",
+    "test:prepare": "cd __test__/cosmos && ./prepare.sh"
   },
   "devDependencies": {
     "@cosmology/telescope": "^1.0.3",

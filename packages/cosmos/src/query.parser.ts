@@ -1,9 +1,9 @@
 import { toBase64 } from "@sign/core";
-import { QueryClientImpl as Auth } from "codegen-query/cosmos/auth/v1beta1/query.rpc.Query";
-import { ServiceClientImpl as Tx } from "codegen-query/cosmos/tx/v1beta1/service.rpc.Service";
 
+import { QueryClientImpl as Auth } from "./codegen/cosmos/auth/v1beta1/query.rpc.Query";
+import { BroadcastMode } from "./codegen/cosmos/tx/v1beta1/service";
+import { ServiceClientImpl as Tx } from "./codegen/cosmos/tx/v1beta1/service.rpc.Service";
 import { AccountParserMap, BaseAccountParser } from "./const/account";
-import { BroadcastMode } from "./codegen/types";
 import { Server } from "./query";
 import { Account } from "./types";
 import { randomId } from "./utils/random-id";
@@ -80,7 +80,6 @@ export class QueryParser extends Server {
 
   async getChainId() {
     const status = await this.status();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return (status as any)["node_info"]["network"];
   }
 
