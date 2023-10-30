@@ -1,9 +1,9 @@
 import { fromBase64, toBase64, toHex } from "@sign/core";
 
-import { Rpc } from "./types";
+import { AbciQueryRpc, TendermintRpc } from "./types";
 import { randomId } from "./utils/random-id";
 
-function createAbciQuery(endpoint: string): Rpc {
+function createAbciQuery(endpoint: string): AbciQueryRpc {
   return {
     request: async (
       service: string,
@@ -26,10 +26,11 @@ function createAbciQuery(endpoint: string): Rpc {
           },
         }),
       };
-      console.log("%cquery.ts line:29 endpoint", "color: #007acc;", endpoint);
-      console.log("%cquery.ts line:30 req", "color: #007acc;", req);
       const resp = await fetch(endpoint, req);
       const json = await resp.json();
+      if (json["error"] != void 0) {
+        throw new Error(`Request Error: ${json["error"]}`);
+      }
       try {
         const result = fromBase64(json["result"]["response"]["value"]);
         return result;
@@ -40,13 +41,9 @@ function createAbciQuery(endpoint: string): Rpc {
   };
 }
 
-function createTxService(endpoint: string): Rpc {
+function createTxService(endpoint: string): TendermintRpc {
   return {
-    request: async (
-      service: string,
-      method: string,
-      data: Uint8Array
-    ): Promise<Uint8Array> => {
+    request: async (method: string, data: Uint8Array): Promise<Uint8Array> => {
       const resp = await fetch(endpoint, {
         method: "POST",
         headers: {
@@ -62,12 +59,14 @@ function createTxService(endpoint: string): Rpc {
         }),
       });
       const json = await resp.json();
-      console.log("%cquery.ts line:62 json", "color: #007acc;", json);
+      if (json["error"] != void 0) {
+        throw new Error(`Request Error: ${json["error"]}`);
+      }
+      // console.log("%cquery.ts line:63 json", "color: #007acc;", json);
       try {
-        const result = fromBase64(json["result"]["response"]["value"]);
-        return result;
+        return json["result"];
       } catch (error) {
-        throw new Error(`Request Error: ${json["result"]["response"]["log"]}`);
+        throw new Error(`Request Error: ${json}`);
       }
     },
   };
@@ -75,8 +74,8 @@ function createTxService(endpoint: string): Rpc {
 
 export class Query {
   readonly endpoint: string;
-  abciQuery: Rpc;
-  txService: Rpc;
+  abciQuery: AbciQueryRpc;
+  txService: TendermintRpc;
 
   constructor(endpoint: string) {
     this.endpoint = endpoint;
@@ -84,7 +83,7 @@ export class Query {
     this.txService = createTxService(endpoint);
   }
 
-  about<T>(Cls: { new (rpc: Rpc): T }) {
+  about<T>(Cls: { new (rpc: AbciQueryRpc): T }) {
     return new Cls(this.abciQuery);
   }
 }

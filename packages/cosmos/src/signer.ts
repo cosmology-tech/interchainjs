@@ -2,7 +2,6 @@ import { sha256 } from "@noble/hashes/sha256";
 import { BaseSigner, Decimal, SigObj } from "@sign/core";
 
 import { SignMode } from "./codegen/cosmos/tx/signing/v1beta1/signing";
-import { BroadcastMode } from "./codegen/cosmos/tx/v1beta1/service";
 import { AuthInfo, Fee, TxBody, TxRaw } from "./codegen/cosmos/tx/v1beta1/tx";
 import prefixJson from "./config/prefix.json";
 import { PubKeySecp256k1Parser } from "./const/pubkey";
@@ -29,7 +28,7 @@ import {
   WrapType,
   WrapTypeUrl,
 } from "./types";
-import { AminoConverters, RegistryTypes } from "./types.cosmjs";
+import { AminoConverters, RegistryTypes } from "./types/cosmjs";
 import { toBech32 } from "./utils/bech";
 import {
   calculateFee,
@@ -437,10 +436,10 @@ export class Signer extends BaseSigner<QueryParser> {
   async broadcastArbitrary(raw: Uint8Array, checkTx = true, commitTx = false) {
     const mode =
       checkTx && commitTx
-        ? BroadcastMode.BROADCAST_MODE_BLOCK
+        ? "broadcast_tx_commit"
         : checkTx
-        ? BroadcastMode.BROADCAST_MODE_SYNC
-        : BroadcastMode.BROADCAST_MODE_ASYNC;
+        ? "broadcast_tx_sync"
+        : "broadcast_tx_async";
     const txResponse = await this.query.broadcast(raw, mode);
     return txResponse;
   }

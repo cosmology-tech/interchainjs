@@ -1,9 +1,13 @@
 import { QueryClientImpl as Auth } from "./codegen/cosmos/auth/v1beta1/query.rpc.Query";
-import { BroadcastMode } from "./codegen/cosmos/tx/v1beta1/service";
 import { ServiceClientImpl as Tx } from "./codegen/cosmos/tx/v1beta1/service.rpc.Service";
 import { AccountParserMap, BaseAccountParser } from "./const/account";
 import { Query } from "./query";
-import { Account } from "./types";
+import {
+  Account,
+  BroadcastTxCommitResponse,
+  BroadcastTxResponse,
+  TxResponse,
+} from "./types";
 import { requestTx } from "./utils/request";
 
 export class QueryParser extends Query {
@@ -88,58 +92,22 @@ export class QueryParser extends Query {
     return gasInfo;
   }
 
-  async broadcast(tx: Uint8Array, mode: BroadcastMode) {
-    let method: string;
-    switch (mode) {
-      case BroadcastMode.BROADCAST_MODE_ASYNC:
-        method = "broadcast_tx_async";
-        break;
-      case BroadcastMode.BROADCAST_MODE_SYNC:
-        method = "broadcast_tx_sync";
-        break;
-      case BroadcastMode.BROADCAST_MODE_BLOCK:
-        method = "broadcast_tx_block";
-        break;
-      case BroadcastMode.BROADCAST_MODE_UNSPECIFIED:
-      case BroadcastMode.UNRECOGNIZED:
-        method = "broadcast_tx_sync";
+  async broadcast(
+    tx: Uint8Array,
+    method: "broadcast_tx_async" | "broadcast_tx_sync" | "broadcast_tx_commit"
+  ): Promise<TxResponse> {
+    const resp = await this.txService.request(method, tx);
+    switch (method) {
+      case "broadcast_tx_commit":
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { check_tx, deliver_tx, ...rest } =
+          resp as BroadcastTxCommitResponse;
+        return { ...rest, ...(check_tx.code !== 0 ? check_tx : deliver_tx) };
+      case "broadcast_tx_sync":
+      case "broadcast_tx_async":
+        return resp as BroadcastTxResponse;
+      default:
+        throw new Error(`Wrong method: ${method}`);
     }
-    const resp = await this.txService.request("", method, tx);
-    return resp;
   }
 }
-
-// interface RpcBroadcastTxSyncResponse extends RpcTxData {
-//   /** hex encoded */
-//   readonly hash: string;
-// }
-
-// function decodeBroadcastTxSync(data: RpcBroadcastTxSyncResponse) {
-//   return {
-//     ...decodeTxData(data),
-//     hash: fromHex(data.hash),
-//   };
-// }
-
-// interface RpcTxData {
-//   readonly codespace?: string;
-//   readonly code?: number;
-//   readonly log?: string;
-//   /** base64 encoded */
-//   readonly data?: string;
-//   readonly events?: readonly RpcEvent[];
-//   readonly gas_wanted?: string;
-//   readonly gas_used?: string;
-// }
-
-// function decodeTxData(data: RpcTxData) {
-//   return {
-//     code: apiToSmallInt(assertNumber(data.code ?? 0)),
-//     codespace: data.codespace,
-//     log: data.log,
-//     data: may(fromBase64, data.data),
-//     events: data.events ? decodeEvents(data.events) : [],
-//     gasWanted: apiToSmallInt(data.gas_wanted ?? "0"),
-//     gasUsed: apiToSmallInt(data.gas_used ?? "0"),
-//   };
-// }

@@ -6,49 +6,43 @@ chains:
       rest: 1313
       rpc: 26653
     resources:
-      cpu: "0.3"
-      memory: "300M"
-  - name: gaia-1
-    type: cosmos
-    numValidators: 1
-    ports:
-      rest: 1317
-      rpc: 26657
-    resources:
-      cpu: "0.3"
-      memory: "300M"
+      cpu: "0.5"
+      memory: "500M"
+#   - name: cosmoshub-1
+#     type: cosmos
+#     numValidators: 1
+#     ports:
+#       rest: 1317
+#       rpc: 26657
+#     resources:
+#       cpu: "0.5"
+#       memory: "500M"
 
-relayers:
-  - name: osmos-gaia
-    type: hermes
-    replicas: 1
-    chains:
-      - osmosis-1
-      - gaia-1
-    resources:
-      cpu: "0.1"
-      memory: "100M"
+# relayers:
+#   - name: osmos-cosmos
+#     type: hermes
+#     replicas: 1
+#     chains:
+#       - osmosis-1
+#       - gaia-1
+#     resources:
+#       cpu: "0.3"
+#       memory: "300M"
 
 registry:
-  enabled: true
+  enabled: false
   ports:
     rest: 8081
   resources:
     cpu: "0.1"
     memory: "100M"
 
-# configure default resources
-resources:
-  node:
-    cpu: "0.3"
-    memory: "300M"
-
 exposer:
   resources:
     cpu: "0.1"
     memory: "100M"
- 
+
 explorer:
-  enabled: true
+  enabled: false
   ports:
     rest: 8080

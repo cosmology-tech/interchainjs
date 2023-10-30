@@ -31,6 +31,8 @@
     "@typescript-eslint/no-var-requires": 0,
     "no-console": 0,
     "@typescript-eslint/ban-ts-comment": 0,
-    "prefer-const": 0
+    "prefer-const": 0,
+    "no-case-declarations": 0,
+    "no-implicit-globals": 0
   }
 }

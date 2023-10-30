@@ -1,5 +1,5 @@
 import { ParserData } from "../types";
-import { AminoConverter, GeneratedType } from "../types.cosmjs";
+import { AminoConverter, GeneratedType } from "../types/cosmjs";
 import { BaseParser } from "./base";
 
 export class MsgParser<ProtoT, AminoT> extends BaseParser<ProtoT, AminoT> {

@@ -14,4 +14,5 @@ module.exports = {
   transformIgnorePatterns: [`/node_modules/*`],
   testRegex: "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
   moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
+  setupFilesAfterEnv: ["<rootDir>/__test__/.setup.ts"],
 };

@@ -5,6 +5,6 @@
     "rootDir": ".",
     "checkJs": false
   },
-  "include": ["tests/**/*", "tests/.osmosis.endpoints.ts"],
+  "include": ["src/**/*", "src/.setup.ts"],
   "exclude": ["node_modules"]
 }
