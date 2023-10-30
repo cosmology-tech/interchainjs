@@ -14,11 +14,11 @@
     "proto:update": "lerna run proto:update",
     "test:prepare-proto": "cd __test__/cosmos && ./scripts/prepare-proto.sh",
     "test:prepare-server": "cd __test__/cosmos && ./scripts/prepare-server.sh",
-    "test:prepare-port": "cd __test__/cosmos && ./scripts/port-forward.sh --config=.starship.yaml > .port",
-    "test:stop-server": "cd __test__/cosmos && ./scripts/stop-server.sh"
+    "test:stop-server": "cd __test__/cosmos && ./scripts/stop-server.sh",
+    "test:prepare": "yarn test:prepare-proto && yarn test:prepare-server"
   },
   "devDependencies": {
-    "@cosmology/telescope": "^1.0.6",
+    "@cosmology/telescope": "^1.0.10",
     "@types/jest": "^29.5.3",
     "@typescript-eslint/eslint-plugin": "^6.4.0",
     "@typescript-eslint/parser": "^6.4.0",

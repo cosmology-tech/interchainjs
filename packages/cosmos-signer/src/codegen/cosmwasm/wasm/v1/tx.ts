@@ -13,7 +13,7 @@ export interface MsgStoreCode {
    * InstantiatePermission access control to apply on contract creation,
    * optional
    */
-  instantiatePermission: AccessConfig;
+  instantiatePermission?: AccessConfig;
 }
 export interface MsgStoreCodeProtoMsg {
   typeUrl: "/cosmwasm.wasm.v1.MsgStoreCode";
@@ -30,10 +30,6 @@ export interface MsgStoreCodeAmino {
    * optional
    */
   instantiate_permission?: AccessConfigAmino;
-}
-export interface MsgStoreCodeAminoMsg {
-  type: "wasm/MsgStoreCode";
-  value: MsgStoreCodeAmino;
 }
 /** MsgStoreCodeResponse returns store result data. */
 export interface MsgStoreCodeResponse {
@@ -52,10 +48,6 @@ export interface MsgStoreCodeResponseAmino {
   code_id: string;
   /** Checksum is the sha256 hash of the stored code */
   checksum: Uint8Array;
-}
-export interface MsgStoreCodeResponseAminoMsg {
-  type: "wasm/MsgStoreCodeResponse";
-  value: MsgStoreCodeResponseAmino;
 }
 /**
  * MsgInstantiateContract create a new smart contract instance for the given
@@ -97,10 +89,6 @@ export interface MsgInstantiateContractAmino {
   /** Funds coins that are transferred to the contract on instantiation */
   funds: CoinAmino[];
 }
-export interface MsgInstantiateContractAminoMsg {
-  type: "wasm/MsgInstantiateContract";
-  value: MsgInstantiateContractAmino;
-}
 /** MsgInstantiateContractResponse return instantiation result data */
 export interface MsgInstantiateContractResponse {
   /** Address is the bech32 address of the new contract instance. */
@@ -118,10 +106,6 @@ export interface MsgInstantiateContractResponseAmino {
   address: string;
   /** Data contains bytes to returned from the contract */
   data: Uint8Array;
-}
-export interface MsgInstantiateContractResponseAminoMsg {
-  type: "wasm/MsgInstantiateContractResponse";
-  value: MsgInstantiateContractResponseAmino;
 }
 /**
  * MsgInstantiateContract2 create a new smart contract instance for the given
@@ -177,10 +161,6 @@ export interface MsgInstantiateContract2Amino {
    */
   fix_msg: boolean;
 }
-export interface MsgInstantiateContract2AminoMsg {
-  type: "wasm/MsgInstantiateContract2";
-  value: MsgInstantiateContract2Amino;
-}
 /** MsgInstantiateContract2Response return instantiation result data */
 export interface MsgInstantiateContract2Response {
   /** Address is the bech32 address of the new contract instance. */
@@ -198,10 +178,6 @@ export interface MsgInstantiateContract2ResponseAmino {
   address: string;
   /** Data contains bytes to returned from the contract */
   data: Uint8Array;
-}
-export interface MsgInstantiateContract2ResponseAminoMsg {
-  type: "wasm/MsgInstantiateContract2Response";
-  value: MsgInstantiateContract2ResponseAmino;
 }
 /** MsgExecuteContract submits the given message data to a smart contract */
 export interface MsgExecuteContract {
@@ -229,10 +205,6 @@ export interface MsgExecuteContractAmino {
   /** Funds coins that are transferred to the contract on execution */
   funds: CoinAmino[];
 }
-export interface MsgExecuteContractAminoMsg {
-  type: "wasm/MsgExecuteContract";
-  value: MsgExecuteContractAmino;
-}
 /** MsgExecuteContractResponse returns execution result data. */
 export interface MsgExecuteContractResponse {
   /** Data contains bytes to returned from the contract */
@@ -246,10 +218,6 @@ export interface MsgExecuteContractResponseProtoMsg {
 export interface MsgExecuteContractResponseAmino {
   /** Data contains bytes to returned from the contract */
   data: Uint8Array;
-}
-export interface MsgExecuteContractResponseAminoMsg {
-  type: "wasm/MsgExecuteContractResponse";
-  value: MsgExecuteContractResponseAmino;
 }
 /** MsgMigrateContract runs a code upgrade/ downgrade for a smart contract */
 export interface MsgMigrateContract {
@@ -277,10 +245,6 @@ export interface MsgMigrateContractAmino {
   /** Msg json encoded message to be passed to the contract on migration */
   msg: Uint8Array;
 }
-export interface MsgMigrateContractAminoMsg {
-  type: "wasm/MsgMigrateContract";
-  value: MsgMigrateContractAmino;
-}
 /** MsgMigrateContractResponse returns contract migration result data. */
 export interface MsgMigrateContractResponse {
   /**
@@ -300,10 +264,6 @@ export interface MsgMigrateContractResponseAmino {
    * (May be empty)
    */
   data: Uint8Array;
-}
-export interface MsgMigrateContractResponseAminoMsg {
-  type: "wasm/MsgMigrateContractResponse";
-  value: MsgMigrateContractResponseAmino;
 }
 /** MsgUpdateAdmin sets a new admin for a smart contract */
 export interface MsgUpdateAdmin {
@@ -327,10 +287,6 @@ export interface MsgUpdateAdminAmino {
   /** Contract is the address of the smart contract */
   contract: string;
 }
-export interface MsgUpdateAdminAminoMsg {
-  type: "wasm/MsgUpdateAdmin";
-  value: MsgUpdateAdminAmino;
-}
 /** MsgUpdateAdminResponse returns empty data */
 export interface MsgUpdateAdminResponse {}
 export interface MsgUpdateAdminResponseProtoMsg {
@@ -339,10 +295,6 @@ export interface MsgUpdateAdminResponseProtoMsg {
 }
 /** MsgUpdateAdminResponse returns empty data */
 export interface MsgUpdateAdminResponseAmino {}
-export interface MsgUpdateAdminResponseAminoMsg {
-  type: "wasm/MsgUpdateAdminResponse";
-  value: MsgUpdateAdminResponseAmino;
-}
 /** MsgClearAdmin removes any admin stored for a smart contract */
 export interface MsgClearAdmin {
   /** Sender is the actor that signed the messages */
@@ -361,10 +313,6 @@ export interface MsgClearAdminAmino {
   /** Contract is the address of the smart contract */
   contract: string;
 }
-export interface MsgClearAdminAminoMsg {
-  type: "wasm/MsgClearAdmin";
-  value: MsgClearAdminAmino;
-}
 /** MsgClearAdminResponse returns empty data */
 export interface MsgClearAdminResponse {}
 export interface MsgClearAdminResponseProtoMsg {
@@ -373,10 +321,6 @@ export interface MsgClearAdminResponseProtoMsg {
 }
 /** MsgClearAdminResponse returns empty data */
 export interface MsgClearAdminResponseAmino {}
-export interface MsgClearAdminResponseAminoMsg {
-  type: "wasm/MsgClearAdminResponse";
-  value: MsgClearAdminResponseAmino;
-}
 /**
  * AccessConfigUpdate contains the code id and the access config to be
  * applied.
@@ -401,10 +345,6 @@ export interface AccessConfigUpdateAmino {
   /** InstantiatePermission to apply to the set of code ids */
   instantiate_permission?: AccessConfigAmino;
 }
-export interface AccessConfigUpdateAminoMsg {
-  type: "wasm/AccessConfigUpdate";
-  value: AccessConfigUpdateAmino;
-}
 /** MsgUpdateInstantiateConfig updates instantiate config for a smart contract */
 export interface MsgUpdateInstantiateConfig {
   /** Sender is the that actor that signed the messages */
@@ -412,7 +352,7 @@ export interface MsgUpdateInstantiateConfig {
   /** CodeID references the stored WASM code */
   codeId: bigint;
   /** NewInstantiatePermission is the new access control */
-  newInstantiatePermission: AccessConfig;
+  newInstantiatePermission?: AccessConfig;
 }
 export interface MsgUpdateInstantiateConfigProtoMsg {
   typeUrl: "/cosmwasm.wasm.v1.MsgUpdateInstantiateConfig";
@@ -427,10 +367,6 @@ export interface MsgUpdateInstantiateConfigAmino {
   /** NewInstantiatePermission is the new access control */
   new_instantiate_permission?: AccessConfigAmino;
 }
-export interface MsgUpdateInstantiateConfigAminoMsg {
-  type: "wasm/MsgUpdateInstantiateConfig";
-  value: MsgUpdateInstantiateConfigAmino;
-}
 /** MsgUpdateInstantiateConfigResponse returns empty data */
 export interface MsgUpdateInstantiateConfigResponse {}
 export interface MsgUpdateInstantiateConfigResponseProtoMsg {
@@ -439,10 +375,6 @@ export interface MsgUpdateInstantiateConfigResponseProtoMsg {
 }
 /** MsgUpdateInstantiateConfigResponse returns empty data */
 export interface MsgUpdateInstantiateConfigResponseAmino {}
-export interface MsgUpdateInstantiateConfigResponseAminoMsg {
-  type: "wasm/MsgUpdateInstantiateConfigResponse";
-  value: MsgUpdateInstantiateConfigResponseAmino;
-}
 /**
  * MsgUpdateParams is the MsgUpdateParams request type.
  * 
@@ -477,10 +409,6 @@ export interface MsgUpdateParamsAmino {
    */
   params?: ParamsAmino;
 }
-export interface MsgUpdateParamsAminoMsg {
-  type: "wasm/MsgUpdateParams";
-  value: MsgUpdateParamsAmino;
-}
 /**
  * MsgUpdateParamsResponse defines the response structure for executing a
  * MsgUpdateParams message.
@@ -499,10 +427,6 @@ export interface MsgUpdateParamsResponseProtoMsg {
  * Since: 0.40
  */
 export interface MsgUpdateParamsResponseAmino {}
-export interface MsgUpdateParamsResponseAminoMsg {
-  type: "wasm/MsgUpdateParamsResponse";
-  value: MsgUpdateParamsResponseAmino;
-}
 /**
  * MsgSudoContract is the MsgSudoContract request type.
  * 
@@ -533,10 +457,6 @@ export interface MsgSudoContractAmino {
   /** Msg json encoded message to be passed to the contract as sudo */
   msg: Uint8Array;
 }
-export interface MsgSudoContractAminoMsg {
-  type: "wasm/MsgSudoContract";
-  value: MsgSudoContractAmino;
-}
 /**
  * MsgSudoContractResponse defines the response structure for executing a
  * MsgSudoContract message.
@@ -560,10 +480,6 @@ export interface MsgSudoContractResponseProtoMsg {
 export interface MsgSudoContractResponseAmino {
   /** Data contains bytes to returned from the contract */
   data: Uint8Array;
-}
-export interface MsgSudoContractResponseAminoMsg {
-  type: "wasm/MsgSudoContractResponse";
-  value: MsgSudoContractResponseAmino;
 }
 /**
  * MsgPinCodes is the MsgPinCodes request type.
@@ -591,10 +507,6 @@ export interface MsgPinCodesAmino {
   /** CodeIDs references the new WASM codes */
   code_ids: string[];
 }
-export interface MsgPinCodesAminoMsg {
-  type: "wasm/MsgPinCodes";
-  value: MsgPinCodesAmino;
-}
 /**
  * MsgPinCodesResponse defines the response structure for executing a
  * MsgPinCodes message.
@@ -613,10 +525,6 @@ export interface MsgPinCodesResponseProtoMsg {
  * Since: 0.40
  */
 export interface MsgPinCodesResponseAmino {}
-export interface MsgPinCodesResponseAminoMsg {
-  type: "wasm/MsgPinCodesResponse";
-  value: MsgPinCodesResponseAmino;
-}
 /**
  * MsgUnpinCodes is the MsgUnpinCodes request type.
  * 
@@ -643,10 +551,6 @@ export interface MsgUnpinCodesAmino {
   /** CodeIDs references the WASM codes */
   code_ids: string[];
 }
-export interface MsgUnpinCodesAminoMsg {
-  type: "wasm/MsgUnpinCodes";
-  value: MsgUnpinCodesAmino;
-}
 /**
  * MsgUnpinCodesResponse defines the response structure for executing a
  * MsgUnpinCodes message.
@@ -665,10 +569,6 @@ export interface MsgUnpinCodesResponseProtoMsg {
  * Since: 0.40
  */
 export interface MsgUnpinCodesResponseAmino {}
-export interface MsgUnpinCodesResponseAminoMsg {
-  type: "wasm/MsgUnpinCodesResponse";
-  value: MsgUnpinCodesResponseAmino;
-}
 /**
  * MsgStoreAndInstantiateContract is the MsgStoreAndInstantiateContract
  * request type.
@@ -681,7 +581,7 @@ export interface MsgStoreAndInstantiateContract {
   /** WASMByteCode can be raw or gzip compressed */
   wasmByteCode: Uint8Array;
   /** InstantiatePermission to apply on contract creation, optional */
-  instantiatePermission: AccessConfig;
+  instantiatePermission?: AccessConfig;
   /**
    * UnpinCode code on upload, optional. As default the uploaded contract is
    * pinned to cache.
@@ -757,10 +657,6 @@ export interface MsgStoreAndInstantiateContractAmino {
    */
   code_hash: Uint8Array;
 }
-export interface MsgStoreAndInstantiateContractAminoMsg {
-  type: "wasm/MsgStoreAndInstantiateContract";
-  value: MsgStoreAndInstantiateContractAmino;
-}
 /**
  * MsgStoreAndInstantiateContractResponse defines the response structure
  * for executing a MsgStoreAndInstantiateContract message.
@@ -789,10 +685,6 @@ export interface MsgStoreAndInstantiateContractResponseAmino {
   /** Data contains bytes to returned from the contract */
   data: Uint8Array;
 }
-export interface MsgStoreAndInstantiateContractResponseAminoMsg {
-  type: "wasm/MsgStoreAndInstantiateContractResponse";
-  value: MsgStoreAndInstantiateContractResponseAmino;
-}
 /**
  * MsgAddCodeUploadParamsAddresses is the
  * MsgAddCodeUploadParamsAddresses request type.
@@ -815,10 +707,6 @@ export interface MsgAddCodeUploadParamsAddressesAmino {
   authority: string;
   addresses: string[];
 }
-export interface MsgAddCodeUploadParamsAddressesAminoMsg {
-  type: "wasm/MsgAddCodeUploadParamsAddresses";
-  value: MsgAddCodeUploadParamsAddressesAmino;
-}
 /**
  * MsgAddCodeUploadParamsAddressesResponse defines the response
  * structure for executing a MsgAddCodeUploadParamsAddresses message.
@@ -833,10 +721,6 @@ export interface MsgAddCodeUploadParamsAddressesResponseProtoMsg {
  * structure for executing a MsgAddCodeUploadParamsAddresses message.
  */
 export interface MsgAddCodeUploadParamsAddressesResponseAmino {}
-export interface MsgAddCodeUploadParamsAddressesResponseAminoMsg {
-  type: "wasm/MsgAddCodeUploadParamsAddressesResponse";
-  value: MsgAddCodeUploadParamsAddressesResponseAmino;
-}
 /**
  * MsgRemoveCodeUploadParamsAddresses is the
  * MsgRemoveCodeUploadParamsAddresses request type.
@@ -859,10 +743,6 @@ export interface MsgRemoveCodeUploadParamsAddressesAmino {
   authority: string;
   addresses: string[];
 }
-export interface MsgRemoveCodeUploadParamsAddressesAminoMsg {
-  type: "wasm/MsgRemoveCodeUploadParamsAddresses";
-  value: MsgRemoveCodeUploadParamsAddressesAmino;
-}
 /**
  * MsgRemoveCodeUploadParamsAddressesResponse defines the response
  * structure for executing a MsgRemoveCodeUploadParamsAddresses message.
@@ -877,10 +757,6 @@ export interface MsgRemoveCodeUploadParamsAddressesResponseProtoMsg {
  * structure for executing a MsgRemoveCodeUploadParamsAddresses message.
  */
 export interface MsgRemoveCodeUploadParamsAddressesResponseAmino {}
-export interface MsgRemoveCodeUploadParamsAddressesResponseAminoMsg {
-  type: "wasm/MsgRemoveCodeUploadParamsAddressesResponse";
-  value: MsgRemoveCodeUploadParamsAddressesResponseAmino;
-}
 /**
  * MsgStoreAndMigrateContract is the MsgStoreAndMigrateContract
  * request type.
@@ -893,7 +769,7 @@ export interface MsgStoreAndMigrateContract {
   /** WASMByteCode can be raw or gzip compressed */
   wasmByteCode: Uint8Array;
   /** InstantiatePermission to apply on contract creation, optional */
-  instantiatePermission: AccessConfig;
+  instantiatePermission?: AccessConfig;
   /** Contract is the address of the smart contract */
   contract: string;
   /** Msg json encoded message to be passed to the contract on migration */
@@ -920,10 +796,6 @@ export interface MsgStoreAndMigrateContractAmino {
   contract: string;
   /** Msg json encoded message to be passed to the contract on migration */
   msg: Uint8Array;
-}
-export interface MsgStoreAndMigrateContractAminoMsg {
-  type: "wasm/MsgStoreAndMigrateContract";
-  value: MsgStoreAndMigrateContractAmino;
 }
 /**
  * MsgStoreAndMigrateContractResponse defines the response structure
@@ -957,10 +829,6 @@ export interface MsgStoreAndMigrateContractResponseAmino {
   /** Data contains bytes to returned from the contract */
   data: Uint8Array;
 }
-export interface MsgStoreAndMigrateContractResponseAminoMsg {
-  type: "wasm/MsgStoreAndMigrateContractResponse";
-  value: MsgStoreAndMigrateContractResponseAmino;
-}
 /** MsgUpdateContractLabel sets a new label for a smart contract */
 export interface MsgUpdateContractLabel {
   /** Sender is the that actor that signed the messages */
@@ -983,10 +851,6 @@ export interface MsgUpdateContractLabelAmino {
   /** Contract is the address of the smart contract */
   contract: string;
 }
-export interface MsgUpdateContractLabelAminoMsg {
-  type: "wasm/MsgUpdateContractLabel";
-  value: MsgUpdateContractLabelAmino;
-}
 /** MsgUpdateContractLabelResponse returns empty data */
 export interface MsgUpdateContractLabelResponse {}
 export interface MsgUpdateContractLabelResponseProtoMsg {
@@ -995,18 +859,16 @@ export interface MsgUpdateContractLabelResponseProtoMsg {
 }
 /** MsgUpdateContractLabelResponse returns empty data */
 export interface MsgUpdateContractLabelResponseAmino {}
-export interface MsgUpdateContractLabelResponseAminoMsg {
-  type: "wasm/MsgUpdateContractLabelResponse";
-  value: MsgUpdateContractLabelResponseAmino;
-}
 function createBaseMsgStoreCode(): MsgStoreCode {
   return {
     sender: "",
     wasmByteCode: new Uint8Array(),
-    instantiatePermission: AccessConfig.fromPartial({})
+    instantiatePermission: undefined
   };
 }
 export const MsgStoreCode = {
+  typeUrl: "/cosmwasm.wasm.v1.MsgStoreCode",
+  aminoType: "wasm/MsgStoreCode",
   encode(message: MsgStoreCode, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.sender !== "") {
       writer.uint32(10).string(message.sender);
@@ -1077,15 +939,6 @@ export const MsgStoreCode = {
     obj.instantiate_permission = message.instantiatePermission ? AccessConfig.toAmino(message.instantiatePermission) : undefined;
     return obj;
   },
-  fromAminoMsg(object: MsgStoreCodeAminoMsg): MsgStoreCode {
-    return MsgStoreCode.fromAmino(object.value);
-  },
-  toAminoMsg(message: MsgStoreCode): MsgStoreCodeAminoMsg {
-    return {
-      type: "wasm/MsgStoreCode",
-      value: MsgStoreCode.toAmino(message)
-    };
-  },
   fromProtoMsg(message: MsgStoreCodeProtoMsg): MsgStoreCode {
     return MsgStoreCode.decode(message.value);
   },
@@ -1106,6 +959,8 @@ function createBaseMsgStoreCodeResponse(): MsgStoreCodeResponse {
   };
 }
 export const MsgStoreCodeResponse = {
+  typeUrl: "/cosmwasm.wasm.v1.MsgStoreCodeResponse",
+  aminoType: "wasm/MsgStoreCodeResponse",
   encode(message: MsgStoreCodeResponse, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.codeId !== BigInt(0)) {
       writer.uint32(8).uint64(message.codeId);
@@ -1165,15 +1020,6 @@ export const MsgStoreCodeResponse = {
     obj.checksum = message.checksum;
     return obj;
   },
-  fromAminoMsg(object: MsgStoreCodeResponseAminoMsg): MsgStoreCodeResponse {
-    return MsgStoreCodeResponse.fromAmino(object.value);
-  },
-  toAminoMsg(message: MsgStoreCodeResponse): MsgStoreCodeResponseAminoMsg {
-    return {
-      type: "wasm/MsgStoreCodeResponse",
-      value: MsgStoreCodeResponse.toAmino(message)
-    };
-  },
   fromProtoMsg(message: MsgStoreCodeResponseProtoMsg): MsgStoreCodeResponse {
     return MsgStoreCodeResponse.decode(message.value);
   },
@@ -1198,6 +1044,8 @@ function createBaseMsgInstantiateContract(): MsgInstantiateContract {
   };
 }
 export const MsgInstantiateContract = {
+  typeUrl: "/cosmwasm.wasm.v1.MsgInstantiateContract",
+  aminoType: "wasm/MsgInstantiateContract",
   encode(message: MsgInstantiateContract, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.sender !== "") {
       writer.uint32(10).string(message.sender);
@@ -1309,15 +1157,6 @@ export const MsgInstantiateContract = {
     }
     return obj;
   },
-  fromAminoMsg(object: MsgInstantiateContractAminoMsg): MsgInstantiateContract {
-    return MsgInstantiateContract.fromAmino(object.value);
-  },
-  toAminoMsg(message: MsgInstantiateContract): MsgInstantiateContractAminoMsg {
-    return {
-      type: "wasm/MsgInstantiateContract",
-      value: MsgInstantiateContract.toAmino(message)
-    };
-  },
   fromProtoMsg(message: MsgInstantiateContractProtoMsg): MsgInstantiateContract {
     return MsgInstantiateContract.decode(message.value);
   },
@@ -1338,6 +1177,8 @@ function createBaseMsgInstantiateContractResponse(): MsgInstantiateContractRespo
   };
 }
 export const MsgInstantiateContractResponse = {
+  typeUrl: "/cosmwasm.wasm.v1.MsgInstantiateContractResponse",
+  aminoType: "wasm/MsgInstantiateContractResponse",
   encode(message: MsgInstantiateContractResponse, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.address !== "") {
       writer.uint32(10).string(message.address);
@@ -1397,15 +1238,6 @@ export const MsgInstantiateContractResponse = {
     obj.data = message.data;
     return obj;
   },
-  fromAminoMsg(object: MsgInstantiateContractResponseAminoMsg): MsgInstantiateContractResponse {
-    return MsgInstantiateContractResponse.fromAmino(object.value);
-  },
-  toAminoMsg(message: MsgInstantiateContractResponse): MsgInstantiateContractResponseAminoMsg {
-    return {
-      type: "wasm/MsgInstantiateContractResponse",
-      value: MsgInstantiateContractResponse.toAmino(message)
-    };
-  },
   fromProtoMsg(message: MsgInstantiateContractResponseProtoMsg): MsgInstantiateContractResponse {
     return MsgInstantiateContractResponse.decode(message.value);
   },
@@ -1432,6 +1264,8 @@ function createBaseMsgInstantiateContract2(): MsgInstantiateContract2 {
   };
 }
 export const MsgInstantiateContract2 = {
+  typeUrl: "/cosmwasm.wasm.v1.MsgInstantiateContract2",
+  aminoType: "wasm/MsgInstantiateContract2",
   encode(message: MsgInstantiateContract2, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.sender !== "") {
       writer.uint32(10).string(message.sender);
@@ -1565,15 +1399,6 @@ export const MsgInstantiateContract2 = {
     obj.fix_msg = message.fixMsg;
     return obj;
   },
-  fromAminoMsg(object: MsgInstantiateContract2AminoMsg): MsgInstantiateContract2 {
-    return MsgInstantiateContract2.fromAmino(object.value);
-  },
-  toAminoMsg(message: MsgInstantiateContract2): MsgInstantiateContract2AminoMsg {
-    return {
-      type: "wasm/MsgInstantiateContract2",
-      value: MsgInstantiateContract2.toAmino(message)
-    };
-  },
   fromProtoMsg(message: MsgInstantiateContract2ProtoMsg): MsgInstantiateContract2 {
     return MsgInstantiateContract2.decode(message.value);
   },
@@ -1594,6 +1419,8 @@ function createBaseMsgInstantiateContract2Response(): MsgInstantiateContract2Res
   };
 }
 export const MsgInstantiateContract2Response = {
+  typeUrl: "/cosmwasm.wasm.v1.MsgInstantiateContract2Response",
+  aminoType: "wasm/MsgInstantiateContract2Response",
   encode(message: MsgInstantiateContract2Response, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.address !== "") {
       writer.uint32(10).string(message.address);
@@ -1653,15 +1480,6 @@ export const MsgInstantiateContract2Response = {
     obj.data = message.data;
     return obj;
   },
-  fromAminoMsg(object: MsgInstantiateContract2ResponseAminoMsg): MsgInstantiateContract2Response {
-    return MsgInstantiateContract2Response.fromAmino(object.value);
-  },
-  toAminoMsg(message: MsgInstantiateContract2Response): MsgInstantiateContract2ResponseAminoMsg {
-    return {
-      type: "wasm/MsgInstantiateContract2Response",
-      value: MsgInstantiateContract2Response.toAmino(message)
-    };
-  },
   fromProtoMsg(message: MsgInstantiateContract2ResponseProtoMsg): MsgInstantiateContract2Response {
     return MsgInstantiateContract2Response.decode(message.value);
   },
@@ -1684,6 +1502,8 @@ function createBaseMsgExecuteContract(): MsgExecuteContract {
   };
 }
 export const MsgExecuteContract = {
+  typeUrl: "/cosmwasm.wasm.v1.MsgExecuteContract",
+  aminoType: "wasm/MsgExecuteContract",
   encode(message: MsgExecuteContract, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.sender !== "") {
       writer.uint32(10).string(message.sender);
@@ -1773,15 +1593,6 @@ export const MsgExecuteContract = {
     }
     return obj;
   },
-  fromAminoMsg(object: MsgExecuteContractAminoMsg): MsgExecuteContract {
-    return MsgExecuteContract.fromAmino(object.value);
-  },
-  toAminoMsg(message: MsgExecuteContract): MsgExecuteContractAminoMsg {
-    return {
-      type: "wasm/MsgExecuteContract",
-      value: MsgExecuteContract.toAmino(message)
-    };
-  },
   fromProtoMsg(message: MsgExecuteContractProtoMsg): MsgExecuteContract {
     return MsgExecuteContract.decode(message.value);
   },
@@ -1801,6 +1612,8 @@ function createBaseMsgExecuteContractResponse(): MsgExecuteContractResponse {
   };
 }
 export const MsgExecuteContractResponse = {
+  typeUrl: "/cosmwasm.wasm.v1.MsgExecuteContractResponse",
+  aminoType: "wasm/MsgExecuteContractResponse",
   encode(message: MsgExecuteContractResponse, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.data.length !== 0) {
       writer.uint32(10).bytes(message.data);
@@ -1849,15 +1662,6 @@ export const MsgExecuteContractResponse = {
     obj.data = message.data;
     return obj;
   },
-  fromAminoMsg(object: MsgExecuteContractResponseAminoMsg): MsgExecuteContractResponse {
-    return MsgExecuteContractResponse.fromAmino(object.value);
-  },
-  toAminoMsg(message: MsgExecuteContractResponse): MsgExecuteContractResponseAminoMsg {
-    return {
-      type: "wasm/MsgExecuteContractResponse",
-      value: MsgExecuteContractResponse.toAmino(message)
-    };
-  },
   fromProtoMsg(message: MsgExecuteContractResponseProtoMsg): MsgExecuteContractResponse {
     return MsgExecuteContractResponse.decode(message.value);
   },
@@ -1880,6 +1684,8 @@ function createBaseMsgMigrateContract(): MsgMigrateContract {
   };
 }
 export const MsgMigrateContract = {
+  typeUrl: "/cosmwasm.wasm.v1.MsgMigrateContract",
+  aminoType: "wasm/MsgMigrateContract",
   encode(message: MsgMigrateContract, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.sender !== "") {
       writer.uint32(10).string(message.sender);
@@ -1961,15 +1767,6 @@ export const MsgMigrateContract = {
     obj.msg = message.msg ? JSON.parse(fromUtf8(message.msg)) : undefined;
     return obj;
   },
-  fromAminoMsg(object: MsgMigrateContractAminoMsg): MsgMigrateContract {
-    return MsgMigrateContract.fromAmino(object.value);
-  },
-  toAminoMsg(message: MsgMigrateContract): MsgMigrateContractAminoMsg {
-    return {
-      type: "wasm/MsgMigrateContract",
-      value: MsgMigrateContract.toAmino(message)
-    };
-  },
   fromProtoMsg(message: MsgMigrateContractProtoMsg): MsgMigrateContract {
     return MsgMigrateContract.decode(message.value);
   },
@@ -1989,6 +1786,8 @@ function createBaseMsgMigrateContractResponse(): MsgMigrateContractResponse {
   };
 }
 export const MsgMigrateContractResponse = {
+  typeUrl: "/cosmwasm.wasm.v1.MsgMigrateContractResponse",
+  aminoType: "wasm/MsgMigrateContractResponse",
   encode(message: MsgMigrateContractResponse, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.data.length !== 0) {
       writer.uint32(10).bytes(message.data);
@@ -2037,15 +1836,6 @@ export const MsgMigrateContractResponse = {
     obj.data = message.data;
     return obj;
   },
-  fromAminoMsg(object: MsgMigrateContractResponseAminoMsg): MsgMigrateContractResponse {
-    return MsgMigrateContractResponse.fromAmino(object.value);
-  },
-  toAminoMsg(message: MsgMigrateContractResponse): MsgMigrateContractResponseAminoMsg {
-    return {
-      type: "wasm/MsgMigrateContractResponse",
-      value: MsgMigrateContractResponse.toAmino(message)
-    };
-  },
   fromProtoMsg(message: MsgMigrateContractResponseProtoMsg): MsgMigrateContractResponse {
     return MsgMigrateContractResponse.decode(message.value);
   },
@@ -2067,6 +1857,8 @@ function createBaseMsgUpdateAdmin(): MsgUpdateAdmin {
   };
 }
 export const MsgUpdateAdmin = {
+  typeUrl: "/cosmwasm.wasm.v1.MsgUpdateAdmin",
+  aminoType: "wasm/MsgUpdateAdmin",
   encode(message: MsgUpdateAdmin, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.sender !== "") {
       writer.uint32(10).string(message.sender);
@@ -2137,15 +1929,6 @@ export const MsgUpdateAdmin = {
     obj.contract = message.contract;
     return obj;
   },
-  fromAminoMsg(object: MsgUpdateAdminAminoMsg): MsgUpdateAdmin {
-    return MsgUpdateAdmin.fromAmino(object.value);
-  },
-  toAminoMsg(message: MsgUpdateAdmin): MsgUpdateAdminAminoMsg {
-    return {
-      type: "wasm/MsgUpdateAdmin",
-      value: MsgUpdateAdmin.toAmino(message)
-    };
-  },
   fromProtoMsg(message: MsgUpdateAdminProtoMsg): MsgUpdateAdmin {
     return MsgUpdateAdmin.decode(message.value);
   },
@@ -2163,6 +1946,8 @@ function createBaseMsgUpdateAdminResponse(): MsgUpdateAdminResponse {
   return {};
 }
 export const MsgUpdateAdminResponse = {
+  typeUrl: "/cosmwasm.wasm.v1.MsgUpdateAdminResponse",
+  aminoType: "wasm/MsgUpdateAdminResponse",
   encode(_: MsgUpdateAdminResponse, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     return writer;
   },
@@ -2198,15 +1983,6 @@ export const MsgUpdateAdminResponse = {
     const obj: any = {};
     return obj;
   },
-  fromAminoMsg(object: MsgUpdateAdminResponseAminoMsg): MsgUpdateAdminResponse {
-    return MsgUpdateAdminResponse.fromAmino(object.value);
-  },
-  toAminoMsg(message: MsgUpdateAdminResponse): MsgUpdateAdminResponseAminoMsg {
-    return {
-      type: "wasm/MsgUpdateAdminResponse",
-      value: MsgUpdateAdminResponse.toAmino(message)
-    };
-  },
   fromProtoMsg(message: MsgUpdateAdminResponseProtoMsg): MsgUpdateAdminResponse {
     return MsgUpdateAdminResponse.decode(message.value);
   },
@@ -2227,6 +2003,8 @@ function createBaseMsgClearAdmin(): MsgClearAdmin {
   };
 }
 export const MsgClearAdmin = {
+  typeUrl: "/cosmwasm.wasm.v1.MsgClearAdmin",
+  aminoType: "wasm/MsgClearAdmin",
   encode(message: MsgClearAdmin, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.sender !== "") {
       writer.uint32(10).string(message.sender);
@@ -2286,15 +2064,6 @@ export const MsgClearAdmin = {
     obj.contract = message.contract;
     return obj;
   },
-  fromAminoMsg(object: MsgClearAdminAminoMsg): MsgClearAdmin {
-    return MsgClearAdmin.fromAmino(object.value);
-  },
-  toAminoMsg(message: MsgClearAdmin): MsgClearAdminAminoMsg {
-    return {
-      type: "wasm/MsgClearAdmin",
-      value: MsgClearAdmin.toAmino(message)
-    };
-  },
   fromProtoMsg(message: MsgClearAdminProtoMsg): MsgClearAdmin {
     return MsgClearAdmin.decode(message.value);
   },
@@ -2312,6 +2081,8 @@ function createBaseMsgClearAdminResponse(): MsgClearAdminResponse {
   return {};
 }
 export const MsgClearAdminResponse = {
+  typeUrl: "/cosmwasm.wasm.v1.MsgClearAdminResponse",
+  aminoType: "wasm/MsgClearAdminResponse",
   encode(_: MsgClearAdminResponse, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     return writer;
   },
@@ -2347,15 +2118,6 @@ export const MsgClearAdminResponse = {
     const obj: any = {};
     return obj;
   },
-  fromAminoMsg(object: MsgClearAdminResponseAminoMsg): MsgClearAdminResponse {
-    return MsgClearAdminResponse.fromAmino(object.value);
-  },
-  toAminoMsg(message: MsgClearAdminResponse): MsgClearAdminResponseAminoMsg {
-    return {
-      type: "wasm/MsgClearAdminResponse",
-      value: MsgClearAdminResponse.toAmino(message)
-    };
-  },
   fromProtoMsg(message: MsgClearAdminResponseProtoMsg): MsgClearAdminResponse {
     return MsgClearAdminResponse.decode(message.value);
   },
@@ -2376,6 +2138,8 @@ function createBaseAccessConfigUpdate(): AccessConfigUpdate {
   };
 }
 export const AccessConfigUpdate = {
+  typeUrl: "/cosmwasm.wasm.v1.AccessConfigUpdate",
+  aminoType: "wasm/AccessConfigUpdate",
   encode(message: AccessConfigUpdate, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.codeId !== BigInt(0)) {
       writer.uint32(8).uint64(message.codeId);
@@ -2435,15 +2199,6 @@ export const AccessConfigUpdate = {
     obj.instantiate_permission = message.instantiatePermission ? AccessConfig.toAmino(message.instantiatePermission) : undefined;
     return obj;
   },
-  fromAminoMsg(object: AccessConfigUpdateAminoMsg): AccessConfigUpdate {
-    return AccessConfigUpdate.fromAmino(object.value);
-  },
-  toAminoMsg(message: AccessConfigUpdate): AccessConfigUpdateAminoMsg {
-    return {
-      type: "wasm/AccessConfigUpdate",
-      value: AccessConfigUpdate.toAmino(message)
-    };
-  },
   fromProtoMsg(message: AccessConfigUpdateProtoMsg): AccessConfigUpdate {
     return AccessConfigUpdate.decode(message.value);
   },
@@ -2461,10 +2216,12 @@ function createBaseMsgUpdateInstantiateConfig(): MsgUpdateInstantiateConfig {
   return {
     sender: "",
     codeId: BigInt(0),
-    newInstantiatePermission: AccessConfig.fromPartial({})
+    newInstantiatePermission: undefined
   };
 }
 export const MsgUpdateInstantiateConfig = {
+  typeUrl: "/cosmwasm.wasm.v1.MsgUpdateInstantiateConfig",
+  aminoType: "wasm/MsgUpdateInstantiateConfig",
   encode(message: MsgUpdateInstantiateConfig, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.sender !== "") {
       writer.uint32(10).string(message.sender);
@@ -2535,15 +2292,6 @@ export const MsgUpdateInstantiateConfig = {
     obj.new_instantiate_permission = message.newInstantiatePermission ? AccessConfig.toAmino(message.newInstantiatePermission) : undefined;
     return obj;
   },
-  fromAminoMsg(object: MsgUpdateInstantiateConfigAminoMsg): MsgUpdateInstantiateConfig {
-    return MsgUpdateInstantiateConfig.fromAmino(object.value);
-  },
-  toAminoMsg(message: MsgUpdateInstantiateConfig): MsgUpdateInstantiateConfigAminoMsg {
-    return {
-      type: "wasm/MsgUpdateInstantiateConfig",
-      value: MsgUpdateInstantiateConfig.toAmino(message)
-    };
-  },
   fromProtoMsg(message: MsgUpdateInstantiateConfigProtoMsg): MsgUpdateInstantiateConfig {
     return MsgUpdateInstantiateConfig.decode(message.value);
   },
@@ -2561,6 +2309,8 @@ function createBaseMsgUpdateInstantiateConfigResponse(): MsgUpdateInstantiateCon
   return {};
 }
 export const MsgUpdateInstantiateConfigResponse = {
+  typeUrl: "/cosmwasm.wasm.v1.MsgUpdateInstantiateConfigResponse",
+  aminoType: "wasm/MsgUpdateInstantiateConfigResponse",
   encode(_: MsgUpdateInstantiateConfigResponse, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     return writer;
   },
@@ -2596,15 +2346,6 @@ export const MsgUpdateInstantiateConfigResponse = {
     const obj: any = {};
     return obj;
   },
-  fromAminoMsg(object: MsgUpdateInstantiateConfigResponseAminoMsg): MsgUpdateInstantiateConfigResponse {
-    return MsgUpdateInstantiateConfigResponse.fromAmino(object.value);
-  },
-  toAminoMsg(message: MsgUpdateInstantiateConfigResponse): MsgUpdateInstantiateConfigResponseAminoMsg {
-    return {
-      type: "wasm/MsgUpdateInstantiateConfigResponse",
-      value: MsgUpdateInstantiateConfigResponse.toAmino(message)
-    };
-  },
   fromProtoMsg(message: MsgUpdateInstantiateConfigResponseProtoMsg): MsgUpdateInstantiateConfigResponse {
     return MsgUpdateInstantiateConfigResponse.decode(message.value);
   },
@@ -2625,6 +2366,8 @@ function createBaseMsgUpdateParams(): MsgUpdateParams {
   };
 }
 export const MsgUpdateParams = {
+  typeUrl: "/cosmwasm.wasm.v1.MsgUpdateParams",
+  aminoType: "wasm/MsgUpdateParams",
   encode(message: MsgUpdateParams, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.authority !== "") {
       writer.uint32(10).string(message.authority);
@@ -2684,15 +2427,6 @@ export const MsgUpdateParams = {
     obj.params = message.params ? Params.toAmino(message.params) : undefined;
     return obj;
   },
-  fromAminoMsg(object: MsgUpdateParamsAminoMsg): MsgUpdateParams {
-    return MsgUpdateParams.fromAmino(object.value);
-  },
-  toAminoMsg(message: MsgUpdateParams): MsgUpdateParamsAminoMsg {
-    return {
-      type: "wasm/MsgUpdateParams",
-      value: MsgUpdateParams.toAmino(message)
-    };
-  },
   fromProtoMsg(message: MsgUpdateParamsProtoMsg): MsgUpdateParams {
     return MsgUpdateParams.decode(message.value);
   },
@@ -2710,6 +2444,8 @@ function createBaseMsgUpdateParamsResponse(): MsgUpdateParamsResponse {
   return {};
 }
 export const MsgUpdateParamsResponse = {
+  typeUrl: "/cosmwasm.wasm.v1.MsgUpdateParamsResponse",
+  aminoType: "wasm/MsgUpdateParamsResponse",
   encode(_: MsgUpdateParamsResponse, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     return writer;
   },
@@ -2745,15 +2481,6 @@ export const MsgUpdateParamsResponse = {
     const obj: any = {};
     return obj;
   },
-  fromAminoMsg(object: MsgUpdateParamsResponseAminoMsg): MsgUpdateParamsResponse {
-    return MsgUpdateParamsResponse.fromAmino(object.value);
-  },
-  toAminoMsg(message: MsgUpdateParamsResponse): MsgUpdateParamsResponseAminoMsg {
-    return {
-      type: "wasm/MsgUpdateParamsResponse",
-      value: MsgUpdateParamsResponse.toAmino(message)
-    };
-  },
   fromProtoMsg(message: MsgUpdateParamsResponseProtoMsg): MsgUpdateParamsResponse {
     return MsgUpdateParamsResponse.decode(message.value);
   },
@@ -2775,6 +2502,8 @@ function createBaseMsgSudoContract(): MsgSudoContract {
   };
 }
 export const MsgSudoContract = {
+  typeUrl: "/cosmwasm.wasm.v1.MsgSudoContract",
+  aminoType: "wasm/MsgSudoContract",
   encode(message: MsgSudoContract, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.authority !== "") {
       writer.uint32(10).string(message.authority);
@@ -2845,15 +2574,6 @@ export const MsgSudoContract = {
     obj.msg = message.msg ? JSON.parse(fromUtf8(message.msg)) : undefined;
     return obj;
   },
-  fromAminoMsg(object: MsgSudoContractAminoMsg): MsgSudoContract {
-    return MsgSudoContract.fromAmino(object.value);
-  },
-  toAminoMsg(message: MsgSudoContract): MsgSudoContractAminoMsg {
-    return {
-      type: "wasm/MsgSudoContract",
-      value: MsgSudoContract.toAmino(message)
-    };
-  },
   fromProtoMsg(message: MsgSudoContractProtoMsg): MsgSudoContract {
     return MsgSudoContract.decode(message.value);
   },
@@ -2873,6 +2593,8 @@ function createBaseMsgSudoContractResponse(): MsgSudoContractResponse {
   };
 }
 export const MsgSudoContractResponse = {
+  typeUrl: "/cosmwasm.wasm.v1.MsgSudoContractResponse",
+  aminoType: "wasm/MsgSudoContractResponse",
   encode(message: MsgSudoContractResponse, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.data.length !== 0) {
       writer.uint32(10).bytes(message.data);
@@ -2921,15 +2643,6 @@ export const MsgSudoContractResponse = {
     obj.data = message.data;
     return obj;
   },
-  fromAminoMsg(object: MsgSudoContractResponseAminoMsg): MsgSudoContractResponse {
-    return MsgSudoContractResponse.fromAmino(object.value);
-  },
-  toAminoMsg(message: MsgSudoContractResponse): MsgSudoContractResponseAminoMsg {
-    return {
-      type: "wasm/MsgSudoContractResponse",
-      value: MsgSudoContractResponse.toAmino(message)
-    };
-  },
   fromProtoMsg(message: MsgSudoContractResponseProtoMsg): MsgSudoContractResponse {
     return MsgSudoContractResponse.decode(message.value);
   },
@@ -2950,6 +2663,8 @@ function createBaseMsgPinCodes(): MsgPinCodes {
   };
 }
 export const MsgPinCodes = {
+  typeUrl: "/cosmwasm.wasm.v1.MsgPinCodes",
+  aminoType: "wasm/MsgPinCodes",
   encode(message: MsgPinCodes, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.authority !== "") {
       writer.uint32(10).string(message.authority);
@@ -3026,15 +2741,6 @@ export const MsgPinCodes = {
     }
     return obj;
   },
-  fromAminoMsg(object: MsgPinCodesAminoMsg): MsgPinCodes {
-    return MsgPinCodes.fromAmino(object.value);
-  },
-  toAminoMsg(message: MsgPinCodes): MsgPinCodesAminoMsg {
-    return {
-      type: "wasm/MsgPinCodes",
-      value: MsgPinCodes.toAmino(message)
-    };
-  },
   fromProtoMsg(message: MsgPinCodesProtoMsg): MsgPinCodes {
     return MsgPinCodes.decode(message.value);
   },
@@ -3052,6 +2758,8 @@ function createBaseMsgPinCodesResponse(): MsgPinCodesResponse {
   return {};
 }
 export const MsgPinCodesResponse = {
+  typeUrl: "/cosmwasm.wasm.v1.MsgPinCodesResponse",
+  aminoType: "wasm/MsgPinCodesResponse",
   encode(_: MsgPinCodesResponse, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     return writer;
   },
@@ -3087,15 +2795,6 @@ export const MsgPinCodesResponse = {
     const obj: any = {};
     return obj;
   },
-  fromAminoMsg(object: MsgPinCodesResponseAminoMsg): MsgPinCodesResponse {
-    return MsgPinCodesResponse.fromAmino(object.value);
-  },
-  toAminoMsg(message: MsgPinCodesResponse): MsgPinCodesResponseAminoMsg {
-    return {
-      type: "wasm/MsgPinCodesResponse",
-      value: MsgPinCodesResponse.toAmino(message)
-    };
-  },
   fromProtoMsg(message: MsgPinCodesResponseProtoMsg): MsgPinCodesResponse {
     return MsgPinCodesResponse.decode(message.value);
   },
@@ -3116,6 +2815,8 @@ function createBaseMsgUnpinCodes(): MsgUnpinCodes {
   };
 }
 export const MsgUnpinCodes = {
+  typeUrl: "/cosmwasm.wasm.v1.MsgUnpinCodes",
+  aminoType: "wasm/MsgUnpinCodes",
   encode(message: MsgUnpinCodes, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.authority !== "") {
       writer.uint32(10).string(message.authority);
@@ -3192,15 +2893,6 @@ export const MsgUnpinCodes = {
     }
     return obj;
   },
-  fromAminoMsg(object: MsgUnpinCodesAminoMsg): MsgUnpinCodes {
-    return MsgUnpinCodes.fromAmino(object.value);
-  },
-  toAminoMsg(message: MsgUnpinCodes): MsgUnpinCodesAminoMsg {
-    return {
-      type: "wasm/MsgUnpinCodes",
-      value: MsgUnpinCodes.toAmino(message)
-    };
-  },
   fromProtoMsg(message: MsgUnpinCodesProtoMsg): MsgUnpinCodes {
     return MsgUnpinCodes.decode(message.value);
   },
@@ -3218,6 +2910,8 @@ function createBaseMsgUnpinCodesResponse(): MsgUnpinCodesResponse {
   return {};
 }
 export const MsgUnpinCodesResponse = {
+  typeUrl: "/cosmwasm.wasm.v1.MsgUnpinCodesResponse",
+  aminoType: "wasm/MsgUnpinCodesResponse",
   encode(_: MsgUnpinCodesResponse, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     return writer;
   },
@@ -3253,15 +2947,6 @@ export const MsgUnpinCodesResponse = {
     const obj: any = {};
     return obj;
   },
-  fromAminoMsg(object: MsgUnpinCodesResponseAminoMsg): MsgUnpinCodesResponse {
-    return MsgUnpinCodesResponse.fromAmino(object.value);
-  },
-  toAminoMsg(message: MsgUnpinCodesResponse): MsgUnpinCodesResponseAminoMsg {
-    return {
-      type: "wasm/MsgUnpinCodesResponse",
-      value: MsgUnpinCodesResponse.toAmino(message)
-    };
-  },
   fromProtoMsg(message: MsgUnpinCodesResponseProtoMsg): MsgUnpinCodesResponse {
     return MsgUnpinCodesResponse.decode(message.value);
   },
@@ -3279,7 +2964,7 @@ function createBaseMsgStoreAndInstantiateContract(): MsgStoreAndInstantiateContr
   return {
     authority: "",
     wasmByteCode: new Uint8Array(),
-    instantiatePermission: AccessConfig.fromPartial({}),
+    instantiatePermission: undefined,
     unpinCode: false,
     admin: "",
     label: "",
@@ -3291,6 +2976,8 @@ function createBaseMsgStoreAndInstantiateContract(): MsgStoreAndInstantiateContr
   };
 }
 export const MsgStoreAndInstantiateContract = {
+  typeUrl: "/cosmwasm.wasm.v1.MsgStoreAndInstantiateContract",
+  aminoType: "wasm/MsgStoreAndInstantiateContract",
   encode(message: MsgStoreAndInstantiateContract, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.authority !== "") {
       writer.uint32(10).string(message.authority);
@@ -3457,15 +3144,6 @@ export const MsgStoreAndInstantiateContract = {
     obj.code_hash = message.codeHash;
     return obj;
   },
-  fromAminoMsg(object: MsgStoreAndInstantiateContractAminoMsg): MsgStoreAndInstantiateContract {
-    return MsgStoreAndInstantiateContract.fromAmino(object.value);
-  },
-  toAminoMsg(message: MsgStoreAndInstantiateContract): MsgStoreAndInstantiateContractAminoMsg {
-    return {
-      type: "wasm/MsgStoreAndInstantiateContract",
-      value: MsgStoreAndInstantiateContract.toAmino(message)
-    };
-  },
   fromProtoMsg(message: MsgStoreAndInstantiateContractProtoMsg): MsgStoreAndInstantiateContract {
     return MsgStoreAndInstantiateContract.decode(message.value);
   },
@@ -3486,6 +3164,8 @@ function createBaseMsgStoreAndInstantiateContractResponse(): MsgStoreAndInstanti
   };
 }
 export const MsgStoreAndInstantiateContractResponse = {
+  typeUrl: "/cosmwasm.wasm.v1.MsgStoreAndInstantiateContractResponse",
+  aminoType: "wasm/MsgStoreAndInstantiateContractResponse",
   encode(message: MsgStoreAndInstantiateContractResponse, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.address !== "") {
       writer.uint32(10).string(message.address);
@@ -3545,15 +3225,6 @@ export const MsgStoreAndInstantiateContractResponse = {
     obj.data = message.data;
     return obj;
   },
-  fromAminoMsg(object: MsgStoreAndInstantiateContractResponseAminoMsg): MsgStoreAndInstantiateContractResponse {
-    return MsgStoreAndInstantiateContractResponse.fromAmino(object.value);
-  },
-  toAminoMsg(message: MsgStoreAndInstantiateContractResponse): MsgStoreAndInstantiateContractResponseAminoMsg {
-    return {
-      type: "wasm/MsgStoreAndInstantiateContractResponse",
-      value: MsgStoreAndInstantiateContractResponse.toAmino(message)
-    };
-  },
   fromProtoMsg(message: MsgStoreAndInstantiateContractResponseProtoMsg): MsgStoreAndInstantiateContractResponse {
     return MsgStoreAndInstantiateContractResponse.decode(message.value);
   },
@@ -3574,6 +3245,8 @@ function createBaseMsgAddCodeUploadParamsAddresses(): MsgAddCodeUploadParamsAddr
   };
 }
 export const MsgAddCodeUploadParamsAddresses = {
+  typeUrl: "/cosmwasm.wasm.v1.MsgAddCodeUploadParamsAddresses",
+  aminoType: "wasm/MsgAddCodeUploadParamsAddresses",
   encode(message: MsgAddCodeUploadParamsAddresses, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.authority !== "") {
       writer.uint32(10).string(message.authority);
@@ -3641,15 +3314,6 @@ export const MsgAddCodeUploadParamsAddresses = {
     }
     return obj;
   },
-  fromAminoMsg(object: MsgAddCodeUploadParamsAddressesAminoMsg): MsgAddCodeUploadParamsAddresses {
-    return MsgAddCodeUploadParamsAddresses.fromAmino(object.value);
-  },
-  toAminoMsg(message: MsgAddCodeUploadParamsAddresses): MsgAddCodeUploadParamsAddressesAminoMsg {
-    return {
-      type: "wasm/MsgAddCodeUploadParamsAddresses",
-      value: MsgAddCodeUploadParamsAddresses.toAmino(message)
-    };
-  },
   fromProtoMsg(message: MsgAddCodeUploadParamsAddressesProtoMsg): MsgAddCodeUploadParamsAddresses {
     return MsgAddCodeUploadParamsAddresses.decode(message.value);
   },
@@ -3667,6 +3331,8 @@ function createBaseMsgAddCodeUploadParamsAddressesResponse(): MsgAddCodeUploadPa
   return {};
 }
 export const MsgAddCodeUploadParamsAddressesResponse = {
+  typeUrl: "/cosmwasm.wasm.v1.MsgAddCodeUploadParamsAddressesResponse",
+  aminoType: "wasm/MsgAddCodeUploadParamsAddressesResponse",
   encode(_: MsgAddCodeUploadParamsAddressesResponse, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     return writer;
   },
@@ -3702,15 +3368,6 @@ export const MsgAddCodeUploadParamsAddressesResponse = {
     const obj: any = {};
     return obj;
   },
-  fromAminoMsg(object: MsgAddCodeUploadParamsAddressesResponseAminoMsg): MsgAddCodeUploadParamsAddressesResponse {
-    return MsgAddCodeUploadParamsAddressesResponse.fromAmino(object.value);
-  },
-  toAminoMsg(message: MsgAddCodeUploadParamsAddressesResponse): MsgAddCodeUploadParamsAddressesResponseAminoMsg {
-    return {
-      type: "wasm/MsgAddCodeUploadParamsAddressesResponse",
-      value: MsgAddCodeUploadParamsAddressesResponse.toAmino(message)
-    };
-  },
   fromProtoMsg(message: MsgAddCodeUploadParamsAddressesResponseProtoMsg): MsgAddCodeUploadParamsAddressesResponse {
     return MsgAddCodeUploadParamsAddressesResponse.decode(message.value);
   },
@@ -3731,6 +3388,8 @@ function createBaseMsgRemoveCodeUploadParamsAddresses(): MsgRemoveCodeUploadPara
   };
 }
 export const MsgRemoveCodeUploadParamsAddresses = {
+  typeUrl: "/cosmwasm.wasm.v1.MsgRemoveCodeUploadParamsAddresses",
+  aminoType: "wasm/MsgRemoveCodeUploadParamsAddresses",
   encode(message: MsgRemoveCodeUploadParamsAddresses, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.authority !== "") {
       writer.uint32(10).string(message.authority);
@@ -3798,15 +3457,6 @@ export const MsgRemoveCodeUploadParamsAddresses = {
     }
     return obj;
   },
-  fromAminoMsg(object: MsgRemoveCodeUploadParamsAddressesAminoMsg): MsgRemoveCodeUploadParamsAddresses {
-    return MsgRemoveCodeUploadParamsAddresses.fromAmino(object.value);
-  },
-  toAminoMsg(message: MsgRemoveCodeUploadParamsAddresses): MsgRemoveCodeUploadParamsAddressesAminoMsg {
-    return {
-      type: "wasm/MsgRemoveCodeUploadParamsAddresses",
-      value: MsgRemoveCodeUploadParamsAddresses.toAmino(message)
-    };
-  },
   fromProtoMsg(message: MsgRemoveCodeUploadParamsAddressesProtoMsg): MsgRemoveCodeUploadParamsAddresses {
     return MsgRemoveCodeUploadParamsAddresses.decode(message.value);
   },
@@ -3824,6 +3474,8 @@ function createBaseMsgRemoveCodeUploadParamsAddressesResponse(): MsgRemoveCodeUp
   return {};
 }
 export const MsgRemoveCodeUploadParamsAddressesResponse = {
+  typeUrl: "/cosmwasm.wasm.v1.MsgRemoveCodeUploadParamsAddressesResponse",
+  aminoType: "wasm/MsgRemoveCodeUploadParamsAddressesResponse",
   encode(_: MsgRemoveCodeUploadParamsAddressesResponse, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     return writer;
   },
@@ -3859,15 +3511,6 @@ export const MsgRemoveCodeUploadParamsAddressesResponse = {
     const obj: any = {};
     return obj;
   },
-  fromAminoMsg(object: MsgRemoveCodeUploadParamsAddressesResponseAminoMsg): MsgRemoveCodeUploadParamsAddressesResponse {
-    return MsgRemoveCodeUploadParamsAddressesResponse.fromAmino(object.value);
-  },
-  toAminoMsg(message: MsgRemoveCodeUploadParamsAddressesResponse): MsgRemoveCodeUploadParamsAddressesResponseAminoMsg {
-    return {
-      type: "wasm/MsgRemoveCodeUploadParamsAddressesResponse",
-      value: MsgRemoveCodeUploadParamsAddressesResponse.toAmino(message)
-    };
-  },
   fromProtoMsg(message: MsgRemoveCodeUploadParamsAddressesResponseProtoMsg): MsgRemoveCodeUploadParamsAddressesResponse {
     return MsgRemoveCodeUploadParamsAddressesResponse.decode(message.value);
   },
@@ -3885,12 +3528,14 @@ function createBaseMsgStoreAndMigrateContract(): MsgStoreAndMigrateContract {
   return {
     authority: "",
     wasmByteCode: new Uint8Array(),
-    instantiatePermission: AccessConfig.fromPartial({}),
+    instantiatePermission: undefined,
     contract: "",
     msg: new Uint8Array()
   };
 }
 export const MsgStoreAndMigrateContract = {
+  typeUrl: "/cosmwasm.wasm.v1.MsgStoreAndMigrateContract",
+  aminoType: "wasm/MsgStoreAndMigrateContract",
   encode(message: MsgStoreAndMigrateContract, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.authority !== "") {
       writer.uint32(10).string(message.authority);
@@ -3983,15 +3628,6 @@ export const MsgStoreAndMigrateContract = {
     obj.msg = message.msg ? JSON.parse(fromUtf8(message.msg)) : undefined;
     return obj;
   },
-  fromAminoMsg(object: MsgStoreAndMigrateContractAminoMsg): MsgStoreAndMigrateContract {
-    return MsgStoreAndMigrateContract.fromAmino(object.value);
-  },
-  toAminoMsg(message: MsgStoreAndMigrateContract): MsgStoreAndMigrateContractAminoMsg {
-    return {
-      type: "wasm/MsgStoreAndMigrateContract",
-      value: MsgStoreAndMigrateContract.toAmino(message)
-    };
-  },
   fromProtoMsg(message: MsgStoreAndMigrateContractProtoMsg): MsgStoreAndMigrateContract {
     return MsgStoreAndMigrateContract.decode(message.value);
   },
@@ -4013,6 +3649,8 @@ function createBaseMsgStoreAndMigrateContractResponse(): MsgStoreAndMigrateContr
   };
 }
 export const MsgStoreAndMigrateContractResponse = {
+  typeUrl: "/cosmwasm.wasm.v1.MsgStoreAndMigrateContractResponse",
+  aminoType: "wasm/MsgStoreAndMigrateContractResponse",
   encode(message: MsgStoreAndMigrateContractResponse, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.codeId !== BigInt(0)) {
       writer.uint32(8).uint64(message.codeId);
@@ -4083,15 +3721,6 @@ export const MsgStoreAndMigrateContractResponse = {
     obj.data = message.data;
     return obj;
   },
-  fromAminoMsg(object: MsgStoreAndMigrateContractResponseAminoMsg): MsgStoreAndMigrateContractResponse {
-    return MsgStoreAndMigrateContractResponse.fromAmino(object.value);
-  },
-  toAminoMsg(message: MsgStoreAndMigrateContractResponse): MsgStoreAndMigrateContractResponseAminoMsg {
-    return {
-      type: "wasm/MsgStoreAndMigrateContractResponse",
-      value: MsgStoreAndMigrateContractResponse.toAmino(message)
-    };
-  },
   fromProtoMsg(message: MsgStoreAndMigrateContractResponseProtoMsg): MsgStoreAndMigrateContractResponse {
     return MsgStoreAndMigrateContractResponse.decode(message.value);
   },
@@ -4113,6 +3742,8 @@ function createBaseMsgUpdateContractLabel(): MsgUpdateContractLabel {
   };
 }
 export const MsgUpdateContractLabel = {
+  typeUrl: "/cosmwasm.wasm.v1.MsgUpdateContractLabel",
+  aminoType: "wasm/MsgUpdateContractLabel",
   encode(message: MsgUpdateContractLabel, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.sender !== "") {
       writer.uint32(10).string(message.sender);
@@ -4183,15 +3814,6 @@ export const MsgUpdateContractLabel = {
     obj.contract = message.contract;
     return obj;
   },
-  fromAminoMsg(object: MsgUpdateContractLabelAminoMsg): MsgUpdateContractLabel {
-    return MsgUpdateContractLabel.fromAmino(object.value);
-  },
-  toAminoMsg(message: MsgUpdateContractLabel): MsgUpdateContractLabelAminoMsg {
-    return {
-      type: "wasm/MsgUpdateContractLabel",
-      value: MsgUpdateContractLabel.toAmino(message)
-    };
-  },
   fromProtoMsg(message: MsgUpdateContractLabelProtoMsg): MsgUpdateContractLabel {
     return MsgUpdateContractLabel.decode(message.value);
   },
@@ -4209,6 +3831,8 @@ function createBaseMsgUpdateContractLabelResponse(): MsgUpdateContractLabelRespo
   return {};
 }
 export const MsgUpdateContractLabelResponse = {
+  typeUrl: "/cosmwasm.wasm.v1.MsgUpdateContractLabelResponse",
+  aminoType: "wasm/MsgUpdateContractLabelResponse",
   encode(_: MsgUpdateContractLabelResponse, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     return writer;
   },
@@ -4243,15 +3867,6 @@ export const MsgUpdateContractLabelResponse = {
   toAmino(_: MsgUpdateContractLabelResponse): MsgUpdateContractLabelResponseAmino {
     const obj: any = {};
     return obj;
-  },
-  fromAminoMsg(object: MsgUpdateContractLabelResponseAminoMsg): MsgUpdateContractLabelResponse {
-    return MsgUpdateContractLabelResponse.fromAmino(object.value);
-  },
-  toAminoMsg(message: MsgUpdateContractLabelResponse): MsgUpdateContractLabelResponseAminoMsg {
-    return {
-      type: "wasm/MsgUpdateContractLabelResponse",
-      value: MsgUpdateContractLabelResponse.toAmino(message)
-    };
   },
   fromProtoMsg(message: MsgUpdateContractLabelResponseProtoMsg): MsgUpdateContractLabelResponse {
     return MsgUpdateContractLabelResponse.decode(message.value);

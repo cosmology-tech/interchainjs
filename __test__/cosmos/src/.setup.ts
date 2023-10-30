@@ -1,12 +1,5 @@
 import { Secp256k1Auth } from "@sign/core";
-import {
-  Query,
-  QueryParser,
-  Signer,
-  toBech32,
-  BaseAccount,
-  Coin,
-} from "@sign/cosmos";
+import { Query, QueryParser, Signer, toBech32 } from "@sign/cosmos";
 import { QueryClientImpl as Bank } from "../codegen/cosmos/bank/v1beta1/query.rpc.Query";
 
 import data from "../.data.json";
@@ -42,13 +35,6 @@ const Chain = "osmosis";
 
 const Account1 = prepare(Chain, "genesis");
 const Account2 = prepare(Chain, "test1");
-
-// console.log(
-//   `Using account1: chain "${Account1.chain}" account "${Account1.slug}" address "${Account1.address}"`
-// );
-// console.log(
-//   `Using account2: chain "${Account2.chain}" account "${Account2.slug}" address "${Account2.address}"`
-// );
 
 console.log(`============ Using Cosmos Chain ${Chain} ===========`);
 

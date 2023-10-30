@@ -64,10 +64,6 @@ export interface MsgTransferAmino {
   /** optional memo */
   memo: string;
 }
-export interface MsgTransferAminoMsg {
-  type: "cosmos-sdk/MsgTransfer";
-  value: MsgTransferAmino;
-}
 /** MsgTransferResponse defines the Msg/Transfer response type. */
 export interface MsgTransferResponse {
   /** sequence number of the transfer packet sent */
@@ -82,10 +78,6 @@ export interface MsgTransferResponseAmino {
   /** sequence number of the transfer packet sent */
   sequence: string;
 }
-export interface MsgTransferResponseAminoMsg {
-  type: "cosmos-sdk/MsgTransferResponse";
-  value: MsgTransferResponseAmino;
-}
 function createBaseMsgTransfer(): MsgTransfer {
   return {
     sourcePort: "",
@@ -99,6 +91,8 @@ function createBaseMsgTransfer(): MsgTransfer {
   };
 }
 export const MsgTransfer = {
+  typeUrl: "/ibc.applications.transfer.v1.MsgTransfer",
+  aminoType: "cosmos-sdk/MsgTransfer",
   encode(message: MsgTransfer, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.sourcePort !== "") {
       writer.uint32(10).string(message.sourcePort);
@@ -224,15 +218,6 @@ export const MsgTransfer = {
     obj.memo = message.memo;
     return obj;
   },
-  fromAminoMsg(object: MsgTransferAminoMsg): MsgTransfer {
-    return MsgTransfer.fromAmino(object.value);
-  },
-  toAminoMsg(message: MsgTransfer): MsgTransferAminoMsg {
-    return {
-      type: "cosmos-sdk/MsgTransfer",
-      value: MsgTransfer.toAmino(message)
-    };
-  },
   fromProtoMsg(message: MsgTransferProtoMsg): MsgTransfer {
     return MsgTransfer.decode(message.value);
   },
@@ -252,6 +237,8 @@ function createBaseMsgTransferResponse(): MsgTransferResponse {
   };
 }
 export const MsgTransferResponse = {
+  typeUrl: "/ibc.applications.transfer.v1.MsgTransferResponse",
+  aminoType: "cosmos-sdk/MsgTransferResponse",
   encode(message: MsgTransferResponse, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.sequence !== BigInt(0)) {
       writer.uint32(8).uint64(message.sequence);
@@ -299,15 +286,6 @@ export const MsgTransferResponse = {
     const obj: any = {};
     obj.sequence = message.sequence ? message.sequence.toString() : undefined;
     return obj;
-  },
-  fromAminoMsg(object: MsgTransferResponseAminoMsg): MsgTransferResponse {
-    return MsgTransferResponse.fromAmino(object.value);
-  },
-  toAminoMsg(message: MsgTransferResponse): MsgTransferResponseAminoMsg {
-    return {
-      type: "cosmos-sdk/MsgTransferResponse",
-      value: MsgTransferResponse.toAmino(message)
-    };
   },
   fromProtoMsg(message: MsgTransferResponseProtoMsg): MsgTransferResponse {
     return MsgTransferResponse.decode(message.value);

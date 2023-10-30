@@ -16,15 +16,11 @@ export interface ProofAmino {
   leaf_hash: Uint8Array;
   aunts: Uint8Array[];
 }
-export interface ProofAminoMsg {
-  type: "/tendermint.crypto.Proof";
-  value: ProofAmino;
-}
 export interface ValueOp {
   /** Encoded in ProofOp.Key. */
   key: Uint8Array;
   /** To encode in ProofOp.Data */
-  proof: Proof;
+  proof?: Proof;
 }
 export interface ValueOpProtoMsg {
   typeUrl: "/tendermint.crypto.ValueOp";
@@ -35,10 +31,6 @@ export interface ValueOpAmino {
   key: Uint8Array;
   /** To encode in ProofOp.Data */
   proof?: ProofAmino;
-}
-export interface ValueOpAminoMsg {
-  type: "/tendermint.crypto.ValueOp";
-  value: ValueOpAmino;
 }
 export interface DominoOp {
   key: string;
@@ -53,10 +45,6 @@ export interface DominoOpAmino {
   key: string;
   input: string;
   output: string;
-}
-export interface DominoOpAminoMsg {
-  type: "/tendermint.crypto.DominoOp";
-  value: DominoOpAmino;
 }
 /**
  * ProofOp defines an operation used for calculating Merkle root
@@ -82,10 +70,6 @@ export interface ProofOpAmino {
   key: Uint8Array;
   data: Uint8Array;
 }
-export interface ProofOpAminoMsg {
-  type: "/tendermint.crypto.ProofOp";
-  value: ProofOpAmino;
-}
 /** ProofOps is Merkle proof defined by the list of ProofOps */
 export interface ProofOps {
   ops: ProofOp[];
@@ -98,10 +82,6 @@ export interface ProofOpsProtoMsg {
 export interface ProofOpsAmino {
   ops: ProofOpAmino[];
 }
-export interface ProofOpsAminoMsg {
-  type: "/tendermint.crypto.ProofOps";
-  value: ProofOpsAmino;
-}
 function createBaseProof(): Proof {
   return {
     total: BigInt(0),
@@ -111,6 +91,7 @@ function createBaseProof(): Proof {
   };
 }
 export const Proof = {
+  typeUrl: "/tendermint.crypto.Proof",
   encode(message: Proof, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.total !== BigInt(0)) {
       writer.uint32(8).int64(message.total);
@@ -200,9 +181,6 @@ export const Proof = {
     }
     return obj;
   },
-  fromAminoMsg(object: ProofAminoMsg): Proof {
-    return Proof.fromAmino(object.value);
-  },
   fromProtoMsg(message: ProofProtoMsg): Proof {
     return Proof.decode(message.value);
   },
@@ -219,10 +197,11 @@ export const Proof = {
 function createBaseValueOp(): ValueOp {
   return {
     key: new Uint8Array(),
-    proof: Proof.fromPartial({})
+    proof: undefined
   };
 }
 export const ValueOp = {
+  typeUrl: "/tendermint.crypto.ValueOp",
   encode(message: ValueOp, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.key.length !== 0) {
       writer.uint32(10).bytes(message.key);
@@ -282,9 +261,6 @@ export const ValueOp = {
     obj.proof = message.proof ? Proof.toAmino(message.proof) : undefined;
     return obj;
   },
-  fromAminoMsg(object: ValueOpAminoMsg): ValueOp {
-    return ValueOp.fromAmino(object.value);
-  },
   fromProtoMsg(message: ValueOpProtoMsg): ValueOp {
     return ValueOp.decode(message.value);
   },
@@ -306,6 +282,7 @@ function createBaseDominoOp(): DominoOp {
   };
 }
 export const DominoOp = {
+  typeUrl: "/tendermint.crypto.DominoOp",
   encode(message: DominoOp, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.key !== "") {
       writer.uint32(10).string(message.key);
@@ -376,9 +353,6 @@ export const DominoOp = {
     obj.output = message.output;
     return obj;
   },
-  fromAminoMsg(object: DominoOpAminoMsg): DominoOp {
-    return DominoOp.fromAmino(object.value);
-  },
   fromProtoMsg(message: DominoOpProtoMsg): DominoOp {
     return DominoOp.decode(message.value);
   },
@@ -400,6 +374,7 @@ function createBaseProofOp(): ProofOp {
   };
 }
 export const ProofOp = {
+  typeUrl: "/tendermint.crypto.ProofOp",
   encode(message: ProofOp, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.type !== "") {
       writer.uint32(10).string(message.type);
@@ -470,9 +445,6 @@ export const ProofOp = {
     obj.data = message.data;
     return obj;
   },
-  fromAminoMsg(object: ProofOpAminoMsg): ProofOp {
-    return ProofOp.fromAmino(object.value);
-  },
   fromProtoMsg(message: ProofOpProtoMsg): ProofOp {
     return ProofOp.decode(message.value);
   },
@@ -492,6 +464,7 @@ function createBaseProofOps(): ProofOps {
   };
 }
 export const ProofOps = {
+  typeUrl: "/tendermint.crypto.ProofOps",
   encode(message: ProofOps, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     for (const v of message.ops) {
       ProofOp.encode(v!, writer.uint32(10).fork()).ldelim();
@@ -547,9 +520,6 @@ export const ProofOps = {
       obj.ops = [];
     }
     return obj;
-  },
-  fromAminoMsg(object: ProofOpsAminoMsg): ProofOps {
-    return ProofOps.fromAmino(object.value);
   },
   fromProtoMsg(message: ProofOpsProtoMsg): ProofOps {
     return ProofOps.decode(message.value);

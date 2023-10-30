@@ -11,7 +11,7 @@ export interface MsgGrantAllowance {
   /** grantee is the address of the user being granted an allowance of another user's funds. */
   grantee: string;
   /** allowance can be any of basic, periodic, allowed fee allowance. */
-  allowance: Any;
+  allowance?: Any;
 }
 export interface MsgGrantAllowanceProtoMsg {
   typeUrl: "/cosmos.feegrant.v1beta1.MsgGrantAllowance";
@@ -29,10 +29,6 @@ export interface MsgGrantAllowanceAmino {
   /** allowance can be any of basic, periodic, allowed fee allowance. */
   allowance?: AnyAmino;
 }
-export interface MsgGrantAllowanceAminoMsg {
-  type: "cosmos-sdk/MsgGrantAllowance";
-  value: MsgGrantAllowanceAmino;
-}
 /** MsgGrantAllowanceResponse defines the Msg/GrantAllowanceResponse response type. */
 export interface MsgGrantAllowanceResponse {}
 export interface MsgGrantAllowanceResponseProtoMsg {
@@ -41,10 +37,6 @@ export interface MsgGrantAllowanceResponseProtoMsg {
 }
 /** MsgGrantAllowanceResponse defines the Msg/GrantAllowanceResponse response type. */
 export interface MsgGrantAllowanceResponseAmino {}
-export interface MsgGrantAllowanceResponseAminoMsg {
-  type: "cosmos-sdk/MsgGrantAllowanceResponse";
-  value: MsgGrantAllowanceResponseAmino;
-}
 /** MsgRevokeAllowance removes any existing Allowance from Granter to Grantee. */
 export interface MsgRevokeAllowance {
   /** granter is the address of the user granting an allowance of their funds. */
@@ -63,10 +55,6 @@ export interface MsgRevokeAllowanceAmino {
   /** grantee is the address of the user being granted an allowance of another user's funds. */
   grantee: string;
 }
-export interface MsgRevokeAllowanceAminoMsg {
-  type: "cosmos-sdk/MsgRevokeAllowance";
-  value: MsgRevokeAllowanceAmino;
-}
 /** MsgRevokeAllowanceResponse defines the Msg/RevokeAllowanceResponse response type. */
 export interface MsgRevokeAllowanceResponse {}
 export interface MsgRevokeAllowanceResponseProtoMsg {
@@ -75,18 +63,16 @@ export interface MsgRevokeAllowanceResponseProtoMsg {
 }
 /** MsgRevokeAllowanceResponse defines the Msg/RevokeAllowanceResponse response type. */
 export interface MsgRevokeAllowanceResponseAmino {}
-export interface MsgRevokeAllowanceResponseAminoMsg {
-  type: "cosmos-sdk/MsgRevokeAllowanceResponse";
-  value: MsgRevokeAllowanceResponseAmino;
-}
 function createBaseMsgGrantAllowance(): MsgGrantAllowance {
   return {
     granter: "",
     grantee: "",
-    allowance: Any.fromPartial({})
+    allowance: undefined
   };
 }
 export const MsgGrantAllowance = {
+  typeUrl: "/cosmos.feegrant.v1beta1.MsgGrantAllowance",
+  aminoType: "cosmos-sdk/MsgGrantAllowance",
   encode(message: MsgGrantAllowance, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.granter !== "") {
       writer.uint32(10).string(message.granter);
@@ -157,15 +143,6 @@ export const MsgGrantAllowance = {
     obj.allowance = message.allowance ? Any.toAmino(message.allowance) : undefined;
     return obj;
   },
-  fromAminoMsg(object: MsgGrantAllowanceAminoMsg): MsgGrantAllowance {
-    return MsgGrantAllowance.fromAmino(object.value);
-  },
-  toAminoMsg(message: MsgGrantAllowance): MsgGrantAllowanceAminoMsg {
-    return {
-      type: "cosmos-sdk/MsgGrantAllowance",
-      value: MsgGrantAllowance.toAmino(message)
-    };
-  },
   fromProtoMsg(message: MsgGrantAllowanceProtoMsg): MsgGrantAllowance {
     return MsgGrantAllowance.decode(message.value);
   },
@@ -183,6 +160,8 @@ function createBaseMsgGrantAllowanceResponse(): MsgGrantAllowanceResponse {
   return {};
 }
 export const MsgGrantAllowanceResponse = {
+  typeUrl: "/cosmos.feegrant.v1beta1.MsgGrantAllowanceResponse",
+  aminoType: "cosmos-sdk/MsgGrantAllowanceResponse",
   encode(_: MsgGrantAllowanceResponse, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     return writer;
   },
@@ -218,15 +197,6 @@ export const MsgGrantAllowanceResponse = {
     const obj: any = {};
     return obj;
   },
-  fromAminoMsg(object: MsgGrantAllowanceResponseAminoMsg): MsgGrantAllowanceResponse {
-    return MsgGrantAllowanceResponse.fromAmino(object.value);
-  },
-  toAminoMsg(message: MsgGrantAllowanceResponse): MsgGrantAllowanceResponseAminoMsg {
-    return {
-      type: "cosmos-sdk/MsgGrantAllowanceResponse",
-      value: MsgGrantAllowanceResponse.toAmino(message)
-    };
-  },
   fromProtoMsg(message: MsgGrantAllowanceResponseProtoMsg): MsgGrantAllowanceResponse {
     return MsgGrantAllowanceResponse.decode(message.value);
   },
@@ -247,6 +217,8 @@ function createBaseMsgRevokeAllowance(): MsgRevokeAllowance {
   };
 }
 export const MsgRevokeAllowance = {
+  typeUrl: "/cosmos.feegrant.v1beta1.MsgRevokeAllowance",
+  aminoType: "cosmos-sdk/MsgRevokeAllowance",
   encode(message: MsgRevokeAllowance, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.granter !== "") {
       writer.uint32(10).string(message.granter);
@@ -306,15 +278,6 @@ export const MsgRevokeAllowance = {
     obj.grantee = message.grantee;
     return obj;
   },
-  fromAminoMsg(object: MsgRevokeAllowanceAminoMsg): MsgRevokeAllowance {
-    return MsgRevokeAllowance.fromAmino(object.value);
-  },
-  toAminoMsg(message: MsgRevokeAllowance): MsgRevokeAllowanceAminoMsg {
-    return {
-      type: "cosmos-sdk/MsgRevokeAllowance",
-      value: MsgRevokeAllowance.toAmino(message)
-    };
-  },
   fromProtoMsg(message: MsgRevokeAllowanceProtoMsg): MsgRevokeAllowance {
     return MsgRevokeAllowance.decode(message.value);
   },
@@ -332,6 +295,8 @@ function createBaseMsgRevokeAllowanceResponse(): MsgRevokeAllowanceResponse {
   return {};
 }
 export const MsgRevokeAllowanceResponse = {
+  typeUrl: "/cosmos.feegrant.v1beta1.MsgRevokeAllowanceResponse",
+  aminoType: "cosmos-sdk/MsgRevokeAllowanceResponse",
   encode(_: MsgRevokeAllowanceResponse, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     return writer;
   },
@@ -366,15 +331,6 @@ export const MsgRevokeAllowanceResponse = {
   toAmino(_: MsgRevokeAllowanceResponse): MsgRevokeAllowanceResponseAmino {
     const obj: any = {};
     return obj;
-  },
-  fromAminoMsg(object: MsgRevokeAllowanceResponseAminoMsg): MsgRevokeAllowanceResponse {
-    return MsgRevokeAllowanceResponse.fromAmino(object.value);
-  },
-  toAminoMsg(message: MsgRevokeAllowanceResponse): MsgRevokeAllowanceResponseAminoMsg {
-    return {
-      type: "cosmos-sdk/MsgRevokeAllowanceResponse",
-      value: MsgRevokeAllowanceResponse.toAmino(message)
-    };
   },
   fromProtoMsg(message: MsgRevokeAllowanceResponseProtoMsg): MsgRevokeAllowanceResponse {
     return MsgRevokeAllowanceResponse.decode(message.value);

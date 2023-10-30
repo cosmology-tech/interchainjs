@@ -17,4 +17,4 @@ cosmosSdkFiles=(
 downloadProto cosmos/cosmos-sdk@"${COSMOS_SDK_VERSION}" ./proto "${cosmosSdkFiles[@]}"
 
 ## Step2: codegen
-npx telescope transpile --config .telescope.json
+npx telescope transpile --config ../../.telescope.json --config .telescope.json

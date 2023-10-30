@@ -7,7 +7,7 @@ import { isSet, DeepPartial } from "../../../helpers";
  * the necessary fields needed for any vesting account implementation.
  */
 export interface BaseVestingAccount {
-  baseAccount: BaseAccount;
+  baseAccount?: BaseAccount;
   originalVesting: Coin[];
   delegatedFree: Coin[];
   delegatedVesting: Coin[];
@@ -30,16 +30,12 @@ export interface BaseVestingAccountAmino {
   /** Vesting end time, as unix timestamp (in seconds). */
   end_time: string;
 }
-export interface BaseVestingAccountAminoMsg {
-  type: "cosmos-sdk/BaseVestingAccount";
-  value: BaseVestingAccountAmino;
-}
 /**
  * ContinuousVestingAccount implements the VestingAccount interface. It
  * continuously vests by unlocking coins linearly with respect to time.
  */
 export interface ContinuousVestingAccount {
-  baseVestingAccount: BaseVestingAccount;
+  baseVestingAccount?: BaseVestingAccount;
   /** Vesting start time, as unix timestamp (in seconds). */
   startTime: bigint;
 }
@@ -56,17 +52,13 @@ export interface ContinuousVestingAccountAmino {
   /** Vesting start time, as unix timestamp (in seconds). */
   start_time: string;
 }
-export interface ContinuousVestingAccountAminoMsg {
-  type: "cosmos-sdk/ContinuousVestingAccount";
-  value: ContinuousVestingAccountAmino;
-}
 /**
  * DelayedVestingAccount implements the VestingAccount interface. It vests all
  * coins after a specific time, but non prior. In other words, it keeps them
  * locked until a specified time.
  */
 export interface DelayedVestingAccount {
-  baseVestingAccount: BaseVestingAccount;
+  baseVestingAccount?: BaseVestingAccount;
 }
 export interface DelayedVestingAccountProtoMsg {
   typeUrl: "/cosmos.vesting.v1beta1.DelayedVestingAccount";
@@ -79,10 +71,6 @@ export interface DelayedVestingAccountProtoMsg {
  */
 export interface DelayedVestingAccountAmino {
   base_vesting_account?: BaseVestingAccountAmino;
-}
-export interface DelayedVestingAccountAminoMsg {
-  type: "cosmos-sdk/DelayedVestingAccount";
-  value: DelayedVestingAccountAmino;
 }
 /** Period defines a length of time and amount of coins that will vest. */
 export interface Period {
@@ -100,16 +88,12 @@ export interface PeriodAmino {
   length: string;
   amount: CoinAmino[];
 }
-export interface PeriodAminoMsg {
-  type: "cosmos-sdk/Period";
-  value: PeriodAmino;
-}
 /**
  * PeriodicVestingAccount implements the VestingAccount interface. It
  * periodically vests by unlocking coins during each specified period.
  */
 export interface PeriodicVestingAccount {
-  baseVestingAccount: BaseVestingAccount;
+  baseVestingAccount?: BaseVestingAccount;
   startTime: bigint;
   vestingPeriods: Period[];
 }
@@ -126,10 +110,6 @@ export interface PeriodicVestingAccountAmino {
   start_time: string;
   vesting_periods: PeriodAmino[];
 }
-export interface PeriodicVestingAccountAminoMsg {
-  type: "cosmos-sdk/PeriodicVestingAccount";
-  value: PeriodicVestingAccountAmino;
-}
 /**
  * PermanentLockedAccount implements the VestingAccount interface. It does
  * not ever release coins, locking them indefinitely. Coins in this account can
@@ -138,7 +118,7 @@ export interface PeriodicVestingAccountAminoMsg {
  * Since: cosmos-sdk 0.43
  */
 export interface PermanentLockedAccount {
-  baseVestingAccount: BaseVestingAccount;
+  baseVestingAccount?: BaseVestingAccount;
 }
 export interface PermanentLockedAccountProtoMsg {
   typeUrl: "/cosmos.vesting.v1beta1.PermanentLockedAccount";
@@ -154,13 +134,9 @@ export interface PermanentLockedAccountProtoMsg {
 export interface PermanentLockedAccountAmino {
   base_vesting_account?: BaseVestingAccountAmino;
 }
-export interface PermanentLockedAccountAminoMsg {
-  type: "cosmos-sdk/PermanentLockedAccount";
-  value: PermanentLockedAccountAmino;
-}
 function createBaseBaseVestingAccount(): BaseVestingAccount {
   return {
-    baseAccount: BaseAccount.fromPartial({}),
+    baseAccount: undefined,
     originalVesting: [],
     delegatedFree: [],
     delegatedVesting: [],
@@ -168,6 +144,8 @@ function createBaseBaseVestingAccount(): BaseVestingAccount {
   };
 }
 export const BaseVestingAccount = {
+  typeUrl: "/cosmos.vesting.v1beta1.BaseVestingAccount",
+  aminoType: "cosmos-sdk/BaseVestingAccount",
   encode(message: BaseVestingAccount, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.baseAccount !== undefined) {
       BaseAccount.encode(message.baseAccount, writer.uint32(10).fork()).ldelim();
@@ -284,15 +262,6 @@ export const BaseVestingAccount = {
     obj.end_time = message.endTime ? message.endTime.toString() : undefined;
     return obj;
   },
-  fromAminoMsg(object: BaseVestingAccountAminoMsg): BaseVestingAccount {
-    return BaseVestingAccount.fromAmino(object.value);
-  },
-  toAminoMsg(message: BaseVestingAccount): BaseVestingAccountAminoMsg {
-    return {
-      type: "cosmos-sdk/BaseVestingAccount",
-      value: BaseVestingAccount.toAmino(message)
-    };
-  },
   fromProtoMsg(message: BaseVestingAccountProtoMsg): BaseVestingAccount {
     return BaseVestingAccount.decode(message.value);
   },
@@ -308,11 +277,13 @@ export const BaseVestingAccount = {
 };
 function createBaseContinuousVestingAccount(): ContinuousVestingAccount {
   return {
-    baseVestingAccount: BaseVestingAccount.fromPartial({}),
+    baseVestingAccount: undefined,
     startTime: BigInt(0)
   };
 }
 export const ContinuousVestingAccount = {
+  typeUrl: "/cosmos.vesting.v1beta1.ContinuousVestingAccount",
+  aminoType: "cosmos-sdk/ContinuousVestingAccount",
   encode(message: ContinuousVestingAccount, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.baseVestingAccount !== undefined) {
       BaseVestingAccount.encode(message.baseVestingAccount, writer.uint32(10).fork()).ldelim();
@@ -372,15 +343,6 @@ export const ContinuousVestingAccount = {
     obj.start_time = message.startTime ? message.startTime.toString() : undefined;
     return obj;
   },
-  fromAminoMsg(object: ContinuousVestingAccountAminoMsg): ContinuousVestingAccount {
-    return ContinuousVestingAccount.fromAmino(object.value);
-  },
-  toAminoMsg(message: ContinuousVestingAccount): ContinuousVestingAccountAminoMsg {
-    return {
-      type: "cosmos-sdk/ContinuousVestingAccount",
-      value: ContinuousVestingAccount.toAmino(message)
-    };
-  },
   fromProtoMsg(message: ContinuousVestingAccountProtoMsg): ContinuousVestingAccount {
     return ContinuousVestingAccount.decode(message.value);
   },
@@ -396,10 +358,12 @@ export const ContinuousVestingAccount = {
 };
 function createBaseDelayedVestingAccount(): DelayedVestingAccount {
   return {
-    baseVestingAccount: BaseVestingAccount.fromPartial({})
+    baseVestingAccount: undefined
   };
 }
 export const DelayedVestingAccount = {
+  typeUrl: "/cosmos.vesting.v1beta1.DelayedVestingAccount",
+  aminoType: "cosmos-sdk/DelayedVestingAccount",
   encode(message: DelayedVestingAccount, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.baseVestingAccount !== undefined) {
       BaseVestingAccount.encode(message.baseVestingAccount, writer.uint32(10).fork()).ldelim();
@@ -448,15 +412,6 @@ export const DelayedVestingAccount = {
     obj.base_vesting_account = message.baseVestingAccount ? BaseVestingAccount.toAmino(message.baseVestingAccount) : undefined;
     return obj;
   },
-  fromAminoMsg(object: DelayedVestingAccountAminoMsg): DelayedVestingAccount {
-    return DelayedVestingAccount.fromAmino(object.value);
-  },
-  toAminoMsg(message: DelayedVestingAccount): DelayedVestingAccountAminoMsg {
-    return {
-      type: "cosmos-sdk/DelayedVestingAccount",
-      value: DelayedVestingAccount.toAmino(message)
-    };
-  },
   fromProtoMsg(message: DelayedVestingAccountProtoMsg): DelayedVestingAccount {
     return DelayedVestingAccount.decode(message.value);
   },
@@ -477,6 +432,8 @@ function createBasePeriod(): Period {
   };
 }
 export const Period = {
+  typeUrl: "/cosmos.vesting.v1beta1.Period",
+  aminoType: "cosmos-sdk/Period",
   encode(message: Period, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.length !== BigInt(0)) {
       writer.uint32(8).int64(message.length);
@@ -544,15 +501,6 @@ export const Period = {
     }
     return obj;
   },
-  fromAminoMsg(object: PeriodAminoMsg): Period {
-    return Period.fromAmino(object.value);
-  },
-  toAminoMsg(message: Period): PeriodAminoMsg {
-    return {
-      type: "cosmos-sdk/Period",
-      value: Period.toAmino(message)
-    };
-  },
   fromProtoMsg(message: PeriodProtoMsg): Period {
     return Period.decode(message.value);
   },
@@ -568,12 +516,14 @@ export const Period = {
 };
 function createBasePeriodicVestingAccount(): PeriodicVestingAccount {
   return {
-    baseVestingAccount: BaseVestingAccount.fromPartial({}),
+    baseVestingAccount: undefined,
     startTime: BigInt(0),
     vestingPeriods: []
   };
 }
 export const PeriodicVestingAccount = {
+  typeUrl: "/cosmos.vesting.v1beta1.PeriodicVestingAccount",
+  aminoType: "cosmos-sdk/PeriodicVestingAccount",
   encode(message: PeriodicVestingAccount, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.baseVestingAccount !== undefined) {
       BaseVestingAccount.encode(message.baseVestingAccount, writer.uint32(10).fork()).ldelim();
@@ -652,15 +602,6 @@ export const PeriodicVestingAccount = {
     }
     return obj;
   },
-  fromAminoMsg(object: PeriodicVestingAccountAminoMsg): PeriodicVestingAccount {
-    return PeriodicVestingAccount.fromAmino(object.value);
-  },
-  toAminoMsg(message: PeriodicVestingAccount): PeriodicVestingAccountAminoMsg {
-    return {
-      type: "cosmos-sdk/PeriodicVestingAccount",
-      value: PeriodicVestingAccount.toAmino(message)
-    };
-  },
   fromProtoMsg(message: PeriodicVestingAccountProtoMsg): PeriodicVestingAccount {
     return PeriodicVestingAccount.decode(message.value);
   },
@@ -676,10 +617,12 @@ export const PeriodicVestingAccount = {
 };
 function createBasePermanentLockedAccount(): PermanentLockedAccount {
   return {
-    baseVestingAccount: BaseVestingAccount.fromPartial({})
+    baseVestingAccount: undefined
   };
 }
 export const PermanentLockedAccount = {
+  typeUrl: "/cosmos.vesting.v1beta1.PermanentLockedAccount",
+  aminoType: "cosmos-sdk/PermanentLockedAccount",
   encode(message: PermanentLockedAccount, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.baseVestingAccount !== undefined) {
       BaseVestingAccount.encode(message.baseVestingAccount, writer.uint32(10).fork()).ldelim();
@@ -727,15 +670,6 @@ export const PermanentLockedAccount = {
     const obj: any = {};
     obj.base_vesting_account = message.baseVestingAccount ? BaseVestingAccount.toAmino(message.baseVestingAccount) : undefined;
     return obj;
-  },
-  fromAminoMsg(object: PermanentLockedAccountAminoMsg): PermanentLockedAccount {
-    return PermanentLockedAccount.fromAmino(object.value);
-  },
-  toAminoMsg(message: PermanentLockedAccount): PermanentLockedAccountAminoMsg {
-    return {
-      type: "cosmos-sdk/PermanentLockedAccount",
-      value: PermanentLockedAccount.toAmino(message)
-    };
   },
   fromProtoMsg(message: PermanentLockedAccountProtoMsg): PermanentLockedAccount {
     return PermanentLockedAccount.decode(message.value);

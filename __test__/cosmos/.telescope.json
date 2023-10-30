@@ -4,6 +4,7 @@
   ],
   "outPath": "./codegen",
   "options": {
+    "env": "v-next",
     "useSDKTypes": false,
     "useOptionalNullable": true,
     "interfaces": {
@@ -28,8 +29,9 @@
         "fromProto": true,
         "toProto": true
       },
-      "addTypeUrlToDecoders": true,
+      "addTypeUrlToDecoders": false,
       "addTypeUrlToObjects": true,
+      "addAminoTypeToObjects": true,
       "typingsFormat": {
         "duration": "duration",
         "timestamp": "date",
@@ -51,7 +53,8 @@
     },
     "aminoEncoding": {
       "enabled": true,
-      "useLegacyInlineEncoding": false
+      "useLegacyInlineEncoding": false,
+      "disableMsgTypes": true
     },
     "lcdClients": {
       "enabled": false
@@ -62,6 +65,7 @@
       "extensions": false,
       "camelCase": true,
       "enabledServices": [
+        "Query",
         "Query"
       ]
     }

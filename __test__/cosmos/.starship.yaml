@@ -1,6 +1,7 @@
 chains:
   - name: osmosis-1
     type: osmosis
+    image: ghcr.io/cosmology-tech/starship/osmosis:v19.2.0
     numValidators: 1
     ports:
       rest: 1313
@@ -10,6 +11,7 @@ chains:
       memory: "500M"
 #   - name: cosmoshub-1
 #     type: cosmos
+#     image: ghcr.io/cosmology-tech/starship/gaia:v13.0.0
 #     numValidators: 1
 #     ports:
 #       rest: 1317

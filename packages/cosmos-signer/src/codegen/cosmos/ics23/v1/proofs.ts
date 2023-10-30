@@ -175,7 +175,7 @@ export function lengthOpToJSON(object: LengthOp): string {
 export interface ExistenceProof {
   key: Uint8Array;
   value: Uint8Array;
-  leaf: LeafOp;
+  leaf?: LeafOp;
   path: InnerOp[];
 }
 export interface ExistenceProofProtoMsg {
@@ -209,10 +209,6 @@ export interface ExistenceProofAmino {
   leaf?: LeafOpAmino;
   path: InnerOpAmino[];
 }
-export interface ExistenceProofAminoMsg {
-  type: "cosmos-sdk/ExistenceProof";
-  value: ExistenceProofAmino;
-}
 /**
  * NonExistenceProof takes a proof of two neighbors, one left of the desired key,
  * one right of the desired key. If both proofs are valid AND they are neighbors,
@@ -221,8 +217,8 @@ export interface ExistenceProofAminoMsg {
 export interface NonExistenceProof {
   /** TODO: remove this as unnecessary??? we prove a range */
   key: Uint8Array;
-  left: ExistenceProof;
-  right: ExistenceProof;
+  left?: ExistenceProof;
+  right?: ExistenceProof;
 }
 export interface NonExistenceProofProtoMsg {
   typeUrl: "/cosmos.ics23.v1.NonExistenceProof";
@@ -238,10 +234,6 @@ export interface NonExistenceProofAmino {
   key: Uint8Array;
   left?: ExistenceProofAmino;
   right?: ExistenceProofAmino;
-}
-export interface NonExistenceProofAminoMsg {
-  type: "cosmos-sdk/NonExistenceProof";
-  value: NonExistenceProofAmino;
 }
 /** CommitmentProof is either an ExistenceProof or a NonExistenceProof, or a Batch of such messages */
 export interface CommitmentProof {
@@ -260,10 +252,6 @@ export interface CommitmentProofAmino {
   nonexist?: NonExistenceProofAmino;
   batch?: BatchProofAmino;
   compressed?: CompressedBatchProofAmino;
-}
-export interface CommitmentProofAminoMsg {
-  type: "cosmos-sdk/CommitmentProof";
-  value: CommitmentProofAmino;
 }
 /**
  * LeafOp represents the raw key-value data we wish to prove, and
@@ -323,10 +311,6 @@ export interface LeafOpAmino {
    */
   prefix: Uint8Array;
 }
-export interface LeafOpAminoMsg {
-  type: "cosmos-sdk/LeafOp";
-  value: LeafOpAmino;
-}
 /**
  * InnerOp represents a merkle-proof step that is not a leaf.
  * It represents concatenating two children and hashing them to provide the next result.
@@ -375,10 +359,6 @@ export interface InnerOpAmino {
   prefix: Uint8Array;
   suffix: Uint8Array;
 }
-export interface InnerOpAminoMsg {
-  type: "cosmos-sdk/InnerOp";
-  value: InnerOpAmino;
-}
 /**
  * ProofSpec defines what the expected parameters are for a given proof type.
  * This can be stored in the client and used to validate any incoming proofs.
@@ -396,8 +376,8 @@ export interface ProofSpec {
    * any field in the ExistenceProof must be the same as in this spec.
    * except Prefix, which is just the first bytes of prefix (spec can be longer)
    */
-  leafSpec: LeafOp;
-  innerSpec: InnerSpec;
+  leafSpec?: LeafOp;
+  innerSpec?: InnerSpec;
   /** max_depth (if > 0) is the maximum number of InnerOps allowed (mainly for fixed-depth tries) */
   maxDepth: number;
   /** min_depth (if > 0) is the minimum number of InnerOps allowed (mainly for fixed-depth tries) */
@@ -442,10 +422,6 @@ export interface ProofSpecAmino {
    * non-existence proofs.
    */
   prehash_key_before_comparison: boolean;
-}
-export interface ProofSpecAminoMsg {
-  type: "cosmos-sdk/ProofSpec";
-  value: ProofSpecAmino;
 }
 /**
  * InnerSpec contains all store-specific structure info to determine if two proofs from a
@@ -501,10 +477,6 @@ export interface InnerSpecAmino {
   /** hash is the algorithm that must be used for each InnerOp */
   hash: HashOp;
 }
-export interface InnerSpecAminoMsg {
-  type: "cosmos-sdk/InnerSpec";
-  value: InnerSpecAmino;
-}
 /** BatchProof is a group of multiple proof types than can be compressed */
 export interface BatchProof {
   entries: BatchEntry[];
@@ -516,10 +488,6 @@ export interface BatchProofProtoMsg {
 /** BatchProof is a group of multiple proof types than can be compressed */
 export interface BatchProofAmino {
   entries: BatchEntryAmino[];
-}
-export interface BatchProofAminoMsg {
-  type: "cosmos-sdk/BatchProof";
-  value: BatchProofAmino;
 }
 /** Use BatchEntry not CommitmentProof, to avoid recursion */
 export interface BatchEntry {
@@ -535,10 +503,6 @@ export interface BatchEntryAmino {
   exist?: ExistenceProofAmino;
   nonexist?: NonExistenceProofAmino;
 }
-export interface BatchEntryAminoMsg {
-  type: "cosmos-sdk/BatchEntry";
-  value: BatchEntryAmino;
-}
 export interface CompressedBatchProof {
   entries: CompressedBatchEntry[];
   lookupInners: InnerOp[];
@@ -550,10 +514,6 @@ export interface CompressedBatchProofProtoMsg {
 export interface CompressedBatchProofAmino {
   entries: CompressedBatchEntryAmino[];
   lookup_inners: InnerOpAmino[];
-}
-export interface CompressedBatchProofAminoMsg {
-  type: "cosmos-sdk/CompressedBatchProof";
-  value: CompressedBatchProofAmino;
 }
 /** Use BatchEntry not CommitmentProof, to avoid recursion */
 export interface CompressedBatchEntry {
@@ -569,14 +529,10 @@ export interface CompressedBatchEntryAmino {
   exist?: CompressedExistenceProofAmino;
   nonexist?: CompressedNonExistenceProofAmino;
 }
-export interface CompressedBatchEntryAminoMsg {
-  type: "cosmos-sdk/CompressedBatchEntry";
-  value: CompressedBatchEntryAmino;
-}
 export interface CompressedExistenceProof {
   key: Uint8Array;
   value: Uint8Array;
-  leaf: LeafOp;
+  leaf?: LeafOp;
   /** these are indexes into the lookup_inners table in CompressedBatchProof */
   path: number[];
 }
@@ -591,15 +547,11 @@ export interface CompressedExistenceProofAmino {
   /** these are indexes into the lookup_inners table in CompressedBatchProof */
   path: number[];
 }
-export interface CompressedExistenceProofAminoMsg {
-  type: "cosmos-sdk/CompressedExistenceProof";
-  value: CompressedExistenceProofAmino;
-}
 export interface CompressedNonExistenceProof {
   /** TODO: remove this as unnecessary??? we prove a range */
   key: Uint8Array;
-  left: CompressedExistenceProof;
-  right: CompressedExistenceProof;
+  left?: CompressedExistenceProof;
+  right?: CompressedExistenceProof;
 }
 export interface CompressedNonExistenceProofProtoMsg {
   typeUrl: "/cosmos.ics23.v1.CompressedNonExistenceProof";
@@ -611,19 +563,17 @@ export interface CompressedNonExistenceProofAmino {
   left?: CompressedExistenceProofAmino;
   right?: CompressedExistenceProofAmino;
 }
-export interface CompressedNonExistenceProofAminoMsg {
-  type: "cosmos-sdk/CompressedNonExistenceProof";
-  value: CompressedNonExistenceProofAmino;
-}
 function createBaseExistenceProof(): ExistenceProof {
   return {
     key: new Uint8Array(),
     value: new Uint8Array(),
-    leaf: LeafOp.fromPartial({}),
+    leaf: undefined,
     path: []
   };
 }
 export const ExistenceProof = {
+  typeUrl: "/cosmos.ics23.v1.ExistenceProof",
+  aminoType: "cosmos-sdk/ExistenceProof",
   encode(message: ExistenceProof, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.key.length !== 0) {
       writer.uint32(10).bytes(message.key);
@@ -713,15 +663,6 @@ export const ExistenceProof = {
     }
     return obj;
   },
-  fromAminoMsg(object: ExistenceProofAminoMsg): ExistenceProof {
-    return ExistenceProof.fromAmino(object.value);
-  },
-  toAminoMsg(message: ExistenceProof): ExistenceProofAminoMsg {
-    return {
-      type: "cosmos-sdk/ExistenceProof",
-      value: ExistenceProof.toAmino(message)
-    };
-  },
   fromProtoMsg(message: ExistenceProofProtoMsg): ExistenceProof {
     return ExistenceProof.decode(message.value);
   },
@@ -738,11 +679,13 @@ export const ExistenceProof = {
 function createBaseNonExistenceProof(): NonExistenceProof {
   return {
     key: new Uint8Array(),
-    left: ExistenceProof.fromPartial({}),
-    right: ExistenceProof.fromPartial({})
+    left: undefined,
+    right: undefined
   };
 }
 export const NonExistenceProof = {
+  typeUrl: "/cosmos.ics23.v1.NonExistenceProof",
+  aminoType: "cosmos-sdk/NonExistenceProof",
   encode(message: NonExistenceProof, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.key.length !== 0) {
       writer.uint32(10).bytes(message.key);
@@ -813,15 +756,6 @@ export const NonExistenceProof = {
     obj.right = message.right ? ExistenceProof.toAmino(message.right) : undefined;
     return obj;
   },
-  fromAminoMsg(object: NonExistenceProofAminoMsg): NonExistenceProof {
-    return NonExistenceProof.fromAmino(object.value);
-  },
-  toAminoMsg(message: NonExistenceProof): NonExistenceProofAminoMsg {
-    return {
-      type: "cosmos-sdk/NonExistenceProof",
-      value: NonExistenceProof.toAmino(message)
-    };
-  },
   fromProtoMsg(message: NonExistenceProofProtoMsg): NonExistenceProof {
     return NonExistenceProof.decode(message.value);
   },
@@ -844,6 +778,8 @@ function createBaseCommitmentProof(): CommitmentProof {
   };
 }
 export const CommitmentProof = {
+  typeUrl: "/cosmos.ics23.v1.CommitmentProof",
+  aminoType: "cosmos-sdk/CommitmentProof",
   encode(message: CommitmentProof, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.exist !== undefined) {
       ExistenceProof.encode(message.exist, writer.uint32(10).fork()).ldelim();
@@ -925,15 +861,6 @@ export const CommitmentProof = {
     obj.compressed = message.compressed ? CompressedBatchProof.toAmino(message.compressed) : undefined;
     return obj;
   },
-  fromAminoMsg(object: CommitmentProofAminoMsg): CommitmentProof {
-    return CommitmentProof.fromAmino(object.value);
-  },
-  toAminoMsg(message: CommitmentProof): CommitmentProofAminoMsg {
-    return {
-      type: "cosmos-sdk/CommitmentProof",
-      value: CommitmentProof.toAmino(message)
-    };
-  },
   fromProtoMsg(message: CommitmentProofProtoMsg): CommitmentProof {
     return CommitmentProof.decode(message.value);
   },
@@ -957,6 +884,8 @@ function createBaseLeafOp(): LeafOp {
   };
 }
 export const LeafOp = {
+  typeUrl: "/cosmos.ics23.v1.LeafOp",
+  aminoType: "cosmos-sdk/LeafOp",
   encode(message: LeafOp, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.hash !== 0) {
       writer.uint32(8).int32(message.hash);
@@ -1049,15 +978,6 @@ export const LeafOp = {
     obj.prefix = message.prefix;
     return obj;
   },
-  fromAminoMsg(object: LeafOpAminoMsg): LeafOp {
-    return LeafOp.fromAmino(object.value);
-  },
-  toAminoMsg(message: LeafOp): LeafOpAminoMsg {
-    return {
-      type: "cosmos-sdk/LeafOp",
-      value: LeafOp.toAmino(message)
-    };
-  },
   fromProtoMsg(message: LeafOpProtoMsg): LeafOp {
     return LeafOp.decode(message.value);
   },
@@ -1079,6 +999,8 @@ function createBaseInnerOp(): InnerOp {
   };
 }
 export const InnerOp = {
+  typeUrl: "/cosmos.ics23.v1.InnerOp",
+  aminoType: "cosmos-sdk/InnerOp",
   encode(message: InnerOp, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.hash !== 0) {
       writer.uint32(8).int32(message.hash);
@@ -1149,15 +1071,6 @@ export const InnerOp = {
     obj.suffix = message.suffix;
     return obj;
   },
-  fromAminoMsg(object: InnerOpAminoMsg): InnerOp {
-    return InnerOp.fromAmino(object.value);
-  },
-  toAminoMsg(message: InnerOp): InnerOpAminoMsg {
-    return {
-      type: "cosmos-sdk/InnerOp",
-      value: InnerOp.toAmino(message)
-    };
-  },
   fromProtoMsg(message: InnerOpProtoMsg): InnerOp {
     return InnerOp.decode(message.value);
   },
@@ -1173,14 +1086,16 @@ export const InnerOp = {
 };
 function createBaseProofSpec(): ProofSpec {
   return {
-    leafSpec: LeafOp.fromPartial({}),
-    innerSpec: InnerSpec.fromPartial({}),
+    leafSpec: undefined,
+    innerSpec: undefined,
     maxDepth: 0,
     minDepth: 0,
     prehashKeyBeforeComparison: false
   };
 }
 export const ProofSpec = {
+  typeUrl: "/cosmos.ics23.v1.ProofSpec",
+  aminoType: "cosmos-sdk/ProofSpec",
   encode(message: ProofSpec, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.leafSpec !== undefined) {
       LeafOp.encode(message.leafSpec, writer.uint32(10).fork()).ldelim();
@@ -1273,15 +1188,6 @@ export const ProofSpec = {
     obj.prehash_key_before_comparison = message.prehashKeyBeforeComparison;
     return obj;
   },
-  fromAminoMsg(object: ProofSpecAminoMsg): ProofSpec {
-    return ProofSpec.fromAmino(object.value);
-  },
-  toAminoMsg(message: ProofSpec): ProofSpecAminoMsg {
-    return {
-      type: "cosmos-sdk/ProofSpec",
-      value: ProofSpec.toAmino(message)
-    };
-  },
   fromProtoMsg(message: ProofSpecProtoMsg): ProofSpec {
     return ProofSpec.decode(message.value);
   },
@@ -1306,6 +1212,8 @@ function createBaseInnerSpec(): InnerSpec {
   };
 }
 export const InnerSpec = {
+  typeUrl: "/cosmos.ics23.v1.InnerSpec",
+  aminoType: "cosmos-sdk/InnerSpec",
   encode(message: InnerSpec, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     writer.uint32(10).fork();
     for (const v of message.childOrder) {
@@ -1426,15 +1334,6 @@ export const InnerSpec = {
     obj.hash = message.hash;
     return obj;
   },
-  fromAminoMsg(object: InnerSpecAminoMsg): InnerSpec {
-    return InnerSpec.fromAmino(object.value);
-  },
-  toAminoMsg(message: InnerSpec): InnerSpecAminoMsg {
-    return {
-      type: "cosmos-sdk/InnerSpec",
-      value: InnerSpec.toAmino(message)
-    };
-  },
   fromProtoMsg(message: InnerSpecProtoMsg): InnerSpec {
     return InnerSpec.decode(message.value);
   },
@@ -1454,6 +1353,8 @@ function createBaseBatchProof(): BatchProof {
   };
 }
 export const BatchProof = {
+  typeUrl: "/cosmos.ics23.v1.BatchProof",
+  aminoType: "cosmos-sdk/BatchProof",
   encode(message: BatchProof, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     for (const v of message.entries) {
       BatchEntry.encode(v!, writer.uint32(10).fork()).ldelim();
@@ -1510,15 +1411,6 @@ export const BatchProof = {
     }
     return obj;
   },
-  fromAminoMsg(object: BatchProofAminoMsg): BatchProof {
-    return BatchProof.fromAmino(object.value);
-  },
-  toAminoMsg(message: BatchProof): BatchProofAminoMsg {
-    return {
-      type: "cosmos-sdk/BatchProof",
-      value: BatchProof.toAmino(message)
-    };
-  },
   fromProtoMsg(message: BatchProofProtoMsg): BatchProof {
     return BatchProof.decode(message.value);
   },
@@ -1539,6 +1431,8 @@ function createBaseBatchEntry(): BatchEntry {
   };
 }
 export const BatchEntry = {
+  typeUrl: "/cosmos.ics23.v1.BatchEntry",
+  aminoType: "cosmos-sdk/BatchEntry",
   encode(message: BatchEntry, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.exist !== undefined) {
       ExistenceProof.encode(message.exist, writer.uint32(10).fork()).ldelim();
@@ -1598,15 +1492,6 @@ export const BatchEntry = {
     obj.nonexist = message.nonexist ? NonExistenceProof.toAmino(message.nonexist) : undefined;
     return obj;
   },
-  fromAminoMsg(object: BatchEntryAminoMsg): BatchEntry {
-    return BatchEntry.fromAmino(object.value);
-  },
-  toAminoMsg(message: BatchEntry): BatchEntryAminoMsg {
-    return {
-      type: "cosmos-sdk/BatchEntry",
-      value: BatchEntry.toAmino(message)
-    };
-  },
   fromProtoMsg(message: BatchEntryProtoMsg): BatchEntry {
     return BatchEntry.decode(message.value);
   },
@@ -1627,6 +1512,8 @@ function createBaseCompressedBatchProof(): CompressedBatchProof {
   };
 }
 export const CompressedBatchProof = {
+  typeUrl: "/cosmos.ics23.v1.CompressedBatchProof",
+  aminoType: "cosmos-sdk/CompressedBatchProof",
   encode(message: CompressedBatchProof, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     for (const v of message.entries) {
       CompressedBatchEntry.encode(v!, writer.uint32(10).fork()).ldelim();
@@ -1702,15 +1589,6 @@ export const CompressedBatchProof = {
     }
     return obj;
   },
-  fromAminoMsg(object: CompressedBatchProofAminoMsg): CompressedBatchProof {
-    return CompressedBatchProof.fromAmino(object.value);
-  },
-  toAminoMsg(message: CompressedBatchProof): CompressedBatchProofAminoMsg {
-    return {
-      type: "cosmos-sdk/CompressedBatchProof",
-      value: CompressedBatchProof.toAmino(message)
-    };
-  },
   fromProtoMsg(message: CompressedBatchProofProtoMsg): CompressedBatchProof {
     return CompressedBatchProof.decode(message.value);
   },
@@ -1731,6 +1609,8 @@ function createBaseCompressedBatchEntry(): CompressedBatchEntry {
   };
 }
 export const CompressedBatchEntry = {
+  typeUrl: "/cosmos.ics23.v1.CompressedBatchEntry",
+  aminoType: "cosmos-sdk/CompressedBatchEntry",
   encode(message: CompressedBatchEntry, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.exist !== undefined) {
       CompressedExistenceProof.encode(message.exist, writer.uint32(10).fork()).ldelim();
@@ -1790,15 +1670,6 @@ export const CompressedBatchEntry = {
     obj.nonexist = message.nonexist ? CompressedNonExistenceProof.toAmino(message.nonexist) : undefined;
     return obj;
   },
-  fromAminoMsg(object: CompressedBatchEntryAminoMsg): CompressedBatchEntry {
-    return CompressedBatchEntry.fromAmino(object.value);
-  },
-  toAminoMsg(message: CompressedBatchEntry): CompressedBatchEntryAminoMsg {
-    return {
-      type: "cosmos-sdk/CompressedBatchEntry",
-      value: CompressedBatchEntry.toAmino(message)
-    };
-  },
   fromProtoMsg(message: CompressedBatchEntryProtoMsg): CompressedBatchEntry {
     return CompressedBatchEntry.decode(message.value);
   },
@@ -1816,11 +1687,13 @@ function createBaseCompressedExistenceProof(): CompressedExistenceProof {
   return {
     key: new Uint8Array(),
     value: new Uint8Array(),
-    leaf: LeafOp.fromPartial({}),
+    leaf: undefined,
     path: []
   };
 }
 export const CompressedExistenceProof = {
+  typeUrl: "/cosmos.ics23.v1.CompressedExistenceProof",
+  aminoType: "cosmos-sdk/CompressedExistenceProof",
   encode(message: CompressedExistenceProof, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.key.length !== 0) {
       writer.uint32(10).bytes(message.key);
@@ -1919,15 +1792,6 @@ export const CompressedExistenceProof = {
     }
     return obj;
   },
-  fromAminoMsg(object: CompressedExistenceProofAminoMsg): CompressedExistenceProof {
-    return CompressedExistenceProof.fromAmino(object.value);
-  },
-  toAminoMsg(message: CompressedExistenceProof): CompressedExistenceProofAminoMsg {
-    return {
-      type: "cosmos-sdk/CompressedExistenceProof",
-      value: CompressedExistenceProof.toAmino(message)
-    };
-  },
   fromProtoMsg(message: CompressedExistenceProofProtoMsg): CompressedExistenceProof {
     return CompressedExistenceProof.decode(message.value);
   },
@@ -1944,11 +1808,13 @@ export const CompressedExistenceProof = {
 function createBaseCompressedNonExistenceProof(): CompressedNonExistenceProof {
   return {
     key: new Uint8Array(),
-    left: CompressedExistenceProof.fromPartial({}),
-    right: CompressedExistenceProof.fromPartial({})
+    left: undefined,
+    right: undefined
   };
 }
 export const CompressedNonExistenceProof = {
+  typeUrl: "/cosmos.ics23.v1.CompressedNonExistenceProof",
+  aminoType: "cosmos-sdk/CompressedNonExistenceProof",
   encode(message: CompressedNonExistenceProof, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.key.length !== 0) {
       writer.uint32(10).bytes(message.key);
@@ -2018,15 +1884,6 @@ export const CompressedNonExistenceProof = {
     obj.left = message.left ? CompressedExistenceProof.toAmino(message.left) : undefined;
     obj.right = message.right ? CompressedExistenceProof.toAmino(message.right) : undefined;
     return obj;
-  },
-  fromAminoMsg(object: CompressedNonExistenceProofAminoMsg): CompressedNonExistenceProof {
-    return CompressedNonExistenceProof.fromAmino(object.value);
-  },
-  toAminoMsg(message: CompressedNonExistenceProof): CompressedNonExistenceProofAminoMsg {
-    return {
-      type: "cosmos-sdk/CompressedNonExistenceProof",
-      value: CompressedNonExistenceProof.toAmino(message)
-    };
   },
   fromProtoMsg(message: CompressedNonExistenceProofProtoMsg): CompressedNonExistenceProof {
     return CompressedNonExistenceProof.decode(message.value);

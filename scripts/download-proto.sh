@@ -116,7 +116,11 @@ downloadDeps() {
         esac
         
         SRC=${GIT}/${GIT_PATH}
-        content=`curl ${SRC} -s`
+
+        content=""
+        while [ "$content" = "" ]; do
+            content=`curl ${SRC} -s`
+        done
 
         if [ "$content" = "404: Not Found" ]; then
             echo "|[${FILE}](${SRC})|$repo|$commit|dependency|404|" >> ${OUT}/README.md

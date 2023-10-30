@@ -153,10 +153,6 @@ export interface ChannelAmino {
   /** opaque channel version, which is agreed upon during the handshake */
   version: string;
 }
-export interface ChannelAminoMsg {
-  type: "cosmos-sdk/Channel";
-  value: ChannelAmino;
-}
 /**
  * IdentifiedChannel defines a channel with additional port and channel
  * identifier fields.
@@ -207,10 +203,6 @@ export interface IdentifiedChannelAmino {
   /** channel identifier */
   channel_id: string;
 }
-export interface IdentifiedChannelAminoMsg {
-  type: "cosmos-sdk/IdentifiedChannel";
-  value: IdentifiedChannelAmino;
-}
 /** Counterparty defines a channel end counterparty */
 export interface Counterparty {
   /** port on the counterparty chain which owns the other end of the channel. */
@@ -228,10 +220,6 @@ export interface CounterpartyAmino {
   port_id: string;
   /** channel end on the counterparty chain */
   channel_id: string;
-}
-export interface CounterpartyAminoMsg {
-  type: "cosmos-sdk/Counterparty";
-  value: CounterpartyAmino;
 }
 /** Packet defines a type that carries data across different chains through IBC */
 export interface Packet {
@@ -283,10 +271,6 @@ export interface PacketAmino {
   /** block timestamp (in nanoseconds) after which the packet times out */
   timeout_timestamp: string;
 }
-export interface PacketAminoMsg {
-  type: "cosmos-sdk/Packet";
-  value: PacketAmino;
-}
 /**
  * PacketState defines the generic type necessary to retrieve and store
  * packet commitments, acknowledgements, and receipts.
@@ -323,10 +307,6 @@ export interface PacketStateAmino {
   /** embedded data that represents packet state. */
   data: Uint8Array;
 }
-export interface PacketStateAminoMsg {
-  type: "cosmos-sdk/PacketState";
-  value: PacketStateAmino;
-}
 /**
  * PacketId is an identifer for a unique Packet
  * Source chains refer to packets by source port/channel
@@ -356,10 +336,6 @@ export interface PacketIdAmino {
   channel_id: string;
   /** packet sequence */
   sequence: string;
-}
-export interface PacketIdAminoMsg {
-  type: "cosmos-sdk/PacketId";
-  value: PacketIdAmino;
 }
 /**
  * Acknowledgement is the recommended acknowledgement format to be used by
@@ -391,10 +367,6 @@ export interface AcknowledgementAmino {
   result?: Uint8Array;
   error?: string;
 }
-export interface AcknowledgementAminoMsg {
-  type: "cosmos-sdk/Acknowledgement";
-  value: AcknowledgementAmino;
-}
 function createBaseChannel(): Channel {
   return {
     state: 0,
@@ -405,6 +377,8 @@ function createBaseChannel(): Channel {
   };
 }
 export const Channel = {
+  typeUrl: "/ibc.core.channel.v1.Channel",
+  aminoType: "cosmos-sdk/Channel",
   encode(message: Channel, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.state !== 0) {
       writer.uint32(8).int32(message.state);
@@ -505,15 +479,6 @@ export const Channel = {
     obj.version = message.version;
     return obj;
   },
-  fromAminoMsg(object: ChannelAminoMsg): Channel {
-    return Channel.fromAmino(object.value);
-  },
-  toAminoMsg(message: Channel): ChannelAminoMsg {
-    return {
-      type: "cosmos-sdk/Channel",
-      value: Channel.toAmino(message)
-    };
-  },
   fromProtoMsg(message: ChannelProtoMsg): Channel {
     return Channel.decode(message.value);
   },
@@ -539,6 +504,8 @@ function createBaseIdentifiedChannel(): IdentifiedChannel {
   };
 }
 export const IdentifiedChannel = {
+  typeUrl: "/ibc.core.channel.v1.IdentifiedChannel",
+  aminoType: "cosmos-sdk/IdentifiedChannel",
   encode(message: IdentifiedChannel, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.state !== 0) {
       writer.uint32(8).int32(message.state);
@@ -661,15 +628,6 @@ export const IdentifiedChannel = {
     obj.channel_id = message.channelId;
     return obj;
   },
-  fromAminoMsg(object: IdentifiedChannelAminoMsg): IdentifiedChannel {
-    return IdentifiedChannel.fromAmino(object.value);
-  },
-  toAminoMsg(message: IdentifiedChannel): IdentifiedChannelAminoMsg {
-    return {
-      type: "cosmos-sdk/IdentifiedChannel",
-      value: IdentifiedChannel.toAmino(message)
-    };
-  },
   fromProtoMsg(message: IdentifiedChannelProtoMsg): IdentifiedChannel {
     return IdentifiedChannel.decode(message.value);
   },
@@ -690,6 +648,8 @@ function createBaseCounterparty(): Counterparty {
   };
 }
 export const Counterparty = {
+  typeUrl: "/ibc.core.channel.v1.Counterparty",
+  aminoType: "cosmos-sdk/Counterparty",
   encode(message: Counterparty, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.portId !== "") {
       writer.uint32(10).string(message.portId);
@@ -749,15 +709,6 @@ export const Counterparty = {
     obj.channel_id = message.channelId;
     return obj;
   },
-  fromAminoMsg(object: CounterpartyAminoMsg): Counterparty {
-    return Counterparty.fromAmino(object.value);
-  },
-  toAminoMsg(message: Counterparty): CounterpartyAminoMsg {
-    return {
-      type: "cosmos-sdk/Counterparty",
-      value: Counterparty.toAmino(message)
-    };
-  },
   fromProtoMsg(message: CounterpartyProtoMsg): Counterparty {
     return Counterparty.decode(message.value);
   },
@@ -784,6 +735,8 @@ function createBasePacket(): Packet {
   };
 }
 export const Packet = {
+  typeUrl: "/ibc.core.channel.v1.Packet",
+  aminoType: "cosmos-sdk/Packet",
   encode(message: Packet, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.sequence !== BigInt(0)) {
       writer.uint32(8).uint64(message.sequence);
@@ -909,15 +862,6 @@ export const Packet = {
     obj.timeout_timestamp = message.timeoutTimestamp ? message.timeoutTimestamp.toString() : undefined;
     return obj;
   },
-  fromAminoMsg(object: PacketAminoMsg): Packet {
-    return Packet.fromAmino(object.value);
-  },
-  toAminoMsg(message: Packet): PacketAminoMsg {
-    return {
-      type: "cosmos-sdk/Packet",
-      value: Packet.toAmino(message)
-    };
-  },
   fromProtoMsg(message: PacketProtoMsg): Packet {
     return Packet.decode(message.value);
   },
@@ -940,6 +884,8 @@ function createBasePacketState(): PacketState {
   };
 }
 export const PacketState = {
+  typeUrl: "/ibc.core.channel.v1.PacketState",
+  aminoType: "cosmos-sdk/PacketState",
   encode(message: PacketState, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.portId !== "") {
       writer.uint32(10).string(message.portId);
@@ -1021,15 +967,6 @@ export const PacketState = {
     obj.data = message.data;
     return obj;
   },
-  fromAminoMsg(object: PacketStateAminoMsg): PacketState {
-    return PacketState.fromAmino(object.value);
-  },
-  toAminoMsg(message: PacketState): PacketStateAminoMsg {
-    return {
-      type: "cosmos-sdk/PacketState",
-      value: PacketState.toAmino(message)
-    };
-  },
   fromProtoMsg(message: PacketStateProtoMsg): PacketState {
     return PacketState.decode(message.value);
   },
@@ -1051,6 +988,8 @@ function createBasePacketId(): PacketId {
   };
 }
 export const PacketId = {
+  typeUrl: "/ibc.core.channel.v1.PacketId",
+  aminoType: "cosmos-sdk/PacketId",
   encode(message: PacketId, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.portId !== "") {
       writer.uint32(10).string(message.portId);
@@ -1121,15 +1060,6 @@ export const PacketId = {
     obj.sequence = message.sequence ? message.sequence.toString() : undefined;
     return obj;
   },
-  fromAminoMsg(object: PacketIdAminoMsg): PacketId {
-    return PacketId.fromAmino(object.value);
-  },
-  toAminoMsg(message: PacketId): PacketIdAminoMsg {
-    return {
-      type: "cosmos-sdk/PacketId",
-      value: PacketId.toAmino(message)
-    };
-  },
   fromProtoMsg(message: PacketIdProtoMsg): PacketId {
     return PacketId.decode(message.value);
   },
@@ -1150,6 +1080,8 @@ function createBaseAcknowledgement(): Acknowledgement {
   };
 }
 export const Acknowledgement = {
+  typeUrl: "/ibc.core.channel.v1.Acknowledgement",
+  aminoType: "cosmos-sdk/Acknowledgement",
   encode(message: Acknowledgement, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.result !== undefined) {
       writer.uint32(170).bytes(message.result);
@@ -1208,15 +1140,6 @@ export const Acknowledgement = {
     obj.result = message.result;
     obj.error = message.error;
     return obj;
-  },
-  fromAminoMsg(object: AcknowledgementAminoMsg): Acknowledgement {
-    return Acknowledgement.fromAmino(object.value);
-  },
-  toAminoMsg(message: Acknowledgement): AcknowledgementAminoMsg {
-    return {
-      type: "cosmos-sdk/Acknowledgement",
-      value: Acknowledgement.toAmino(message)
-    };
   },
   fromProtoMsg(message: AcknowledgementProtoMsg): Acknowledgement {
     return Acknowledgement.decode(message.value);

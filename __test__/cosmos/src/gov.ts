@@ -1,8 +1,8 @@
 import { Signer, WrapTypeUrl } from "@sign/cosmos";
 import { TxRaw } from "@sign/cosmos";
 
-import { AminoConverter } from "../codegen/cosmos/bank/v1beta1/tx.amino";
-import { registry } from "../codegen/cosmos/bank/v1beta1/tx.registry";
+import { AminoConverter } from "../codegen/cosmos/gov/v1beta1/tx.amino";
+import { registry } from "../codegen/cosmos/gov/v1beta1/tx.registry";
 import {
   Account1 as fromAccount,
   Account2 as toAccount,

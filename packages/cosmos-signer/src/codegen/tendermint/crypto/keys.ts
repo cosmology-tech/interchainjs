@@ -14,10 +14,6 @@ export interface PublicKeyAmino {
   ed25519?: Uint8Array;
   secp256k1?: Uint8Array;
 }
-export interface PublicKeyAminoMsg {
-  type: "/tendermint.crypto.PublicKey";
-  value: PublicKeyAmino;
-}
 function createBasePublicKey(): PublicKey {
   return {
     ed25519: undefined,
@@ -25,6 +21,7 @@ function createBasePublicKey(): PublicKey {
   };
 }
 export const PublicKey = {
+  typeUrl: "/tendermint.crypto.PublicKey",
   encode(message: PublicKey, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.ed25519 !== undefined) {
       writer.uint32(10).bytes(message.ed25519);
@@ -83,9 +80,6 @@ export const PublicKey = {
     obj.ed25519 = message.ed25519;
     obj.secp256k1 = message.secp256k1;
     return obj;
-  },
-  fromAminoMsg(object: PublicKeyAminoMsg): PublicKey {
-    return PublicKey.fromAmino(object.value);
   },
   fromProtoMsg(message: PublicKeyProtoMsg): PublicKey {
     return PublicKey.decode(message.value);
