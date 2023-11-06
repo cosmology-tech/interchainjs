@@ -13,29 +13,49 @@ const prepare = (chain: string, slug: string) => {
   const signer = new Signer().on(rpc).by(auth);
 
   const address = toBech32(prefix, auth.key.address);
-  return { chain, slug, query, auth, signer, address, denom };
+  return {
+    chain,
+    slug,
+    query,
+    auth,
+    signer,
+    address,
+    denom,
+    seed,
+    rpc,
+    prefix,
+  };
 };
 
-const fetchBaseAccount = async (account: ReturnType<typeof prepare>) => {
-  const { query, address } = account;
+type PreparedType = ReturnType<typeof prepare>;
+
+const fetchBaseAccount = async (prepared: PreparedType) => {
+  const { query, address } = prepared;
   const queryParser = QueryParser.fromQuery(query);
   const { account: baseAccount } = await queryParser.getBaseAccount(address);
   return baseAccount;
 };
 
-const fetchBalance = async (account: ReturnType<typeof prepare>) => {
-  const { query, address, denom } = account;
+const fetchBalance = async (prepared: PreparedType) => {
+  const { query, address, denom } = prepared;
   const bank = query.about(Bank);
   const { balance } = await bank.balance({ address, denom });
   return balance;
 };
 
-const Chain = "osmosis";
+const CHAIN = "osmosis";
 // const Chain = "cosmoshub";
 
-const Account1 = prepare(Chain, "genesis");
-const Account2 = prepare(Chain, "test1");
+const prepared1 = prepare(CHAIN, "genesis");
+const prepared2 = prepare(CHAIN, "test1");
 
-console.log(`============ Using Cosmos Chain ${Chain} ===========`);
+console.log(`============ Using Cosmos Chain ${CHAIN} ===========`);
 
-export { Chain, Account1, Account2, fetchBaseAccount, fetchBalance };
+export {
+  CHAIN,
+  prepared1,
+  prepared2,
+  fetchBaseAccount,
+  fetchBalance,
+  PreparedType,
+};

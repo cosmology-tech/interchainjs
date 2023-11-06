@@ -3,12 +3,11 @@
 import BN from "bn.js";
 import elliptic from "elliptic";
 
-import { Auth, SigObj } from "./types";
+import { Auth, AuthOptions, HdPath, SigObj } from "./types";
 import { getCompressedPubkey, toAddress } from "./utils/key";
 import { getSeedFromMnemonic } from "./utils/mnemonic";
 import { toSigObj } from "./utils/signature";
 import {
-  HdPath,
   Slip10,
   Slip10Curve,
   Slip10RawIndex,
@@ -51,10 +50,10 @@ export class Secp256k1Auth implements Auth {
 
   constructor() {}
 
-  static fromMnemonic(mnemonic: string, password?: string) {
+  static fromMnemonic(mnemonic: string, options?: AuthOptions) {
     const auth = new Secp256k1Auth();
-    auth.updateSeed(getSeedFromMnemonic(mnemonic, password));
-    auth.updateHdPath(defaultHdPath);
+    auth.updateSeed(getSeedFromMnemonic(mnemonic, options?.bip39Password));
+    auth.updateHdPath(options?.hdPath || defaultHdPath);
     return auth;
   }
 

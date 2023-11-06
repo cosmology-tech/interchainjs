@@ -1,24 +1,26 @@
-import { Signer, WrapTypeUrl } from "@sign/cosmos";
+import { Fee, Signer, TxResponse, WrapTypeUrl } from "@sign/cosmos";
 import { TxRaw } from "@sign/cosmos";
 
+import { MsgSend } from "../codegen/cosmos/bank/v1beta1/tx";
 import { AminoConverter } from "../codegen/cosmos/bank/v1beta1/tx.amino";
 import { registry } from "../codegen/cosmos/bank/v1beta1/tx.registry";
 import {
-  Account1 as fromAccount,
-  Account2 as toAccount,
   fetchBalance,
   fetchBaseAccount,
+  prepared1 as fromTarget,
+  prepared2 as toTarget,
 } from "./.setup";
 
-const amount = 100;
+const amount = "100000000";
 
-let msgs: WrapTypeUrl<any>[];
+let msgs: WrapTypeUrl<MsgSend>[];
+let fee: Fee;
 let txRaw: TxRaw;
 let signer: Signer;
 
 beforeAll(async () => {
-  signer = fromAccount.signer;
-  signer.register(registry as any, AminoConverter);
+  signer = fromTarget.signer;
+  signer.register(registry, AminoConverter);
   msgs = [
     {
       typeUrl: "/cosmos.bank.v1beta1.MsgSend",
@@ -26,29 +28,26 @@ beforeAll(async () => {
         amount: [
           {
             amount,
-            denom: fromAccount.denom,
+            denom: fromTarget.denom,
           },
         ],
-        fromAddress: fromAccount.address,
-        toAddress: toAccount.address,
+        fromAddress: fromTarget.address,
+        toAddress: toTarget.address,
       },
     },
   ];
-  console.log("%csend.spec.ts line:37 msgs", "color: #007acc;", msgs);
-  txRaw = await signer.sign({
-    msgs,
-    fee: {
-      amount: [
-        {
-          denom: fromAccount.denom,
-          amount: "500",
-        },
-      ],
-      gasLimit: 200000n,
-      payer: "",
-      granter: "",
-    },
-  }).signed;
+  fee = {
+    amount: [
+      {
+        denom: fromTarget.denom,
+        amount: "500",
+      },
+    ],
+    gasLimit: 200000n,
+    payer: "",
+    granter: "",
+  };
+  txRaw = await signer.sign({ msgs, fee }).signed;
 });
 
 describe("MsgSend Broadcasting", () => {
@@ -56,43 +55,30 @@ describe("MsgSend Broadcasting", () => {
   let senderSequenceAfter: bigint;
   let receiverAmountBefore: bigint;
   let receiverAmountAfter: bigint;
+  let resp: TxResponse;
 
   beforeAll(async () => {
-    senderSequenceBefore = (await fetchBaseAccount(fromAccount)).sequence;
-    console.log(
-      "%csend.spec.ts line:57 senderSequenceBefore",
-      "color: #007acc;",
-      senderSequenceBefore
-    );
-    receiverAmountBefore = BigInt((await fetchBalance(toAccount)).amount);
-    console.log(
-      "%csend.spec.ts line:63 receiverAmountBefore",
-      "color: #007acc;",
-      receiverAmountBefore
-    );
-    const resp = await signer.broadcast(txRaw, true, true);
-    console.log("%csend.spec.ts line:69 resp", "color: #007acc;", resp);
-    senderSequenceAfter = (await fetchBaseAccount(fromAccount)).sequence;
-    console.log(
-      "%csend.spec.ts line:60 senderSequenceAfter",
-      "color: #007acc;",
-      senderSequenceAfter
-    );
-    receiverAmountAfter = BigInt((await fetchBalance(toAccount)).amount);
-    console.log(
-      "%csend.spec.ts line:76 receiverAmountAfter",
-      "color: #007acc;",
-      receiverAmountAfter
-    );
+    senderSequenceBefore = (await fetchBaseAccount(fromTarget)).sequence;
+    receiverAmountBefore = BigInt((await fetchBalance(toTarget)).amount);
+    resp = await signer.broadcast(txRaw, true, true);
+    senderSequenceAfter = (await fetchBaseAccount(fromTarget)).sequence;
+    receiverAmountAfter = BigInt((await fetchBalance(toTarget)).amount);
   });
 
-  test("fromAccount should increase sequence", async () => {
+  test("resp code should be 0", () => {
+    if (resp?.code !== 0) {
+      console.log("MsgSend Broadcasting Failed", resp?.log);
+    }
+    expect(resp?.code).toEqual(0);
+  });
+
+  test("fromAddress should increase sequence", async () => {
     expect(senderSequenceAfter).toEqual(senderSequenceBefore + 1n);
   });
 
-  test("toAccount should receive balance", async () => {
+  test("toAddress should receive balance", async () => {
     expect(receiverAmountAfter).toEqual(receiverAmountBefore + BigInt(amount));
   });
 });
 
-export { msgs, signer, txRaw };
+export { fee, msgs, signer, fromTarget as target, txRaw };

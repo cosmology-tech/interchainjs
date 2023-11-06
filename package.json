@@ -7,7 +7,8 @@
   "author": "liujun93 <ljun8575@gmail.com>",
   "license": "MIT",
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "cosmos/*"
   ],
   "scripts": {
     "build": "lerna run build",

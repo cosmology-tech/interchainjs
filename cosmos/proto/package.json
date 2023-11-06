@@ -1,0 +1,27 @@
+{
+  "name": "@sign/cosmos-proto",
+  "version": "1.0.0",
+  "description": "Cosmos sign and broadcast classes",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "author": "liujun93 <ljun8575@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "build": "rm -rf dist && tsc",
+    "proto:download": "rm -rf ./proto && ./scripts/download-proto.sh",
+    "proto:codegen": "rm -rf ./src/codegen && npx telescope transpile --config ../../.telescope.json",
+    "proto:update": "yarn proto:download && yarn proto:codegen"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "dependencies": {
+    "@sign/core": "^1.0.0",
+    "bech32": "^2.0.0"
+  },
+  "peerDependencies": {
+    "@noble/hashes": "^1.3.1"
+  }
+}

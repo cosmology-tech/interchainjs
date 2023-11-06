@@ -1,12 +1,15 @@
-import { Auth, SigObj } from "./types";
+import { Auth, HttpEndpoint, SignatureConverter } from "./types";
 
 export abstract class BaseSigner<T> {
-  private _Query?: { new (endpoint: string): T };
+  private _Query?: { new (endpoint: string | HttpEndpoint): T };
 
   protected _query?: T;
   protected _auth?: Auth;
 
-  constructor(Query: { new (endpoint: string): T }) {
+  protected abstract hash: (data: Uint8Array) => Uint8Array;
+  protected abstract signatureConverter: SignatureConverter;
+
+  constructor(Query: { new (endpoint: string | HttpEndpoint): T }) {
     this._Query = Query;
   }
 
@@ -20,7 +23,7 @@ export abstract class BaseSigner<T> {
     return this._auth!;
   }
 
-  on(endpoint: string) {
+  on(endpoint: string | HttpEndpoint) {
     this._query = new this._Query(endpoint);
     return this;
   }
@@ -46,20 +49,30 @@ export abstract class BaseSigner<T> {
     }
   }
 
-  protected abstract _hash(raw: Uint8Array): Uint8Array;
-  protected abstract _toSignature(sigObj: SigObj): Uint8Array;
-  protected abstract _toSigObj(signature: Uint8Array): SigObj;
-
-  protected _signArbitrary(raw: Uint8Array): Uint8Array {
-    const rawHash = this._hash(raw);
-    const sigObj = this.auth.sign(rawHash);
-    const signature = this._toSignature(sigObj);
+  signBytes(bytes: Uint8Array, isHashed = false): Uint8Array {
+    let data: Uint8Array;
+    if (!isHashed) {
+      data = this.hash(bytes);
+    } else {
+      data = bytes;
+    }
+    const sigObj = this.auth.sign(data);
+    const signature = this.signatureConverter.toSignature(sigObj);
     return signature;
   }
 
-  verifyArbitrary(raw: Uint8Array, signature: Uint8Array): boolean {
-    const rawHash = this._hash(raw);
-    const sigObj = this._toSigObj(signature);
-    return this.auth.verify(rawHash, sigObj);
+  verifyBytes(
+    bytes: Uint8Array,
+    signature: Uint8Array,
+    isHashed = false
+  ): boolean {
+    let data: Uint8Array;
+    if (!isHashed) {
+      data = this.hash(bytes);
+    } else {
+      data = bytes;
+    }
+    const sigObj = this.signatureConverter.fromSignature(signature);
+    return this.auth.verify(data, sigObj);
   }
 }
