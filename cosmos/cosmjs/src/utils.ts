@@ -1,27 +1,32 @@
-import { AminoMsg } from "@sign/cosmos-amino";
-import {
-  EncodeObject,
-  EncodeObjectUtils as _EncodeObjectUtils,
-  Generated,
-} from "@sign/cosmos-proto";
+/**
+ * An error when broadcasting the transaction. This contains the CheckTx errors
+ * from the blockchain. Once a transaction is included in a block no BroadcastTxError
+ * is thrown, even if the execution fails (DeliverTx errors).
+ */
+export class BroadcastTxError extends Error {
+  public readonly code: number;
+  public readonly codespace: string;
+  public readonly log: string | undefined;
 
-export const EncodeObjectUtils = {
-  ..._EncodeObjectUtils,
-  toAminoMsg(
-    msgs: EncodeObject[],
-    getGeneratedFromTypeUrl: (typeUrl: string) => Generated
-  ): AminoMsg[] {
-    return msgs.map((msg) => {
-      const generated = getGeneratedFromTypeUrl(msg.typeUrl);
-      if (!generated.amino) {
-        throw new Error(
-          `No such aminoConverter provided for typeUrl ${msg.typeUrl}`
-        );
-      }
-      return {
-        type: generated.amino.aminoType,
-        value: generated.amino.toAmino(msg.value),
-      };
-    });
-  },
-};
+  public constructor(code: number, codespace: string, log: string | undefined) {
+    super(
+      `Broadcasting transaction failed with code ${code} (codespace: ${codespace}). Log: ${log}`
+    );
+    this.code = code;
+    this.codespace = codespace;
+    this.log = log;
+  }
+}
+
+export class TimeoutError extends Error {
+  public readonly txId: string;
+
+  public constructor(message: string, txId: string) {
+    super(message);
+    this.txId = txId;
+  }
+}
+
+export async function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}

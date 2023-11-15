@@ -1,7 +1,7 @@
 import { Auth, HttpEndpoint, SignatureConverter } from "./types";
 
 export abstract class BaseSigner<T> {
-  private _Query?: { new (endpoint: string | HttpEndpoint): T };
+  protected _Query?: { new (endpoint: string | HttpEndpoint): T };
 
   protected _query?: T;
   protected _auth?: Auth;

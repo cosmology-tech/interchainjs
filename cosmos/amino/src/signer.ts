@@ -1,15 +1,18 @@
 import {
-  Any,
-  Generated,
+  calculateFee,
+  EncodeObject,
+  Fee,
+  GasPrice,
+  getAvgGasPrice,
+  Parser,
   Registry,
-  Secp256k1PubKey,
   Signed,
   Signer,
   TxRaw,
 } from "@sign/cosmos-proto";
 
-import { AminoConverters, StdSignDoc } from "./types";
-import { StdSignDocUtils } from "./utils";
+import { AminoConverters, StdFee, StdSignDoc } from "./types";
+import { EncodeObjectUtils, StdFeeUtils, StdSignDocUtils } from "./utils";
 
 export class AminoSigner extends Signer {
   constructor(registry: Registry, aminoConverters: AminoConverters) {
@@ -27,7 +30,7 @@ export class AminoSigner extends Signer {
     });
   }
 
-  getGeneratedFromAminoType = (type: string): Generated => {
+  getParserFromAminoType = (type: string): Parser => {
     const generated = this.generated.find((g) => g.amino?.aminoType === type);
     if (!generated) {
       throw new Error(
@@ -37,18 +40,50 @@ export class AminoSigner extends Signer {
     return generated;
   };
 
-  signStd(doc: StdSignDoc): Signed<TxRaw> {
-    const signature = this.signBytes(StdSignDocUtils.encode(doc));
-    const publicKey: Any = {
-      typeUrl: "/cosmos.crypto.secp256k1.PubKey",
-      value: Secp256k1PubKey.encode({
-        key: this.auth.key.pubkey,
-      }).finish(),
+  async signMessagesWithAmino(
+    messages: EncodeObject[],
+    fee?: Fee,
+    memo: string = "",
+    options?: {
+      multiplier?: number;
+      gasPrice?: GasPrice;
+    }
+  ) {
+    if (!this.accountData) {
+      await this.initAccountData();
+    }
+
+    let _fee: StdFee;
+    if (!fee) {
+      const gas = await this.estimateGas(messages, memo);
+      _fee = StdFeeUtils.fromFee(
+        calculateFee(
+          gas.gasUsed * BigInt(options?.multiplier || 1.4),
+          options?.gasPrice || getAvgGasPrice(this.accountData.chainId)
+        )
+      );
+    } else {
+      _fee = StdFeeUtils.fromFee(fee);
+    }
+
+    const doc: StdSignDoc = {
+      chain_id: this.accountData.chainId,
+      account_number: this.accountData.accountNumber.toString(),
+      sequence: this.accountData.sequence.toString(),
+      fee: _fee,
+      msgs: EncodeObjectUtils.toAminoMsg(messages, this.getParserFromTypeUrl),
+      memo,
     };
+
+    return this.signDocWithAmino(doc);
+  }
+
+  signDocWithAmino(doc: StdSignDoc): Signed<TxRaw> {
+    const signature = this.signBytes(StdSignDocUtils.encode(doc));
     const { bodyBytes, authInfoBytes } = StdSignDocUtils.toSignDoc(
       doc,
-      publicKey,
-      this.getGeneratedFromAminoType
+      this.publicKey,
+      this.getParserFromAminoType
     );
     const signed = TxRaw.fromPartial({
       bodyBytes,
@@ -57,8 +92,8 @@ export class AminoSigner extends Signer {
     });
     return {
       signed,
-      broadcast: async (checkTx = true, commitTx = false) => {
-        return this.broadcast(signed, checkTx, commitTx);
+      broadcast: async (checkTx = true, deliverTx = false) => {
+        return this.broadcast(signed, checkTx, deliverTx);
       },
     };
   }

@@ -1,7 +1,7 @@
 import { fromBase64, HttpEndpoint, toBase64, toHex } from "@sign/core";
 
-import { AbciQueryRpc, TendermintRpc } from "./types";
-import { randomId } from "./utils/random-id";
+import { AbciQueryRpc, BroadcastRpc } from "./types";
+import { randomId } from "./utils/random";
 
 function createAbciQuery(endpoint: string | HttpEndpoint): AbciQueryRpc {
   return {
@@ -50,7 +50,7 @@ function createAbciQuery(endpoint: string | HttpEndpoint): AbciQueryRpc {
   };
 }
 
-function createTxService(endpoint: string | HttpEndpoint): TendermintRpc {
+function createTxService(endpoint: string | HttpEndpoint): BroadcastRpc {
   let _endpoint: string;
   let headers: Record<string, string> = {};
   if (typeof endpoint === "string") {
@@ -92,7 +92,7 @@ function createTxService(endpoint: string | HttpEndpoint): TendermintRpc {
 export class Query {
   readonly endpoint: string | HttpEndpoint;
   abciQuery: AbciQueryRpc;
-  txService: TendermintRpc;
+  txService: BroadcastRpc;
 
   constructor(endpoint: string | HttpEndpoint) {
     this.endpoint = endpoint;

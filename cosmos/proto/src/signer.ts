@@ -1,4 +1,4 @@
-import { BaseSigner } from "@sign/core";
+import { Auth, BaseSigner, Bech32Address, HttpEndpoint } from "@sign/core";
 
 import { PubKey as PubKeySecp256k1 } from "./codegen/cosmos/crypto/secp256k1/keys";
 import { SignMode } from "./codegen/cosmos/tx/signing/v1beta1/signing";
@@ -11,35 +11,64 @@ import {
   TxBody,
   TxRaw,
 } from "./codegen/cosmos/tx/v1beta1/tx";
+import { Any } from "./codegen/google/protobuf/any";
 import prefixJson from "./config/prefix.json";
 import { CosmosDefaults } from "./defaults";
 import { QueryParser } from "./query.parser";
-import {
-  Bech32Address,
-  EncodeObject,
-  Generated,
-  Registry,
-  Signed,
-} from "./types";
-import { toBech32 } from "./utils/bech";
-import { EncodeObjectUtils } from "./utils/utils";
+import { AccountData, EncodeObject, Parser, Registry, Signed } from "./types";
+import { toBech32 } from "./utils/account";
+import { calculateFee, GasPrice, getAvgGasPrice } from "./utils/fee";
+import { EncodeObjectUtils, TxUtils } from "./utils/tx";
 
 export class Signer extends BaseSigner<QueryParser> {
   protected hash = CosmosDefaults.hash;
   protected signatureConverter = CosmosDefaults.signatureConverter;
-  protected generated: Generated[] = [];
+  protected generated: Parser[] = [];
+  accountData: AccountData;
 
   constructor(registry?: Registry) {
     super(QueryParser);
     registry && this.register(registry);
   }
 
-  getBech32Address(chainId: string): Bech32Address {
-    const prefix = (prefixJson as any)[chainId];
-    if (!prefix) {
-      throw new Error(`Cannot find bech32_prefix for chain ${chainId}.`);
+  register(registry: Registry) {
+    registry.forEach(([typeUrl, type]) => {
+      this.generated.push({ ...type, typeUrl });
+    });
+  }
+
+  on(endpoint: string | HttpEndpoint) {
+    this._query = new this._Query(endpoint);
+    this.accountData = void 0;
+    return this;
+  }
+
+  by(auth: Auth) {
+    this._auth = auth;
+    this.accountData = void 0;
+    return this;
+  }
+
+  async initAccountData() {
+    const chainId = await this.getChainId();
+    let address: Bech32Address;
+    if (!this.auth.key.bech32address) {
+      const _prefix = (prefixJson as any)[chainId];
+      if (!_prefix) {
+        throw new Error(`Cannot find bech32_prefix for chain ${chainId}.`);
+      }
+      address = toBech32(_prefix, this.auth.key.address);
+    } else {
+      address = this.auth.key.bech32address;
     }
-    return toBech32(prefix, this.auth.key.address);
+
+    const { sequence, accountNumber } = await this.getSequence(address);
+    this.accountData = {
+      chainId,
+      sequence,
+      accountNumber,
+      address,
+    };
   }
 
   async getChainId(): Promise<string> {
@@ -47,48 +76,21 @@ export class Signer extends BaseSigner<QueryParser> {
   }
 
   async getSequence(address: Bech32Address) {
-    const {
-      account: { sequence, accountNumber },
-    } = await this.query.getBaseAccount(address);
+    const { sequence, accountNumber } =
+      await this.query.getBaseAccount(address);
     return { sequence, accountNumber };
   }
 
-  async estimateGas(tx: Tx) {
-    return this.query.estimateGas(Tx.encode(tx).finish());
+  protected get publicKey(): Any {
+    return {
+      typeUrl: PubKeySecp256k1.typeUrl,
+      value: PubKeySecp256k1.encode({
+        key: this.auth.key.pubkey,
+      }).finish(),
+    };
   }
 
-  async mockTx(messages: EncodeObject[], fee?: Fee, memo: string = "") {
-    const chainId = await this.getChainId();
-    const { sequence } = await this.getSequence(this.getBech32Address(chainId));
-    const txBody: TxBody = TxBody.fromPartial({
-      messages: EncodeObjectUtils.encode(
-        messages,
-        this.getGeneratedFromTypeUrl
-      ),
-      memo,
-    });
-    const signerInfo: SignerInfo = SignerInfo.fromPartial({
-      publicKey: {
-        typeUrl: "/cosmos.crypto.secp256k1.PubKey",
-        value: PubKeySecp256k1.encode({
-          key: this.auth.key.pubkey,
-        }).finish(),
-      },
-      sequence: BigInt(sequence),
-      modeInfo: { single: { mode: SignMode.SIGN_MODE_UNSPECIFIED } },
-    });
-
-    return Tx.fromPartial({
-      body: txBody,
-      authInfo: AuthInfo.fromPartial({
-        fee: Fee.fromPartial(fee || {}),
-        signerInfos: [signerInfo],
-      }),
-      signatures: [new Uint8Array()],
-    });
-  }
-
-  getGeneratedFromTypeUrl = (typeUrl: string): Generated => {
+  getParserFromTypeUrl = (typeUrl: string): Parser => {
     const generated = this.generated.find((g) => g.typeUrl === typeUrl);
     if (!generated) {
       throw new Error(
@@ -98,13 +100,92 @@ export class Signer extends BaseSigner<QueryParser> {
     return generated;
   };
 
-  register(registry: Registry) {
-    registry.forEach(([typeUrl, type]) => {
-      this.generated.push({ ...type, typeUrl });
-    });
+  async estimateGas(messages: EncodeObject[], memo: string = "") {
+    if (!this.accountData) {
+      await this.initAccountData();
+    }
+    const tx = TxUtils.toTxForGasEstimation(
+      messages,
+      this.publicKey,
+      this.getParserFromTypeUrl,
+      this.accountData.sequence,
+      memo
+    );
+    return this.query.estimateGas(Tx.encode(tx).finish());
   }
 
-  sign(doc: SignDoc): Signed<TxRaw> {
+  async estimateFee(
+    messages: EncodeObject[],
+    memo: string = "",
+    options?: {
+      multiplier?: number;
+      gasPrice?: GasPrice;
+    }
+  ) {
+    const gas = await this.estimateGas(messages, memo);
+    const fee = calculateFee(
+      gas.gasUsed * BigInt(options?.multiplier || 1.4),
+      options?.gasPrice || getAvgGasPrice(this.accountData.chainId)
+    );
+    return fee;
+  }
+
+  async signMessages(
+    messages: EncodeObject[],
+    fee?: Fee,
+    memo: string = "",
+    options?: {
+      multiplier?: number;
+      gasPrice?: GasPrice;
+    }
+  ) {
+    if (!this.accountData) {
+      await this.initAccountData();
+    }
+
+    let _fee: Fee;
+    if (!fee) {
+      const gas = await this.estimateGas(messages, memo);
+      _fee = calculateFee(
+        gas.gasUsed * BigInt(options?.multiplier || 1.4),
+        options?.gasPrice || getAvgGasPrice(this.accountData.chainId)
+      );
+    } else {
+      _fee = fee;
+    }
+
+    const txBody: TxBody = TxBody.fromPartial({
+      messages: EncodeObjectUtils.encode(messages, this.getParserFromTypeUrl),
+      memo,
+    });
+
+    const signerInfo: SignerInfo = SignerInfo.fromPartial({
+      publicKey: {
+        typeUrl: PubKeySecp256k1.typeUrl,
+        value: PubKeySecp256k1.encode(
+          PubKeySecp256k1.fromPartial({ key: this.auth.key.pubkey })
+        ).finish(),
+      },
+      sequence: this.accountData.sequence,
+      modeInfo: { single: { mode: SignMode.SIGN_MODE_DIRECT } },
+    });
+
+    const doc: SignDoc = SignDoc.fromPartial({
+      bodyBytes: TxBody.encode(txBody).finish(),
+      authInfoBytes: AuthInfo.encode(
+        AuthInfo.fromPartial({
+          fee: _fee,
+          signerInfos: [signerInfo],
+        })
+      ).finish(),
+      chainId: this.accountData.chainId,
+      accountNumber: this.accountData.accountNumber,
+    });
+
+    return this.signDoc(doc);
+  }
+
+  signDoc(doc: SignDoc): Signed<TxRaw> {
     const signature = this.signBytes(
       SignDoc.encode(SignDoc.fromPartial(doc)).finish()
     );
@@ -115,36 +196,20 @@ export class Signer extends BaseSigner<QueryParser> {
     });
     return {
       signed,
-      broadcast: async (checkTx = true, commitTx = false) => {
-        return this.broadcast(signed, checkTx, commitTx);
+      broadcast: async (checkTx = true, deliverTx = false) => {
+        return this.broadcast(signed, checkTx, deliverTx);
       },
     };
   }
 
-  async signMessages(messages: EncodeObject[], fee?: Fee, memo: string = "") {
-    const tx = await this.mockTx(messages, fee, memo);
-    const gas = await this.estimateGas(tx)
-    const estimatedFee: Fee = 
-    const { accountNumber } = await this.getSequence(this.getBech32Address(chainId));
-    const doc: SignDoc = SignDoc.fromPartial({
-      bodyBytes: TxBody.encode(tx.body),
-      authInfoBytes: AuthInfo.encode(AuthInfo.fromPartial({
-        fee: estimatedFee,
-        signerInfos: tx.authInfo.signerInfos
-      })),
-      chainId: await this.getChainId(),
-      accountNumber
-    })
-  }
-
-  async broadcast(txRaw: TxRaw, checkTx = true, commitTx = false) {
+  async broadcast(txRaw: TxRaw, checkTx = true, deliverTx = false) {
     const txBytes = TxRaw.encode(txRaw).finish();
-    return this.broadcastBytes(txBytes, checkTx, commitTx);
+    return this.broadcastBytes(txBytes, checkTx, deliverTx);
   }
 
-  async broadcastBytes(raw: Uint8Array, checkTx = true, commitTx = false) {
+  async broadcastBytes(raw: Uint8Array, checkTx = true, deliverTx = false) {
     const mode =
-      checkTx && commitTx
+      checkTx && deliverTx
         ? "broadcast_tx_commit"
         : checkTx
         ? "broadcast_tx_sync"

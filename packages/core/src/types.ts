@@ -1,9 +1,12 @@
 import { Slip10RawIndex } from "./utils/slip10";
 
+export type Bech32Address = string;
+
 /* eslint-disable @typescript-eslint/ban-types */
 export interface Key {
   pubkey: Uint8Array;
-  address: Uint8Array;
+  address?: Uint8Array;
+  bech32address?: Bech32Address;
 }
 
 export interface SigObj {

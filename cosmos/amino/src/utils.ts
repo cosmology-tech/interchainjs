@@ -3,15 +3,17 @@ import {
   Any,
   AuthInfo,
   Coin,
+  EncodeObject,
+  EncodeObjectUtils as _EncodeObjectUtils,
   Fee,
-  Generated,
+  Parser,
   SignDoc,
   SignerInfo,
   TxBody,
 } from "@sign/cosmos-proto";
 import { SignMode } from "@sign/cosmos-proto/src/codegen/cosmos/tx/signing/v1beta1/signing";
 
-import { StdFee, StdSignDoc } from "./types";
+import { AminoMsg, StdFee, StdSignDoc } from "./types";
 
 function sortedObject(obj: any): any {
   if (typeof obj !== "object" || obj === null) {
@@ -54,6 +56,14 @@ export function escapeCharacters(input: string): string {
 }
 
 export const StdFeeUtils = {
+  fromFee(fee: Fee): StdFee {
+    return {
+      amount: fee.amount,
+      gas: fee.gasLimit.toString(),
+      granter: fee.granter,
+      payer: fee.payer,
+    };
+  },
   toFee(fee: StdFee): Fee {
     return Fee.fromPartial({
       amount: fee.amount.map((coin) => Coin.fromPartial(coin)),
@@ -74,11 +84,11 @@ export const StdSignDocUtils = {
   toSignDoc(
     doc: StdSignDoc,
     publicKey: Any,
-    getGeneratedFromAminoType: (type: string) => Generated
+    getParserFromAminoType: (type: string) => Parser
   ): SignDoc {
     const txBody: TxBody = TxBody.fromPartial({
       messages: doc.msgs.map((msg) => {
-        const generated = getGeneratedFromAminoType(msg.type);
+        const generated = getParserFromAminoType(msg.type);
         if (!generated.amino) {
           throw new Error(
             `No such aminoConverter provided for aminoType ${msg.type}`
@@ -114,5 +124,26 @@ export const StdSignDocUtils = {
       accountNumber: BigInt(doc.account_number),
     });
     return signDoc;
+  },
+};
+
+export const EncodeObjectUtils = {
+  ..._EncodeObjectUtils,
+  toAminoMsg(
+    msgs: EncodeObject[],
+    getParserFromTypeUrl: (typeUrl: string) => Parser
+  ): AminoMsg[] {
+    return msgs.map((msg) => {
+      const generated = getParserFromTypeUrl(msg.typeUrl);
+      if (!generated.amino) {
+        throw new Error(
+          `No such aminoConverter provided for typeUrl ${msg.typeUrl}`
+        );
+      }
+      return {
+        type: generated.amino.aminoType,
+        value: generated.amino.toAmino(msg.value),
+      };
+    });
   },
 };

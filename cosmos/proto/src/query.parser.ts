@@ -1,15 +1,17 @@
 import { HttpEndpoint } from "@cosmjs/stargate";
 
+import { BaseAccount } from "./codegen/cosmos/auth/v1beta1/auth";
 import { QueryClientImpl as Auth } from "./codegen/cosmos/auth/v1beta1/query.rpc.Query";
 import { ServiceClientImpl as Tx } from "./codegen/cosmos/tx/v1beta1/service.rpc.Service";
-import { AccountParserMap, BaseAccountParser } from "./const/account";
 import { Query } from "./query";
 import {
-  Account,
+  AccountType,
   BroadcastTxCommitResponse,
   BroadcastTxResponse,
+  IndexedTx,
   TxResponse,
 } from "./types";
+import { Accounts } from "./utils/account";
 
 export class QueryParser extends Query {
   constructor(endpoint: string | HttpEndpoint) {
@@ -28,17 +30,16 @@ export class QueryParser extends Query {
     return this.about(Tx);
   }
 
-  status() {
-    return new Promise((resolve, reject) => {
-      fetch(`${this.endpoint}/status`)
-        .then((data) =>
-          data
-            .json()
-            .then((json) => resolve(json["result"]))
-            .catch((e) => reject(e))
-        )
-        .catch((e) => reject(e));
-    });
+  async getStatus() {
+    const data = await fetch(`${this.endpoint}/status`);
+    const json = await data.json();
+    return json["result"];
+  }
+
+  async getTx(id: string): Promise<IndexedTx | null> {
+    const data = await fetch(`${this.endpoint}/tx.hash='${id}'`);
+    const json = await data.json();
+    return json["result"] || null;
   }
 
   async getAccount(address: string) {
@@ -48,36 +49,33 @@ export class QueryParser extends Query {
       throw new Error(`Account is undefined.`);
     }
 
-    const accountParser = Object.values(AccountParserMap).find(
-      (parser) => parser.protoType === accountResp.account!.typeUrl
+    const Account = Accounts.find(
+      (Account) => Account.typeUrl === accountResp.account!.typeUrl
     );
 
-    if (!accountParser) {
+    if (!Account) {
       throw new Error(
-        `No corresponding accountParser found for account type ${accountResp.account.typeUrl}.`
+        `No corresponding account found for account type ${accountResp.account.typeUrl}.`
       );
     }
 
-    const account = accountParser
-      .fromProto(accountResp.account)
-      .decode()
-      .unwrap()
-      .pop() as Account;
-
-    return { account, parser: accountParser };
+    const account: AccountType = Account.fromPartial(
+      Account.decode(accountResp.account.value)
+    );
+    return account;
   }
 
-  async getBaseAccount(address: string) {
-    const { account, parser } = await this.getAccount(address);
-    const baseAccount = parser.getBaseAccount(account);
-    if (!baseAccount) {
-      throw new Error("BaseAccount is undefined.");
-    }
-    return { account: baseAccount, parser: BaseAccountParser };
+  async getBaseAccount(address: string): Promise<BaseAccount> {
+    const account = await this.getAccount(address);
+    return (
+      (account as any).baseVestingAccount?.baseAccount ||
+      (account as any).baseAccount ||
+      account
+    );
   }
 
   async getChainId() {
-    const status = await this.status();
+    const status = await this.getStatus();
     return (status as any)["node_info"]["network"];
   }
 
@@ -95,16 +93,31 @@ export class QueryParser extends Query {
   ): Promise<TxResponse> {
     const resp = await this.txService.request(method, tx);
     switch (method) {
+      case "broadcast_tx_async":
+        const { hash: hash1, ...rest1 } = resp as BroadcastTxResponse;
+        return {
+          hash: hash1,
+          add_tx: rest1,
+        };
+      case "broadcast_tx_sync":
+        const { hash: hash2, ...rest2 } = resp as BroadcastTxResponse;
+        return {
+          hash: hash2,
+          check_tx: rest2,
+        };
       case "broadcast_tx_commit":
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { check_tx, deliver_tx, ...rest } =
-          resp as BroadcastTxCommitResponse;
-        const txResp = check_tx.code !== 0 ? check_tx : deliver_tx;
-        const from = check_tx.code !== 0 ? "check_tx" : "deliver_tx";
-        return { ...rest, ...txResp, from };
-      case "broadcast_tx_sync":
-      case "broadcast_tx_async":
-        return resp as BroadcastTxResponse;
+        const {
+          check_tx,
+          deliver_tx,
+          height,
+          hash: hash3,
+        } = resp as BroadcastTxCommitResponse;
+        return {
+          hash: hash3,
+          check_tx,
+          deliver_tx: { height, ...deliver_tx },
+        };
       default:
         throw new Error(`Wrong method: ${method}`);
     }
