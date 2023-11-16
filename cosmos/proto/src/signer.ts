@@ -23,7 +23,7 @@ import { EncodeObjectUtils, TxUtils } from "./utils/tx";
 export class Signer extends BaseSigner<QueryParser> {
   protected hash = CosmosDefaults.hash;
   protected signatureConverter = CosmosDefaults.signatureConverter;
-  protected generated: Parser[] = [];
+  protected parsers: Parser[] = [];
   accountData: AccountData;
 
   constructor(registry?: Registry) {
@@ -31,9 +31,9 @@ export class Signer extends BaseSigner<QueryParser> {
     registry && this.register(registry);
   }
 
-  register(registry: Registry) {
-    registry.forEach(([typeUrl, type]) => {
-      this.generated.push({ ...type, typeUrl });
+  register(registry?: Registry) {
+    registry?.forEach(([typeUrl, type]) => {
+      this.parsers.push({ ...type, typeUrl });
     });
   }
 
@@ -91,7 +91,7 @@ export class Signer extends BaseSigner<QueryParser> {
   }
 
   getParserFromTypeUrl = (typeUrl: string): Parser => {
-    const generated = this.generated.find((g) => g.typeUrl === typeUrl);
+    const generated = this.parsers.find((g) => g.typeUrl === typeUrl);
     if (!generated) {
       throw new Error(
         `No such Generated corresponding to typeUrl ${typeUrl} registered`
@@ -124,7 +124,7 @@ export class Signer extends BaseSigner<QueryParser> {
   ) {
     const gas = await this.estimateGas(messages, memo);
     const fee = calculateFee(
-      gas.gasUsed * BigInt(options?.multiplier || 1.4),
+      gas.gasUsed * BigInt(Math.round(options?.multiplier || 1.6)),
       options?.gasPrice || getAvgGasPrice(this.accountData.chainId)
     );
     return fee;
@@ -189,15 +189,15 @@ export class Signer extends BaseSigner<QueryParser> {
     const signature = this.signBytes(
       SignDoc.encode(SignDoc.fromPartial(doc)).finish()
     );
-    const signed = TxRaw.fromPartial({
+    const txRaw = TxRaw.fromPartial({
       bodyBytes: doc.bodyBytes,
       authInfoBytes: doc.authInfoBytes,
       signatures: [signature],
     });
     return {
-      signed,
+      signed: txRaw,
       broadcast: async (checkTx = true, deliverTx = false) => {
-        return this.broadcast(signed, checkTx, deliverTx);
+        return this.broadcast(txRaw, checkTx, deliverTx);
       },
     };
   }

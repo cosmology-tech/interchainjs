@@ -1,5 +1,3 @@
-import { Signer } from "@sign/cosmos";
-
 import {
   MsgClearAdmin,
   MsgExecuteContract,
@@ -10,12 +8,12 @@ import {
   MsgUpdateAdmin,
 } from "./codegen/cosmwasm/wasm/v1/tx";
 
-export const wasmSigner = new Signer(
+export const cosmwasmConsts = [
   MsgClearAdmin,
   MsgExecuteContract,
   MsgMigrateContract,
   MsgStoreCode,
   MsgInstantiateContract,
   MsgInstantiateContract2,
-  MsgUpdateAdmin
-);
+  MsgUpdateAdmin,
+];

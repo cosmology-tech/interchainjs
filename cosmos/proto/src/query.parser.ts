@@ -1,4 +1,4 @@
-import { HttpEndpoint } from "@cosmjs/stargate";
+import { HttpEndpoint } from "@sign/core";
 
 import { BaseAccount } from "./codegen/cosmos/auth/v1beta1/auth";
 import { QueryClientImpl as Auth } from "./codegen/cosmos/auth/v1beta1/query.rpc.Query";
@@ -37,7 +37,7 @@ export class QueryParser extends Query {
   }
 
   async getTx(id: string): Promise<IndexedTx | null> {
-    const data = await fetch(`${this.endpoint}/tx.hash='${id}'`);
+    const data = await fetch(`${this.endpoint}/tx?hash=0x${id}`);
     const json = await data.json();
     return json["result"] || null;
   }

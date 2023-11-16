@@ -18,7 +18,12 @@
     "README.md"
   ],
   "dependencies": {
-    "@sign/cosmos": "^1.0.0"
+    "@sign/cosmos-cosmjs": "^1.0.0"
+  },
+  "peerDependencies": {
+    "@sign/cosmos-proto": "^1.0.0",
+    "@sign/cosmos-amino": "^1.0.0",
+    "@sign/core": "^1.0.0"
   },
   "devDependencies": {
     "@cosmology/telescope": "^1.0.1",

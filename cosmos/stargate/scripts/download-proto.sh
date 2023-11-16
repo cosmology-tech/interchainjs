@@ -21,10 +21,5 @@ ibcGoFiles=(
     "ibc/core/connection/v1/tx.proto"
     )
 
-wasmdFiles=(
-    "cosmwasm/wasm/v1/tx.proto"
-    )
-
 downloadProto cosmos/cosmos-sdk@${COSMOS_SDK_VERSION} ./proto "${cosmosSdkFiles[@]}"
 downloadProto cosmos/ibc-go@${IBC_GO_VERSION} ./proto "${ibcGoFiles[@]}"
-downloadProto CosmWasm/wasmd@${WASMD_VERSION} ./proto "${wasmdFiles[@]}"

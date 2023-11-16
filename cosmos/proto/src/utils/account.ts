@@ -1,3 +1,4 @@
+import { Bech32Address } from "@sign/core";
 import { bech32 } from "bech32";
 
 import {
@@ -10,7 +11,6 @@ import {
   DelayedVestingAccount,
   PeriodicVestingAccount,
 } from "../codegen/cosmos/vesting/v1beta1/vesting";
-import { Bech32Address } from "../types";
 
 export function toBech32(
   prefix: string,

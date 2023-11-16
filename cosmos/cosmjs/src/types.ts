@@ -1,3 +1,4 @@
+import { Bech32Address } from "@sign/core";
 import { AminoConverters, StdSignDoc } from "@sign/cosmos-amino";
 import { GasPrice, Registry, SignDoc } from "@sign/cosmos-proto";
 
@@ -9,7 +10,7 @@ export interface SequenceResponse {
 export type Algo = "secp256k1" | "ed25519" | "sr25519";
 
 export interface AccountData {
-  address: string; // bech32 address
+  address: Bech32Address;
   algo: Algo;
   pubkey: Uint8Array;
 }
@@ -52,15 +53,12 @@ export interface OfflineDirectSigner {
 
 export type OfflineSigner = OfflineAminoSigner | OfflineDirectSigner;
 
-export interface Options {
+export interface SignerOptions {
+  registry?: Registry;
+  aminoConverters?: AminoConverters;
   broadcastTimeoutMs?: number;
   broadcastPollIntervalMs?: number;
   gasPrice?: GasPrice;
-}
-
-export interface SignerOptions extends Options {
-  registry?: Registry;
-  aminoConverters?: AminoConverters;
 }
 
 export interface MsgData {

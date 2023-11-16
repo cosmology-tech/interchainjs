@@ -1,5 +1,3 @@
-import { Signer } from "@sign/cosmos";
-
 import {
   MsgExec,
   MsgGrant,
@@ -147,7 +145,7 @@ const MsgStakingConsts = [
 
 const MsgVestingConsts = [MsgCreateVestingAccount];
 
-export const stargateSigner = new Signer(
+export const stargateConsts = [
   ...MsgAuthzConsts,
   ...MsgBankConsts,
   ...MsgDistributionConsts,
@@ -156,5 +154,5 @@ export const stargateSigner = new Signer(
   ...MsgGroupConsts,
   ...MsgIbcConsts,
   ...MsgStakingConsts,
-  ...MsgVestingConsts
-);
+  ...MsgVestingConsts,
+];

@@ -1,9 +1,7 @@
 import {
-  calculateFee,
   EncodeObject,
   Fee,
   GasPrice,
-  getAvgGasPrice,
   Parser,
   Registry,
   Signed,
@@ -15,14 +13,14 @@ import { AminoConverters, StdFee, StdSignDoc } from "./types";
 import { EncodeObjectUtils, StdFeeUtils, StdSignDocUtils } from "./utils";
 
 export class AminoSigner extends Signer {
-  constructor(registry: Registry, aminoConverters: AminoConverters) {
+  constructor(registry?: Registry, aminoConverters?: AminoConverters) {
     super();
     this.registerWithAmino(registry, aminoConverters);
   }
 
-  registerWithAmino(registry: Registry, aminoConverters: AminoConverters) {
-    registry.forEach(([typeUrl, type]) => {
-      this.generated.push({
+  registerWithAmino(registry?: Registry, aminoConverters?: AminoConverters) {
+    registry?.forEach(([typeUrl, type]) => {
+      this.parsers.push({
         ...type,
         typeUrl,
         amino: aminoConverters[typeUrl],
@@ -31,7 +29,7 @@ export class AminoSigner extends Signer {
   }
 
   getParserFromAminoType = (type: string): Parser => {
-    const generated = this.generated.find((g) => g.amino?.aminoType === type);
+    const generated = this.parsers.find((g) => g.amino?.aminoType === type);
     if (!generated) {
       throw new Error(
         `No such Generated corresponding to aminoType ${type} registered`
@@ -55,12 +53,8 @@ export class AminoSigner extends Signer {
 
     let _fee: StdFee;
     if (!fee) {
-      const gas = await this.estimateGas(messages, memo);
       _fee = StdFeeUtils.fromFee(
-        calculateFee(
-          gas.gasUsed * BigInt(options?.multiplier || 1.4),
-          options?.gasPrice || getAvgGasPrice(this.accountData.chainId)
-        )
+        await this.estimateFee(messages, memo, options)
       );
     } else {
       _fee = StdFeeUtils.fromFee(fee);
@@ -85,15 +79,15 @@ export class AminoSigner extends Signer {
       this.publicKey,
       this.getParserFromAminoType
     );
-    const signed = TxRaw.fromPartial({
+    const txRaw = TxRaw.fromPartial({
       bodyBytes,
       authInfoBytes,
       signatures: [signature],
     });
     return {
-      signed,
+      signed: txRaw,
       broadcast: async (checkTx = true, deliverTx = false) => {
-        return this.broadcast(signed, checkTx, deliverTx);
+        return this.broadcast(txRaw, checkTx, deliverTx);
       },
     };
   }

@@ -30,7 +30,6 @@ import {
   OfflineAminoSigner,
   OfflineDirectSigner,
   OfflineSigner,
-  Options,
   SequenceResponse,
   SignerOptions,
 } from "./types";
@@ -41,6 +40,7 @@ import { BroadcastTxError, sleep, TimeoutError } from "./utils";
  */
 export class CosmjsSigner {
   readonly aminoSigner: AminoSigner;
+  readonly offlineSigner: OfflineSigner;
   readonly broadcastTimeoutMs: number | undefined;
   readonly broadcastPollIntervalMs: number | undefined;
 
@@ -52,9 +52,11 @@ export class CosmjsSigner {
   constructor(
     aminoSigner: AminoSigner,
     offlineSigner: OfflineSigner,
-    options: Options = {}
+    options: SignerOptions = {}
   ) {
+    aminoSigner.registerWithAmino(options.registry, options.aminoConverters);
     this.aminoSigner = aminoSigner;
+    this.offlineSigner = offlineSigner;
     this._getAccounts = offlineSigner.getAccounts;
     this._signAmino = (offlineSigner as OfflineAminoSigner).signAmino;
     this._signDirect = (offlineSigner as OfflineDirectSigner).signDirect;
@@ -69,8 +71,8 @@ export class CosmjsSigner {
     options: SignerOptions = {}
   ): CosmjsSigner {
     const aminoSigner = new AminoSigner(
-      options.registry || [],
-      options.aminoConverters || {}
+      options.registry,
+      options.aminoConverters
     ).on(endpoint);
     return new CosmjsSigner(aminoSigner, signer, options);
   }

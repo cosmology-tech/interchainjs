@@ -1,9 +1,9 @@
 import { Coin } from "@sign/cosmos-proto";
 
 export interface AminoConverter {
-  readonly aminoType: string;
-  readonly toAmino: (value: any) => any;
-  readonly fromAmino: (value: any) => any;
+  aminoType: string;
+  toAmino: (value: any) => any;
+  fromAmino: (value: any) => any;
 }
 
 export type TypeUrl = string;

@@ -19,6 +19,7 @@
     "test:prepare": "yarn test:prepare-proto && yarn test:prepare-server"
   },
   "devDependencies": {
+    "@cosmjs/proto-signing": "^0.31.3",
     "@cosmology/telescope": "^1.0.10",
     "@types/jest": "^29.5.3",
     "@typescript-eslint/eslint-plugin": "^6.4.0",
