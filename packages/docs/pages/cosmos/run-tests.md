@@ -1,4 +1,4 @@
-# Test Running
+# Running Tests
 
 All test files locate at [**test**/cosmos/src](https://github.com/cosmology-tech/sign/tree/main/__test__/cosmos/src)
 
@@ -42,7 +42,7 @@ yarn test:cosmos:start-server
 >
 > For more information of configuration, go to the [Starship Documentation](https://starship.cosmology.tech/config)
 
-## 3.Run Test
+## 3.Run Tests
 
 ```sh
 yarn test:cosmos

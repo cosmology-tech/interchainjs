@@ -1,7 +1,7 @@
 {
   "structure": "Code Structure",
   "messages": "Registered Messages",
-  "exercise": "Hands-on Exercise",
+  "exercises": "Hands-on Exercises",
   "update": "Proto Update",
-  "test": "Test Running"
+  "run-tests": "Running Tests"
 }
