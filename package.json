@@ -13,10 +13,10 @@
   "scripts": {
     "build": "lerna run build",
     "proto:update": "lerna run proto:update",
-    "test:prepare-proto": "cd __test__/cosmos && ./scripts/prepare-proto.sh",
-    "test:prepare-server": "cd __test__/cosmos && ./scripts/prepare-server.sh",
-    "test:stop-server": "cd __test__/cosmos && ./scripts/stop-server.sh",
-    "test:prepare": "yarn test:prepare-proto && yarn test:prepare-server"
+    "test:cosmos:update-proto": "cd __test__/cosmos && ./scripts/update-proto.sh",
+    "test:cosmos:start-server": "cd __test__/cosmos && ./scripts/start-server.sh",
+    "test:cosmos:stop-server": "cd __test__/cosmos && ./scripts/stop-server.sh",
+    "test:cosmos": "cd __test__/cosmos && jest --testPathPattern=./src"
   },
   "devDependencies": {
     "@cosmjs/proto-signing": "^0.31.3",

@@ -154,7 +154,7 @@ downloadTargets() {
     printf "\n\e[1;33m%s\e[0m\n\n" "**** Downloading from git repository $REPO@$VERSION to $OUT ****"
     mkdir -p ${OUT}
     echo "## ${REPO}@${VERSION}" >> ${OUT}/README.md
-    echo "|file|repo|commit|type|code|" >> ${OUT}/README.md
+    echo "|File|Repo|Commit|Type|Code|" >> ${OUT}/README.md
     echo "|--|--|--|--|--|" >> ${OUT}/README.md
 
     for FILE in "${FILES[@]}"; do
