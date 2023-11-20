@@ -1,6 +1,6 @@
 # Running Tests
 
-All test files locate at [**test**/cosmos/src](https://github.com/cosmology-tech/sign/tree/main/__test__/cosmos/src)
+All test files locate at [\_\_test\_\_/cosmos/src](https://github.com/cosmology-tech/sign/tree/main/__test__/cosmos/src)
 
 ## 1.Prepare
 
