@@ -8,7 +8,13 @@ import {
 import { StdSignDoc, StdSignDocUtils } from "@sign/cosmos-amino";
 import { CosmosDefaults, SignDoc, toBech32 } from "@sign/cosmos-proto";
 
-import { AccountData, AminoSignResponse, DirectSignResponse } from "./types";
+import {
+  AccountData,
+  AminoSignResponse,
+  DirectSignResponse,
+  OfflineAminoSigner,
+  OfflineDirectSigner,
+} from "./types";
 
 interface Wallet {
   getAccounts: () => AccountData[];
@@ -23,8 +29,8 @@ interface WalletOptions {
 }
 
 export class Secp256k1Wallet implements Wallet {
-  auths: Auth[] = [];
-  bech32addrs: string[] = [];
+  readonly auths: Auth[] = [];
+  readonly bech32addrs: string[] = [];
 
   protected hash = CosmosDefaults.hash;
   protected signatureConverter = CosmosDefaults.signatureConverter;
@@ -102,6 +108,22 @@ export class Secp256k1Wallet implements Wallet {
         },
         signature: toBase64(this.signatureConverter.toSignature(sigObj)),
       },
+    };
+  }
+
+  toOfflineDirectSigner(): OfflineDirectSigner {
+    return {
+      getAccounts: async () => this.getAccounts(),
+      signDirect: async (signerAddress: string, signDoc: SignDoc) =>
+        this.signDirect(signerAddress, signDoc),
+    };
+  }
+
+  toOfflineAminoSigner(): OfflineAminoSigner {
+    return {
+      getAccounts: async () => this.getAccounts(),
+      signAmino: async (signerAddress: string, signDoc: StdSignDoc) =>
+        this.signAmino(signerAddress, signDoc),
     };
   }
 }

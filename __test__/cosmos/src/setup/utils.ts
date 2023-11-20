@@ -1,19 +1,25 @@
-import { Query, QueryParser } from "@sign/cosmos-proto";
+import { Store } from "./store";
 
-import { QueryClientImpl as Bank } from "../../codegen/cosmos/bank/v1beta1/query.rpc.Query";
+export async function signAndBroadcast<T>(
+  signerAddress: string,
+  messages: any,
+  store: Store,
+  getRecord: (store: Store) => T
+) {
+  const before = await getRecord(store);
 
-export const fetchBaseAccount = async (query: Query, address: string) => {
-  const queryParser = QueryParser.fromQuery(query);
-  const account = await queryParser.getBaseAccount(address);
-  return account;
-};
+  const resp = await store.cosmjsSigner.signAndBroadcast(
+    signerAddress,
+    messages,
+    2
+  );
+  console.log("resp:", resp);
 
-export const fetchBalance = async (
-  query: Query,
-  address: string,
-  denom: string
-) => {
-  const bank = query.about(Bank);
-  const { balance } = await bank.balance({ address, denom });
-  return balance;
-};
+  const after = await getRecord(store);
+
+  return {
+    resp,
+    before,
+    after,
+  };
+}

@@ -76,9 +76,9 @@ Before `@sign/cosmos-cosmjs` exercise, let's prepare the `offlineSigner` object.
 
 ```ts
 import { Secp256k1Wallet } from "@sign/cosmjs";
-const offlineSigner = await Secp256k1Wallet.fromMnemonic(
-  "word1 word2 word3..."
-);
+const wallet = await Secp256k1Wallet.fromMnemonic("word1 word2 word3...");
+const offlineDirectSigner = wallet.toOfflineDirectSigner();
+const offlineAminoSigner = wallet.toOfflineAminoSigner();
 ```
 
 ### Sign and Broadcast
@@ -90,15 +90,17 @@ import { CosmjsSigner } from "@sign/cosmos-cosmjs";
 import { registry } from "interchain/cosmos/bank/v1beta1/tx.registry";
 import { AminoConverter } from "interchain/cosmos/bank/v1beta1/tx.amino";
 
-const cosmjsSigner = CosmjsSigner.connectWithSigner("http://", offlineSigner, {
-  registry,
-  aminoConverters: AminoConverter,
-});
+const cosmjsSigner = CosmjsSigner.connectWithSigner(
+  "http://",
+  offlineDirectSigner, // or `offlineAminoSigner`
+  {
+    registry,
+    aminoConverters: AminoConverter,
+  }
+);
 await cosmjsSigner.signAndBroadcast(messages);
 await cosmjsSigner.signAndBroadcastSync(messages);
 ```
-
-> NOTE: `Secp256k1Wallet` implements both `signDirect` and `signAmino`. So if using `Secp256k1Wallet` instance as `offlineSigner`, `cosmjsSigner` will always use DIRECT signing. If you want to use AMINO signing, you'll need to reconstruct a `offlineSigner` object that removes `signDirect` from `Secp256k1Wallet` instance.
 
 ### Get `TxRaw`
 

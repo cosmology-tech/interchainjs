@@ -1,11 +1,11 @@
-import { address } from "./setup/address";
-import { chain, seed } from "./setup/data";
-import { SignerStore } from "./setup/signer-store";
-import { fetchBalance } from "./setup/utils";
+import { Message } from "@sign/cosmos-proto";
+import { MsgSend } from "@sign/cosmos-stargate";
 
-describe("Bank: send tokens", () => {
+import { address, chain, seed, signAndBroadcast, Store } from "./setup";
+
+describe("Send tokens", () => {
   const amount = "1000000";
-  const messages = [
+  const messages: Message<MsgSend>[] = [
     {
       typeUrl: "/cosmos.bank.v1beta1.MsgSend",
       value: {
@@ -21,54 +21,38 @@ describe("Bank: send tokens", () => {
     },
   ];
 
-  async function getRecord(store: SignerStore) {
-    const { sequence } = await store.cosmjsSigner.getSequence(
+  async function getRecord(store: Store) {
+    const { sequence: fromSequence } = await store.query.getBaseAccount(
       address.osmosis.genesis
     );
-    const amount = BigInt(
-      (
-        await fetchBalance(
-          store.cosmjsSigner.aminoSigner.query,
-          address.osmosis.test1,
-          chain.osmosis.denom
-        )
-      ).amount
+    const toAmount = BigInt(
+      (await store.query.getBalance(address.osmosis.test1, chain.osmosis.denom))
+        .amount
     );
-    return { sequence, amount };
+    return { fromSequence, toAmount };
   }
 
-  async function signAndBroadcast(signType: "direct" | "amino" = "direct") {
-    const store = new SignerStore(chain.osmosis, seed.genesis, signType);
-
-    const recBefore = await getRecord(store);
-
-    const resp = await store.cosmjsSigner.signAndBroadcast(
+  it("should success with DIRECT signing", async () => {
+    const { resp, before, after } = await signAndBroadcast(
       address.osmosis.genesis,
       messages,
-      2
+      new Store(chain.osmosis, seed.genesis),
+      getRecord
     );
-    console.log("resp:", resp);
-
-    const recAfter = await getRecord(store);
-
-    return {
-      resp,
-      recBefore,
-      recAfter,
-    };
-  }
-
-  it("should success with direct signing", async () => {
-    const { resp, recBefore, recAfter } = await signAndBroadcast();
     expect(resp.code).toEqual(0);
-    expect(recBefore.sequence).toEqual(recAfter.sequence + 1n);
-    expect(recBefore.amount).toEqual(recAfter.amount + BigInt(amount));
+    expect(before.fromSequence + 1n).toEqual(after.fromSequence);
+    expect(before.toAmount + BigInt(amount)).toEqual(after.toAmount);
   });
 
-  it("should success with amino signing", async () => {
-    const { resp, recBefore, recAfter } = await signAndBroadcast();
+  it("should success with AMINO signing", async () => {
+    const { resp, before, after } = await signAndBroadcast(
+      address.osmosis.genesis,
+      messages,
+      new Store(chain.osmosis, seed.genesis, "amino"),
+      getRecord
+    );
     expect(resp.code).toEqual(0);
-    expect(recBefore.sequence).toEqual(recAfter.sequence + 1n);
-    expect(recBefore.amount).toEqual(recAfter.amount + BigInt(amount));
+    expect(before.fromSequence + 1n).toEqual(after.fromSequence);
+    expect(before.toAmount + BigInt(amount)).toEqual(after.toAmount);
   });
 });

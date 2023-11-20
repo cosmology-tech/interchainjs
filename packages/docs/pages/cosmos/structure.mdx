@@ -16,11 +16,13 @@ Here to briefly introduce the structure of `@sign/cosmos-*` packages, which is d
 >
 > `@sign/core` -> `@sign/cosmos-proto` -> `@sign/cosmos-amino` -> `@sign/cosmos-cosmjs` -> `@sign/cosmos-stargate` -> `@sign/cosmos-cosmwasm-stargate`
 
+> Registered messages types and `TelescopeGeneratedType` constants also be exported by `@sign/cosmos-stargate` and `@sign/cosmos-cosmwasm-stargate` to facilitate code developing.
+
 ## Signer Classes
 
 There’re several types of signer class, and they’re
 
-|          class           | package                          | description                                                                                                                                                                                                                                                     |
+|          Class           | Package                          | Description                                                                                                                                                                                                                                                     |
 | :----------------------: | :------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 |      **BaseSigner**      | _@sign/core_                     | defines common methods independent of network i.e. _cosmos_ or _eth_                                                                                                                                                                                            |
 |        **Signer**        | _@sign/cosmos-proto_             | implements _proto/direct_ signing process                                                                                                                                                                                                                       |
@@ -33,9 +35,7 @@ There’re several types of signer class, and they’re
 | **CosmWasmAminoSigner**  | _@sign/cosmos-cosmwasm-stargate_ | is **AminoSigner** that with _stargate_ and _cosmwasm_ message types being registered by default                                                                                                                                                                |
 | **CosmWasmCosmjsSigner** | _@sign/cosmos-cosmwasm-stargate_ | is **CosmjsSigner** that with _stargate_ and _cosmwasm_ message types being registered by default                                                                                                                                                               |
 
-> _stargate_ messages types can be found in [cosmos/stargate/src/stargate.ts](https://github.com/cosmology-tech/sign/blob/main/cosmos/stargate/src/stargate.ts)
-
-> _cosmwasm_ messages types can be found in [cosmos/cosmwasm-stargate/src/cosmwasm.ts](https://github.com/cosmology-tech/sign/blob/main/cosmos/cosmwasm-stargate/src/cosmwasm.ts)
+> See more information of _stargate_ and _cosmwasm_ messages types: [Registered Messages](/cosmos/messages)
 
 ## Structure Tree
 

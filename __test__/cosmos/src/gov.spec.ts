@@ -1,10 +1,11 @@
-import { TextProposal } from "../codegen/cosmos/gov/v1beta1/gov";
-import { address } from "./setup/address";
-import { chain, seed } from "./setup/data";
-import { SignerStore } from "./setup/signer-store";
+import { Message } from "@sign/cosmos-proto";
+import { MsgSubmitProposal, MsgVote } from "@sign/cosmos-stargate";
 
-describe("Gov: submit a proposal", () => {
-  const messages = [
+import { TextProposal } from "../codegen/cosmos/gov/v1beta1/gov";
+import { address, chain, seed, signAndBroadcast, Store } from "./setup";
+
+describe("Submit a proposal", () => {
+  const messages: Message<MsgSubmitProposal>[] = [
     {
       typeUrl: "/cosmos.gov.v1beta1.MsgSubmitProposal",
       value: {
@@ -28,24 +29,87 @@ describe("Gov: submit a proposal", () => {
     },
   ];
 
-  async function signAndBroadcast(signType: "direct" | "amino" = "direct") {
-    const store = new SignerStore(chain.osmosis, seed.genesis, signType);
-    const resp = await store.cosmjsSigner.signAndBroadcast(
-      address.osmosis.genesis,
-      messages,
-      "auto"
+  async function getRecord(store: Store) {
+    const { sequence } = await store.query.getBaseAccount(
+      address.osmosis.genesis
     );
-    console.log("resp:", resp);
-    return { resp };
+    return { sequence };
   }
 
-  it("should success with direct signing", async () => {
-    const { resp } = await signAndBroadcast();
+  it("should success with DIRECT signing", async () => {
+    const { resp, before, after } = await signAndBroadcast(
+      address.osmosis.genesis,
+      messages,
+      new Store(chain.osmosis, seed.genesis),
+      getRecord
+    );
     expect(resp.code).toEqual(0);
+    expect(before.sequence + 1n).toEqual(after.sequence);
   });
 
-  it("should success with amino signing", async () => {
-    const { resp } = await signAndBroadcast("amino");
+  it("should success with AMINO signing", async () => {
+    const { resp, before, after } = await signAndBroadcast(
+      address.osmosis.genesis,
+      messages,
+      new Store(chain.osmosis, seed.genesis, "amino"),
+      getRecord
+    );
     expect(resp.code).toEqual(0);
+    expect(before.sequence + 1n).toEqual(after.sequence);
+  });
+});
+
+describe("Vote", () => {
+  const messages: Message<MsgVote> = [
+    {
+      typeUrl: "/cosmos.gov.v1beta1.MsgVote",
+      value: {
+        proposer: address.osmosis.genesis,
+        initialDeposit: [
+          {
+            amount: "1000000",
+            denom: chain.osmosis.denom,
+          },
+        ],
+        content: {
+          typeUrl: "/cosmos.gov.v1beta1.TextProposal",
+          value: TextProposal.encode(
+            TextProposal.fromPartial({
+              title: "Test Proposal",
+              description: "Test text proposal for the @sign testing",
+            })
+          ).finish(),
+        },
+      },
+    },
+  ];
+
+  async function getRecord(store: Store) {
+    const { sequence } = await store.query.getBaseAccount(
+      address.osmosis.genesis
+    );
+    return { sequence };
+  }
+
+  it("should success with DIRECT signing", async () => {
+    const { resp, before, after } = await signAndBroadcast(
+      address.osmosis.genesis,
+      messages,
+      new Store(chain.osmosis, seed.genesis),
+      getRecord
+    );
+    expect(resp.code).toEqual(0);
+    expect(before.sequence + 1n).toEqual(after.sequence);
+  });
+
+  it("should success with AMINO signing", async () => {
+    const { resp, before, after } = await signAndBroadcast(
+      address.osmosis.genesis,
+      messages,
+      new Store(chain.osmosis, seed.genesis, "amino"),
+      getRecord
+    );
+    expect(resp.code).toEqual(0);
+    expect(before.sequence + 1n).toEqual(after.sequence);
   });
 });

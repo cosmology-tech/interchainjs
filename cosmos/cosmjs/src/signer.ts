@@ -39,11 +39,11 @@ import { BroadcastTxError, sleep, TimeoutError } from "./utils";
  * implement the same methods as what in `cosmjs` signingClient
  */
 export class CosmjsSigner {
-  readonly aminoSigner: AminoSigner;
   readonly offlineSigner: OfflineSigner;
   readonly broadcastTimeoutMs: number | undefined;
   readonly broadcastPollIntervalMs: number | undefined;
 
+  private readonly aminoSigner: AminoSigner;
   private readonly _getAccounts: OfflineSigner["getAccounts"];
   private readonly _signAmino?: OfflineAminoSigner["signAmino"];
   private readonly _signDirect?: OfflineDirectSigner["signDirect"];

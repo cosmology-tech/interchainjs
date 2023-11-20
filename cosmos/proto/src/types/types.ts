@@ -67,7 +67,9 @@ export interface Parser extends TelescopeGeneratedType {
   amino?: AminoConverter;
 }
 
-export interface EncodeObject {
+export type EncodeObject = Message<any>;
+
+export interface Message<T> {
   typeUrl: string;
-  value: any;
+  value: T;
 }
