@@ -1,10 +1,4 @@
-import {
-  Auth,
-  defaultHdPath,
-  HdPath,
-  Secp256k1Auth,
-  toBase64,
-} from "@sign/core";
+import { Auth, defaultHdPath, Secp256k1Auth, toBase64 } from "@sign/core";
 import { StdSignDoc, StdSignDocUtils } from "@sign/cosmos-amino";
 import { CosmosDefaults, SignDoc, toBech32 } from "@sign/cosmos-proto";
 
@@ -14,19 +8,9 @@ import {
   DirectSignResponse,
   OfflineAminoSigner,
   OfflineDirectSigner,
+  Wallet,
+  WalletOptions,
 } from "./types";
-
-interface Wallet {
-  getAccounts: () => AccountData[];
-  signAmino: (signerAddress: string, signDoc: StdSignDoc) => AminoSignResponse;
-  signDirect: (signerAddress: string, signDoc: SignDoc) => DirectSignResponse;
-}
-
-interface WalletOptions {
-  bip39Password?: string;
-  hdPaths?: HdPath[];
-  prefix?: string;
-}
 
 export class Secp256k1Wallet implements Wallet {
   readonly auths: Auth[] = [];

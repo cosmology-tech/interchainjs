@@ -32,6 +32,25 @@ yarn proto:update
 
 ## More Info
 
+The proto update process can be split into 2 steps:
+
+1. Download proto files
+2. Generate codes with `telescope`
+
+If you only need to download proto files, which will overwrite previous proto files, run
+
+```sh
+yarn proto:download
+```
+
+If you only need to generate codes, which will overwrite previous codes, run
+
+```sh
+yarn proto:codegen
+```
+
+### 1. Download Proto
+
 There are 3 packages involve update of proto files.
 
 - **@sign/cosmos-proto**
@@ -50,21 +69,23 @@ All proto files information is recorded in corresponding `README.md` file.
 - [cosmos/stargate/proto/README.md](https://github.com/cosmology-tech/sign/tree/main/cosmos/stargate/proto)
 - [cosmos/cosmwasm-stargate/proto/README.md](https://github.com/cosmology-tech/sign/tree/main/cosmos/cosmwasm-stargate/proto/README.md)
 
-### `README.md` Table Explain
+#### `README.md` Table Explain
 
-|    Head    | Description                                                                                 |
-| :--------: | ------------------------------------------------------------------------------------------- |
-|  **File**  | Relative path of downloaded proto file. The link directs to the source url when downloading |
-|  **Repo**  | Github repository name                                                                      |
+| Head       | Description                                                                                 |
+| :--------- | ------------------------------------------------------------------------------------------- |
+| **File**   | Relative path of downloaded proto file. The link directs to the source url when downloading |
+| **Repo**   | Github repository name                                                                      |
 | **Commit** | Github version/commit name                                                                  |
-|  **Type**  | `target` or `dependency`. To check if it's target file or not                               |
-|  **Code**  | Fetch response code. If it's 200, means proto file is successfully downloaded               |
+| **Type**   | `target` or `dependency`. To check if it's target file or not                               |
+| **Code**   | Fetch response code. If it's 200, means proto file is successfully downloaded               |
 
 Target files for each package are configured in corresponding `scripts/download-proto.sh`.
 
 - [cosmos/proto/scripts/download-proto.sh](https://github.com/cosmology-tech/sign/tree/main/cosmos/proto/scripts/download-proto.sh)
 - [cosmos/stargate/scripts/download-proto.sh](https://github.com/cosmology-tech/sign/tree/main/cosmos/stargate/scripts/download-proto.sh)
 - [cosmos/cosmwasm-stargate/scripts/download-proto.sh](https://github.com/cosmology-tech/sign/tree/main/cosmos/cosmwasm-stargate/scripts/download-proto.sh)
+
+### 2. Generate Code
 
 After all proto files being downloaded, it will automatically generate typescript codes with `telescope`.
 

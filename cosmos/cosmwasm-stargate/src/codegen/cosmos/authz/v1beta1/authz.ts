@@ -50,7 +50,7 @@ export interface GrantAmino {
    * doesn't have a time expiration (other conditions  in `authorization`
    * may apply to invalidate the grant)
    */
-  expiration?: Date;
+  expiration?: string;
 }
 /**
  * GrantAuthorization extends a grant with both the addresses of the grantee and granter.
@@ -74,7 +74,7 @@ export interface GrantAuthorizationAmino {
   granter: string;
   grantee: string;
   authorization?: AnyAmino;
-  expiration?: Date;
+  expiration?: string;
 }
 /** GrantQueueItem contains the list of TypeURL of a sdk.Msg. */
 export interface GrantQueueItem {
@@ -218,13 +218,13 @@ export const Grant = {
   fromAmino(object: GrantAmino): Grant {
     return {
       authorization: object?.authorization ? Any.fromAmino(object.authorization) : undefined,
-      expiration: object?.expiration
+      expiration: object?.expiration ? fromTimestamp(Timestamp.fromAmino(object.expiration)) : undefined
     };
   },
   toAmino(message: Grant): GrantAmino {
     const obj: any = {};
     obj.authorization = message.authorization ? Any.toAmino(message.authorization) : undefined;
-    obj.expiration = message.expiration;
+    obj.expiration = message.expiration ? Timestamp.toAmino(toTimestamp(message.expiration)) : undefined;
     return obj;
   },
   fromProtoMsg(message: GrantProtoMsg): Grant {
@@ -321,7 +321,7 @@ export const GrantAuthorization = {
       granter: object.granter,
       grantee: object.grantee,
       authorization: object?.authorization ? Any.fromAmino(object.authorization) : undefined,
-      expiration: object?.expiration
+      expiration: object?.expiration ? fromTimestamp(Timestamp.fromAmino(object.expiration)) : undefined
     };
   },
   toAmino(message: GrantAuthorization): GrantAuthorizationAmino {
@@ -329,7 +329,7 @@ export const GrantAuthorization = {
     obj.granter = message.granter;
     obj.grantee = message.grantee;
     obj.authorization = message.authorization ? Any.toAmino(message.authorization) : undefined;
-    obj.expiration = message.expiration;
+    obj.expiration = message.expiration ? Timestamp.toAmino(toTimestamp(message.expiration)) : undefined;
     return obj;
   },
   fromProtoMsg(message: GrantAuthorizationProtoMsg): GrantAuthorization {

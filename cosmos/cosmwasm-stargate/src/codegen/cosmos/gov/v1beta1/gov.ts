@@ -258,15 +258,15 @@ export interface ProposalAmino {
    */
   final_tally_result?: TallyResultAmino;
   /** submit_time is the time of proposal submission. */
-  submit_time?: Date;
+  submit_time?: string;
   /** deposit_end_time is the end time for deposition. */
-  deposit_end_time?: Date;
+  deposit_end_time?: string;
   /** total_deposit is the total deposit on the proposal. */
   total_deposit: CoinAmino[];
   /** voting_start_time is the starting time to vote on a proposal. */
-  voting_start_time?: Date;
+  voting_start_time?: string;
   /** voting_end_time is the end time of voting on a proposal. */
-  voting_end_time?: Date;
+  voting_end_time?: string;
 }
 /** TallyResult defines a standard tally for a governance proposal. */
 export interface TallyResult {
@@ -815,11 +815,11 @@ export const Proposal = {
       content: object?.content ? Any.fromAmino(object.content) : undefined,
       status: isSet(object.status) ? proposalStatusFromJSON(object.status) : -1,
       finalTallyResult: object?.final_tally_result ? TallyResult.fromAmino(object.final_tally_result) : undefined,
-      submitTime: object.submit_time,
-      depositEndTime: object.deposit_end_time,
+      submitTime: object?.submit_time ? fromTimestamp(Timestamp.fromAmino(object.submit_time)) : undefined,
+      depositEndTime: object?.deposit_end_time ? fromTimestamp(Timestamp.fromAmino(object.deposit_end_time)) : undefined,
       totalDeposit: Array.isArray(object?.total_deposit) ? object.total_deposit.map((e: any) => Coin.fromAmino(e)) : [],
-      votingStartTime: object.voting_start_time,
-      votingEndTime: object.voting_end_time
+      votingStartTime: object?.voting_start_time ? fromTimestamp(Timestamp.fromAmino(object.voting_start_time)) : undefined,
+      votingEndTime: object?.voting_end_time ? fromTimestamp(Timestamp.fromAmino(object.voting_end_time)) : undefined
     };
   },
   toAmino(message: Proposal): ProposalAmino {
@@ -828,15 +828,15 @@ export const Proposal = {
     obj.content = message.content ? Any.toAmino(message.content) : undefined;
     obj.status = message.status;
     obj.final_tally_result = message.finalTallyResult ? TallyResult.toAmino(message.finalTallyResult) : undefined;
-    obj.submit_time = message.submitTime;
-    obj.deposit_end_time = message.depositEndTime;
+    obj.submit_time = message.submitTime ? Timestamp.toAmino(toTimestamp(message.submitTime)) : undefined;
+    obj.deposit_end_time = message.depositEndTime ? Timestamp.toAmino(toTimestamp(message.depositEndTime)) : undefined;
     if (message.totalDeposit) {
       obj.total_deposit = message.totalDeposit.map(e => e ? Coin.toAmino(e) : undefined);
     } else {
       obj.total_deposit = [];
     }
-    obj.voting_start_time = message.votingStartTime;
-    obj.voting_end_time = message.votingEndTime;
+    obj.voting_start_time = message.votingStartTime ? Timestamp.toAmino(toTimestamp(message.votingStartTime)) : undefined;
+    obj.voting_end_time = message.votingEndTime ? Timestamp.toAmino(toTimestamp(message.votingEndTime)) : undefined;
     return obj;
   },
   fromProtoMsg(message: ProposalProtoMsg): Proposal {

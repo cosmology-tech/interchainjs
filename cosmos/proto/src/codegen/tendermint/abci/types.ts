@@ -317,7 +317,7 @@ export interface RequestInitChainProtoMsg {
   value: Uint8Array;
 }
 export interface RequestInitChainAmino {
-  time?: Date;
+  time?: string;
   chain_id: string;
   consensus_params?: ConsensusParamsAmino;
   validators: ValidatorUpdateAmino[];
@@ -483,7 +483,7 @@ export interface RequestPrepareProposalAmino {
   local_last_commit?: ExtendedCommitInfoAmino;
   misbehavior: MisbehaviorAmino[];
   height: string;
-  time?: Date;
+  time?: string;
   next_validators_hash: Uint8Array;
   /** address of the public key of the validator proposing the block. */
   proposer_address: Uint8Array;
@@ -511,7 +511,7 @@ export interface RequestProcessProposalAmino {
   /** hash is the merkle root hash of the fields of the proposed block. */
   hash: Uint8Array;
   height: string;
-  time?: Date;
+  time?: string;
   next_validators_hash: Uint8Array;
   /** address of the public key of the original proposer of the block. */
   proposer_address: Uint8Array;
@@ -1018,7 +1018,7 @@ export interface MisbehaviorAmino {
   /** The height when the offense occurred */
   height: string;
   /** The corresponding time where the offense occurred */
-  time?: Date;
+  time?: string;
   /**
    * Total voting power of the validator set in case the ABCI application does
    * not store historical validators.
@@ -1628,7 +1628,7 @@ export const RequestInitChain = {
   },
   fromAmino(object: RequestInitChainAmino): RequestInitChain {
     return {
-      time: object.time,
+      time: object?.time ? fromTimestamp(Timestamp.fromAmino(object.time)) : undefined,
       chainId: object.chain_id,
       consensusParams: object?.consensus_params ? ConsensusParams.fromAmino(object.consensus_params) : undefined,
       validators: Array.isArray(object?.validators) ? object.validators.map((e: any) => ValidatorUpdate.fromAmino(e)) : [],
@@ -1638,7 +1638,7 @@ export const RequestInitChain = {
   },
   toAmino(message: RequestInitChain): RequestInitChainAmino {
     const obj: any = {};
-    obj.time = message.time;
+    obj.time = message.time ? Timestamp.toAmino(toTimestamp(message.time)) : undefined;
     obj.chain_id = message.chainId;
     obj.consensus_params = message.consensusParams ? ConsensusParams.toAmino(message.consensusParams) : undefined;
     if (message.validators) {
@@ -2595,7 +2595,7 @@ export const RequestPrepareProposal = {
       localLastCommit: object?.local_last_commit ? ExtendedCommitInfo.fromAmino(object.local_last_commit) : undefined,
       misbehavior: Array.isArray(object?.misbehavior) ? object.misbehavior.map((e: any) => Misbehavior.fromAmino(e)) : [],
       height: BigInt(object.height),
-      time: object.time,
+      time: object?.time ? fromTimestamp(Timestamp.fromAmino(object.time)) : undefined,
       nextValidatorsHash: object.next_validators_hash,
       proposerAddress: object.proposer_address
     };
@@ -2615,7 +2615,7 @@ export const RequestPrepareProposal = {
       obj.misbehavior = [];
     }
     obj.height = message.height ? message.height.toString() : undefined;
-    obj.time = message.time;
+    obj.time = message.time ? Timestamp.toAmino(toTimestamp(message.time)) : undefined;
     obj.next_validators_hash = message.nextValidatorsHash;
     obj.proposer_address = message.proposerAddress;
     return obj;
@@ -2763,7 +2763,7 @@ export const RequestProcessProposal = {
       misbehavior: Array.isArray(object?.misbehavior) ? object.misbehavior.map((e: any) => Misbehavior.fromAmino(e)) : [],
       hash: object.hash,
       height: BigInt(object.height),
-      time: object.time,
+      time: object?.time ? fromTimestamp(Timestamp.fromAmino(object.time)) : undefined,
       nextValidatorsHash: object.next_validators_hash,
       proposerAddress: object.proposer_address
     };
@@ -2783,7 +2783,7 @@ export const RequestProcessProposal = {
     }
     obj.hash = message.hash;
     obj.height = message.height ? message.height.toString() : undefined;
-    obj.time = message.time;
+    obj.time = message.time ? Timestamp.toAmino(toTimestamp(message.time)) : undefined;
     obj.next_validators_hash = message.nextValidatorsHash;
     obj.proposer_address = message.proposerAddress;
     return obj;
@@ -5605,7 +5605,7 @@ export const Misbehavior = {
       type: isSet(object.type) ? misbehaviorTypeFromJSON(object.type) : -1,
       validator: object?.validator ? Validator.fromAmino(object.validator) : undefined,
       height: BigInt(object.height),
-      time: object.time,
+      time: object?.time ? fromTimestamp(Timestamp.fromAmino(object.time)) : undefined,
       totalVotingPower: BigInt(object.total_voting_power)
     };
   },
@@ -5614,7 +5614,7 @@ export const Misbehavior = {
     obj.type = message.type;
     obj.validator = message.validator ? Validator.toAmino(message.validator) : undefined;
     obj.height = message.height ? message.height.toString() : undefined;
-    obj.time = message.time;
+    obj.time = message.time ? Timestamp.toAmino(toTimestamp(message.time)) : undefined;
     obj.total_voting_power = message.totalVotingPower ? message.totalVotingPower.toString() : undefined;
     return obj;
   },

@@ -1,4 +1,4 @@
-# Hands-on Exercise
+# Hands-on Exercises
 
 ## @sign/cosmos-proto
 
@@ -114,8 +114,12 @@ const txRaw = await cosmjsSigner.sign(messages);
 - `StargateAminoSigner` with same exercise as [`AminoSigner`](#signcosmos-amino)
 - `StargateCosmjsSigner` with same exercise as [`CosmjsSigner`](#signcosmos-cosmjs)
 
-## @sign/cosmos-stargate-cosmwasm
+> Using `StargateCosmjsSigner` to replace `SigningStargateClient` from `@cosmjs/stargate`
+
+## @sign/cosmos-cosmwasm-stargate
 
 - `CosmWasmSigner` with same exercise as [`Signer`](#signcosmos-proto)
 - `CosmWasmAminoSigner` with same exercise as [`AminoSigner`](#signcosmos-amino)
 - `CosmWasmCosmjsSigner` with same exercise as [`CosmjsSigner`](#signcosmos-cosmjs)
+
+> Using `CosmWasmCosmjsSigner` to replace `SigningCosmWasmClient` from `@cosmjs/cosmwasm-stargate`

@@ -12,6 +12,8 @@
   ],
   "scripts": {
     "build": "lerna run build",
+    "proto:download": "lerna run proto:download",
+    "proto:codegen": "lerna run proto:codegen",
     "proto:update": "lerna run proto:update",
     "test:cosmos:update-proto": "cd __test__/cosmos && ./scripts/update-proto.sh",
     "test:cosmos:start-server": "cd __test__/cosmos && ./scripts/start-server.sh",
@@ -20,7 +22,7 @@
   },
   "devDependencies": {
     "@cosmjs/proto-signing": "^0.31.3",
-    "@cosmology/telescope": "^1.0.10",
+    "@cosmology/telescope": "^1.1.1",
     "@types/jest": "^29.5.3",
     "@typescript-eslint/eslint-plugin": "^6.4.0",
     "@typescript-eslint/parser": "^6.4.0",
@@ -29,7 +31,7 @@
     "eslint-plugin-simple-import-sort": "^10.0.0",
     "eslint-plugin-unused-imports": "^3.0.0",
     "jest": "^29.6.2",
-    "lerna": "^6.0.3",
+    "lerna": "^7.4.2",
     "prettier": "^3.0.2",
     "ts-jest": "^29.1.1",
     "typescript": "^5.1.6"

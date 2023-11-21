@@ -5,6 +5,7 @@
   "outPath": "./src/codegen",
   "options": {
     "env": "v-next",
+    "fieldDefaultIsOptional": false,
     "useSDKTypes": false,
     "useOptionalNullable": true,
     "interfaces": {

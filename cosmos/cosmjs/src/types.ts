@@ -1,4 +1,4 @@
-import { Bech32Address } from "@sign/core";
+import { Bech32Address, HdPath } from "@sign/core";
 import { AminoConverters, StdSignDoc } from "@sign/cosmos-amino";
 import { GasPrice, Registry, SignDoc } from "@sign/cosmos-proto";
 
@@ -155,4 +155,16 @@ export interface IndexedTx {
   }>;
   gasUsed: bigint;
   gasWanted: bigint;
+}
+
+export interface Wallet {
+  getAccounts: () => AccountData[];
+  signAmino: (signerAddress: string, signDoc: StdSignDoc) => AminoSignResponse;
+  signDirect: (signerAddress: string, signDoc: SignDoc) => DirectSignResponse;
+}
+
+export interface WalletOptions {
+  bip39Password?: string;
+  hdPaths?: HdPath[];
+  prefix?: string;
 }

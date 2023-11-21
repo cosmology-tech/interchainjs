@@ -43,7 +43,7 @@ export class CosmjsSigner {
   readonly broadcastTimeoutMs: number | undefined;
   readonly broadcastPollIntervalMs: number | undefined;
 
-  private readonly aminoSigner: AminoSigner;
+  readonly aminoSigner: AminoSigner;
   private readonly _getAccounts: OfflineSigner["getAccounts"];
   private readonly _signAmino?: OfflineAminoSigner["signAmino"];
   private readonly _signDirect?: OfflineDirectSigner["signDirect"];
