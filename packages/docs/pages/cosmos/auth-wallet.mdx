@@ -1,6 +1,6 @@
 # Auth vs. Wallet
 
-```ts filename="From @sign/core"
+```ts filename="exported from @sign/core"
 interface Auth {
   key: Key;
   sign: (data: Uint8Array) => SigObj;
@@ -8,7 +8,7 @@ interface Auth {
 }
 ```
 
-```ts filename="From @sign/cosmjs"
+```ts filename="exported from @sign/cosmjs"
 interface Wallet {
   getAccounts: () => AccountData[];
   signAmino: (signerAddress: string, signDoc: StdSignDoc) => AminoSignResponse;
