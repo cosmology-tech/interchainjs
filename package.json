@@ -21,7 +21,9 @@
     "test:cosmos": "cd __test__/cosmos && jest --testPathPattern=./src"
   },
   "devDependencies": {
+    "@cosmjs/amino": "^0.31.3",
     "@cosmjs/proto-signing": "^0.31.3",
+    "@cosmjs/stargate": "^0.31.3",
     "@cosmology/telescope": "^1.1.1",
     "@types/jest": "^29.5.3",
     "@typescript-eslint/eslint-plugin": "^6.4.0",

@@ -1,6 +1,5 @@
 import { Auth, BaseSigner, Bech32Address, HttpEndpoint } from "@sign/core";
 
-import { PubKey as PubKeySecp256k1 } from "./codegen/cosmos/crypto/secp256k1/keys";
 import { SignMode } from "./codegen/cosmos/tx/signing/v1beta1/signing";
 import {
   AuthInfo,
@@ -11,24 +10,35 @@ import {
   TxBody,
   TxRaw,
 } from "./codegen/cosmos/tx/v1beta1/tx";
-import { Any } from "./codegen/google/protobuf/any";
 import prefixJson from "./config/prefix.json";
-import { CosmosDefaults } from "./defaults";
+import { CosmosDefaultOptions } from "./defaults";
 import { QueryParser } from "./query.parser";
-import { AccountData, EncodeObject, Parser, Registry, Signed } from "./types";
+import {
+  AccountData,
+  EncodeObject,
+  Parser,
+  Registry,
+  Signed,
+  SignerOptions,
+} from "./types";
 import { toBech32 } from "./utils/account";
 import { calculateFee, GasPrice, getAvgGasPrice } from "./utils/fee";
 import { EncodeObjectUtils, TxUtils } from "./utils/tx";
 
 export class Signer extends BaseSigner<QueryParser> {
-  protected hash = CosmosDefaults.hash;
-  protected signatureConverter = CosmosDefaults.signatureConverter;
+  protected hash = CosmosDefaultOptions.hash;
+  protected signatureConverter = CosmosDefaultOptions.signatureConverter;
+  protected encodePubKey = CosmosDefaultOptions.encodePubKey;
   protected parsers: Parser[] = [];
   accountData: AccountData;
 
-  constructor(registry?: Registry) {
+  constructor(registry?: Registry, options?: SignerOptions) {
     super(QueryParser);
-    registry && this.register(registry);
+    if (options?.hash) this.hash = options?.hash;
+    if (options?.signatureConverter)
+      this.signatureConverter = options?.signatureConverter;
+    if (options?.encodePubKey) this.encodePubKey = options?.encodePubKey;
+    if (registry) this.register(registry);
   }
 
   register(registry?: Registry) {
@@ -81,15 +91,6 @@ export class Signer extends BaseSigner<QueryParser> {
     return { sequence, accountNumber };
   }
 
-  protected get publicKey(): Any {
-    return {
-      typeUrl: PubKeySecp256k1.typeUrl,
-      value: PubKeySecp256k1.encode({
-        key: this.auth.key.pubkey,
-      }).finish(),
-    };
-  }
-
   getParserFromTypeUrl = (typeUrl: string): Parser => {
     const generated = this.parsers.find((g) => g.typeUrl === typeUrl);
     if (!generated) {
@@ -106,7 +107,7 @@ export class Signer extends BaseSigner<QueryParser> {
     }
     const tx = TxUtils.toTxForGasEstimation(
       messages,
-      this.publicKey,
+      this.encodePubKey(this.auth.key.pubkey),
       this.getParserFromTypeUrl,
       this.accountData.sequence,
       memo
@@ -160,12 +161,7 @@ export class Signer extends BaseSigner<QueryParser> {
     });
 
     const signerInfo: SignerInfo = SignerInfo.fromPartial({
-      publicKey: {
-        typeUrl: PubKeySecp256k1.typeUrl,
-        value: PubKeySecp256k1.encode(
-          PubKeySecp256k1.fromPartial({ key: this.auth.key.pubkey })
-        ).finish(),
-      },
+      publicKey: this.encodePubKey(this.auth.key.pubkey),
       sequence: this.accountData.sequence,
       modeInfo: { single: { mode: SignMode.SIGN_MODE_DIRECT } },
     });
@@ -212,8 +208,8 @@ export class Signer extends BaseSigner<QueryParser> {
       checkTx && deliverTx
         ? "broadcast_tx_commit"
         : checkTx
-        ? "broadcast_tx_sync"
-        : "broadcast_tx_async";
+          ? "broadcast_tx_sync"
+          : "broadcast_tx_async";
     const txResponse = await this.query.broadcast(raw, mode);
     return txResponse;
   }

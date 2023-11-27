@@ -6,6 +6,7 @@ import {
   Registry,
   Signed,
   Signer,
+  SignerOptions,
   TxRaw,
 } from "@sign/cosmos-proto";
 
@@ -13,8 +14,12 @@ import { AminoConverters, StdFee, StdSignDoc } from "./types";
 import { EncodeObjectUtils, StdFeeUtils, StdSignDocUtils } from "./utils";
 
 export class AminoSigner extends Signer {
-  constructor(registry?: Registry, aminoConverters?: AminoConverters) {
-    super();
+  constructor(
+    registry?: Registry,
+    aminoConverters?: AminoConverters,
+    options?: SignerOptions
+  ) {
+    super(void 0, options);
     this.registerWithAmino(registry, aminoConverters);
   }
 
@@ -76,7 +81,7 @@ export class AminoSigner extends Signer {
     const signature = this.signBytes(StdSignDocUtils.encode(doc));
     const { bodyBytes, authInfoBytes } = StdSignDocUtils.toSignDoc(
       doc,
-      this.publicKey,
+      this.encodePubKey(this.auth.key.pubkey),
       this.getParserFromAminoType
     );
     const txRaw = TxRaw.fromPartial({

@@ -5,6 +5,7 @@
   "outPath": "./codegen",
   "options": {
     "env": "v-next",
+    "fieldDefaultIsOptional": false,
     "useSDKTypes": false,
     "useOptionalNullable": true,
     "interfaces": {
@@ -65,6 +66,7 @@
       "extensions": false,
       "camelCase": true,
       "enabledServices": [
+        "Query",
         "Query",
         "Query"
       ]

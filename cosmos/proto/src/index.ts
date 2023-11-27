@@ -12,7 +12,7 @@ export {
   TxRaw,
 } from "./codegen/cosmos/tx/v1beta1/tx";
 export { Any } from "./codegen/google/protobuf/any";
-export { CosmosDefaults } from "./defaults";
+export { CosmosDefaultOptions as CosmosDefaults } from "./defaults";
 export * from "./query";
 export * from "./query.parser";
 export * from "./signer";

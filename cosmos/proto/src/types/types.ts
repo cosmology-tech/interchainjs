@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Bech32Address, GeneralSigned } from "@sign/core";
+import { Bech32Address, GeneralSigned, SigObj } from "@sign/core";
 
 import {
   BaseAccount,
@@ -11,6 +11,7 @@ import {
   DelayedVestingAccount,
   PeriodicVestingAccount,
 } from "../codegen/cosmos/vesting/v1beta1/vesting";
+import { Any } from "../codegen/google/protobuf/any";
 import { TelescopeGeneratedType } from "../codegen/types";
 import { TxResponse } from "./tendermint";
 
@@ -72,4 +73,13 @@ export type EncodeObject = Message<any>;
 export interface Message<T> {
   typeUrl: string;
   value: T;
+}
+
+export interface SignerOptions {
+  hash?: (msg: Uint8Array) => Uint8Array;
+  signatureConverter?: {
+    toSignature: (sigObj: SigObj) => Uint8Array;
+    fromSignature: (signature: Uint8Array) => SigObj;
+  };
+  encodePubKey?: (pubkey: Uint8Array) => Any;
 }

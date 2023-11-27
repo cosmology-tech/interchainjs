@@ -1,14 +1,24 @@
 import { Secp256k1Auth } from "@sign/core";
 import { toBech32 } from "@sign/cosmos-proto";
 
-export const chain = {
+export interface ChainData {
+  chainId: string;
+  rpc: string;
+  rest: string;
+  prefix: string;
+  denom: string;
+}
+
+export const chain: Record<string, ChainData> = {
   osmosis: {
+    chainId: "osmosis-1",
     rpc: "http://localhost:26653",
     rest: "http://localhost:1313",
     prefix: "osmo",
     denom: "uosmo",
   },
   // cosmoshub: {
+  //   chainId: "cosmoshub-1",
   //   rpc: "http://localhost:26657",
   //   rest: "http://localhost:1317",
   //   prefix: "cosmos",
@@ -16,7 +26,7 @@ export const chain = {
   // },
 };
 
-export const seed = {
+export const seed: Record<string, string> = {
   genesis:
     "razor dog gown public private couple ecology paper flee connect local robot diamond stay rude join sound win ribbon soup kidney glass robot vehicle",
   test1:
