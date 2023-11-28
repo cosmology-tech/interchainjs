@@ -71,4 +71,19 @@ export class QueryParserExt extends QueryParser {
     });
     return validators;
   };
+
+  getDelegations = async (delegatorAddr: string) => {
+    const { delegationResponses } = await this.staking.delegatorDelegations({
+      delegatorAddr,
+    });
+    return delegationResponses;
+  };
+
+  getDelegation = async (delegatorAddr: string, validatorAddr: string) => {
+    const { delegationResponse } = await this.staking.delegation({
+      delegatorAddr,
+      validatorAddr,
+    });
+    return delegationResponse;
+  };
 }

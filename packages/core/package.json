@@ -1,5 +1,5 @@
 {
-  "name": "@sign/core",
+  "name": "@cosmonauts/core",
   "version": "1.0.0",
   "description": "sign client for cosmos network",
   "main": "dist/index.js",

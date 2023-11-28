@@ -7,6 +7,8 @@ import { TextProposal, VoteOption } from "../codegen/cosmos/gov/v1beta1/gov";
 import {
   address,
   chain,
+  ChainData,
+  QueryParserExt,
   seed,
   sign,
   signAmino,
@@ -15,14 +17,23 @@ import {
   Store,
 } from "./setup";
 
+let chainData: ChainData;
+let signerAddress: string;
+let directStore: Store;
+let aminoStore: Store;
+let query: QueryParserExt;
+
+beforeAll(() => {
+  chainData = chain.osmosis;
+  signerAddress = address.osmosis.genesis;
+  directStore = new Store(chain.osmosis, seed.genesis);
+  aminoStore = new Store(chain.osmosis, seed.genesis, "amino");
+  query = directStore.query;
+});
+
 let proposalId: bigint;
 
 describe("Submit a proposal", () => {
-  const chainData = chain.osmosis;
-  const signerAddress = address.osmosis.genesis;
-  const directStore = new Store(chainData, seed.genesis);
-  const aminoStore = new Store(chainData, seed.genesis, "amino");
-
   const messages: Message<MsgSubmitProposal>[] = [
     {
       typeUrl: "/cosmos.gov.v1beta1.MsgSubmitProposal",
@@ -133,12 +144,6 @@ describe("Submit a proposal", () => {
 });
 
 describe("Vote a proposal", () => {
-  const chainData = chain.osmosis;
-  const signerAddress = address.osmosis.genesis;
-  const directStore = new Store(chain.osmosis, seed.genesis);
-  const aminoStore = new Store(chain.osmosis, seed.genesis, "amino");
-  const query = directStore.query;
-
   async function getMessages(): Promise<Message<MsgVote>[]> {
     return [
       {

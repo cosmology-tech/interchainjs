@@ -56,8 +56,8 @@ yarn test:cosmos:stop-server
 
 ## All Tests
 
-| File                                                                                                    | Descriptions                 |
-| ------------------------------------------------------------------------------------------------------- | ---------------------------- |
-| [bank.spec.ts](https://github.com/cosmology-tech/sign/blob/main/__test__/cosmos/src/bank.spec.ts)       | `Send tokens`                |
-| [gov.spec.ts](https://github.com/cosmology-tech/sign/blob/main/__test__/cosmos/src/gov.spec.ts)         | `Submit a proposal` ; `Vote` |
-| [staking.spec.ts](https://github.com/cosmology-tech/sign/blob/main/__test__/cosmos/src/staking.spec.ts) | `Delegate tokens`            |
+| File                                                                                                    | Descriptions                            |
+| ------------------------------------------------------------------------------------------------------- | --------------------------------------- |
+| [bank.spec.ts](https://github.com/cosmology-tech/sign/blob/main/__test__/cosmos/src/bank.spec.ts)       | `Send tokens`                           |
+| [gov.spec.ts](https://github.com/cosmology-tech/sign/blob/main/__test__/cosmos/src/gov.spec.ts)         | `Submit a proposal` ; `Vote`            |
+| [staking.spec.ts](https://github.com/cosmology-tech/sign/blob/main/__test__/cosmos/src/staking.spec.ts) | `Delegate tokens` ; `Undelegate tokens` |

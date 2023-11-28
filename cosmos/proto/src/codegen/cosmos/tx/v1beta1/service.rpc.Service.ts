@@ -1,5 +1,6 @@
 import { Rpc } from "../../../helpers";
 import { BinaryReader } from "../../../binary";
+import { QueryClient, createProtobufRpcClient } from "@cosmjs/stargate";
 import { SimulateRequest, SimulateResponse, GetTxRequest, GetTxResponse, BroadcastTxRequest, BroadcastTxResponse, GetTxsEventRequest, GetTxsEventResponse, GetBlockWithTxsRequest, GetBlockWithTxsResponse, TxDecodeRequest, TxDecodeResponse, TxEncodeRequest, TxEncodeResponse, TxEncodeAminoRequest, TxEncodeAminoResponse, TxDecodeAminoRequest, TxDecodeAminoResponse } from "./service";
 /** Service defines a gRPC service for interacting with transactions. */
 export interface Service {
@@ -102,3 +103,36 @@ export class ServiceClientImpl implements Service {
     return promise.then(data => TxDecodeAminoResponse.decode(new BinaryReader(data)));
   }
 }
+export const createRpcQueryExtension = (base: QueryClient) => {
+  const rpc = createProtobufRpcClient(base);
+  const queryService = new ServiceClientImpl(rpc);
+  return {
+    simulate(request: SimulateRequest): Promise<SimulateResponse> {
+      return queryService.simulate(request);
+    },
+    getTx(request: GetTxRequest): Promise<GetTxResponse> {
+      return queryService.getTx(request);
+    },
+    broadcastTx(request: BroadcastTxRequest): Promise<BroadcastTxResponse> {
+      return queryService.broadcastTx(request);
+    },
+    getTxsEvent(request: GetTxsEventRequest): Promise<GetTxsEventResponse> {
+      return queryService.getTxsEvent(request);
+    },
+    getBlockWithTxs(request: GetBlockWithTxsRequest): Promise<GetBlockWithTxsResponse> {
+      return queryService.getBlockWithTxs(request);
+    },
+    txDecode(request: TxDecodeRequest): Promise<TxDecodeResponse> {
+      return queryService.txDecode(request);
+    },
+    txEncode(request: TxEncodeRequest): Promise<TxEncodeResponse> {
+      return queryService.txEncode(request);
+    },
+    txEncodeAmino(request: TxEncodeAminoRequest): Promise<TxEncodeAminoResponse> {
+      return queryService.txEncodeAmino(request);
+    },
+    txDecodeAmino(request: TxDecodeAminoRequest): Promise<TxDecodeAminoResponse> {
+      return queryService.txDecodeAmino(request);
+    }
+  };
+};

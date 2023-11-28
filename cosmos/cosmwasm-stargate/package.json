@@ -1,5 +1,5 @@
 {
-  "name": "@sign/cosmos-cosmwasm-stargate",
+  "name": "@cosmonauts/cosmos-cosmwasm-stargate",
   "version": "1.0.0",
   "description": "Cosmos sign and broadcast instances",
   "main": "dist/index.js",

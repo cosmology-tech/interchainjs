@@ -1,5 +1,5 @@
 {
-  "name": "@sign/cosmos-cosmjs",
+  "name": "@cosmonauts/cosmos-cosmjs",
   "version": "1.0.0",
   "description": "Cosmos sign and broadcast classes",
   "main": "dist/index.js",

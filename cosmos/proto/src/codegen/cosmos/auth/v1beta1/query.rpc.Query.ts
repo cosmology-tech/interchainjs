@@ -1,5 +1,6 @@
 import { Rpc } from "../../../helpers";
 import { BinaryReader } from "../../../binary";
+import { QueryClient, createProtobufRpcClient } from "@cosmjs/stargate";
 import { QueryAccountsRequest, QueryAccountsResponse, QueryAccountRequest, QueryAccountResponse, QueryAccountAddressByIDRequest, QueryAccountAddressByIDResponse, QueryParamsRequest, QueryParamsResponse, QueryModuleAccountsRequest, QueryModuleAccountsResponse, QueryModuleAccountByNameRequest, QueryModuleAccountByNameResponse, Bech32PrefixRequest, Bech32PrefixResponse, AddressBytesToStringRequest, AddressBytesToStringResponse, AddressStringToBytesRequest, AddressStringToBytesResponse, QueryAccountInfoRequest, QueryAccountInfoResponse } from "./query";
 /** Query defines the gRPC querier service. */
 export interface Query {
@@ -123,3 +124,39 @@ export class QueryClientImpl implements Query {
     return promise.then(data => QueryAccountInfoResponse.decode(new BinaryReader(data)));
   }
 }
+export const createRpcQueryExtension = (base: QueryClient) => {
+  const rpc = createProtobufRpcClient(base);
+  const queryService = new QueryClientImpl(rpc);
+  return {
+    accounts(request?: QueryAccountsRequest): Promise<QueryAccountsResponse> {
+      return queryService.accounts(request);
+    },
+    account(request: QueryAccountRequest): Promise<QueryAccountResponse> {
+      return queryService.account(request);
+    },
+    accountAddressByID(request: QueryAccountAddressByIDRequest): Promise<QueryAccountAddressByIDResponse> {
+      return queryService.accountAddressByID(request);
+    },
+    params(request?: QueryParamsRequest): Promise<QueryParamsResponse> {
+      return queryService.params(request);
+    },
+    moduleAccounts(request?: QueryModuleAccountsRequest): Promise<QueryModuleAccountsResponse> {
+      return queryService.moduleAccounts(request);
+    },
+    moduleAccountByName(request: QueryModuleAccountByNameRequest): Promise<QueryModuleAccountByNameResponse> {
+      return queryService.moduleAccountByName(request);
+    },
+    bech32Prefix(request?: Bech32PrefixRequest): Promise<Bech32PrefixResponse> {
+      return queryService.bech32Prefix(request);
+    },
+    addressBytesToString(request: AddressBytesToStringRequest): Promise<AddressBytesToStringResponse> {
+      return queryService.addressBytesToString(request);
+    },
+    addressStringToBytes(request: AddressStringToBytesRequest): Promise<AddressStringToBytesResponse> {
+      return queryService.addressStringToBytes(request);
+    },
+    accountInfo(request: QueryAccountInfoRequest): Promise<QueryAccountInfoResponse> {
+      return queryService.accountInfo(request);
+    }
+  };
+};

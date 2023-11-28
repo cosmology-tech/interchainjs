@@ -1,15 +1,14 @@
 {
-  "name": "@sign/eth",
+  "name": "@cosmonauts/eth",
   "version": "1.0.0",
+  "private": true,
   "description": "sign client for cosmos network",
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "author": "liujun93 <ljun8575@gmail.com>",
   "license": "MIT",
-  "scripts": {
-    "build": "rm -rf dist && tsc"
-  },
+  "scripts": {},
   "files": [
     "dist",
     "README.md"

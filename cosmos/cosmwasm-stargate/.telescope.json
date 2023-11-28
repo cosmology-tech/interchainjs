@@ -63,7 +63,7 @@
     "rpcClients": {
       "enabled": true,
       "inline": false,
-      "extensions": false,
+      "extensions": true,
       "camelCase": true,
       "enabledServices": [
         "Query"
