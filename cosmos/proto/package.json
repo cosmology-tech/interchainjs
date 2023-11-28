@@ -1,6 +1,6 @@
 {
   "name": "@cosmonauts/cosmos-proto",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Cosmos sign and broadcast classes",
   "main": "dist/index.js",
   "module": "dist/index.js",

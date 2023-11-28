@@ -1,6 +1,6 @@
 {
   "name": "@cosmonauts/cosmos-stargate",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Cosmos sign and broadcast instances",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -21,9 +21,9 @@
     "@sign/cosmos-cosmjs": "^1.0.0"
   },
   "peerDependencies": {
-    "@sign/cosmos-proto": "^1.0.0",
+    "@sign/core": "^1.0.0",
     "@sign/cosmos-amino": "^1.0.0",
-    "@sign/core": "^1.0.0"
+    "@sign/cosmos-proto": "^1.0.0"
   },
   "devDependencies": {
     "@cosmology/telescope": "^1.0.1",
