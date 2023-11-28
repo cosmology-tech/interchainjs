@@ -1,2 +1,2 @@
-// for dev mode only
+// for dev mode only.
 export * from "./src";
