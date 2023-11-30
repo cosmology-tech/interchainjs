@@ -13,6 +13,9 @@
     "dist",
     "README.md"
   ],
+  "publishConfig": {
+    "access": "restricted"
+  },
   "dependencies": {
     "@ethereumjs/tx": "^5.0.0",
     "@sign/core": "^1.0.0",

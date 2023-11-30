@@ -13,6 +13,9 @@
     "proto:codegen": "rm -rf ./src/codegen && npx telescope transpile --config ../../.telescope.json",
     "proto:update": "yarn proto:download && yarn proto:codegen"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "dist",
     "README.md"

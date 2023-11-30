@@ -10,6 +10,9 @@
   "scripts": {
     "build": "rm -rf dist && tsc"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "dist",
     "README.md"

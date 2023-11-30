@@ -1,6 +1,6 @@
 {
   "name": "@cosmonauts/core",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "sign client for cosmos network",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -9,6 +9,9 @@
   "license": "MIT",
   "scripts": {
     "build": "rm -rf dist && tsc"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "files": [
     "dist",
@@ -24,5 +27,6 @@
   },
   "peerDependencies": {
     "bn.js": "^4.11.9"
-  }
+  },
+  "gitHead": "08545e066171d25cfb25a161bd3bd38b98f48700"
 }
