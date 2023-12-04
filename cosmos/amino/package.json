@@ -8,7 +8,8 @@
   "author": "liujun93 <ljun8575@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "build": "rm -rf dist && tsc"
+    "build": "rm -rf dist && tsc",
+    "clear": "rimraf dist"
   },
   "publishConfig": {
     "access": "public"

@@ -9,27 +9,32 @@ chains:
     resources:
       cpu: "0.5"
       memory: "500M"
-#   - name: cosmoshub-1
-#     type: cosmos
-#     image: ghcr.io/cosmology-tech/starship/gaia:v13.0.0
-#     numValidators: 1
-#     ports:
-#       rest: 1317
-#       rpc: 26657
-#     resources:
-#       cpu: "0.5"
-#       memory: "500M"
+    genesis:
+      app_state:
+        gov:
+          voting_params:
+            voting_period: 90s
+  - name: cosmoshub-1
+    type: cosmos
+    image: ghcr.io/cosmology-tech/starship/gaia:v13.0.0
+    numValidators: 1
+    ports:
+      rest: 1317
+      rpc: 26657
+    resources:
+      cpu: "0.5"
+      memory: "500M"
 
-# relayers:
-#   - name: osmos-cosmos
-#     type: hermes
-#     replicas: 1
-#     chains:
-#       - osmosis-1
-#       - gaia-1
-#     resources:
-#       cpu: "0.3"
-#       memory: "300M"
+relayers:
+  - name: osmos-cosmos
+    type: hermes
+    replicas: 1
+    chains:
+      - osmosis-1
+      - gaia-1
+    resources:
+      cpu: "0.3"
+      memory: "300M"
 
 registry:
   enabled: false

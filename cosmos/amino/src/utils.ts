@@ -134,15 +134,15 @@ export const EncodeObjectUtils = {
     getParserFromTypeUrl: (typeUrl: string) => Parser
   ): AminoMsg[] {
     return msgs.map((msg) => {
-      const generated = getParserFromTypeUrl(msg.typeUrl);
-      if (!generated.amino) {
+      const parser = getParserFromTypeUrl(msg.typeUrl);
+      if (!parser.amino) {
         throw new Error(
           `No such aminoConverter provided for typeUrl ${msg.typeUrl}`
         );
       }
       return {
-        type: generated.amino.aminoType,
-        value: generated.amino.toAmino(msg.value),
+        type: parser.amino.aminoType,
+        value: parser.amino.toAmino(parser.fromPartial(msg.value)),
       };
     });
   },
