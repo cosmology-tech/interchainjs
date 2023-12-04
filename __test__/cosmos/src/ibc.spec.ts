@@ -5,48 +5,43 @@ import {
   address,
   chain,
   ChainData,
-  QueryParserExt,
   seed,
   signAndBroadcast,
   Store,
 } from "./setup";
 
-let chainData: ChainData;
-let signerAddress: string;
-let directStore: Store;
-let aminoStore: Store;
-let query: QueryParserExt;
+const chainData: ChainData = chain.osmosis;
+const signerAddress: string = address.osmosis.genesis;
+const directStore: Store = new Store(chain.osmosis, seed.genesis);
+const aminoStore: Store = new Store(chain.osmosis, seed.genesis, "amino");
 
-let recipientAddress: string;
-
-beforeAll(async () => {
-  chainData = chain.osmosis;
-  signerAddress = address.osmosis.genesis;
-  directStore = new Store(chain.osmosis, seed.genesis);
-  aminoStore = new Store(chain.osmosis, seed.genesis, "amino");
-  query = directStore.query;
-  recipientAddress = address;
-});
+const recipientAddress: string = address.cosmoshub.test1;
 
 async function getRecord(store: Store) {
   const { sequence } = await store.query.getBaseAccount(signerAddress);
-  const delegation = await query.getDelegation(signerAddress, validatorAddress);
-  return { sequence, delegation: BigInt(delegation.balance.amount) };
+  return { sequence };
 }
 
 describe("Send IBC tokens", () => {
-  const delegationAmount = 1000000n;
+  const amount = 1000000n;
   const messages: Message<MsgTransfer>[] = [
     {
       typeUrl: "/ibc.applications.transfer.v1.MsgTransfer",
       value: {
-        sourcePort: sourcePort,
-        sourceChannel: sourceChannel,
+        sourcePort: "transfer",
+        sourceChannel: "channel-0",
         sender: signerAddress,
         receiver: recipientAddress,
-        token: transferAmount,
-        timeoutHeight: timeoutHeight,
-        timeoutTimestamp: timeoutTimestampNanoseconds,
+        token: {
+          amount: amount.toString(),
+          denom: chain.osmosis.denom,
+        },
+        timeoutHeight: {
+          revisionHeight: 0n,
+          revisionNumber: 0n,
+        },
+        timeoutTimestamp: BigInt(Math.floor(Date.now() / 1000) + 120),
+        memo: "",
       },
     },
   ];
@@ -61,7 +56,6 @@ describe("Send IBC tokens", () => {
     );
     expect(resp.code).toEqual(0);
     expect(before.sequence + 1n).toEqual(after.sequence);
-    expect(before.delegation + delegationAmount).toEqual(after.delegation);
   });
 
   it("should success with AMINO signing", async () => {
@@ -74,6 +68,5 @@ describe("Send IBC tokens", () => {
     );
     expect(resp.code).toEqual(0);
     expect(before.sequence + 1n).toEqual(after.sequence);
-    expect(before.delegation + delegationAmount).toEqual(after.delegation);
   });
 });

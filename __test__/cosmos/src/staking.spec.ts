@@ -11,20 +11,15 @@ import {
   Store,
 } from "./setup";
 
-let chainData: ChainData;
-let signerAddress: string;
-let directStore: Store;
-let aminoStore: Store;
-let query: QueryParserExt;
+const chainData: ChainData = chain.osmosis;
+const signerAddress: string = address.osmosis.genesis;
+const directStore: Store = new Store(chain.osmosis, seed.genesis);
+const aminoStore: Store = new Store(chain.osmosis, seed.genesis, "amino");
+const query: QueryParserExt = directStore.query;
 
 let validatorAddress: string;
 
 beforeAll(async () => {
-  chainData = chain.osmosis;
-  signerAddress = address.osmosis.genesis;
-  directStore = new Store(chain.osmosis, seed.genesis);
-  aminoStore = new Store(chain.osmosis, seed.genesis, "amino");
-  query = directStore.query;
   const validators = await query.getValidators();
   // console.log("All validatores:", validators);
   validatorAddress = validators[0]?.operatorAddress;
@@ -42,19 +37,23 @@ async function getRecord(store: Store) {
 
 describe("Delegate tokens", () => {
   const delegationAmount = 1000000n;
-  const messages: Message<MsgDelegate>[] = [
-    {
-      typeUrl: "/cosmos.staking.v1beta1.MsgDelegate",
-      value: {
-        delegatorAddress: signerAddress,
-        validatorAddress,
-        amount: {
-          denom: chainData.denom,
-          amount: delegationAmount.toString(),
+  let messages: Message<MsgDelegate>[];
+
+  beforeAll(() => {
+    messages = [
+      {
+        typeUrl: "/cosmos.staking.v1beta1.MsgDelegate",
+        value: {
+          delegatorAddress: signerAddress,
+          validatorAddress,
+          amount: {
+            denom: chainData.denom,
+            amount: delegationAmount.toString(),
+          },
         },
       },
-    },
-  ];
+    ];
+  });
 
   it("should success with DIRECT signing", async () => {
     const { resp, before, after } = await signAndBroadcast(
@@ -86,6 +85,7 @@ describe("Delegate tokens", () => {
 describe("Undelegate tokens", () => {
   let messages: Message<MsgUndelegate>[];
   const undelegationAmount = 100000n;
+
   beforeAll(() => {
     messages = [
       {

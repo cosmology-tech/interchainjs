@@ -17,19 +17,11 @@ import {
   Store,
 } from "./setup";
 
-let chainData: ChainData;
-let signerAddress: string;
-let directStore: Store;
-let aminoStore: Store;
-let query: QueryParserExt;
-
-beforeAll(() => {
-  chainData = chain.osmosis;
-  signerAddress = address.osmosis.genesis;
-  directStore = new Store(chain.osmosis, seed.genesis);
-  aminoStore = new Store(chain.osmosis, seed.genesis, "amino");
-  query = directStore.query;
-});
+const chainData: ChainData = chain.osmosis;
+const signerAddress: string = address.osmosis.genesis;
+const directStore: Store = new Store(chain.osmosis, seed.genesis);
+const aminoStore: Store = new Store(chain.osmosis, seed.genesis, "amino");
+const query: QueryParserExt = directStore.query;
 
 let proposalId: bigint;
 

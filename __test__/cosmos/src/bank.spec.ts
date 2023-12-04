@@ -5,6 +5,7 @@ import { MsgSend } from "@sign/cosmos-stargate";
 import {
   address,
   chain,
+  ChainData,
   seed,
   sign,
   signAmino,
@@ -13,12 +14,12 @@ import {
   Store,
 } from "./setup";
 
-describe("Send tokens", () => {
-  const chainData = chain.osmosis;
-  const signerAddress = address.osmosis.genesis;
-  const directStore = new Store(chainData, seed.genesis);
-  const aminoStore = new Store(chainData, seed.genesis, "amino");
+const chainData: ChainData = chain.osmosis;
+const signerAddress: string = address.osmosis.genesis;
+const directStore: Store = new Store(chain.osmosis, seed.genesis);
+const aminoStore: Store = new Store(chain.osmosis, seed.genesis, "amino");
 
+describe("Send tokens", () => {
   const amount = "1000000";
   const messages: Message<MsgSend>[] = [
     {

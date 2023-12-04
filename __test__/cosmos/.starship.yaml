@@ -31,13 +31,13 @@ relayers:
     replicas: 1
     chains:
       - osmosis-1
-      - gaia-1
+      - cosmoshub-1
     resources:
       cpu: "0.3"
       memory: "300M"
 
 registry:
-  enabled: false
+  enabled: true
   ports:
     rest: 8081
   resources:

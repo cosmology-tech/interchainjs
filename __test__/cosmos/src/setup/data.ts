@@ -17,13 +17,13 @@ export const chain: Record<string, ChainData> = {
     prefix: "osmo",
     denom: "uosmo",
   },
-  // cosmoshub: {
-  //   chainId: "cosmoshub-1",
-  //   rpc: "http://localhost:26657",
-  //   rest: "http://localhost:1317",
-  //   prefix: "cosmos",
-  //   denom: "uatom",
-  // },
+  cosmoshub: {
+    chainId: "cosmoshub-1",
+    rpc: "http://localhost:26657",
+    rest: "http://localhost:1317",
+    prefix: "cosmos",
+    denom: "uatom",
+  },
 };
 
 export const seed: Record<string, string> = {
@@ -42,5 +42,9 @@ export const address = {
   osmosis: {
     genesis: getAddress(chain.osmosis.prefix, seed.genesis),
     test1: getAddress(chain.osmosis.prefix, seed.test1),
+  },
+  cosmoshub: {
+    genesis: getAddress(chain.cosmoshub.prefix, seed.genesis),
+    test1: getAddress(chain.cosmoshub.prefix, seed.test1),
   },
 };

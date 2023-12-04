@@ -4,4 +4,8 @@ Port forwarding all chains
 [33mchains: forwarded osmosis-1[0m
 [33m    rpc to http://localhost:26653[0m
 [33m    lcd to http://localhost:1313[0m
+[33mchains: forwarded cosmoshub-1[0m
+[33m    rpc to http://localhost:26657[0m
+[33m    lcd to http://localhost:1317[0m
 Port forward services
+[33mregistry: forwarded registry lcd to grpc http://localhost:8081, to http://localhost:9091[0m
