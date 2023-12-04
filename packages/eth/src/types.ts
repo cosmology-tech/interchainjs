@@ -4,7 +4,7 @@ import {
   FeeMarketEIP1559TxData,
   LegacyTxData,
 } from "@ethereumjs/tx";
-import { GeneralSigned } from "@sign/core";
+import { GeneralSigned } from "@cosmonauts/core";
 import { TransactionReceipt } from "web3-types";
 
 type PrefixedHexString = string;

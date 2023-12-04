@@ -27,6 +27,12 @@ export enum Edition {
   EDITION_99997_TEST_ONLY = 99997,
   EDITION_99998_TEST_ONLY = 99998,
   EDITION_99999_TEST_ONLY = 99999,
+  /**
+   * EDITION_MAX - Placeholder for specifying unbounded edition support.  This should only
+   * ever be used by plugins that can expect to never require any changes to
+   * support a new edition.
+   */
+  EDITION_MAX = 2147483647,
   UNRECOGNIZED = -1,
 }
 export const EditionAmino = Edition;
@@ -59,6 +65,9 @@ export function editionFromJSON(object: any): Edition {
     case 99999:
     case "EDITION_99999_TEST_ONLY":
       return Edition.EDITION_99999_TEST_ONLY;
+    case 2147483647:
+    case "EDITION_MAX":
+      return Edition.EDITION_MAX;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -85,6 +94,8 @@ export function editionToJSON(object: Edition): string {
       return "EDITION_99998_TEST_ONLY";
     case Edition.EDITION_99999_TEST_ONLY:
       return "EDITION_99999_TEST_ONLY";
+    case Edition.EDITION_MAX:
+      return "EDITION_MAX";
     case Edition.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
@@ -735,8 +746,8 @@ export function featureSet_RepeatedFieldEncodingToJSON(object: FeatureSet_Repeat
 }
 export enum FeatureSet_Utf8Validation {
   UTF8_VALIDATION_UNKNOWN = 0,
-  NONE = 1,
   VERIFY = 2,
+  NONE = 3,
   UNRECOGNIZED = -1,
 }
 export const FeatureSet_Utf8ValidationAmino = FeatureSet_Utf8Validation;
@@ -745,12 +756,12 @@ export function featureSet_Utf8ValidationFromJSON(object: any): FeatureSet_Utf8V
     case 0:
     case "UTF8_VALIDATION_UNKNOWN":
       return FeatureSet_Utf8Validation.UTF8_VALIDATION_UNKNOWN;
-    case 1:
-    case "NONE":
-      return FeatureSet_Utf8Validation.NONE;
     case 2:
     case "VERIFY":
       return FeatureSet_Utf8Validation.VERIFY;
+    case 3:
+    case "NONE":
+      return FeatureSet_Utf8Validation.NONE;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -761,10 +772,10 @@ export function featureSet_Utf8ValidationToJSON(object: FeatureSet_Utf8Validatio
   switch (object) {
     case FeatureSet_Utf8Validation.UTF8_VALIDATION_UNKNOWN:
       return "UTF8_VALIDATION_UNKNOWN";
-    case FeatureSet_Utf8Validation.NONE:
-      return "NONE";
     case FeatureSet_Utf8Validation.VERIFY:
       return "VERIFY";
+    case FeatureSet_Utf8Validation.NONE:
+      return "NONE";
     case FeatureSet_Utf8Validation.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
@@ -1209,12 +1220,12 @@ export interface FieldDescriptorProto {
    * If true, this is a proto3 "optional". When a proto3 field is optional, it
    * tracks presence regardless of field type.
    * 
-   * When proto3_optional is true, this field must be belong to a oneof to
-   * signal to old proto3 clients that presence is tracked for this field. This
-   * oneof is known as a "synthetic" oneof, and this field must be its sole
-   * member (each proto3 optional field gets its own synthetic oneof). Synthetic
-   * oneofs exist in the descriptor only, and do not generate any API. Synthetic
-   * oneofs must be ordered after all "real" oneofs.
+   * When proto3_optional is true, this field must belong to a oneof to signal
+   * to old proto3 clients that presence is tracked for this field. This oneof
+   * is known as a "synthetic" oneof, and this field must be its sole member
+   * (each proto3 optional field gets its own synthetic oneof). Synthetic oneofs
+   * exist in the descriptor only, and do not generate any API. Synthetic oneofs
+   * must be ordered after all "real" oneofs.
    * 
    * For message fields, proto3_optional doesn't create any semantic change,
    * since non-repeated message fields always track presence. However it still
@@ -1281,12 +1292,12 @@ export interface FieldDescriptorProtoAmino {
    * If true, this is a proto3 "optional". When a proto3 field is optional, it
    * tracks presence regardless of field type.
    * 
-   * When proto3_optional is true, this field must be belong to a oneof to
-   * signal to old proto3 clients that presence is tracked for this field. This
-   * oneof is known as a "synthetic" oneof, and this field must be its sole
-   * member (each proto3 optional field gets its own synthetic oneof). Synthetic
-   * oneofs exist in the descriptor only, and do not generate any API. Synthetic
-   * oneofs must be ordered after all "real" oneofs.
+   * When proto3_optional is true, this field must belong to a oneof to signal
+   * to old proto3 clients that presence is tracked for this field. This oneof
+   * is known as a "synthetic" oneof, and this field must be its sole member
+   * (each proto3 optional field gets its own synthetic oneof). Synthetic oneofs
+   * exist in the descriptor only, and do not generate any API. Synthetic oneofs
+   * must be ordered after all "real" oneofs.
    * 
    * For message fields, proto3_optional doesn't create any semantic change,
    * since non-repeated message fields always track presence. However it still

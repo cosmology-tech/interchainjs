@@ -1,5 +1,5 @@
-import { Message } from "@sign/cosmos-proto";
-import { MsgTransfer } from "@sign/cosmos-stargate";
+import { Message } from "@cosmonauts/cosmos-proto";
+import { MsgTransfer } from "@cosmonauts/cosmos-stargate";
 
 import {
   address,

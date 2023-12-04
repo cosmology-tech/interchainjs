@@ -1,9 +1,13 @@
-import { EncodeObjectUtils, StdFee, StdSignDoc } from "@sign/cosmos-amino";
+import {
+  EncodeObjectUtils,
+  StdFee,
+  StdSignDoc,
+} from "@cosmonauts/cosmos-amino";
 
 import { ChainData } from "./data";
 import { Store } from "./store";
 
-function mockFee(chainData: ChainData): StdFee {
+export function mockFee(chainData: ChainData): StdFee {
   const fee: StdFee = {
     gas: "20000000",
     amount: [

@@ -1,11 +1,12 @@
-import { toBase64 } from "@sign/core";
-import { Message } from "@sign/cosmos-proto";
-import { MsgSend } from "@sign/cosmos-stargate";
+import { toBase64 } from "@cosmonauts/core";
+import { Message } from "@cosmonauts/cosmos-proto";
+import { MsgSend } from "@cosmonauts/cosmos-stargate";
 
 import {
   address,
   chain,
   ChainData,
+  mockFee,
   seed,
   sign,
   signAmino,
@@ -21,19 +22,20 @@ const aminoStore: Store = new Store(chain.osmosis, seed.genesis, "amino");
 
 describe("Send tokens", () => {
   const amount = "1000000";
+  const msgSend: MsgSend = {
+    amount: [
+      {
+        amount,
+        denom: chainData.denom,
+      },
+    ],
+    fromAddress: signerAddress,
+    toAddress: address.osmosis.test1,
+  };
   const messages: Message<MsgSend>[] = [
     {
       typeUrl: "/cosmos.bank.v1beta1.MsgSend",
-      value: {
-        amount: [
-          {
-            amount,
-            denom: chainData.denom,
-          },
-        ],
-        fromAddress: signerAddress,
-        toAddress: address.osmosis.test1,
-      },
+      value: msgSend,
     },
   ];
 
@@ -71,6 +73,16 @@ describe("Send tokens", () => {
     expect(resp.code).toEqual(0);
     expect(before.fromSequence + 1n).toEqual(after.fromSequence);
     expect(before.toAmount + BigInt(amount)).toEqual(after.toAmount);
+  });
+
+  it("should success with StargateImpl", async () => {
+    const resp = await directStore.stargateCosmjsSigner.send({
+      signerAddress,
+      message: msgSend,
+      fee: mockFee(chainData),
+      memo: "",
+    });
+    expect(resp.code).toEqual(0);
   });
 
   it("should success with AMINO signing using @cosmjs", async () => {

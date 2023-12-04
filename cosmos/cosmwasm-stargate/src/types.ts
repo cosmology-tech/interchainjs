@@ -66,4 +66,4 @@ export {
   MsgWithdrawDelegatorReward,
   MsgWithdrawProposal,
   MsgWithdrawValidatorCommission,
-} from "@sign/cosmos-stargate";
+} from "@cosmonauts/cosmos-stargate";

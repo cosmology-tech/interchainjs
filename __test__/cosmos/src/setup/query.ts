@@ -1,5 +1,5 @@
-import { HttpEndpoint } from "@sign/core";
-import { Query, QueryParser } from "@sign/cosmos-proto";
+import { HttpEndpoint } from "@cosmonauts/core";
+import { Query, QueryParser } from "@cosmonauts/cosmos-proto";
 
 import { QueryClientImpl as Bank } from "../../codegen/cosmos/bank/v1beta1/query.rpc.Query";
 import { QueryClientImpl as Gov } from "../../codegen/cosmos/gov/v1beta1/query.rpc.Query";

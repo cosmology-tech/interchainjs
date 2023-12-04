@@ -1,4 +1,4 @@
-import { HttpEndpoint } from "@sign/core";
+import { HttpEndpoint } from "@cosmonauts/core";
 
 import { BaseAccount } from "./codegen/cosmos/auth/v1beta1/auth";
 import { QueryClientImpl as Auth } from "./codegen/cosmos/auth/v1beta1/query.rpc.Query";

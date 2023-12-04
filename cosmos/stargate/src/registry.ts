@@ -1,5 +1,5 @@
-import { AminoConverters } from "@sign/cosmos-amino";
-import { Registry } from "@sign/cosmos-proto";
+import { AminoConverters } from "@cosmonauts/cosmos-amino";
+import { Registry } from "@cosmonauts/cosmos-proto";
 
 import { stargateConsts } from "./stargate";
 

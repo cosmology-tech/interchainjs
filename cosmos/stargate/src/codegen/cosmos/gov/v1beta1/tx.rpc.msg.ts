@@ -1,48 +1,58 @@
-import { Rpc } from "../../../helpers";
-import { BinaryReader } from "../../../binary";
-import { MsgSubmitProposal, MsgSubmitProposalResponse, MsgVote, MsgVoteResponse, MsgVoteWeighted, MsgVoteWeightedResponse, MsgDeposit, MsgDepositResponse } from "./tx";
+import { BroadcastTxReq, DeliverTxResponse, TxRpc } from "../../../types";
+import { MsgSubmitProposal, MsgVote, MsgVoteWeighted, MsgDeposit } from "./tx";
 /** Msg defines the bank Msg service. */
 export interface Msg {
   /** SubmitProposal defines a method to create new proposal given a content. */
-  submitProposal(request: MsgSubmitProposal): Promise<MsgSubmitProposalResponse>;
+  submitProposal(request: BroadcastTxReq<MsgSubmitProposal>): Promise<DeliverTxResponse>;
   /** Vote defines a method to add a vote on a specific proposal. */
-  vote(request: MsgVote): Promise<MsgVoteResponse>;
+  vote(request: BroadcastTxReq<MsgVote>): Promise<DeliverTxResponse>;
   /**
    * VoteWeighted defines a method to add a weighted vote on a specific proposal.
    * 
    * Since: cosmos-sdk 0.43
    */
-  voteWeighted(request: MsgVoteWeighted): Promise<MsgVoteWeightedResponse>;
+  voteWeighted(request: BroadcastTxReq<MsgVoteWeighted>): Promise<DeliverTxResponse>;
   /** Deposit defines a method to add deposit on a specific proposal. */
-  deposit(request: MsgDeposit): Promise<MsgDepositResponse>;
+  deposit(request: BroadcastTxReq<MsgDeposit>): Promise<DeliverTxResponse>;
 }
 export class MsgClientImpl implements Msg {
-  private readonly rpc: Rpc;
-  constructor(rpc: Rpc) {
+  private readonly rpc: TxRpc;
+  constructor(rpc: TxRpc) {
     this.rpc = rpc;
     this.submitProposal = this.submitProposal.bind(this);
     this.vote = this.vote.bind(this);
     this.voteWeighted = this.voteWeighted.bind(this);
     this.deposit = this.deposit.bind(this);
   }
-  submitProposal(request: MsgSubmitProposal): Promise<MsgSubmitProposalResponse> {
-    const data = MsgSubmitProposal.encode(request).finish();
-    const promise = this.rpc.request("cosmos.gov.v1beta1.Msg", "SubmitProposal", data);
-    return promise.then(data => MsgSubmitProposalResponse.decode(new BinaryReader(data)));
+  submitProposal(request: BroadcastTxReq<MsgSubmitProposal>): Promise<DeliverTxResponse> {
+    const data = [{
+      typeUrl: MsgSubmitProposal.typeUrl,
+      value: request.message
+    }];
+    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
   }
-  vote(request: MsgVote): Promise<MsgVoteResponse> {
-    const data = MsgVote.encode(request).finish();
-    const promise = this.rpc.request("cosmos.gov.v1beta1.Msg", "Vote", data);
-    return promise.then(data => MsgVoteResponse.decode(new BinaryReader(data)));
+  vote(request: BroadcastTxReq<MsgVote>): Promise<DeliverTxResponse> {
+    const data = [{
+      typeUrl: MsgVote.typeUrl,
+      value: request.message
+    }];
+    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
   }
-  voteWeighted(request: MsgVoteWeighted): Promise<MsgVoteWeightedResponse> {
-    const data = MsgVoteWeighted.encode(request).finish();
-    const promise = this.rpc.request("cosmos.gov.v1beta1.Msg", "VoteWeighted", data);
-    return promise.then(data => MsgVoteWeightedResponse.decode(new BinaryReader(data)));
+  voteWeighted(request: BroadcastTxReq<MsgVoteWeighted>): Promise<DeliverTxResponse> {
+    const data = [{
+      typeUrl: MsgVoteWeighted.typeUrl,
+      value: request.message
+    }];
+    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
   }
-  deposit(request: MsgDeposit): Promise<MsgDepositResponse> {
-    const data = MsgDeposit.encode(request).finish();
-    const promise = this.rpc.request("cosmos.gov.v1beta1.Msg", "Deposit", data);
-    return promise.then(data => MsgDepositResponse.decode(new BinaryReader(data)));
+  deposit(request: BroadcastTxReq<MsgDeposit>): Promise<DeliverTxResponse> {
+    const data = [{
+      typeUrl: MsgDeposit.typeUrl,
+      value: request.message
+    }];
+    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
   }
 }
+export const createClientImpl = (rpc: TxRpc) => {
+  return new MsgClientImpl(rpc);
+};

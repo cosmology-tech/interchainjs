@@ -1,6 +1,5 @@
-import { Rpc } from "../../../helpers";
-import { BinaryReader } from "../../../binary";
-import { MsgGrant, MsgGrantResponse, MsgExec, MsgExecResponse, MsgRevoke, MsgRevokeResponse } from "./tx";
+import { BroadcastTxReq, DeliverTxResponse, TxRpc } from "../../../types";
+import { MsgGrant, MsgExec, MsgRevoke } from "./tx";
 /** Msg defines the authz Msg service. */
 export interface Msg {
   /**
@@ -9,40 +8,49 @@ export interface Msg {
    * for the given (granter, grantee, Authorization) triple, then the grant
    * will be overwritten.
    */
-  grant(request: MsgGrant): Promise<MsgGrantResponse>;
+  grant(request: BroadcastTxReq<MsgGrant>): Promise<DeliverTxResponse>;
   /**
    * Exec attempts to execute the provided messages using
    * authorizations granted to the grantee. Each message should have only
    * one signer corresponding to the granter of the authorization.
    */
-  exec(request: MsgExec): Promise<MsgExecResponse>;
+  exec(request: BroadcastTxReq<MsgExec>): Promise<DeliverTxResponse>;
   /**
    * Revoke revokes any authorization corresponding to the provided method name on the
    * granter's account that has been granted to the grantee.
    */
-  revoke(request: MsgRevoke): Promise<MsgRevokeResponse>;
+  revoke(request: BroadcastTxReq<MsgRevoke>): Promise<DeliverTxResponse>;
 }
 export class MsgClientImpl implements Msg {
-  private readonly rpc: Rpc;
-  constructor(rpc: Rpc) {
+  private readonly rpc: TxRpc;
+  constructor(rpc: TxRpc) {
     this.rpc = rpc;
     this.grant = this.grant.bind(this);
     this.exec = this.exec.bind(this);
     this.revoke = this.revoke.bind(this);
   }
-  grant(request: MsgGrant): Promise<MsgGrantResponse> {
-    const data = MsgGrant.encode(request).finish();
-    const promise = this.rpc.request("cosmos.authz.v1beta1.Msg", "Grant", data);
-    return promise.then(data => MsgGrantResponse.decode(new BinaryReader(data)));
+  grant(request: BroadcastTxReq<MsgGrant>): Promise<DeliverTxResponse> {
+    const data = [{
+      typeUrl: MsgGrant.typeUrl,
+      value: request.message
+    }];
+    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
   }
-  exec(request: MsgExec): Promise<MsgExecResponse> {
-    const data = MsgExec.encode(request).finish();
-    const promise = this.rpc.request("cosmos.authz.v1beta1.Msg", "Exec", data);
-    return promise.then(data => MsgExecResponse.decode(new BinaryReader(data)));
+  exec(request: BroadcastTxReq<MsgExec>): Promise<DeliverTxResponse> {
+    const data = [{
+      typeUrl: MsgExec.typeUrl,
+      value: request.message
+    }];
+    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
   }
-  revoke(request: MsgRevoke): Promise<MsgRevokeResponse> {
-    const data = MsgRevoke.encode(request).finish();
-    const promise = this.rpc.request("cosmos.authz.v1beta1.Msg", "Revoke", data);
-    return promise.then(data => MsgRevokeResponse.decode(new BinaryReader(data)));
+  revoke(request: BroadcastTxReq<MsgRevoke>): Promise<DeliverTxResponse> {
+    const data = [{
+      typeUrl: MsgRevoke.typeUrl,
+      value: request.message
+    }];
+    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
   }
 }
+export const createClientImpl = (rpc: TxRpc) => {
+  return new MsgClientImpl(rpc);
+};

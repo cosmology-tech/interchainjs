@@ -11,7 +11,7 @@ import {
   TxOptions,
 } from "@ethereumjs/tx";
 import { keccak_256 } from "@noble/hashes/sha3";
-import { BaseSigner, fromHex, SigObj, toHex } from "@sign/core";
+import { BaseSigner, fromHex, SigObj, toHex } from "@cosmonauts/core";
 import Eth from "web3-eth";
 
 import { Signed, TxData } from "./types";

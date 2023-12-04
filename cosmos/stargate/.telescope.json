@@ -10,7 +10,8 @@
     "useOptionalNullable": true,
     "interfaces": {
       "enabled": false,
-      "useUnionTypes": false
+      "useGlobalDecoderRegistry": false,
+      "useUnionTypes": true
     },
     "prototypes": {
       "enableRegistryLoader": false,
@@ -67,6 +68,34 @@
       "camelCase": true,
       "enabledServices": [
         "Query"
+      ],
+      "serviceImplement": {
+        "Msg": {
+          "type": "Tx"
+        }
+      },
+      "instantOps": [
+        {
+          "className": "StargateImpl",
+          "include": {
+            "patterns": [
+              "cosmos.bank.v1beta1.send",
+              "cosmos.staking.v1beta1.delegate",
+              "cosmos.staking.v1beta1.undelegate",
+              "cosmos.distribution.v1beta1.withdrawDelegatorReward",
+              "ibc.applications.transfer.v1.transfer"
+            ]
+          },
+          "nameMapping": {
+            "Tx": {
+              "sendTokens": "cosmos.bank.v1beta1.send",
+              "delegateTokens": "cosmos.staking.v1beta1.delegate",
+              "undelegateTokens": "cosmos.staking.v1beta1.undelegate",
+              "withdrawRewards": "cosmos.distribution.v1beta1.withdrawDelegatorReward",
+              "sendIbcTokens": "ibc.applications.transfer.v1.transfer"
+            }
+          }
+        }
       ]
     }
   }

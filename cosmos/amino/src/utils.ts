@@ -1,4 +1,4 @@
-import { fromUtf8 } from "@sign/core";
+import { fromUtf8 } from "@cosmonauts/core";
 import {
   Any,
   AuthInfo,
@@ -10,8 +10,8 @@ import {
   SignDoc,
   SignerInfo,
   TxBody,
-} from "@sign/cosmos-proto";
-import { SignMode } from "@sign/cosmos-proto/src/codegen/cosmos/tx/signing/v1beta1/signing";
+} from "@cosmonauts/cosmos-proto";
+import { SignMode } from "@cosmonauts/cosmos-proto/src/codegen/cosmos/tx/signing/v1beta1/signing";
 
 import { AminoMsg, StdFee, StdSignDoc } from "./types";
 

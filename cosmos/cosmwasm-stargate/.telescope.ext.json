@@ -1,0 +1,38 @@
+{
+  "protoDirs": ["./proto"],
+  "outPath": "./src/codegen",
+  "rpcClients": {
+    "serviceImplement": {
+      "Msg": {
+        "type": "Tx"
+      }
+    },
+    "instantOps": [
+      {
+        "className": "CosmWasmImpl",
+        "include": {
+          "patterns": [
+            "cosmwasm.wasm.v1.storeCode",
+            "cosmwasm.wasm.v1.instantiateContract",
+            "cosmwasm.wasm.v1.instantiateContract2",
+            "cosmwasm.wasm.v1.updateAdmin",
+            "cosmwasm.wasm.v1.clearAdmin",
+            "cosmwasm.wasm.v1.migrateContract",
+            "cosmwasm.wasm.v1.executeContract"
+          ]
+        },
+        "nameMapping": {
+          "Tx": {
+            "upload": "cosmwasm.wasm.v1.storeCode",
+            "instantiate": "cosmwasm.wasm.v1.instantiateContract",
+            "instantiate2": "cosmwasm.wasm.v1.instantiateContract2",
+            "updateAdmin": "cosmwasm.wasm.v1.updateAdmin",
+            "clearAdmin": "cosmwasm.wasm.v1.clearAdmin",
+            "migrate": "cosmwasm.wasm.v1.migrateContract",
+            "executeMultiple": "cosmwasm.wasm.v1.executeContract"
+          }
+        }
+      }
+    ]
+  }
+}

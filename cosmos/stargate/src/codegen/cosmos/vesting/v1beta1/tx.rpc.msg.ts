@@ -1,49 +1,57 @@
-import { Rpc } from "../../../helpers";
-import { BinaryReader } from "../../../binary";
-import { MsgCreateVestingAccount, MsgCreateVestingAccountResponse, MsgCreatePermanentLockedAccount, MsgCreatePermanentLockedAccountResponse, MsgCreatePeriodicVestingAccount, MsgCreatePeriodicVestingAccountResponse } from "./tx";
+import { BroadcastTxReq, DeliverTxResponse, TxRpc } from "../../../types";
+import { MsgCreateVestingAccount, MsgCreatePermanentLockedAccount, MsgCreatePeriodicVestingAccount } from "./tx";
 /** Msg defines the bank Msg service. */
 export interface Msg {
   /**
    * CreateVestingAccount defines a method that enables creating a vesting
    * account.
    */
-  createVestingAccount(request: MsgCreateVestingAccount): Promise<MsgCreateVestingAccountResponse>;
+  createVestingAccount(request: BroadcastTxReq<MsgCreateVestingAccount>): Promise<DeliverTxResponse>;
   /**
    * CreatePermanentLockedAccount defines a method that enables creating a permanent
    * locked account.
    * 
    * Since: cosmos-sdk 0.46
    */
-  createPermanentLockedAccount(request: MsgCreatePermanentLockedAccount): Promise<MsgCreatePermanentLockedAccountResponse>;
+  createPermanentLockedAccount(request: BroadcastTxReq<MsgCreatePermanentLockedAccount>): Promise<DeliverTxResponse>;
   /**
    * CreatePeriodicVestingAccount defines a method that enables creating a
    * periodic vesting account.
    * 
    * Since: cosmos-sdk 0.46
    */
-  createPeriodicVestingAccount(request: MsgCreatePeriodicVestingAccount): Promise<MsgCreatePeriodicVestingAccountResponse>;
+  createPeriodicVestingAccount(request: BroadcastTxReq<MsgCreatePeriodicVestingAccount>): Promise<DeliverTxResponse>;
 }
 export class MsgClientImpl implements Msg {
-  private readonly rpc: Rpc;
-  constructor(rpc: Rpc) {
+  private readonly rpc: TxRpc;
+  constructor(rpc: TxRpc) {
     this.rpc = rpc;
     this.createVestingAccount = this.createVestingAccount.bind(this);
     this.createPermanentLockedAccount = this.createPermanentLockedAccount.bind(this);
     this.createPeriodicVestingAccount = this.createPeriodicVestingAccount.bind(this);
   }
-  createVestingAccount(request: MsgCreateVestingAccount): Promise<MsgCreateVestingAccountResponse> {
-    const data = MsgCreateVestingAccount.encode(request).finish();
-    const promise = this.rpc.request("cosmos.vesting.v1beta1.Msg", "CreateVestingAccount", data);
-    return promise.then(data => MsgCreateVestingAccountResponse.decode(new BinaryReader(data)));
+  createVestingAccount(request: BroadcastTxReq<MsgCreateVestingAccount>): Promise<DeliverTxResponse> {
+    const data = [{
+      typeUrl: MsgCreateVestingAccount.typeUrl,
+      value: request.message
+    }];
+    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
   }
-  createPermanentLockedAccount(request: MsgCreatePermanentLockedAccount): Promise<MsgCreatePermanentLockedAccountResponse> {
-    const data = MsgCreatePermanentLockedAccount.encode(request).finish();
-    const promise = this.rpc.request("cosmos.vesting.v1beta1.Msg", "CreatePermanentLockedAccount", data);
-    return promise.then(data => MsgCreatePermanentLockedAccountResponse.decode(new BinaryReader(data)));
+  createPermanentLockedAccount(request: BroadcastTxReq<MsgCreatePermanentLockedAccount>): Promise<DeliverTxResponse> {
+    const data = [{
+      typeUrl: MsgCreatePermanentLockedAccount.typeUrl,
+      value: request.message
+    }];
+    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
   }
-  createPeriodicVestingAccount(request: MsgCreatePeriodicVestingAccount): Promise<MsgCreatePeriodicVestingAccountResponse> {
-    const data = MsgCreatePeriodicVestingAccount.encode(request).finish();
-    const promise = this.rpc.request("cosmos.vesting.v1beta1.Msg", "CreatePeriodicVestingAccount", data);
-    return promise.then(data => MsgCreatePeriodicVestingAccountResponse.decode(new BinaryReader(data)));
+  createPeriodicVestingAccount(request: BroadcastTxReq<MsgCreatePeriodicVestingAccount>): Promise<DeliverTxResponse> {
+    const data = [{
+      typeUrl: MsgCreatePeriodicVestingAccount.typeUrl,
+      value: request.message
+    }];
+    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
   }
 }
+export const createClientImpl = (rpc: TxRpc) => {
+  return new MsgClientImpl(rpc);
+};

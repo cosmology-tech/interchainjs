@@ -11,44 +11,44 @@ WASMD_VERSION="v0.43.0"
 
 ## sources of dependencies
 cosmosProtoRepo="cosmos/cosmos-proto"
-echo "Fetching latest commit: $GIT_API/$cosmosProtoRepo/commits/main"
 cosmosProtoCommit=$(curl -s $GIT_API/$cosmosProtoRepo/commits/main | jq -r '.sha')
 if [ "$cosmosProtoCommit" = "null" ] ;then
     echo "Failed to fetch $cosmosProtoRepo latest commit, using main/master"
     cosmosProtoCommit="main"
 fi
+echo "Fetched latest commit: $GIT_API/$cosmosProtoRepo/commits/main -> $cosmosProtoCommit"
 
 gogoprotoRepo="cosmos/gogoproto"
-echo "Fetching latest commit: $GIT_API/$gogoprotoRepo/commits/main"
 gogoprotoCommit=$(curl -s $GIT_API/$gogoprotoRepo/commits/main | jq -r '.sha')
 if [ "$gogoprotoCommit" = "null" ] ;then
     echo "Failed to fetch $gogoprotoRepo latest commit, using main/master"
     gogoprotoCommit="main"
 fi
+echo "Fetched latest commit: $GIT_API/$gogoprotoRepo/commits/main -> $gogoprotoCommit"
 
 protobufRepo="protocolbuffers/protobuf"
-echo "Fetching latest commit: $GIT_API/$protobufRepo/commits/main"
 protobufCommit=$(curl -s $GIT_API/$protobufRepo/commits/main | jq -r '.sha')
 if [ "$protobufCommit" = "null" ] ;then
     echo "Failed to fetch $protobufRepo latest commit, using main/master"
     protobufCommit="main"
 fi
+echo "Fetched latest commit: $GIT_API/$protobufRepo/commits/main -> $protobufCommit"
 
 googleapisRepo="googleapis/googleapis"
-echo "Fetching latest commit: $GIT_API/$googleapisRepo/commits/master"
 googleapisCommit=$(curl -s $GIT_API/$googleapisRepo/commits/master | jq -r '.sha')
 if [ "$googleapisCommit" = "null" ] ;then
     echo "Failed to fetch $googleapisRepo latest commit, using main/master"
     googleapisCommit="master"
 fi
+echo "Fetched latest commit: $GIT_API/$googleapisRepo/commits/master -> $googleapisCommit"
 
 ics23Repo="cosmos/ics23"
-echo "Fetching latest commit: $GIT_API/$ics23Repo/commits/master"
 ics23Commit=$(curl -s $GIT_API/$ics23Repo/commits/master | jq -r '.sha')
 if [ "$ics23Commit" = "null" ] ;then
     echo "Failed to fetch $ics23Repo latest commit, using main/master"
     ics23Commit="master"
 fi
+echo "Fetched latest commit: $GIT_API/$ics23Repo/commits/master -> $ics23Commit"
 
 cosmosSdkRepo="cosmos/cosmos-sdk"
 cosmosSdkCommit="${COSMOS_SDK_VERSION}"

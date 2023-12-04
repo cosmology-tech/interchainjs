@@ -1,12 +1,13 @@
-import { HttpEndpoint } from "@sign/core";
-import { AminoConverters, AminoSigner } from "@sign/cosmos-amino";
+import { HttpEndpoint } from "@cosmonauts/core";
+import { AminoConverters, AminoSigner } from "@cosmonauts/cosmos-amino";
 import {
   CosmjsSigner,
   OfflineSigner,
   SignerOptions,
-} from "@sign/cosmos-cosmjs";
-import { Registry, Signer } from "@sign/cosmos-proto";
+} from "@cosmonauts/cosmos-cosmjs";
+import { Registry, Signer } from "@cosmonauts/cosmos-proto";
 
+import { StargateImpl } from "./codegen/service-ops";
 import { stargateAminoConverters, stargateRegistry } from "./registry";
 
 export class StargateSigner extends Signer {
@@ -23,13 +24,25 @@ export class StargateAminoSigner extends AminoSigner {
   }
 }
 
+export interface StargateCosmjsSigner extends CosmjsSigner, StargateImpl {}
+
 export class StargateCosmjsSigner extends CosmjsSigner {
-  constructor(offlineSigner: OfflineSigner, options: SignerOptions = {}) {
-    const aminoSigner = new AminoSigner(
+  constructor(
+    aminoSigner: AminoSigner,
+    offlineSigner: OfflineSigner,
+    options: SignerOptions = {}
+  ) {
+    super(aminoSigner, offlineSigner, options);
+    this.aminoSigner.registerWithAmino(
       stargateRegistry,
       stargateAminoConverters
     );
-    super(aminoSigner, offlineSigner, options);
+    const stargateImpl = new StargateImpl();
+    stargateImpl.init({
+      ...this.aminoSigner.query.abciQuery,
+      signAndBroadcast: this.signAndBroadcast,
+    });
+    Object.assign(this, stargateImpl);
   }
 
   static connectWithSigner(
@@ -37,8 +50,12 @@ export class StargateCosmjsSigner extends CosmjsSigner {
     signer: OfflineSigner,
     options: SignerOptions = {}
   ): CosmjsSigner {
-    const stargateSigner = new StargateCosmjsSigner(signer, options);
-    stargateSigner.aminoSigner.on(endpoint);
+    const aminoSigner = new AminoSigner().on(endpoint);
+    const stargateSigner = new StargateCosmjsSigner(
+      aminoSigner,
+      signer,
+      options
+    );
     return stargateSigner;
   }
 }

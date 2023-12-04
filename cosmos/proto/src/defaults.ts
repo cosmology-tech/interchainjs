@@ -1,5 +1,5 @@
+import { SigObj } from "@cosmonauts/core";
 import { sha256 } from "@noble/hashes/sha256";
-import { SigObj } from "@sign/core";
 
 import { PubKey as PubKeySecp256k1 } from "./codegen/cosmos/crypto/secp256k1/keys";
 import { SignerOptions } from "./types";

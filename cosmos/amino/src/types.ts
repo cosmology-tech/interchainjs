@@ -1,4 +1,4 @@
-import { Coin } from "@sign/cosmos-proto";
+import { Coin } from "@cosmonauts/cosmos-proto";
 
 export interface AminoConverter {
   aminoType: string;

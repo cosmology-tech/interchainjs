@@ -1,35 +1,34 @@
-import { Rpc } from "../../../helpers";
-import { BinaryReader } from "../../../binary";
-import { MsgSetWithdrawAddress, MsgSetWithdrawAddressResponse, MsgWithdrawDelegatorReward, MsgWithdrawDelegatorRewardResponse, MsgWithdrawValidatorCommission, MsgWithdrawValidatorCommissionResponse, MsgFundCommunityPool, MsgFundCommunityPoolResponse, MsgUpdateParams, MsgUpdateParamsResponse, MsgCommunityPoolSpend, MsgCommunityPoolSpendResponse } from "./tx";
+import { BroadcastTxReq, DeliverTxResponse, TxRpc } from "../../../types";
+import { MsgSetWithdrawAddress, MsgWithdrawDelegatorReward, MsgWithdrawValidatorCommission, MsgFundCommunityPool, MsgUpdateParams, MsgCommunityPoolSpend } from "./tx";
 /** Msg defines the distribution Msg service. */
 export interface Msg {
   /**
    * SetWithdrawAddress defines a method to change the withdraw address
    * for a delegator (or validator self-delegation).
    */
-  setWithdrawAddress(request: MsgSetWithdrawAddress): Promise<MsgSetWithdrawAddressResponse>;
+  setWithdrawAddress(request: BroadcastTxReq<MsgSetWithdrawAddress>): Promise<DeliverTxResponse>;
   /**
    * WithdrawDelegatorReward defines a method to withdraw rewards of delegator
    * from a single validator.
    */
-  withdrawDelegatorReward(request: MsgWithdrawDelegatorReward): Promise<MsgWithdrawDelegatorRewardResponse>;
+  withdrawDelegatorReward(request: BroadcastTxReq<MsgWithdrawDelegatorReward>): Promise<DeliverTxResponse>;
   /**
    * WithdrawValidatorCommission defines a method to withdraw the
    * full commission to the validator address.
    */
-  withdrawValidatorCommission(request: MsgWithdrawValidatorCommission): Promise<MsgWithdrawValidatorCommissionResponse>;
+  withdrawValidatorCommission(request: BroadcastTxReq<MsgWithdrawValidatorCommission>): Promise<DeliverTxResponse>;
   /**
    * FundCommunityPool defines a method to allow an account to directly
    * fund the community pool.
    */
-  fundCommunityPool(request: MsgFundCommunityPool): Promise<MsgFundCommunityPoolResponse>;
+  fundCommunityPool(request: BroadcastTxReq<MsgFundCommunityPool>): Promise<DeliverTxResponse>;
   /**
    * UpdateParams defines a governance operation for updating the x/distribution
    * module parameters. The authority is defined in the keeper.
    * 
    * Since: cosmos-sdk 0.47
    */
-  updateParams(request: MsgUpdateParams): Promise<MsgUpdateParamsResponse>;
+  updateParams(request: BroadcastTxReq<MsgUpdateParams>): Promise<DeliverTxResponse>;
   /**
    * CommunityPoolSpend defines a governance operation for sending tokens from
    * the community pool in the x/distribution module to another account, which
@@ -38,11 +37,19 @@ export interface Msg {
    * 
    * Since: cosmos-sdk 0.47
    */
-  communityPoolSpend(request: MsgCommunityPoolSpend): Promise<MsgCommunityPoolSpendResponse>;
+  communityPoolSpend(request: BroadcastTxReq<MsgCommunityPoolSpend>): Promise<DeliverTxResponse>;
+}
+/** Msg defines the distribution Msg service. */
+export interface StargateImpl {
+  /**
+   * WithdrawDelegatorReward defines a method to withdraw rewards of delegator
+   * from a single validator.
+   */
+  withdrawRewards(request: BroadcastTxReq<MsgWithdrawDelegatorReward>): Promise<DeliverTxResponse>;
 }
 export class MsgClientImpl implements Msg {
-  private readonly rpc: Rpc;
-  constructor(rpc: Rpc) {
+  private readonly rpc: TxRpc;
+  constructor(rpc: TxRpc) {
     this.rpc = rpc;
     this.setWithdrawAddress = this.setWithdrawAddress.bind(this);
     this.withdrawDelegatorReward = this.withdrawDelegatorReward.bind(this);
@@ -51,34 +58,49 @@ export class MsgClientImpl implements Msg {
     this.updateParams = this.updateParams.bind(this);
     this.communityPoolSpend = this.communityPoolSpend.bind(this);
   }
-  setWithdrawAddress(request: MsgSetWithdrawAddress): Promise<MsgSetWithdrawAddressResponse> {
-    const data = MsgSetWithdrawAddress.encode(request).finish();
-    const promise = this.rpc.request("cosmos.distribution.v1beta1.Msg", "SetWithdrawAddress", data);
-    return promise.then(data => MsgSetWithdrawAddressResponse.decode(new BinaryReader(data)));
+  setWithdrawAddress(request: BroadcastTxReq<MsgSetWithdrawAddress>): Promise<DeliverTxResponse> {
+    const data = [{
+      typeUrl: MsgSetWithdrawAddress.typeUrl,
+      value: request.message
+    }];
+    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
   }
-  withdrawDelegatorReward(request: MsgWithdrawDelegatorReward): Promise<MsgWithdrawDelegatorRewardResponse> {
-    const data = MsgWithdrawDelegatorReward.encode(request).finish();
-    const promise = this.rpc.request("cosmos.distribution.v1beta1.Msg", "WithdrawDelegatorReward", data);
-    return promise.then(data => MsgWithdrawDelegatorRewardResponse.decode(new BinaryReader(data)));
+  withdrawDelegatorReward(request: BroadcastTxReq<MsgWithdrawDelegatorReward>): Promise<DeliverTxResponse> {
+    const data = [{
+      typeUrl: MsgWithdrawDelegatorReward.typeUrl,
+      value: request.message
+    }];
+    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
   }
-  withdrawValidatorCommission(request: MsgWithdrawValidatorCommission): Promise<MsgWithdrawValidatorCommissionResponse> {
-    const data = MsgWithdrawValidatorCommission.encode(request).finish();
-    const promise = this.rpc.request("cosmos.distribution.v1beta1.Msg", "WithdrawValidatorCommission", data);
-    return promise.then(data => MsgWithdrawValidatorCommissionResponse.decode(new BinaryReader(data)));
+  withdrawValidatorCommission(request: BroadcastTxReq<MsgWithdrawValidatorCommission>): Promise<DeliverTxResponse> {
+    const data = [{
+      typeUrl: MsgWithdrawValidatorCommission.typeUrl,
+      value: request.message
+    }];
+    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
   }
-  fundCommunityPool(request: MsgFundCommunityPool): Promise<MsgFundCommunityPoolResponse> {
-    const data = MsgFundCommunityPool.encode(request).finish();
-    const promise = this.rpc.request("cosmos.distribution.v1beta1.Msg", "FundCommunityPool", data);
-    return promise.then(data => MsgFundCommunityPoolResponse.decode(new BinaryReader(data)));
+  fundCommunityPool(request: BroadcastTxReq<MsgFundCommunityPool>): Promise<DeliverTxResponse> {
+    const data = [{
+      typeUrl: MsgFundCommunityPool.typeUrl,
+      value: request.message
+    }];
+    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
   }
-  updateParams(request: MsgUpdateParams): Promise<MsgUpdateParamsResponse> {
-    const data = MsgUpdateParams.encode(request).finish();
-    const promise = this.rpc.request("cosmos.distribution.v1beta1.Msg", "UpdateParams", data);
-    return promise.then(data => MsgUpdateParamsResponse.decode(new BinaryReader(data)));
+  updateParams(request: BroadcastTxReq<MsgUpdateParams>): Promise<DeliverTxResponse> {
+    const data = [{
+      typeUrl: MsgUpdateParams.typeUrl,
+      value: request.message
+    }];
+    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
   }
-  communityPoolSpend(request: MsgCommunityPoolSpend): Promise<MsgCommunityPoolSpendResponse> {
-    const data = MsgCommunityPoolSpend.encode(request).finish();
-    const promise = this.rpc.request("cosmos.distribution.v1beta1.Msg", "CommunityPoolSpend", data);
-    return promise.then(data => MsgCommunityPoolSpendResponse.decode(new BinaryReader(data)));
+  communityPoolSpend(request: BroadcastTxReq<MsgCommunityPoolSpend>): Promise<DeliverTxResponse> {
+    const data = [{
+      typeUrl: MsgCommunityPoolSpend.typeUrl,
+      value: request.message
+    }];
+    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
   }
 }
+export const createClientImpl = (rpc: TxRpc) => {
+  return new MsgClientImpl(rpc);
+};

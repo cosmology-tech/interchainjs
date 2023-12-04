@@ -1,6 +1,6 @@
-import { Auth, defaultHdPath, Secp256k1Auth, toBase64 } from "@sign/core";
-import { StdSignDoc, StdSignDocUtils } from "@sign/cosmos-amino";
-import { CosmosDefaults, SignDoc, toBech32 } from "@sign/cosmos-proto";
+import { Auth, defaultHdPath, Secp256k1Auth, toBase64 } from "@cosmonauts/core";
+import { StdSignDoc, StdSignDocUtils } from "@cosmonauts/cosmos-amino";
+import { CosmosDefaults, SignDoc, toBech32 } from "@cosmonauts/cosmos-proto";
 
 import {
   AccountData,

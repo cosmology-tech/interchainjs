@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Bech32Address, GeneralSigned, SigObj } from "@sign/core";
+import { Bech32Address, GeneralSigned, SigObj } from "@cosmonauts/core";
 
 import {
   BaseAccount,

@@ -10,7 +10,8 @@
     "useOptionalNullable": true,
     "interfaces": {
       "enabled": false,
-      "useUnionTypes": false
+      "useGlobalDecoderRegistry": false,
+      "useUnionTypes": true
     },
     "prototypes": {
       "enableRegistryLoader": false,

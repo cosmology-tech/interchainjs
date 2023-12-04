@@ -1,4 +1,4 @@
-import { Bech32Address } from "@sign/core";
+import { Bech32Address } from "@cosmonauts/core";
 import { bech32 } from "bech32";
 
 import {

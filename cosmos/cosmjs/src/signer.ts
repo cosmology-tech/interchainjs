@@ -1,4 +1,4 @@
-import { Auth, fromBase64, HttpEndpoint, SigObj } from "@sign/core";
+import { Auth, fromBase64, HttpEndpoint, SigObj } from "@cosmonauts/core";
 import {
   AminoSigner,
   EncodeObjectUtils,
@@ -6,7 +6,7 @@ import {
   StdFeeUtils,
   StdSignDoc,
   StdSignDocUtils,
-} from "@sign/cosmos-amino";
+} from "@cosmonauts/cosmos-amino";
 import {
   Any,
   AuthInfo,
@@ -20,8 +20,8 @@ import {
   SignerInfo,
   TxBody,
   TxRaw,
-} from "@sign/cosmos-proto";
-import { SignMode } from "@sign/cosmos-proto/src/codegen/cosmos/tx/signing/v1beta1/signing";
+} from "@cosmonauts/cosmos-proto";
+import { SignMode } from "@cosmonauts/cosmos-proto/src/codegen/cosmos/tx/signing/v1beta1/signing";
 
 import {
   AccountData,
@@ -164,12 +164,12 @@ export class CosmjsSigner {
       : this.signAmino(signerAddress, messages, fee, memo, signerData);
   }
 
-  private async signWithAutoFee(
+  private signWithAutoFee = async (
     signerAddress: string,
     messages: EncodeObject[],
     fee: StdFee | "auto" | number,
     memo = ""
-  ): Promise<TxRaw> {
+  ): Promise<TxRaw> => {
     let usedFee: StdFee;
     if (fee == "auto" || typeof fee === "number") {
       await this.initAuth(signerAddress);
@@ -183,7 +183,7 @@ export class CosmjsSigner {
     }
     const txRaw = await this.sign(signerAddress, messages, usedFee, memo);
     return txRaw;
-  }
+  };
 
   async simulate(
     signerAddress: string,
@@ -297,12 +297,12 @@ export class CosmjsSigner {
     );
   }
 
-  async signAndBroadcast(
+  signAndBroadcast = async (
     signerAddress: string,
     messages: EncodeObject[],
     fee: StdFee | "auto" | number,
     memo = ""
-  ): Promise<DeliverTxResponse> {
+  ): Promise<DeliverTxResponse> => {
     const txRaw = await this.signWithAutoFee(
       signerAddress,
       messages,
@@ -315,7 +315,7 @@ export class CosmjsSigner {
       this.broadcastTimeoutMs,
       this.broadcastPollIntervalMs
     );
-  }
+  };
 
   private async signDirect(
     signerAddress: string,

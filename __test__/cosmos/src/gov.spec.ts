@@ -1,7 +1,7 @@
-import { toBase64, toUtf8 } from "@sign/core";
-import { DeliverTxResponse } from "@sign/cosmos-cosmjs";
-import { Message } from "@sign/cosmos-proto";
-import { MsgSubmitProposal, MsgVote } from "@sign/cosmos-stargate";
+import { toBase64, toUtf8 } from "@cosmonauts/core";
+import { DeliverTxResponse } from "@cosmonauts/cosmos-cosmjs";
+import { Message } from "@cosmonauts/cosmos-proto";
+import { MsgSubmitProposal, MsgVote } from "@cosmonauts/cosmos-stargate";
 
 import { TextProposal, VoteOption } from "../codegen/cosmos/gov/v1beta1/gov";
 import {

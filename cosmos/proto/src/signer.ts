@@ -1,4 +1,9 @@
-import { Auth, BaseSigner, Bech32Address, HttpEndpoint } from "@sign/core";
+import {
+  Auth,
+  BaseSigner,
+  Bech32Address,
+  HttpEndpoint,
+} from "@cosmonauts/core";
 
 import { SignMode } from "./codegen/cosmos/tx/signing/v1beta1/signing";
 import {

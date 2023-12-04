@@ -1,35 +1,34 @@
-import { Rpc } from "../../../../helpers";
-import { BinaryReader } from "../../../../binary";
-import { MsgChannelOpenInit, MsgChannelOpenInitResponse, MsgChannelOpenTry, MsgChannelOpenTryResponse, MsgChannelOpenAck, MsgChannelOpenAckResponse, MsgChannelOpenConfirm, MsgChannelOpenConfirmResponse, MsgChannelCloseInit, MsgChannelCloseInitResponse, MsgChannelCloseConfirm, MsgChannelCloseConfirmResponse, MsgRecvPacket, MsgRecvPacketResponse, MsgTimeout, MsgTimeoutResponse, MsgTimeoutOnClose, MsgTimeoutOnCloseResponse, MsgAcknowledgement, MsgAcknowledgementResponse } from "./tx";
+import { BroadcastTxReq, DeliverTxResponse, TxRpc } from "../../../../types";
+import { MsgChannelOpenInit, MsgChannelOpenTry, MsgChannelOpenAck, MsgChannelOpenConfirm, MsgChannelCloseInit, MsgChannelCloseConfirm, MsgRecvPacket, MsgTimeout, MsgTimeoutOnClose, MsgAcknowledgement } from "./tx";
 /** Msg defines the ibc/channel Msg service. */
 export interface Msg {
   /** ChannelOpenInit defines a rpc handler method for MsgChannelOpenInit. */
-  channelOpenInit(request: MsgChannelOpenInit): Promise<MsgChannelOpenInitResponse>;
+  channelOpenInit(request: BroadcastTxReq<MsgChannelOpenInit>): Promise<DeliverTxResponse>;
   /** ChannelOpenTry defines a rpc handler method for MsgChannelOpenTry. */
-  channelOpenTry(request: MsgChannelOpenTry): Promise<MsgChannelOpenTryResponse>;
+  channelOpenTry(request: BroadcastTxReq<MsgChannelOpenTry>): Promise<DeliverTxResponse>;
   /** ChannelOpenAck defines a rpc handler method for MsgChannelOpenAck. */
-  channelOpenAck(request: MsgChannelOpenAck): Promise<MsgChannelOpenAckResponse>;
+  channelOpenAck(request: BroadcastTxReq<MsgChannelOpenAck>): Promise<DeliverTxResponse>;
   /** ChannelOpenConfirm defines a rpc handler method for MsgChannelOpenConfirm. */
-  channelOpenConfirm(request: MsgChannelOpenConfirm): Promise<MsgChannelOpenConfirmResponse>;
+  channelOpenConfirm(request: BroadcastTxReq<MsgChannelOpenConfirm>): Promise<DeliverTxResponse>;
   /** ChannelCloseInit defines a rpc handler method for MsgChannelCloseInit. */
-  channelCloseInit(request: MsgChannelCloseInit): Promise<MsgChannelCloseInitResponse>;
+  channelCloseInit(request: BroadcastTxReq<MsgChannelCloseInit>): Promise<DeliverTxResponse>;
   /**
    * ChannelCloseConfirm defines a rpc handler method for
    * MsgChannelCloseConfirm.
    */
-  channelCloseConfirm(request: MsgChannelCloseConfirm): Promise<MsgChannelCloseConfirmResponse>;
+  channelCloseConfirm(request: BroadcastTxReq<MsgChannelCloseConfirm>): Promise<DeliverTxResponse>;
   /** RecvPacket defines a rpc handler method for MsgRecvPacket. */
-  recvPacket(request: MsgRecvPacket): Promise<MsgRecvPacketResponse>;
+  recvPacket(request: BroadcastTxReq<MsgRecvPacket>): Promise<DeliverTxResponse>;
   /** Timeout defines a rpc handler method for MsgTimeout. */
-  timeout(request: MsgTimeout): Promise<MsgTimeoutResponse>;
+  timeout(request: BroadcastTxReq<MsgTimeout>): Promise<DeliverTxResponse>;
   /** TimeoutOnClose defines a rpc handler method for MsgTimeoutOnClose. */
-  timeoutOnClose(request: MsgTimeoutOnClose): Promise<MsgTimeoutOnCloseResponse>;
+  timeoutOnClose(request: BroadcastTxReq<MsgTimeoutOnClose>): Promise<DeliverTxResponse>;
   /** Acknowledgement defines a rpc handler method for MsgAcknowledgement. */
-  acknowledgement(request: MsgAcknowledgement): Promise<MsgAcknowledgementResponse>;
+  acknowledgement(request: BroadcastTxReq<MsgAcknowledgement>): Promise<DeliverTxResponse>;
 }
 export class MsgClientImpl implements Msg {
-  private readonly rpc: Rpc;
-  constructor(rpc: Rpc) {
+  private readonly rpc: TxRpc;
+  constructor(rpc: TxRpc) {
     this.rpc = rpc;
     this.channelOpenInit = this.channelOpenInit.bind(this);
     this.channelOpenTry = this.channelOpenTry.bind(this);
@@ -42,54 +41,77 @@ export class MsgClientImpl implements Msg {
     this.timeoutOnClose = this.timeoutOnClose.bind(this);
     this.acknowledgement = this.acknowledgement.bind(this);
   }
-  channelOpenInit(request: MsgChannelOpenInit): Promise<MsgChannelOpenInitResponse> {
-    const data = MsgChannelOpenInit.encode(request).finish();
-    const promise = this.rpc.request("ibc.core.channel.v1.Msg", "ChannelOpenInit", data);
-    return promise.then(data => MsgChannelOpenInitResponse.decode(new BinaryReader(data)));
+  channelOpenInit(request: BroadcastTxReq<MsgChannelOpenInit>): Promise<DeliverTxResponse> {
+    const data = [{
+      typeUrl: MsgChannelOpenInit.typeUrl,
+      value: request.message
+    }];
+    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
   }
-  channelOpenTry(request: MsgChannelOpenTry): Promise<MsgChannelOpenTryResponse> {
-    const data = MsgChannelOpenTry.encode(request).finish();
-    const promise = this.rpc.request("ibc.core.channel.v1.Msg", "ChannelOpenTry", data);
-    return promise.then(data => MsgChannelOpenTryResponse.decode(new BinaryReader(data)));
+  channelOpenTry(request: BroadcastTxReq<MsgChannelOpenTry>): Promise<DeliverTxResponse> {
+    const data = [{
+      typeUrl: MsgChannelOpenTry.typeUrl,
+      value: request.message
+    }];
+    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
   }
-  channelOpenAck(request: MsgChannelOpenAck): Promise<MsgChannelOpenAckResponse> {
-    const data = MsgChannelOpenAck.encode(request).finish();
-    const promise = this.rpc.request("ibc.core.channel.v1.Msg", "ChannelOpenAck", data);
-    return promise.then(data => MsgChannelOpenAckResponse.decode(new BinaryReader(data)));
+  channelOpenAck(request: BroadcastTxReq<MsgChannelOpenAck>): Promise<DeliverTxResponse> {
+    const data = [{
+      typeUrl: MsgChannelOpenAck.typeUrl,
+      value: request.message
+    }];
+    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
   }
-  channelOpenConfirm(request: MsgChannelOpenConfirm): Promise<MsgChannelOpenConfirmResponse> {
-    const data = MsgChannelOpenConfirm.encode(request).finish();
-    const promise = this.rpc.request("ibc.core.channel.v1.Msg", "ChannelOpenConfirm", data);
-    return promise.then(data => MsgChannelOpenConfirmResponse.decode(new BinaryReader(data)));
+  channelOpenConfirm(request: BroadcastTxReq<MsgChannelOpenConfirm>): Promise<DeliverTxResponse> {
+    const data = [{
+      typeUrl: MsgChannelOpenConfirm.typeUrl,
+      value: request.message
+    }];
+    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
   }
-  channelCloseInit(request: MsgChannelCloseInit): Promise<MsgChannelCloseInitResponse> {
-    const data = MsgChannelCloseInit.encode(request).finish();
-    const promise = this.rpc.request("ibc.core.channel.v1.Msg", "ChannelCloseInit", data);
-    return promise.then(data => MsgChannelCloseInitResponse.decode(new BinaryReader(data)));
+  channelCloseInit(request: BroadcastTxReq<MsgChannelCloseInit>): Promise<DeliverTxResponse> {
+    const data = [{
+      typeUrl: MsgChannelCloseInit.typeUrl,
+      value: request.message
+    }];
+    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
   }
-  channelCloseConfirm(request: MsgChannelCloseConfirm): Promise<MsgChannelCloseConfirmResponse> {
-    const data = MsgChannelCloseConfirm.encode(request).finish();
-    const promise = this.rpc.request("ibc.core.channel.v1.Msg", "ChannelCloseConfirm", data);
-    return promise.then(data => MsgChannelCloseConfirmResponse.decode(new BinaryReader(data)));
+  channelCloseConfirm(request: BroadcastTxReq<MsgChannelCloseConfirm>): Promise<DeliverTxResponse> {
+    const data = [{
+      typeUrl: MsgChannelCloseConfirm.typeUrl,
+      value: request.message
+    }];
+    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
   }
-  recvPacket(request: MsgRecvPacket): Promise<MsgRecvPacketResponse> {
-    const data = MsgRecvPacket.encode(request).finish();
-    const promise = this.rpc.request("ibc.core.channel.v1.Msg", "RecvPacket", data);
-    return promise.then(data => MsgRecvPacketResponse.decode(new BinaryReader(data)));
+  recvPacket(request: BroadcastTxReq<MsgRecvPacket>): Promise<DeliverTxResponse> {
+    const data = [{
+      typeUrl: MsgRecvPacket.typeUrl,
+      value: request.message
+    }];
+    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
   }
-  timeout(request: MsgTimeout): Promise<MsgTimeoutResponse> {
-    const data = MsgTimeout.encode(request).finish();
-    const promise = this.rpc.request("ibc.core.channel.v1.Msg", "Timeout", data);
-    return promise.then(data => MsgTimeoutResponse.decode(new BinaryReader(data)));
+  timeout(request: BroadcastTxReq<MsgTimeout>): Promise<DeliverTxResponse> {
+    const data = [{
+      typeUrl: MsgTimeout.typeUrl,
+      value: request.message
+    }];
+    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
   }
-  timeoutOnClose(request: MsgTimeoutOnClose): Promise<MsgTimeoutOnCloseResponse> {
-    const data = MsgTimeoutOnClose.encode(request).finish();
-    const promise = this.rpc.request("ibc.core.channel.v1.Msg", "TimeoutOnClose", data);
-    return promise.then(data => MsgTimeoutOnCloseResponse.decode(new BinaryReader(data)));
+  timeoutOnClose(request: BroadcastTxReq<MsgTimeoutOnClose>): Promise<DeliverTxResponse> {
+    const data = [{
+      typeUrl: MsgTimeoutOnClose.typeUrl,
+      value: request.message
+    }];
+    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
   }
-  acknowledgement(request: MsgAcknowledgement): Promise<MsgAcknowledgementResponse> {
-    const data = MsgAcknowledgement.encode(request).finish();
-    const promise = this.rpc.request("ibc.core.channel.v1.Msg", "Acknowledgement", data);
-    return promise.then(data => MsgAcknowledgementResponse.decode(new BinaryReader(data)));
+  acknowledgement(request: BroadcastTxReq<MsgAcknowledgement>): Promise<DeliverTxResponse> {
+    const data = [{
+      typeUrl: MsgAcknowledgement.typeUrl,
+      value: request.message
+    }];
+    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
   }
 }
+export const createClientImpl = (rpc: TxRpc) => {
+  return new MsgClientImpl(rpc);
+};

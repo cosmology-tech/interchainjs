@@ -1,15 +1,15 @@
-import { HttpEndpoint } from "@sign/core";
-import { AminoConverters, AminoSigner } from "@sign/cosmos-amino";
+import { HttpEndpoint } from "@cosmonauts/core";
+import { AminoConverters, AminoSigner } from "@cosmonauts/cosmos-amino";
 import {
   CosmjsSigner,
   OfflineSigner,
   SignerOptions,
-} from "@sign/cosmos-cosmjs";
-import { Registry, Signer } from "@sign/cosmos-proto";
+} from "@cosmonauts/cosmos-cosmjs";
+import { Registry, Signer } from "@cosmonauts/cosmos-proto";
 import {
   stargateAminoConverters,
   stargateRegistry,
-} from "@sign/cosmos-stargate";
+} from "@cosmonauts/cosmos-stargate";
 
 import { cosmwasmAminoConverters, cosmwasmRegistry } from "./registry";
 
@@ -31,15 +31,22 @@ export class CosmWasmAminoSigner extends AminoSigner {
 }
 
 export class CosmWasmCosmjsSigner extends CosmjsSigner {
-  constructor(offlineSigner: OfflineSigner, options: SignerOptions = {}) {
-    const aminoSigner = new AminoSigner(
-      [...cosmwasmRegistry, ...stargateRegistry],
-      {
-        ...cosmwasmAminoConverters,
-        ...stargateAminoConverters,
-      }
-    );
+  constructor(
+    aminoSigner: AminoSigner,
+    offlineSigner: OfflineSigner,
+    options: SignerOptions = {}
+  ) {
     super(aminoSigner, offlineSigner, options);
+    this.aminoSigner.registerWithAmino(
+      cosmwasmRegistry,
+      cosmwasmAminoConverters
+    );
+    const stargateImpl = new CosmWasmImpl();
+    stargateImpl.init({
+      ...this.aminoSigner.query.abciQuery,
+      signAndBroadcast: this.signAndBroadcast,
+    });
+    Object.assign(this, stargateImpl);
   }
 
   static connectWithSigner(

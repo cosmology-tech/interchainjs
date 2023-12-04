@@ -1,6 +1,6 @@
-import { Bech32Address, HdPath } from "@sign/core";
-import { AminoConverters, StdSignDoc } from "@sign/cosmos-amino";
-import { GasPrice, Registry, SignDoc } from "@sign/cosmos-proto";
+import { Bech32Address, HdPath } from "@cosmonauts/core";
+import { AminoConverters, StdSignDoc } from "@cosmonauts/cosmos-amino";
+import { GasPrice, Registry, SignDoc } from "@cosmonauts/cosmos-proto";
 
 export interface SequenceResponse {
   accountNumber: bigint;

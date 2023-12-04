@@ -1,4 +1,4 @@
-import { fromBase64, HttpEndpoint, toBase64, toHex } from "@sign/core";
+import { fromBase64, HttpEndpoint, toBase64, toHex } from "@cosmonauts/core";
 
 import { AbciQueryRpc, BroadcastRpc } from "./types";
 import { randomId } from "./utils/random";

@@ -19,7 +19,7 @@
     "README.md"
   ],
   "dependencies": {
-    "@sign/core": "^1.0.0",
-    "@sign/cosmos-proto": "^1.0.0"
+    "@cosmonauts/core": "^1.0.0",
+    "@cosmonauts/cosmos-proto": "^1.0.0"
   }
 }

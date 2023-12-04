@@ -10,7 +10,7 @@
   "scripts": {
     "build": "rm -rf dist && tsc",
     "proto:download": "rm -rf ./proto && ./scripts/download-proto.sh",
-    "proto:codegen": "rm -rf ./src/codegen && npx telescope transpile --config ../../.telescope.json",
+    "proto:codegen": "rm -rf ./src/codegen && npx telescope transpile --config ../../.telescope.json --config ./.telescope.ext.json",
     "proto:update": "yarn proto:download && yarn proto:codegen",
     "clear": "rimraf dist"
   },
@@ -22,13 +22,13 @@
     "README.md"
   ],
   "dependencies": {
-    "@sign/cosmos-stargate": "^1.0.0"
+    "@cosmonauts/cosmos-stargate": "^1.0.0"
   },
   "peerDependencies": {
-    "@sign/core": "^1.0.0",
-    "@sign/cosmos-amino": "^1.0.0",
-    "@sign/cosmos-cosmjs": "^1.0.0",
-    "@sign/cosmos-proto": "^1.0.0"
+    "@cosmonauts/core": "^1.0.0",
+    "@cosmonauts/cosmos-amino": "^1.0.0",
+    "@cosmonauts/cosmos-cosmjs": "^1.0.0",
+    "@cosmonauts/cosmos-proto": "^1.0.0"
   },
   "devDependencies": {
     "@cosmology/telescope": "^1.0.1",

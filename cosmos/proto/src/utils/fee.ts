@@ -1,4 +1,4 @@
-import { Decimal } from "@sign/core";
+import { Decimal } from "@cosmonauts/core";
 
 import { Fee } from "../codegen/cosmos/tx/v1beta1/tx";
 import feeTokensJson from "../config/fee-tokens.json";

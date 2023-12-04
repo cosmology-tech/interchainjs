@@ -1,44 +1,54 @@
-import { Rpc } from "../../../../helpers";
-import { BinaryReader } from "../../../../binary";
-import { MsgCreateClient, MsgCreateClientResponse, MsgUpdateClient, MsgUpdateClientResponse, MsgUpgradeClient, MsgUpgradeClientResponse, MsgSubmitMisbehaviour, MsgSubmitMisbehaviourResponse } from "./tx";
+import { BroadcastTxReq, DeliverTxResponse, TxRpc } from "../../../../types";
+import { MsgCreateClient, MsgUpdateClient, MsgUpgradeClient, MsgSubmitMisbehaviour } from "./tx";
 /** Msg defines the ibc/client Msg service. */
 export interface Msg {
   /** CreateClient defines a rpc handler method for MsgCreateClient. */
-  createClient(request: MsgCreateClient): Promise<MsgCreateClientResponse>;
+  createClient(request: BroadcastTxReq<MsgCreateClient>): Promise<DeliverTxResponse>;
   /** UpdateClient defines a rpc handler method for MsgUpdateClient. */
-  updateClient(request: MsgUpdateClient): Promise<MsgUpdateClientResponse>;
+  updateClient(request: BroadcastTxReq<MsgUpdateClient>): Promise<DeliverTxResponse>;
   /** UpgradeClient defines a rpc handler method for MsgUpgradeClient. */
-  upgradeClient(request: MsgUpgradeClient): Promise<MsgUpgradeClientResponse>;
+  upgradeClient(request: BroadcastTxReq<MsgUpgradeClient>): Promise<DeliverTxResponse>;
   /** SubmitMisbehaviour defines a rpc handler method for MsgSubmitMisbehaviour. */
-  submitMisbehaviour(request: MsgSubmitMisbehaviour): Promise<MsgSubmitMisbehaviourResponse>;
+  submitMisbehaviour(request: BroadcastTxReq<MsgSubmitMisbehaviour>): Promise<DeliverTxResponse>;
 }
 export class MsgClientImpl implements Msg {
-  private readonly rpc: Rpc;
-  constructor(rpc: Rpc) {
+  private readonly rpc: TxRpc;
+  constructor(rpc: TxRpc) {
     this.rpc = rpc;
     this.createClient = this.createClient.bind(this);
     this.updateClient = this.updateClient.bind(this);
     this.upgradeClient = this.upgradeClient.bind(this);
     this.submitMisbehaviour = this.submitMisbehaviour.bind(this);
   }
-  createClient(request: MsgCreateClient): Promise<MsgCreateClientResponse> {
-    const data = MsgCreateClient.encode(request).finish();
-    const promise = this.rpc.request("ibc.core.client.v1.Msg", "CreateClient", data);
-    return promise.then(data => MsgCreateClientResponse.decode(new BinaryReader(data)));
+  createClient(request: BroadcastTxReq<MsgCreateClient>): Promise<DeliverTxResponse> {
+    const data = [{
+      typeUrl: MsgCreateClient.typeUrl,
+      value: request.message
+    }];
+    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
   }
-  updateClient(request: MsgUpdateClient): Promise<MsgUpdateClientResponse> {
-    const data = MsgUpdateClient.encode(request).finish();
-    const promise = this.rpc.request("ibc.core.client.v1.Msg", "UpdateClient", data);
-    return promise.then(data => MsgUpdateClientResponse.decode(new BinaryReader(data)));
+  updateClient(request: BroadcastTxReq<MsgUpdateClient>): Promise<DeliverTxResponse> {
+    const data = [{
+      typeUrl: MsgUpdateClient.typeUrl,
+      value: request.message
+    }];
+    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
   }
-  upgradeClient(request: MsgUpgradeClient): Promise<MsgUpgradeClientResponse> {
-    const data = MsgUpgradeClient.encode(request).finish();
-    const promise = this.rpc.request("ibc.core.client.v1.Msg", "UpgradeClient", data);
-    return promise.then(data => MsgUpgradeClientResponse.decode(new BinaryReader(data)));
+  upgradeClient(request: BroadcastTxReq<MsgUpgradeClient>): Promise<DeliverTxResponse> {
+    const data = [{
+      typeUrl: MsgUpgradeClient.typeUrl,
+      value: request.message
+    }];
+    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
   }
-  submitMisbehaviour(request: MsgSubmitMisbehaviour): Promise<MsgSubmitMisbehaviourResponse> {
-    const data = MsgSubmitMisbehaviour.encode(request).finish();
-    const promise = this.rpc.request("ibc.core.client.v1.Msg", "SubmitMisbehaviour", data);
-    return promise.then(data => MsgSubmitMisbehaviourResponse.decode(new BinaryReader(data)));
+  submitMisbehaviour(request: BroadcastTxReq<MsgSubmitMisbehaviour>): Promise<DeliverTxResponse> {
+    const data = [{
+      typeUrl: MsgSubmitMisbehaviour.typeUrl,
+      value: request.message
+    }];
+    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
   }
 }
+export const createClientImpl = (rpc: TxRpc) => {
+  return new MsgClientImpl(rpc);
+};

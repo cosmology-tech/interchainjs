@@ -11,7 +11,7 @@ import {
   FeeMarketEIP1559Transaction,
   LegacyTransaction,
 } from "@ethereumjs/tx";
-import { fromHex, fromUtf8, Secp256k1Auth, toHex } from "@sign/core";
+import { fromHex, fromUtf8, Secp256k1Auth, toHex } from "@cosmonauts/core";
 import EthCrypto from "eth-crypto";
 
 import { Signer } from "../src";

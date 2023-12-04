@@ -1,94 +1,93 @@
-import { Rpc } from "../../../helpers";
-import { BinaryReader } from "../../../binary";
-import { MsgStoreCode, MsgStoreCodeResponse, MsgInstantiateContract, MsgInstantiateContractResponse, MsgInstantiateContract2, MsgInstantiateContract2Response, MsgExecuteContract, MsgExecuteContractResponse, MsgMigrateContract, MsgMigrateContractResponse, MsgUpdateAdmin, MsgUpdateAdminResponse, MsgClearAdmin, MsgClearAdminResponse, MsgUpdateInstantiateConfig, MsgUpdateInstantiateConfigResponse, MsgUpdateParams, MsgUpdateParamsResponse, MsgSudoContract, MsgSudoContractResponse, MsgPinCodes, MsgPinCodesResponse, MsgUnpinCodes, MsgUnpinCodesResponse, MsgStoreAndInstantiateContract, MsgStoreAndInstantiateContractResponse, MsgRemoveCodeUploadParamsAddresses, MsgRemoveCodeUploadParamsAddressesResponse, MsgAddCodeUploadParamsAddresses, MsgAddCodeUploadParamsAddressesResponse, MsgStoreAndMigrateContract, MsgStoreAndMigrateContractResponse, MsgUpdateContractLabel, MsgUpdateContractLabelResponse } from "./tx";
+import { BroadcastTxReq, DeliverTxResponse, TxRpc } from "../../../types";
+import { MsgStoreCode, MsgInstantiateContract, MsgInstantiateContract2, MsgExecuteContract, MsgMigrateContract, MsgUpdateAdmin, MsgClearAdmin, MsgUpdateInstantiateConfig, MsgUpdateParams, MsgSudoContract, MsgPinCodes, MsgUnpinCodes, MsgStoreAndInstantiateContract, MsgRemoveCodeUploadParamsAddresses, MsgAddCodeUploadParamsAddresses, MsgStoreAndMigrateContract, MsgUpdateContractLabel } from "./tx";
 /** Msg defines the wasm Msg service. */
 export interface Msg {
   /** StoreCode to submit Wasm code to the system */
-  storeCode(request: MsgStoreCode): Promise<MsgStoreCodeResponse>;
+  storeCode(request: BroadcastTxReq<MsgStoreCode>): Promise<DeliverTxResponse>;
   /**
    * InstantiateContract creates a new smart contract instance for the given
    *  code id.
    */
-  instantiateContract(request: MsgInstantiateContract): Promise<MsgInstantiateContractResponse>;
+  instantiateContract(request: BroadcastTxReq<MsgInstantiateContract>): Promise<DeliverTxResponse>;
   /**
    * InstantiateContract2 creates a new smart contract instance for the given
    *  code id with a predictable address
    */
-  instantiateContract2(request: MsgInstantiateContract2): Promise<MsgInstantiateContract2Response>;
+  instantiateContract2(request: BroadcastTxReq<MsgInstantiateContract2>): Promise<DeliverTxResponse>;
   /** Execute submits the given message data to a smart contract */
-  executeContract(request: MsgExecuteContract): Promise<MsgExecuteContractResponse>;
+  executeContract(request: BroadcastTxReq<MsgExecuteContract>): Promise<DeliverTxResponse>;
   /** Migrate runs a code upgrade/ downgrade for a smart contract */
-  migrateContract(request: MsgMigrateContract): Promise<MsgMigrateContractResponse>;
+  migrateContract(request: BroadcastTxReq<MsgMigrateContract>): Promise<DeliverTxResponse>;
   /** UpdateAdmin sets a new admin for a smart contract */
-  updateAdmin(request: MsgUpdateAdmin): Promise<MsgUpdateAdminResponse>;
+  updateAdmin(request: BroadcastTxReq<MsgUpdateAdmin>): Promise<DeliverTxResponse>;
   /** ClearAdmin removes any admin stored for a smart contract */
-  clearAdmin(request: MsgClearAdmin): Promise<MsgClearAdminResponse>;
+  clearAdmin(request: BroadcastTxReq<MsgClearAdmin>): Promise<DeliverTxResponse>;
   /** UpdateInstantiateConfig updates instantiate config for a smart contract */
-  updateInstantiateConfig(request: MsgUpdateInstantiateConfig): Promise<MsgUpdateInstantiateConfigResponse>;
+  updateInstantiateConfig(request: BroadcastTxReq<MsgUpdateInstantiateConfig>): Promise<DeliverTxResponse>;
   /**
    * UpdateParams defines a governance operation for updating the x/wasm
    * module parameters. The authority is defined in the keeper.
    * 
    * Since: 0.40
    */
-  updateParams(request: MsgUpdateParams): Promise<MsgUpdateParamsResponse>;
+  updateParams(request: BroadcastTxReq<MsgUpdateParams>): Promise<DeliverTxResponse>;
   /**
    * SudoContract defines a governance operation for calling sudo
    * on a contract. The authority is defined in the keeper.
    * 
    * Since: 0.40
    */
-  sudoContract(request: MsgSudoContract): Promise<MsgSudoContractResponse>;
+  sudoContract(request: BroadcastTxReq<MsgSudoContract>): Promise<DeliverTxResponse>;
   /**
    * PinCodes defines a governance operation for pinning a set of
    * code ids in the wasmvm cache. The authority is defined in the keeper.
    * 
    * Since: 0.40
    */
-  pinCodes(request: MsgPinCodes): Promise<MsgPinCodesResponse>;
+  pinCodes(request: BroadcastTxReq<MsgPinCodes>): Promise<DeliverTxResponse>;
   /**
    * UnpinCodes defines a governance operation for unpinning a set of
    * code ids in the wasmvm cache. The authority is defined in the keeper.
    * 
    * Since: 0.40
    */
-  unpinCodes(request: MsgUnpinCodes): Promise<MsgUnpinCodesResponse>;
+  unpinCodes(request: BroadcastTxReq<MsgUnpinCodes>): Promise<DeliverTxResponse>;
   /**
    * StoreAndInstantiateContract defines a governance operation for storing
    * and instantiating the contract. The authority is defined in the keeper.
    * 
    * Since: 0.40
    */
-  storeAndInstantiateContract(request: MsgStoreAndInstantiateContract): Promise<MsgStoreAndInstantiateContractResponse>;
+  storeAndInstantiateContract(request: BroadcastTxReq<MsgStoreAndInstantiateContract>): Promise<DeliverTxResponse>;
   /**
    * RemoveCodeUploadParamsAddresses defines a governance operation for
    * removing addresses from code upload params.
    * The authority is defined in the keeper.
    */
-  removeCodeUploadParamsAddresses(request: MsgRemoveCodeUploadParamsAddresses): Promise<MsgRemoveCodeUploadParamsAddressesResponse>;
+  removeCodeUploadParamsAddresses(request: BroadcastTxReq<MsgRemoveCodeUploadParamsAddresses>): Promise<DeliverTxResponse>;
   /**
    * AddCodeUploadParamsAddresses defines a governance operation for
    * adding addresses to code upload params.
    * The authority is defined in the keeper.
    */
-  addCodeUploadParamsAddresses(request: MsgAddCodeUploadParamsAddresses): Promise<MsgAddCodeUploadParamsAddressesResponse>;
+  addCodeUploadParamsAddresses(request: BroadcastTxReq<MsgAddCodeUploadParamsAddresses>): Promise<DeliverTxResponse>;
   /**
    * StoreAndMigrateContract defines a governance operation for storing
    * and migrating the contract. The authority is defined in the keeper.
    * 
    * Since: 0.42
    */
-  storeAndMigrateContract(request: MsgStoreAndMigrateContract): Promise<MsgStoreAndMigrateContractResponse>;
+  storeAndMigrateContract(request: BroadcastTxReq<MsgStoreAndMigrateContract>): Promise<DeliverTxResponse>;
   /**
    * UpdateContractLabel sets a new label for a smart contract
    * 
    * Since: 0.43
    */
-  updateContractLabel(request: MsgUpdateContractLabel): Promise<MsgUpdateContractLabelResponse>;
+  updateContractLabel(request: BroadcastTxReq<MsgUpdateContractLabel>): Promise<DeliverTxResponse>;
 }
 export class MsgClientImpl implements Msg {
-  private readonly rpc: Rpc;
-  constructor(rpc: Rpc) {
+  private readonly rpc: TxRpc;
+  constructor(rpc: TxRpc) {
     this.rpc = rpc;
     this.storeCode = this.storeCode.bind(this);
     this.instantiateContract = this.instantiateContract.bind(this);
@@ -108,89 +107,126 @@ export class MsgClientImpl implements Msg {
     this.storeAndMigrateContract = this.storeAndMigrateContract.bind(this);
     this.updateContractLabel = this.updateContractLabel.bind(this);
   }
-  storeCode(request: MsgStoreCode): Promise<MsgStoreCodeResponse> {
-    const data = MsgStoreCode.encode(request).finish();
-    const promise = this.rpc.request("cosmwasm.wasm.v1.Msg", "StoreCode", data);
-    return promise.then(data => MsgStoreCodeResponse.decode(new BinaryReader(data)));
+  storeCode(request: BroadcastTxReq<MsgStoreCode>): Promise<DeliverTxResponse> {
+    const data = [{
+      typeUrl: MsgStoreCode.typeUrl,
+      value: request.message
+    }];
+    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
   }
-  instantiateContract(request: MsgInstantiateContract): Promise<MsgInstantiateContractResponse> {
-    const data = MsgInstantiateContract.encode(request).finish();
-    const promise = this.rpc.request("cosmwasm.wasm.v1.Msg", "InstantiateContract", data);
-    return promise.then(data => MsgInstantiateContractResponse.decode(new BinaryReader(data)));
+  instantiateContract(request: BroadcastTxReq<MsgInstantiateContract>): Promise<DeliverTxResponse> {
+    const data = [{
+      typeUrl: MsgInstantiateContract.typeUrl,
+      value: request.message
+    }];
+    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
   }
-  instantiateContract2(request: MsgInstantiateContract2): Promise<MsgInstantiateContract2Response> {
-    const data = MsgInstantiateContract2.encode(request).finish();
-    const promise = this.rpc.request("cosmwasm.wasm.v1.Msg", "InstantiateContract2", data);
-    return promise.then(data => MsgInstantiateContract2Response.decode(new BinaryReader(data)));
+  instantiateContract2(request: BroadcastTxReq<MsgInstantiateContract2>): Promise<DeliverTxResponse> {
+    const data = [{
+      typeUrl: MsgInstantiateContract2.typeUrl,
+      value: request.message
+    }];
+    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
   }
-  executeContract(request: MsgExecuteContract): Promise<MsgExecuteContractResponse> {
-    const data = MsgExecuteContract.encode(request).finish();
-    const promise = this.rpc.request("cosmwasm.wasm.v1.Msg", "ExecuteContract", data);
-    return promise.then(data => MsgExecuteContractResponse.decode(new BinaryReader(data)));
+  executeContract(request: BroadcastTxReq<MsgExecuteContract>): Promise<DeliverTxResponse> {
+    const data = [{
+      typeUrl: MsgExecuteContract.typeUrl,
+      value: request.message
+    }];
+    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
   }
-  migrateContract(request: MsgMigrateContract): Promise<MsgMigrateContractResponse> {
-    const data = MsgMigrateContract.encode(request).finish();
-    const promise = this.rpc.request("cosmwasm.wasm.v1.Msg", "MigrateContract", data);
-    return promise.then(data => MsgMigrateContractResponse.decode(new BinaryReader(data)));
+  migrateContract(request: BroadcastTxReq<MsgMigrateContract>): Promise<DeliverTxResponse> {
+    const data = [{
+      typeUrl: MsgMigrateContract.typeUrl,
+      value: request.message
+    }];
+    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
   }
-  updateAdmin(request: MsgUpdateAdmin): Promise<MsgUpdateAdminResponse> {
-    const data = MsgUpdateAdmin.encode(request).finish();
-    const promise = this.rpc.request("cosmwasm.wasm.v1.Msg", "UpdateAdmin", data);
-    return promise.then(data => MsgUpdateAdminResponse.decode(new BinaryReader(data)));
+  updateAdmin(request: BroadcastTxReq<MsgUpdateAdmin>): Promise<DeliverTxResponse> {
+    const data = [{
+      typeUrl: MsgUpdateAdmin.typeUrl,
+      value: request.message
+    }];
+    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
   }
-  clearAdmin(request: MsgClearAdmin): Promise<MsgClearAdminResponse> {
-    const data = MsgClearAdmin.encode(request).finish();
-    const promise = this.rpc.request("cosmwasm.wasm.v1.Msg", "ClearAdmin", data);
-    return promise.then(data => MsgClearAdminResponse.decode(new BinaryReader(data)));
+  clearAdmin(request: BroadcastTxReq<MsgClearAdmin>): Promise<DeliverTxResponse> {
+    const data = [{
+      typeUrl: MsgClearAdmin.typeUrl,
+      value: request.message
+    }];
+    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
   }
-  updateInstantiateConfig(request: MsgUpdateInstantiateConfig): Promise<MsgUpdateInstantiateConfigResponse> {
-    const data = MsgUpdateInstantiateConfig.encode(request).finish();
-    const promise = this.rpc.request("cosmwasm.wasm.v1.Msg", "UpdateInstantiateConfig", data);
-    return promise.then(data => MsgUpdateInstantiateConfigResponse.decode(new BinaryReader(data)));
+  updateInstantiateConfig(request: BroadcastTxReq<MsgUpdateInstantiateConfig>): Promise<DeliverTxResponse> {
+    const data = [{
+      typeUrl: MsgUpdateInstantiateConfig.typeUrl,
+      value: request.message
+    }];
+    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
   }
-  updateParams(request: MsgUpdateParams): Promise<MsgUpdateParamsResponse> {
-    const data = MsgUpdateParams.encode(request).finish();
-    const promise = this.rpc.request("cosmwasm.wasm.v1.Msg", "UpdateParams", data);
-    return promise.then(data => MsgUpdateParamsResponse.decode(new BinaryReader(data)));
+  updateParams(request: BroadcastTxReq<MsgUpdateParams>): Promise<DeliverTxResponse> {
+    const data = [{
+      typeUrl: MsgUpdateParams.typeUrl,
+      value: request.message
+    }];
+    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
   }
-  sudoContract(request: MsgSudoContract): Promise<MsgSudoContractResponse> {
-    const data = MsgSudoContract.encode(request).finish();
-    const promise = this.rpc.request("cosmwasm.wasm.v1.Msg", "SudoContract", data);
-    return promise.then(data => MsgSudoContractResponse.decode(new BinaryReader(data)));
+  sudoContract(request: BroadcastTxReq<MsgSudoContract>): Promise<DeliverTxResponse> {
+    const data = [{
+      typeUrl: MsgSudoContract.typeUrl,
+      value: request.message
+    }];
+    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
   }
-  pinCodes(request: MsgPinCodes): Promise<MsgPinCodesResponse> {
-    const data = MsgPinCodes.encode(request).finish();
-    const promise = this.rpc.request("cosmwasm.wasm.v1.Msg", "PinCodes", data);
-    return promise.then(data => MsgPinCodesResponse.decode(new BinaryReader(data)));
+  pinCodes(request: BroadcastTxReq<MsgPinCodes>): Promise<DeliverTxResponse> {
+    const data = [{
+      typeUrl: MsgPinCodes.typeUrl,
+      value: request.message
+    }];
+    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
   }
-  unpinCodes(request: MsgUnpinCodes): Promise<MsgUnpinCodesResponse> {
-    const data = MsgUnpinCodes.encode(request).finish();
-    const promise = this.rpc.request("cosmwasm.wasm.v1.Msg", "UnpinCodes", data);
-    return promise.then(data => MsgUnpinCodesResponse.decode(new BinaryReader(data)));
+  unpinCodes(request: BroadcastTxReq<MsgUnpinCodes>): Promise<DeliverTxResponse> {
+    const data = [{
+      typeUrl: MsgUnpinCodes.typeUrl,
+      value: request.message
+    }];
+    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
   }
-  storeAndInstantiateContract(request: MsgStoreAndInstantiateContract): Promise<MsgStoreAndInstantiateContractResponse> {
-    const data = MsgStoreAndInstantiateContract.encode(request).finish();
-    const promise = this.rpc.request("cosmwasm.wasm.v1.Msg", "StoreAndInstantiateContract", data);
-    return promise.then(data => MsgStoreAndInstantiateContractResponse.decode(new BinaryReader(data)));
+  storeAndInstantiateContract(request: BroadcastTxReq<MsgStoreAndInstantiateContract>): Promise<DeliverTxResponse> {
+    const data = [{
+      typeUrl: MsgStoreAndInstantiateContract.typeUrl,
+      value: request.message
+    }];
+    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
   }
-  removeCodeUploadParamsAddresses(request: MsgRemoveCodeUploadParamsAddresses): Promise<MsgRemoveCodeUploadParamsAddressesResponse> {
-    const data = MsgRemoveCodeUploadParamsAddresses.encode(request).finish();
-    const promise = this.rpc.request("cosmwasm.wasm.v1.Msg", "RemoveCodeUploadParamsAddresses", data);
-    return promise.then(data => MsgRemoveCodeUploadParamsAddressesResponse.decode(new BinaryReader(data)));
+  removeCodeUploadParamsAddresses(request: BroadcastTxReq<MsgRemoveCodeUploadParamsAddresses>): Promise<DeliverTxResponse> {
+    const data = [{
+      typeUrl: MsgRemoveCodeUploadParamsAddresses.typeUrl,
+      value: request.message
+    }];
+    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
   }
-  addCodeUploadParamsAddresses(request: MsgAddCodeUploadParamsAddresses): Promise<MsgAddCodeUploadParamsAddressesResponse> {
-    const data = MsgAddCodeUploadParamsAddresses.encode(request).finish();
-    const promise = this.rpc.request("cosmwasm.wasm.v1.Msg", "AddCodeUploadParamsAddresses", data);
-    return promise.then(data => MsgAddCodeUploadParamsAddressesResponse.decode(new BinaryReader(data)));
+  addCodeUploadParamsAddresses(request: BroadcastTxReq<MsgAddCodeUploadParamsAddresses>): Promise<DeliverTxResponse> {
+    const data = [{
+      typeUrl: MsgAddCodeUploadParamsAddresses.typeUrl,
+      value: request.message
+    }];
+    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
   }
-  storeAndMigrateContract(request: MsgStoreAndMigrateContract): Promise<MsgStoreAndMigrateContractResponse> {
-    const data = MsgStoreAndMigrateContract.encode(request).finish();
-    const promise = this.rpc.request("cosmwasm.wasm.v1.Msg", "StoreAndMigrateContract", data);
-    return promise.then(data => MsgStoreAndMigrateContractResponse.decode(new BinaryReader(data)));
+  storeAndMigrateContract(request: BroadcastTxReq<MsgStoreAndMigrateContract>): Promise<DeliverTxResponse> {
+    const data = [{
+      typeUrl: MsgStoreAndMigrateContract.typeUrl,
+      value: request.message
+    }];
+    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
   }
-  updateContractLabel(request: MsgUpdateContractLabel): Promise<MsgUpdateContractLabelResponse> {
-    const data = MsgUpdateContractLabel.encode(request).finish();
-    const promise = this.rpc.request("cosmwasm.wasm.v1.Msg", "UpdateContractLabel", data);
-    return promise.then(data => MsgUpdateContractLabelResponse.decode(new BinaryReader(data)));
+  updateContractLabel(request: BroadcastTxReq<MsgUpdateContractLabel>): Promise<DeliverTxResponse> {
+    const data = [{
+      typeUrl: MsgUpdateContractLabel.typeUrl,
+      value: request.message
+    }];
+    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
   }
 }
+export const createClientImpl = (rpc: TxRpc) => {
+  return new MsgClientImpl(rpc);
+};
