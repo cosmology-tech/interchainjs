@@ -5,29 +5,26 @@ import {
   OfflineSigner,
   SignerOptions,
 } from "@cosmonauts/cosmos-cosmjs";
-import { Registry, Signer } from "@cosmonauts/cosmos-proto";
+import { Registry } from "@cosmonauts/cosmos-proto";
 import {
-  stargateAminoConverters,
+  StargateAminoSigner,
   StargateCosmjsSigner,
-  stargateRegistry,
+  StargateSigner,
 } from "@cosmonauts/cosmos-stargate";
 
 import { CosmWasmImpl } from "./codegen/service-ops";
 import { cosmwasmAminoConverters, cosmwasmRegistry } from "./registry";
 
-export class CosmWasmSigner extends Signer {
+export class CosmWasmSigner extends StargateSigner {
   constructor(registry?: Registry) {
-    super([...cosmwasmRegistry, ...stargateRegistry]);
+    super(cosmwasmRegistry);
     this.register(registry);
   }
 }
 
-export class CosmWasmAminoSigner extends AminoSigner {
+export class CosmWasmAminoSigner extends StargateAminoSigner {
   constructor(registry?: Registry, aminoConverters?: AminoConverters) {
-    super([...cosmwasmRegistry, ...stargateRegistry], {
-      ...cosmwasmAminoConverters,
-      ...stargateAminoConverters,
-    });
+    super(cosmwasmRegistry, cosmwasmAminoConverters);
     this.registerWithAmino(registry, aminoConverters);
   }
 }
