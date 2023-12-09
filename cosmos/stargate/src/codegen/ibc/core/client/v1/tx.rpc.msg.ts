@@ -1,15 +1,15 @@
-import { BroadcastTxReq, DeliverTxResponse, TxRpc } from "../../../../types";
+import { DeliverTxResponse, StdFee, TxRpc } from "../../../../types";
 import { MsgCreateClient, MsgUpdateClient, MsgUpgradeClient, MsgSubmitMisbehaviour } from "./tx";
 /** Msg defines the ibc/client Msg service. */
 export interface Msg {
   /** CreateClient defines a rpc handler method for MsgCreateClient. */
-  createClient(request: BroadcastTxReq<MsgCreateClient>): Promise<DeliverTxResponse>;
+  createClient(signerAddress: string, message: MsgCreateClient, fee: number | StdFee | "auto", memo: string): Promise<DeliverTxResponse>;
   /** UpdateClient defines a rpc handler method for MsgUpdateClient. */
-  updateClient(request: BroadcastTxReq<MsgUpdateClient>): Promise<DeliverTxResponse>;
+  updateClient(signerAddress: string, message: MsgUpdateClient, fee: number | StdFee | "auto", memo: string): Promise<DeliverTxResponse>;
   /** UpgradeClient defines a rpc handler method for MsgUpgradeClient. */
-  upgradeClient(request: BroadcastTxReq<MsgUpgradeClient>): Promise<DeliverTxResponse>;
+  upgradeClient(signerAddress: string, message: MsgUpgradeClient, fee: number | StdFee | "auto", memo: string): Promise<DeliverTxResponse>;
   /** SubmitMisbehaviour defines a rpc handler method for MsgSubmitMisbehaviour. */
-  submitMisbehaviour(request: BroadcastTxReq<MsgSubmitMisbehaviour>): Promise<DeliverTxResponse>;
+  submitMisbehaviour(signerAddress: string, message: MsgSubmitMisbehaviour, fee: number | StdFee | "auto", memo: string): Promise<DeliverTxResponse>;
 }
 export class MsgClientImpl implements Msg {
   private readonly rpc: TxRpc;
@@ -20,33 +20,33 @@ export class MsgClientImpl implements Msg {
     this.upgradeClient = this.upgradeClient.bind(this);
     this.submitMisbehaviour = this.submitMisbehaviour.bind(this);
   }
-  createClient(request: BroadcastTxReq<MsgCreateClient>): Promise<DeliverTxResponse> {
+  createClient(signerAddress: string, message: MsgCreateClient, fee: number | StdFee | "auto" = "auto", memo: string = ""): Promise<DeliverTxResponse> {
     const data = [{
       typeUrl: MsgCreateClient.typeUrl,
-      value: request.message
+      value: message
     }];
-    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
+    return this.rpc.signAndBroadcast!(signerAddress, data, fee, memo);
   }
-  updateClient(request: BroadcastTxReq<MsgUpdateClient>): Promise<DeliverTxResponse> {
+  updateClient(signerAddress: string, message: MsgUpdateClient, fee: number | StdFee | "auto" = "auto", memo: string = ""): Promise<DeliverTxResponse> {
     const data = [{
       typeUrl: MsgUpdateClient.typeUrl,
-      value: request.message
+      value: message
     }];
-    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
+    return this.rpc.signAndBroadcast!(signerAddress, data, fee, memo);
   }
-  upgradeClient(request: BroadcastTxReq<MsgUpgradeClient>): Promise<DeliverTxResponse> {
+  upgradeClient(signerAddress: string, message: MsgUpgradeClient, fee: number | StdFee | "auto" = "auto", memo: string = ""): Promise<DeliverTxResponse> {
     const data = [{
       typeUrl: MsgUpgradeClient.typeUrl,
-      value: request.message
+      value: message
     }];
-    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
+    return this.rpc.signAndBroadcast!(signerAddress, data, fee, memo);
   }
-  submitMisbehaviour(request: BroadcastTxReq<MsgSubmitMisbehaviour>): Promise<DeliverTxResponse> {
+  submitMisbehaviour(signerAddress: string, message: MsgSubmitMisbehaviour, fee: number | StdFee | "auto" = "auto", memo: string = ""): Promise<DeliverTxResponse> {
     const data = [{
       typeUrl: MsgSubmitMisbehaviour.typeUrl,
-      value: request.message
+      value: message
     }];
-    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
+    return this.rpc.signAndBroadcast!(signerAddress, data, fee, memo);
   }
 }
 export const createClientImpl = (rpc: TxRpc) => {

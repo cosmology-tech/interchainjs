@@ -1,14 +1,14 @@
-import { BroadcastTxReq, DeliverTxResponse, TxRpc } from "../../../../types";
+import { DeliverTxResponse, StdFee, TxRpc } from "../../../../types";
 import { MsgTransfer } from "./tx";
 /** Msg defines the ibc/transfer Msg service. */
 export interface Msg {
   /** Transfer defines a rpc handler method for MsgTransfer. */
-  transfer(request: BroadcastTxReq<MsgTransfer>): Promise<DeliverTxResponse>;
+  transfer(signerAddress: string, message: MsgTransfer, fee: number | StdFee | "auto", memo: string): Promise<DeliverTxResponse>;
 }
 /** Msg defines the ibc/transfer Msg service. */
 export interface StargateImpl {
   /** Transfer defines a rpc handler method for MsgTransfer. */
-  sendIbcTokens(request: BroadcastTxReq<MsgTransfer>): Promise<DeliverTxResponse>;
+  sendIbcTokens(signerAddress: string, message: MsgTransfer, fee: number | StdFee | "auto", memo: string): Promise<DeliverTxResponse>;
 }
 export class MsgClientImpl implements Msg {
   private readonly rpc: TxRpc;
@@ -16,12 +16,12 @@ export class MsgClientImpl implements Msg {
     this.rpc = rpc;
     this.transfer = this.transfer.bind(this);
   }
-  transfer(request: BroadcastTxReq<MsgTransfer>): Promise<DeliverTxResponse> {
+  transfer(signerAddress: string, message: MsgTransfer, fee: number | StdFee | "auto" = "auto", memo: string = ""): Promise<DeliverTxResponse> {
     const data = [{
       typeUrl: MsgTransfer.typeUrl,
-      value: request.message
+      value: message
     }];
-    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
+    return this.rpc.signAndBroadcast!(signerAddress, data, fee, memo);
   }
 }
 export const createClientImpl = (rpc: TxRpc) => {

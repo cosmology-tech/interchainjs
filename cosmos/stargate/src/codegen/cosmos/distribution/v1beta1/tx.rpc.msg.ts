@@ -1,4 +1,4 @@
-import { BroadcastTxReq, DeliverTxResponse, TxRpc } from "../../../types";
+import { DeliverTxResponse, StdFee, TxRpc } from "../../../types";
 import { MsgSetWithdrawAddress, MsgWithdrawDelegatorReward, MsgWithdrawValidatorCommission, MsgFundCommunityPool, MsgUpdateParams, MsgCommunityPoolSpend } from "./tx";
 /** Msg defines the distribution Msg service. */
 export interface Msg {
@@ -6,29 +6,29 @@ export interface Msg {
    * SetWithdrawAddress defines a method to change the withdraw address
    * for a delegator (or validator self-delegation).
    */
-  setWithdrawAddress(request: BroadcastTxReq<MsgSetWithdrawAddress>): Promise<DeliverTxResponse>;
+  setWithdrawAddress(signerAddress: string, message: MsgSetWithdrawAddress, fee: number | StdFee | "auto", memo: string): Promise<DeliverTxResponse>;
   /**
    * WithdrawDelegatorReward defines a method to withdraw rewards of delegator
    * from a single validator.
    */
-  withdrawDelegatorReward(request: BroadcastTxReq<MsgWithdrawDelegatorReward>): Promise<DeliverTxResponse>;
+  withdrawDelegatorReward(signerAddress: string, message: MsgWithdrawDelegatorReward, fee: number | StdFee | "auto", memo: string): Promise<DeliverTxResponse>;
   /**
    * WithdrawValidatorCommission defines a method to withdraw the
    * full commission to the validator address.
    */
-  withdrawValidatorCommission(request: BroadcastTxReq<MsgWithdrawValidatorCommission>): Promise<DeliverTxResponse>;
+  withdrawValidatorCommission(signerAddress: string, message: MsgWithdrawValidatorCommission, fee: number | StdFee | "auto", memo: string): Promise<DeliverTxResponse>;
   /**
    * FundCommunityPool defines a method to allow an account to directly
    * fund the community pool.
    */
-  fundCommunityPool(request: BroadcastTxReq<MsgFundCommunityPool>): Promise<DeliverTxResponse>;
+  fundCommunityPool(signerAddress: string, message: MsgFundCommunityPool, fee: number | StdFee | "auto", memo: string): Promise<DeliverTxResponse>;
   /**
    * UpdateParams defines a governance operation for updating the x/distribution
    * module parameters. The authority is defined in the keeper.
    * 
    * Since: cosmos-sdk 0.47
    */
-  updateParams(request: BroadcastTxReq<MsgUpdateParams>): Promise<DeliverTxResponse>;
+  updateParams(signerAddress: string, message: MsgUpdateParams, fee: number | StdFee | "auto", memo: string): Promise<DeliverTxResponse>;
   /**
    * CommunityPoolSpend defines a governance operation for sending tokens from
    * the community pool in the x/distribution module to another account, which
@@ -37,7 +37,7 @@ export interface Msg {
    * 
    * Since: cosmos-sdk 0.47
    */
-  communityPoolSpend(request: BroadcastTxReq<MsgCommunityPoolSpend>): Promise<DeliverTxResponse>;
+  communityPoolSpend(signerAddress: string, message: MsgCommunityPoolSpend, fee: number | StdFee | "auto", memo: string): Promise<DeliverTxResponse>;
 }
 /** Msg defines the distribution Msg service. */
 export interface StargateImpl {
@@ -45,7 +45,7 @@ export interface StargateImpl {
    * WithdrawDelegatorReward defines a method to withdraw rewards of delegator
    * from a single validator.
    */
-  withdrawRewards(request: BroadcastTxReq<MsgWithdrawDelegatorReward>): Promise<DeliverTxResponse>;
+  withdrawRewards(signerAddress: string, message: MsgWithdrawDelegatorReward, fee: number | StdFee | "auto", memo: string): Promise<DeliverTxResponse>;
 }
 export class MsgClientImpl implements Msg {
   private readonly rpc: TxRpc;
@@ -58,47 +58,47 @@ export class MsgClientImpl implements Msg {
     this.updateParams = this.updateParams.bind(this);
     this.communityPoolSpend = this.communityPoolSpend.bind(this);
   }
-  setWithdrawAddress(request: BroadcastTxReq<MsgSetWithdrawAddress>): Promise<DeliverTxResponse> {
+  setWithdrawAddress(signerAddress: string, message: MsgSetWithdrawAddress, fee: number | StdFee | "auto" = "auto", memo: string = ""): Promise<DeliverTxResponse> {
     const data = [{
       typeUrl: MsgSetWithdrawAddress.typeUrl,
-      value: request.message
+      value: message
     }];
-    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
+    return this.rpc.signAndBroadcast!(signerAddress, data, fee, memo);
   }
-  withdrawDelegatorReward(request: BroadcastTxReq<MsgWithdrawDelegatorReward>): Promise<DeliverTxResponse> {
+  withdrawDelegatorReward(signerAddress: string, message: MsgWithdrawDelegatorReward, fee: number | StdFee | "auto" = "auto", memo: string = ""): Promise<DeliverTxResponse> {
     const data = [{
       typeUrl: MsgWithdrawDelegatorReward.typeUrl,
-      value: request.message
+      value: message
     }];
-    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
+    return this.rpc.signAndBroadcast!(signerAddress, data, fee, memo);
   }
-  withdrawValidatorCommission(request: BroadcastTxReq<MsgWithdrawValidatorCommission>): Promise<DeliverTxResponse> {
+  withdrawValidatorCommission(signerAddress: string, message: MsgWithdrawValidatorCommission, fee: number | StdFee | "auto" = "auto", memo: string = ""): Promise<DeliverTxResponse> {
     const data = [{
       typeUrl: MsgWithdrawValidatorCommission.typeUrl,
-      value: request.message
+      value: message
     }];
-    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
+    return this.rpc.signAndBroadcast!(signerAddress, data, fee, memo);
   }
-  fundCommunityPool(request: BroadcastTxReq<MsgFundCommunityPool>): Promise<DeliverTxResponse> {
+  fundCommunityPool(signerAddress: string, message: MsgFundCommunityPool, fee: number | StdFee | "auto" = "auto", memo: string = ""): Promise<DeliverTxResponse> {
     const data = [{
       typeUrl: MsgFundCommunityPool.typeUrl,
-      value: request.message
+      value: message
     }];
-    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
+    return this.rpc.signAndBroadcast!(signerAddress, data, fee, memo);
   }
-  updateParams(request: BroadcastTxReq<MsgUpdateParams>): Promise<DeliverTxResponse> {
+  updateParams(signerAddress: string, message: MsgUpdateParams, fee: number | StdFee | "auto" = "auto", memo: string = ""): Promise<DeliverTxResponse> {
     const data = [{
       typeUrl: MsgUpdateParams.typeUrl,
-      value: request.message
+      value: message
     }];
-    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
+    return this.rpc.signAndBroadcast!(signerAddress, data, fee, memo);
   }
-  communityPoolSpend(request: BroadcastTxReq<MsgCommunityPoolSpend>): Promise<DeliverTxResponse> {
+  communityPoolSpend(signerAddress: string, message: MsgCommunityPoolSpend, fee: number | StdFee | "auto" = "auto", memo: string = ""): Promise<DeliverTxResponse> {
     const data = [{
       typeUrl: MsgCommunityPoolSpend.typeUrl,
-      value: request.message
+      value: message
     }];
-    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
+    return this.rpc.signAndBroadcast!(signerAddress, data, fee, memo);
   }
 }
 export const createClientImpl = (rpc: TxRpc) => {

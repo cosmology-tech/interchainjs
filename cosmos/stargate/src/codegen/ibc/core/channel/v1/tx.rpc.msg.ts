@@ -1,30 +1,30 @@
-import { BroadcastTxReq, DeliverTxResponse, TxRpc } from "../../../../types";
+import { DeliverTxResponse, StdFee, TxRpc } from "../../../../types";
 import { MsgChannelOpenInit, MsgChannelOpenTry, MsgChannelOpenAck, MsgChannelOpenConfirm, MsgChannelCloseInit, MsgChannelCloseConfirm, MsgRecvPacket, MsgTimeout, MsgTimeoutOnClose, MsgAcknowledgement } from "./tx";
 /** Msg defines the ibc/channel Msg service. */
 export interface Msg {
   /** ChannelOpenInit defines a rpc handler method for MsgChannelOpenInit. */
-  channelOpenInit(request: BroadcastTxReq<MsgChannelOpenInit>): Promise<DeliverTxResponse>;
+  channelOpenInit(signerAddress: string, message: MsgChannelOpenInit, fee: number | StdFee | "auto", memo: string): Promise<DeliverTxResponse>;
   /** ChannelOpenTry defines a rpc handler method for MsgChannelOpenTry. */
-  channelOpenTry(request: BroadcastTxReq<MsgChannelOpenTry>): Promise<DeliverTxResponse>;
+  channelOpenTry(signerAddress: string, message: MsgChannelOpenTry, fee: number | StdFee | "auto", memo: string): Promise<DeliverTxResponse>;
   /** ChannelOpenAck defines a rpc handler method for MsgChannelOpenAck. */
-  channelOpenAck(request: BroadcastTxReq<MsgChannelOpenAck>): Promise<DeliverTxResponse>;
+  channelOpenAck(signerAddress: string, message: MsgChannelOpenAck, fee: number | StdFee | "auto", memo: string): Promise<DeliverTxResponse>;
   /** ChannelOpenConfirm defines a rpc handler method for MsgChannelOpenConfirm. */
-  channelOpenConfirm(request: BroadcastTxReq<MsgChannelOpenConfirm>): Promise<DeliverTxResponse>;
+  channelOpenConfirm(signerAddress: string, message: MsgChannelOpenConfirm, fee: number | StdFee | "auto", memo: string): Promise<DeliverTxResponse>;
   /** ChannelCloseInit defines a rpc handler method for MsgChannelCloseInit. */
-  channelCloseInit(request: BroadcastTxReq<MsgChannelCloseInit>): Promise<DeliverTxResponse>;
+  channelCloseInit(signerAddress: string, message: MsgChannelCloseInit, fee: number | StdFee | "auto", memo: string): Promise<DeliverTxResponse>;
   /**
    * ChannelCloseConfirm defines a rpc handler method for
    * MsgChannelCloseConfirm.
    */
-  channelCloseConfirm(request: BroadcastTxReq<MsgChannelCloseConfirm>): Promise<DeliverTxResponse>;
+  channelCloseConfirm(signerAddress: string, message: MsgChannelCloseConfirm, fee: number | StdFee | "auto", memo: string): Promise<DeliverTxResponse>;
   /** RecvPacket defines a rpc handler method for MsgRecvPacket. */
-  recvPacket(request: BroadcastTxReq<MsgRecvPacket>): Promise<DeliverTxResponse>;
+  recvPacket(signerAddress: string, message: MsgRecvPacket, fee: number | StdFee | "auto", memo: string): Promise<DeliverTxResponse>;
   /** Timeout defines a rpc handler method for MsgTimeout. */
-  timeout(request: BroadcastTxReq<MsgTimeout>): Promise<DeliverTxResponse>;
+  timeout(signerAddress: string, message: MsgTimeout, fee: number | StdFee | "auto", memo: string): Promise<DeliverTxResponse>;
   /** TimeoutOnClose defines a rpc handler method for MsgTimeoutOnClose. */
-  timeoutOnClose(request: BroadcastTxReq<MsgTimeoutOnClose>): Promise<DeliverTxResponse>;
+  timeoutOnClose(signerAddress: string, message: MsgTimeoutOnClose, fee: number | StdFee | "auto", memo: string): Promise<DeliverTxResponse>;
   /** Acknowledgement defines a rpc handler method for MsgAcknowledgement. */
-  acknowledgement(request: BroadcastTxReq<MsgAcknowledgement>): Promise<DeliverTxResponse>;
+  acknowledgement(signerAddress: string, message: MsgAcknowledgement, fee: number | StdFee | "auto", memo: string): Promise<DeliverTxResponse>;
 }
 export class MsgClientImpl implements Msg {
   private readonly rpc: TxRpc;
@@ -41,75 +41,75 @@ export class MsgClientImpl implements Msg {
     this.timeoutOnClose = this.timeoutOnClose.bind(this);
     this.acknowledgement = this.acknowledgement.bind(this);
   }
-  channelOpenInit(request: BroadcastTxReq<MsgChannelOpenInit>): Promise<DeliverTxResponse> {
+  channelOpenInit(signerAddress: string, message: MsgChannelOpenInit, fee: number | StdFee | "auto" = "auto", memo: string = ""): Promise<DeliverTxResponse> {
     const data = [{
       typeUrl: MsgChannelOpenInit.typeUrl,
-      value: request.message
+      value: message
     }];
-    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
+    return this.rpc.signAndBroadcast!(signerAddress, data, fee, memo);
   }
-  channelOpenTry(request: BroadcastTxReq<MsgChannelOpenTry>): Promise<DeliverTxResponse> {
+  channelOpenTry(signerAddress: string, message: MsgChannelOpenTry, fee: number | StdFee | "auto" = "auto", memo: string = ""): Promise<DeliverTxResponse> {
     const data = [{
       typeUrl: MsgChannelOpenTry.typeUrl,
-      value: request.message
+      value: message
     }];
-    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
+    return this.rpc.signAndBroadcast!(signerAddress, data, fee, memo);
   }
-  channelOpenAck(request: BroadcastTxReq<MsgChannelOpenAck>): Promise<DeliverTxResponse> {
+  channelOpenAck(signerAddress: string, message: MsgChannelOpenAck, fee: number | StdFee | "auto" = "auto", memo: string = ""): Promise<DeliverTxResponse> {
     const data = [{
       typeUrl: MsgChannelOpenAck.typeUrl,
-      value: request.message
+      value: message
     }];
-    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
+    return this.rpc.signAndBroadcast!(signerAddress, data, fee, memo);
   }
-  channelOpenConfirm(request: BroadcastTxReq<MsgChannelOpenConfirm>): Promise<DeliverTxResponse> {
+  channelOpenConfirm(signerAddress: string, message: MsgChannelOpenConfirm, fee: number | StdFee | "auto" = "auto", memo: string = ""): Promise<DeliverTxResponse> {
     const data = [{
       typeUrl: MsgChannelOpenConfirm.typeUrl,
-      value: request.message
+      value: message
     }];
-    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
+    return this.rpc.signAndBroadcast!(signerAddress, data, fee, memo);
   }
-  channelCloseInit(request: BroadcastTxReq<MsgChannelCloseInit>): Promise<DeliverTxResponse> {
+  channelCloseInit(signerAddress: string, message: MsgChannelCloseInit, fee: number | StdFee | "auto" = "auto", memo: string = ""): Promise<DeliverTxResponse> {
     const data = [{
       typeUrl: MsgChannelCloseInit.typeUrl,
-      value: request.message
+      value: message
     }];
-    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
+    return this.rpc.signAndBroadcast!(signerAddress, data, fee, memo);
   }
-  channelCloseConfirm(request: BroadcastTxReq<MsgChannelCloseConfirm>): Promise<DeliverTxResponse> {
+  channelCloseConfirm(signerAddress: string, message: MsgChannelCloseConfirm, fee: number | StdFee | "auto" = "auto", memo: string = ""): Promise<DeliverTxResponse> {
     const data = [{
       typeUrl: MsgChannelCloseConfirm.typeUrl,
-      value: request.message
+      value: message
     }];
-    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
+    return this.rpc.signAndBroadcast!(signerAddress, data, fee, memo);
   }
-  recvPacket(request: BroadcastTxReq<MsgRecvPacket>): Promise<DeliverTxResponse> {
+  recvPacket(signerAddress: string, message: MsgRecvPacket, fee: number | StdFee | "auto" = "auto", memo: string = ""): Promise<DeliverTxResponse> {
     const data = [{
       typeUrl: MsgRecvPacket.typeUrl,
-      value: request.message
+      value: message
     }];
-    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
+    return this.rpc.signAndBroadcast!(signerAddress, data, fee, memo);
   }
-  timeout(request: BroadcastTxReq<MsgTimeout>): Promise<DeliverTxResponse> {
+  timeout(signerAddress: string, message: MsgTimeout, fee: number | StdFee | "auto" = "auto", memo: string = ""): Promise<DeliverTxResponse> {
     const data = [{
       typeUrl: MsgTimeout.typeUrl,
-      value: request.message
+      value: message
     }];
-    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
+    return this.rpc.signAndBroadcast!(signerAddress, data, fee, memo);
   }
-  timeoutOnClose(request: BroadcastTxReq<MsgTimeoutOnClose>): Promise<DeliverTxResponse> {
+  timeoutOnClose(signerAddress: string, message: MsgTimeoutOnClose, fee: number | StdFee | "auto" = "auto", memo: string = ""): Promise<DeliverTxResponse> {
     const data = [{
       typeUrl: MsgTimeoutOnClose.typeUrl,
-      value: request.message
+      value: message
     }];
-    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
+    return this.rpc.signAndBroadcast!(signerAddress, data, fee, memo);
   }
-  acknowledgement(request: BroadcastTxReq<MsgAcknowledgement>): Promise<DeliverTxResponse> {
+  acknowledgement(signerAddress: string, message: MsgAcknowledgement, fee: number | StdFee | "auto" = "auto", memo: string = ""): Promise<DeliverTxResponse> {
     const data = [{
       typeUrl: MsgAcknowledgement.typeUrl,
-      value: request.message
+      value: message
     }];
-    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
+    return this.rpc.signAndBroadcast!(signerAddress, data, fee, memo);
   }
 }
 export const createClientImpl = (rpc: TxRpc) => {

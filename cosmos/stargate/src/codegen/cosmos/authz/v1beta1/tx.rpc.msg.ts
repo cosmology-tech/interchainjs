@@ -1,4 +1,4 @@
-import { BroadcastTxReq, DeliverTxResponse, TxRpc } from "../../../types";
+import { DeliverTxResponse, StdFee, TxRpc } from "../../../types";
 import { MsgGrant, MsgExec, MsgRevoke } from "./tx";
 /** Msg defines the authz Msg service. */
 export interface Msg {
@@ -8,18 +8,18 @@ export interface Msg {
    * for the given (granter, grantee, Authorization) triple, then the grant
    * will be overwritten.
    */
-  grant(request: BroadcastTxReq<MsgGrant>): Promise<DeliverTxResponse>;
+  grant(signerAddress: string, message: MsgGrant, fee: number | StdFee | "auto", memo: string): Promise<DeliverTxResponse>;
   /**
    * Exec attempts to execute the provided messages using
    * authorizations granted to the grantee. Each message should have only
    * one signer corresponding to the granter of the authorization.
    */
-  exec(request: BroadcastTxReq<MsgExec>): Promise<DeliverTxResponse>;
+  exec(signerAddress: string, message: MsgExec, fee: number | StdFee | "auto", memo: string): Promise<DeliverTxResponse>;
   /**
    * Revoke revokes any authorization corresponding to the provided method name on the
    * granter's account that has been granted to the grantee.
    */
-  revoke(request: BroadcastTxReq<MsgRevoke>): Promise<DeliverTxResponse>;
+  revoke(signerAddress: string, message: MsgRevoke, fee: number | StdFee | "auto", memo: string): Promise<DeliverTxResponse>;
 }
 export class MsgClientImpl implements Msg {
   private readonly rpc: TxRpc;
@@ -29,26 +29,26 @@ export class MsgClientImpl implements Msg {
     this.exec = this.exec.bind(this);
     this.revoke = this.revoke.bind(this);
   }
-  grant(request: BroadcastTxReq<MsgGrant>): Promise<DeliverTxResponse> {
+  grant(signerAddress: string, message: MsgGrant, fee: number | StdFee | "auto" = "auto", memo: string = ""): Promise<DeliverTxResponse> {
     const data = [{
       typeUrl: MsgGrant.typeUrl,
-      value: request.message
+      value: message
     }];
-    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
+    return this.rpc.signAndBroadcast!(signerAddress, data, fee, memo);
   }
-  exec(request: BroadcastTxReq<MsgExec>): Promise<DeliverTxResponse> {
+  exec(signerAddress: string, message: MsgExec, fee: number | StdFee | "auto" = "auto", memo: string = ""): Promise<DeliverTxResponse> {
     const data = [{
       typeUrl: MsgExec.typeUrl,
-      value: request.message
+      value: message
     }];
-    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
+    return this.rpc.signAndBroadcast!(signerAddress, data, fee, memo);
   }
-  revoke(request: BroadcastTxReq<MsgRevoke>): Promise<DeliverTxResponse> {
+  revoke(signerAddress: string, message: MsgRevoke, fee: number | StdFee | "auto" = "auto", memo: string = ""): Promise<DeliverTxResponse> {
     const data = [{
       typeUrl: MsgRevoke.typeUrl,
-      value: request.message
+      value: message
     }];
-    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
+    return this.rpc.signAndBroadcast!(signerAddress, data, fee, memo);
   }
 }
 export const createClientImpl = (rpc: TxRpc) => {

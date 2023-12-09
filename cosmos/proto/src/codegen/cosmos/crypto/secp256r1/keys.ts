@@ -1,5 +1,6 @@
 import { BinaryReader, BinaryWriter } from "../../../binary";
 import { isSet, bytesFromBase64, base64FromBytes, DeepPartial } from "../../../helpers";
+import { GlobalDecoderRegistry } from "../../../registry";
 /** PubKey defines a secp256r1 ECDSA public key. */
 export interface PubKey {
   /**
@@ -42,6 +43,12 @@ function createBasePubKey(): PubKey {
 export const PubKey = {
   typeUrl: "/cosmos.crypto.secp256r1.PubKey",
   aminoType: "cosmos-sdk/PubKey",
+  is(o: any): o is PubKey {
+    return o && (o.$typeUrl === PubKey.typeUrl || o.key instanceof Uint8Array || typeof o.key === "string");
+  },
+  isAmino(o: any): o is PubKeyAmino {
+    return o && (o.$typeUrl === PubKey.typeUrl || o.key instanceof Uint8Array || typeof o.key === "string");
+  },
   encode(message: PubKey, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.key.length !== 0) {
       writer.uint32(10).bytes(message.key);
@@ -103,6 +110,7 @@ export const PubKey = {
     };
   }
 };
+GlobalDecoderRegistry.register(PubKey.typeUrl, PubKey);
 function createBasePrivKey(): PrivKey {
   return {
     secret: new Uint8Array()
@@ -111,6 +119,12 @@ function createBasePrivKey(): PrivKey {
 export const PrivKey = {
   typeUrl: "/cosmos.crypto.secp256r1.PrivKey",
   aminoType: "cosmos-sdk/PrivKey",
+  is(o: any): o is PrivKey {
+    return o && (o.$typeUrl === PrivKey.typeUrl || o.secret instanceof Uint8Array || typeof o.secret === "string");
+  },
+  isAmino(o: any): o is PrivKeyAmino {
+    return o && (o.$typeUrl === PrivKey.typeUrl || o.secret instanceof Uint8Array || typeof o.secret === "string");
+  },
   encode(message: PrivKey, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.secret.length !== 0) {
       writer.uint32(10).bytes(message.secret);
@@ -172,3 +186,4 @@ export const PrivKey = {
     };
   }
 };
+GlobalDecoderRegistry.register(PrivKey.typeUrl, PrivKey);

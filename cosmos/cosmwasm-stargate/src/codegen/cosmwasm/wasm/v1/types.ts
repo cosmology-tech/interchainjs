@@ -1,6 +1,7 @@
-import { Any, AnyAmino } from "../../../google/protobuf/any";
+import { Any, AnyProtoMsg, AnyAmino } from "../../../google/protobuf/any";
 import { BinaryReader, BinaryWriter } from "../../../binary";
 import { isSet, DeepPartial, bytesFromBase64, base64FromBytes } from "../../../helpers";
+import { GlobalDecoderRegistry } from "../../../registry";
 import { toUtf8, fromUtf8 } from "@cosmjs/encoding";
 /** AccessType permission types */
 export enum AccessType {
@@ -177,12 +178,19 @@ export interface ContractInfo {
    * Extension is an extension point to store custom metadata within the
    * persistence model.
    */
-  extension?: Any;
+  extension?: Any | undefined;
 }
 export interface ContractInfoProtoMsg {
   typeUrl: "/cosmwasm.wasm.v1.ContractInfo";
   value: Uint8Array;
 }
+export type ContractInfoEncoded = Omit<ContractInfo, "extension"> & {
+  /**
+   * Extension is an extension point to store custom metadata within the
+   * persistence model.
+   */
+  extension?: AnyProtoMsg | undefined;
+};
 /** ContractInfo stores a WASM contract instance */
 export interface ContractInfoAmino {
   /** CodeID is the reference to the stored Wasm code */
@@ -280,6 +288,12 @@ function createBaseAccessTypeParam(): AccessTypeParam {
 export const AccessTypeParam = {
   typeUrl: "/cosmwasm.wasm.v1.AccessTypeParam",
   aminoType: "wasm/AccessTypeParam",
+  is(o: any): o is AccessTypeParam {
+    return o && (o.$typeUrl === AccessTypeParam.typeUrl || o.value);
+  },
+  isAmino(o: any): o is AccessTypeParamAmino {
+    return o && (o.$typeUrl === AccessTypeParam.typeUrl || o.value);
+  },
   encode(message: AccessTypeParam, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.value !== 0) {
       writer.uint32(8).int32(message.value);
@@ -341,6 +355,7 @@ export const AccessTypeParam = {
     };
   }
 };
+GlobalDecoderRegistry.register(AccessTypeParam.typeUrl, AccessTypeParam);
 function createBaseAccessConfig(): AccessConfig {
   return {
     permission: 0,
@@ -350,6 +365,12 @@ function createBaseAccessConfig(): AccessConfig {
 export const AccessConfig = {
   typeUrl: "/cosmwasm.wasm.v1.AccessConfig",
   aminoType: "wasm/AccessConfig",
+  is(o: any): o is AccessConfig {
+    return o && (o.$typeUrl === AccessConfig.typeUrl || o.permission && Array.isArray(o.addresses) && (!o.addresses.length || typeof o.addresses[0] === "string"));
+  },
+  isAmino(o: any): o is AccessConfigAmino {
+    return o && (o.$typeUrl === AccessConfig.typeUrl || o.permission && Array.isArray(o.addresses) && (!o.addresses.length || typeof o.addresses[0] === "string"));
+  },
   encode(message: AccessConfig, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.permission !== 0) {
       writer.uint32(8).int32(message.permission);
@@ -430,6 +451,7 @@ export const AccessConfig = {
     };
   }
 };
+GlobalDecoderRegistry.register(AccessConfig.typeUrl, AccessConfig);
 function createBaseParams(): Params {
   return {
     codeUploadAccess: AccessConfig.fromPartial({}),
@@ -439,6 +461,12 @@ function createBaseParams(): Params {
 export const Params = {
   typeUrl: "/cosmwasm.wasm.v1.Params",
   aminoType: "wasm/Params",
+  is(o: any): o is Params {
+    return o && (o.$typeUrl === Params.typeUrl || AccessConfig.is(o.codeUploadAccess) && o.instantiateDefaultPermission);
+  },
+  isAmino(o: any): o is ParamsAmino {
+    return o && (o.$typeUrl === Params.typeUrl || AccessConfig.isAmino(o.code_upload_access) && o.instantiate_default_permission);
+  },
   encode(message: Params, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.codeUploadAccess !== undefined) {
       AccessConfig.encode(message.codeUploadAccess, writer.uint32(10).fork()).ldelim();
@@ -511,6 +539,7 @@ export const Params = {
     };
   }
 };
+GlobalDecoderRegistry.register(Params.typeUrl, Params);
 function createBaseCodeInfo(): CodeInfo {
   return {
     codeHash: new Uint8Array(),
@@ -521,6 +550,12 @@ function createBaseCodeInfo(): CodeInfo {
 export const CodeInfo = {
   typeUrl: "/cosmwasm.wasm.v1.CodeInfo",
   aminoType: "wasm/CodeInfo",
+  is(o: any): o is CodeInfo {
+    return o && (o.$typeUrl === CodeInfo.typeUrl || (o.codeHash instanceof Uint8Array || typeof o.codeHash === "string") && typeof o.creator === "string" && AccessConfig.is(o.instantiateConfig));
+  },
+  isAmino(o: any): o is CodeInfoAmino {
+    return o && (o.$typeUrl === CodeInfo.typeUrl || (o.code_hash instanceof Uint8Array || typeof o.code_hash === "string") && typeof o.creator === "string" && AccessConfig.isAmino(o.instantiate_config));
+  },
   encode(message: CodeInfo, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.codeHash.length !== 0) {
       writer.uint32(10).bytes(message.codeHash);
@@ -604,6 +639,7 @@ export const CodeInfo = {
     };
   }
 };
+GlobalDecoderRegistry.register(CodeInfo.typeUrl, CodeInfo);
 function createBaseContractInfo(): ContractInfo {
   return {
     codeId: BigInt(0),
@@ -618,6 +654,12 @@ function createBaseContractInfo(): ContractInfo {
 export const ContractInfo = {
   typeUrl: "/cosmwasm.wasm.v1.ContractInfo",
   aminoType: "wasm/ContractInfo",
+  is(o: any): o is ContractInfo {
+    return o && (o.$typeUrl === ContractInfo.typeUrl || typeof o.codeId === "bigint" && typeof o.creator === "string" && typeof o.admin === "string" && typeof o.label === "string" && typeof o.ibcPortId === "string");
+  },
+  isAmino(o: any): o is ContractInfoAmino {
+    return o && (o.$typeUrl === ContractInfo.typeUrl || typeof o.code_id === "bigint" && typeof o.creator === "string" && typeof o.admin === "string" && typeof o.label === "string" && typeof o.ibc_port_id === "string");
+  },
   encode(message: ContractInfo, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.codeId !== BigInt(0)) {
       writer.uint32(8).uint64(message.codeId);
@@ -638,7 +680,7 @@ export const ContractInfo = {
       writer.uint32(50).string(message.ibcPortId);
     }
     if (message.extension !== undefined) {
-      Any.encode(message.extension, writer.uint32(58).fork()).ldelim();
+      Any.encode(GlobalDecoderRegistry.wrapAny(message.extension), writer.uint32(58).fork()).ldelim();
     }
     return writer;
   },
@@ -668,7 +710,7 @@ export const ContractInfo = {
           message.ibcPortId = reader.string();
           break;
         case 7:
-          message.extension = Any.decode(reader, reader.uint32());
+          message.extension = GlobalDecoderRegistry.unwrapAny(reader);
           break;
         default:
           reader.skipType(tag & 7);
@@ -685,7 +727,7 @@ export const ContractInfo = {
       label: isSet(object.label) ? String(object.label) : "",
       created: isSet(object.created) ? AbsoluteTxPosition.fromJSON(object.created) : undefined,
       ibcPortId: isSet(object.ibcPortId) ? String(object.ibcPortId) : "",
-      extension: isSet(object.extension) ? Any.fromJSON(object.extension) : undefined
+      extension: isSet(object.extension) ? GlobalDecoderRegistry.fromJSON(object.extension) : undefined
     };
   },
   toJSON(message: ContractInfo): unknown {
@@ -696,7 +738,7 @@ export const ContractInfo = {
     message.label !== undefined && (obj.label = message.label);
     message.created !== undefined && (obj.created = message.created ? AbsoluteTxPosition.toJSON(message.created) : undefined);
     message.ibcPortId !== undefined && (obj.ibcPortId = message.ibcPortId);
-    message.extension !== undefined && (obj.extension = message.extension ? Any.toJSON(message.extension) : undefined);
+    message.extension !== undefined && (obj.extension = message.extension ? GlobalDecoderRegistry.toJSON(message.extension) : undefined);
     return obj;
   },
   fromPartial(object: DeepPartial<ContractInfo>): ContractInfo {
@@ -707,7 +749,7 @@ export const ContractInfo = {
     message.label = object.label ?? "";
     message.created = object.created !== undefined && object.created !== null ? AbsoluteTxPosition.fromPartial(object.created) : undefined;
     message.ibcPortId = object.ibcPortId ?? "";
-    message.extension = object.extension !== undefined && object.extension !== null ? Any.fromPartial(object.extension) : undefined;
+    message.extension = object.extension !== undefined && object.extension !== null ? GlobalDecoderRegistry.fromPartial(object.extension) : undefined;
     return message;
   },
   fromAmino(object: ContractInfoAmino): ContractInfo {
@@ -718,7 +760,7 @@ export const ContractInfo = {
       label: object.label,
       created: object?.created ? AbsoluteTxPosition.fromAmino(object.created) : undefined,
       ibcPortId: object.ibc_port_id,
-      extension: object?.extension ? Any.fromAmino(object.extension) : undefined
+      extension: object?.extension ? GlobalDecoderRegistry.fromAmino(object.extension) : undefined
     };
   },
   toAmino(message: ContractInfo): ContractInfoAmino {
@@ -729,7 +771,7 @@ export const ContractInfo = {
     obj.label = message.label;
     obj.created = message.created ? AbsoluteTxPosition.toAmino(message.created) : undefined;
     obj.ibc_port_id = message.ibcPortId;
-    obj.extension = message.extension ? Any.toAmino(message.extension) : undefined;
+    obj.extension = message.extension ? GlobalDecoderRegistry.toAmino(message.extension) : undefined;
     return obj;
   },
   fromProtoMsg(message: ContractInfoProtoMsg): ContractInfo {
@@ -745,6 +787,7 @@ export const ContractInfo = {
     };
   }
 };
+GlobalDecoderRegistry.register(ContractInfo.typeUrl, ContractInfo);
 function createBaseContractCodeHistoryEntry(): ContractCodeHistoryEntry {
   return {
     operation: 0,
@@ -756,6 +799,12 @@ function createBaseContractCodeHistoryEntry(): ContractCodeHistoryEntry {
 export const ContractCodeHistoryEntry = {
   typeUrl: "/cosmwasm.wasm.v1.ContractCodeHistoryEntry",
   aminoType: "wasm/ContractCodeHistoryEntry",
+  is(o: any): o is ContractCodeHistoryEntry {
+    return o && (o.$typeUrl === ContractCodeHistoryEntry.typeUrl || o.operation && typeof o.codeId === "bigint" && (o.msg instanceof Uint8Array || typeof o.msg === "string"));
+  },
+  isAmino(o: any): o is ContractCodeHistoryEntryAmino {
+    return o && (o.$typeUrl === ContractCodeHistoryEntry.typeUrl || o.operation && typeof o.code_id === "bigint" && (o.msg instanceof Uint8Array || typeof o.msg === "string"));
+  },
   encode(message: ContractCodeHistoryEntry, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.operation !== 0) {
       writer.uint32(8).int32(message.operation);
@@ -850,6 +899,7 @@ export const ContractCodeHistoryEntry = {
     };
   }
 };
+GlobalDecoderRegistry.register(ContractCodeHistoryEntry.typeUrl, ContractCodeHistoryEntry);
 function createBaseAbsoluteTxPosition(): AbsoluteTxPosition {
   return {
     blockHeight: BigInt(0),
@@ -859,6 +909,12 @@ function createBaseAbsoluteTxPosition(): AbsoluteTxPosition {
 export const AbsoluteTxPosition = {
   typeUrl: "/cosmwasm.wasm.v1.AbsoluteTxPosition",
   aminoType: "wasm/AbsoluteTxPosition",
+  is(o: any): o is AbsoluteTxPosition {
+    return o && (o.$typeUrl === AbsoluteTxPosition.typeUrl || typeof o.blockHeight === "bigint" && typeof o.txIndex === "bigint");
+  },
+  isAmino(o: any): o is AbsoluteTxPositionAmino {
+    return o && (o.$typeUrl === AbsoluteTxPosition.typeUrl || typeof o.block_height === "bigint" && typeof o.tx_index === "bigint");
+  },
   encode(message: AbsoluteTxPosition, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.blockHeight !== BigInt(0)) {
       writer.uint32(8).uint64(message.blockHeight);
@@ -931,6 +987,7 @@ export const AbsoluteTxPosition = {
     };
   }
 };
+GlobalDecoderRegistry.register(AbsoluteTxPosition.typeUrl, AbsoluteTxPosition);
 function createBaseModel(): Model {
   return {
     key: new Uint8Array(),
@@ -940,6 +997,12 @@ function createBaseModel(): Model {
 export const Model = {
   typeUrl: "/cosmwasm.wasm.v1.Model",
   aminoType: "wasm/Model",
+  is(o: any): o is Model {
+    return o && (o.$typeUrl === Model.typeUrl || (o.key instanceof Uint8Array || typeof o.key === "string") && (o.value instanceof Uint8Array || typeof o.value === "string"));
+  },
+  isAmino(o: any): o is ModelAmino {
+    return o && (o.$typeUrl === Model.typeUrl || (o.key instanceof Uint8Array || typeof o.key === "string") && (o.value instanceof Uint8Array || typeof o.value === "string"));
+  },
   encode(message: Model, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.key.length !== 0) {
       writer.uint32(10).bytes(message.key);
@@ -1012,3 +1075,4 @@ export const Model = {
     };
   }
 };
+GlobalDecoderRegistry.register(Model.typeUrl, Model);

@@ -1,19 +1,19 @@
-import { BroadcastTxReq, DeliverTxResponse, TxRpc } from "../../../types";
+import { DeliverTxResponse, StdFee, TxRpc } from "../../../types";
 import { MsgSubmitProposal, MsgVote, MsgVoteWeighted, MsgDeposit } from "./tx";
 /** Msg defines the bank Msg service. */
 export interface Msg {
   /** SubmitProposal defines a method to create new proposal given a content. */
-  submitProposal(request: BroadcastTxReq<MsgSubmitProposal>): Promise<DeliverTxResponse>;
+  submitProposal(signerAddress: string, message: MsgSubmitProposal, fee: number | StdFee | "auto", memo: string): Promise<DeliverTxResponse>;
   /** Vote defines a method to add a vote on a specific proposal. */
-  vote(request: BroadcastTxReq<MsgVote>): Promise<DeliverTxResponse>;
+  vote(signerAddress: string, message: MsgVote, fee: number | StdFee | "auto", memo: string): Promise<DeliverTxResponse>;
   /**
    * VoteWeighted defines a method to add a weighted vote on a specific proposal.
    * 
    * Since: cosmos-sdk 0.43
    */
-  voteWeighted(request: BroadcastTxReq<MsgVoteWeighted>): Promise<DeliverTxResponse>;
+  voteWeighted(signerAddress: string, message: MsgVoteWeighted, fee: number | StdFee | "auto", memo: string): Promise<DeliverTxResponse>;
   /** Deposit defines a method to add deposit on a specific proposal. */
-  deposit(request: BroadcastTxReq<MsgDeposit>): Promise<DeliverTxResponse>;
+  deposit(signerAddress: string, message: MsgDeposit, fee: number | StdFee | "auto", memo: string): Promise<DeliverTxResponse>;
 }
 export class MsgClientImpl implements Msg {
   private readonly rpc: TxRpc;
@@ -24,33 +24,33 @@ export class MsgClientImpl implements Msg {
     this.voteWeighted = this.voteWeighted.bind(this);
     this.deposit = this.deposit.bind(this);
   }
-  submitProposal(request: BroadcastTxReq<MsgSubmitProposal>): Promise<DeliverTxResponse> {
+  submitProposal(signerAddress: string, message: MsgSubmitProposal, fee: number | StdFee | "auto" = "auto", memo: string = ""): Promise<DeliverTxResponse> {
     const data = [{
       typeUrl: MsgSubmitProposal.typeUrl,
-      value: request.message
+      value: message
     }];
-    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
+    return this.rpc.signAndBroadcast!(signerAddress, data, fee, memo);
   }
-  vote(request: BroadcastTxReq<MsgVote>): Promise<DeliverTxResponse> {
+  vote(signerAddress: string, message: MsgVote, fee: number | StdFee | "auto" = "auto", memo: string = ""): Promise<DeliverTxResponse> {
     const data = [{
       typeUrl: MsgVote.typeUrl,
-      value: request.message
+      value: message
     }];
-    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
+    return this.rpc.signAndBroadcast!(signerAddress, data, fee, memo);
   }
-  voteWeighted(request: BroadcastTxReq<MsgVoteWeighted>): Promise<DeliverTxResponse> {
+  voteWeighted(signerAddress: string, message: MsgVoteWeighted, fee: number | StdFee | "auto" = "auto", memo: string = ""): Promise<DeliverTxResponse> {
     const data = [{
       typeUrl: MsgVoteWeighted.typeUrl,
-      value: request.message
+      value: message
     }];
-    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
+    return this.rpc.signAndBroadcast!(signerAddress, data, fee, memo);
   }
-  deposit(request: BroadcastTxReq<MsgDeposit>): Promise<DeliverTxResponse> {
+  deposit(signerAddress: string, message: MsgDeposit, fee: number | StdFee | "auto" = "auto", memo: string = ""): Promise<DeliverTxResponse> {
     const data = [{
       typeUrl: MsgDeposit.typeUrl,
-      value: request.message
+      value: message
     }];
-    return this.rpc.signAndBroadcast!(request.signerAddress, data, request.fee, request.memo);
+    return this.rpc.signAndBroadcast!(signerAddress, data, fee, memo);
   }
 }
 export const createClientImpl = (rpc: TxRpc) => {

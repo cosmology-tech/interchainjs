@@ -8,9 +8,11 @@ import {
 import { Registry, Signer } from "@cosmonauts/cosmos-proto";
 import {
   stargateAminoConverters,
+  StargateCosmjsSigner,
   stargateRegistry,
 } from "@cosmonauts/cosmos-stargate";
 
+import { CosmWasmImpl } from "./codegen/service-ops";
 import { cosmwasmAminoConverters, cosmwasmRegistry } from "./registry";
 
 export class CosmWasmSigner extends Signer {
@@ -30,7 +32,11 @@ export class CosmWasmAminoSigner extends AminoSigner {
   }
 }
 
-export class CosmWasmCosmjsSigner extends CosmjsSigner {
+export interface CosmWasmCosmjsSigner
+  extends StargateCosmjsSigner,
+    CosmWasmImpl {}
+
+export class CosmWasmCosmjsSigner extends StargateCosmjsSigner {
   constructor(
     aminoSigner: AminoSigner,
     offlineSigner: OfflineSigner,
@@ -54,8 +60,12 @@ export class CosmWasmCosmjsSigner extends CosmjsSigner {
     signer: OfflineSigner,
     options: SignerOptions = {}
   ): CosmjsSigner {
-    const stargateSigner = new CosmWasmCosmjsSigner(signer, options);
-    stargateSigner.aminoSigner.on(endpoint);
-    return stargateSigner;
+    const aminoSigner = new AminoSigner().on(endpoint);
+    const cosmWasmSigner = new CosmWasmCosmjsSigner(
+      aminoSigner,
+      signer,
+      options
+    );
+    return cosmWasmSigner;
   }
 }

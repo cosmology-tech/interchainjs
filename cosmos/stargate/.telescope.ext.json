@@ -6,6 +6,9 @@
       "serviceImplement": {
         "Msg": {
           "type": "Tx"
+        },
+        "Query": {
+          "type": "Query"
         }
       },
       "instantOps": [
@@ -17,16 +20,27 @@
               "cosmos.staking.v1beta1.delegate",
               "cosmos.staking.v1beta1.undelegate",
               "cosmos.distribution.v1beta1.withdrawDelegatorReward",
-              "ibc.applications.transfer.v1.transfer"
+              "ibc.applications.transfer.v1.transfer",
+
+              "cosmos.bank.v1beta1.balance",
+              "cosmos.bank.v1beta1.allBalances",
+              "cosmos.staking.v1beta1.delegatorDelegations",
+              "cosmos.staking.v1beta1.delegation"
             ]
           },
           "nameMapping": {
-            "Tx": {
+            "Msg": {
               "sendTokens": "cosmos.bank.v1beta1.send",
               "delegateTokens": "cosmos.staking.v1beta1.delegate",
               "undelegateTokens": "cosmos.staking.v1beta1.undelegate",
               "withdrawRewards": "cosmos.distribution.v1beta1.withdrawDelegatorReward",
               "sendIbcTokens": "ibc.applications.transfer.v1.transfer"
+            },
+            "Query": {
+              "getBalance": "cosmos.bank.v1beta1.balance",
+              "getAllBalances": "cosmos.bank.v1beta1.allBalances",
+              "getBalanceStaked": "cosmos.staking.v1beta1.delegatorDelegations",
+              "getDelegation": "cosmos.staking.v1beta1.delegation"
             }
           }
         }

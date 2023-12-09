@@ -5,8 +5,8 @@
     "useSDKTypes": false,
     "useOptionalNullable": true,
     "interfaces": {
-      "enabled": false,
-      "useGlobalDecoderRegistry": false,
+      "enabled": true,
+      "useGlobalDecoderRegistry": true,
       "useUnionTypes": true
     },
     "prototypes": {
