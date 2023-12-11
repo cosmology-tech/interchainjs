@@ -1,21 +1,25 @@
 import { Auth, HttpEndpoint, SignatureConverter } from "./types";
 
-export abstract class BaseSigner<T> {
-  protected _Query?: { new (endpoint: string | HttpEndpoint): T };
+export abstract class BaseSigner<RequestClient> {
+  protected _RequestClient?: {
+    new (endpoint: string | HttpEndpoint): RequestClient;
+  };
 
-  protected _query?: T;
+  protected _request?: RequestClient;
   protected _auth?: Auth;
 
   protected abstract hash: (data: Uint8Array) => Uint8Array;
   protected abstract signatureConverter: SignatureConverter;
 
-  constructor(Query: { new (endpoint: string | HttpEndpoint): T }) {
-    this._Query = Query;
+  constructor(RequestClient: {
+    new (endpoint: string | HttpEndpoint): RequestClient;
+  }) {
+    this._RequestClient = RequestClient;
   }
 
-  get query() {
-    this._assertQuery();
-    return this._query!;
+  get request() {
+    this._assertRequest();
+    return this._request!;
   }
 
   get auth() {
@@ -24,7 +28,7 @@ export abstract class BaseSigner<T> {
   }
 
   on(endpoint: string | HttpEndpoint) {
-    this._query = new this._Query(endpoint);
+    this._request = new this._RequestClient(endpoint);
     return this;
   }
 
@@ -33,8 +37,8 @@ export abstract class BaseSigner<T> {
     return this;
   }
 
-  protected _assertQuery() {
-    if (!this._query) {
+  protected _assertRequest() {
+    if (!this._request) {
       throw new Error(
         "Please provide rpc endpoint before signing (using `on` method)."
       );

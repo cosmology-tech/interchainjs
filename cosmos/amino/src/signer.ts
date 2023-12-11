@@ -1,14 +1,13 @@
 import {
   EncodeObject,
-  Fee,
   GasPrice,
-  Parser,
+  Generated,
   Registry,
   Signed,
   Signer,
   SignerOptions,
-  TxRaw,
 } from "@cosmonauts/cosmos-proto";
+import { Fee, TxRaw } from "@cosmonauts/cosmos-rpc";
 
 import { AminoConverters, StdFee, StdSignDoc } from "./types";
 import { EncodeObjectUtils, StdFeeUtils, StdSignDocUtils } from "./utils";
@@ -33,7 +32,7 @@ export class AminoSigner extends Signer {
     });
   }
 
-  getParserFromAminoType = (type: string): Parser => {
+  getGeneratedFromAminoType = (type: string): Generated => {
     const generated = this.parsers.find((g) => g.amino?.aminoType === type);
     if (!generated) {
       throw new Error(
@@ -70,7 +69,10 @@ export class AminoSigner extends Signer {
       account_number: this.accountData.accountNumber.toString(),
       sequence: this.accountData.sequence.toString(),
       fee: _fee,
-      msgs: EncodeObjectUtils.toAminoMsg(messages, this.getParserFromTypeUrl),
+      msgs: EncodeObjectUtils.toAminoMsg(
+        messages,
+        this.getGeneratedFromTypeUrl
+      ),
       memo,
     };
 
@@ -82,7 +84,7 @@ export class AminoSigner extends Signer {
     const { bodyBytes, authInfoBytes } = StdSignDocUtils.toSignDoc(
       doc,
       this.encodePubKey(this.auth.key.pubkey),
-      this.getParserFromAminoType
+      this.getGeneratedFromAminoType
     );
     const txRaw = TxRaw.fromPartial({
       bodyBytes,

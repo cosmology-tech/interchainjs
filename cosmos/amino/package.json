@@ -21,5 +21,8 @@
   "dependencies": {
     "@cosmonauts/core": "^1.0.0",
     "@cosmonauts/cosmos-proto": "^1.0.0"
+  },
+  "peerDependencies": {
+    "@cosmonauts/cosmos-rpc": "^1.0.0"
   }
 }

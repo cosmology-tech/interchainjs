@@ -1,18 +1,19 @@
-import { SignMode } from "../codegen/cosmos/tx/signing/v1beta1/signing";
 import {
+  Any,
   AuthInfo,
   Fee,
   SignerInfo,
+  SignMode,
   Tx,
   TxBody,
-} from "../codegen/cosmos/tx/v1beta1/tx";
-import { Any } from "../codegen/google/protobuf/any";
-import { EncodeObject, Parser } from "../types";
+} from "@cosmonauts/cosmos-rpc";
+
+import { EncodeObject, Generated } from "../types";
 
 export const EncodeObjectUtils = {
   encode(
     msgs: EncodeObject[],
-    getParserFromTypeUrl: (typeUrl: string) => Parser
+    getParserFromTypeUrl: (typeUrl: string) => Generated
   ): Any[] {
     return msgs.map((msg) => {
       const generated = getParserFromTypeUrl(msg.typeUrl);
@@ -28,7 +29,7 @@ export const TxUtils = {
   toTxForGasEstimation(
     messages: EncodeObject[],
     publicKey: Any,
-    getParserFromTypeUrl: (typeUrl: string) => Parser,
+    getParserFromTypeUrl: (typeUrl: string) => Generated,
     sequence: bigint,
     memo: string = ""
   ): Tx {

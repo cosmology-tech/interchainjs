@@ -8,7 +8,7 @@ export interface Msg {
 /** Msg defines the ibc/transfer Msg service. */
 export interface StargateImpl {
   /** Transfer defines a rpc handler method for MsgTransfer. */
-  sendIbcTokens(signerAddress: string, message: MsgTransfer, fee: number | StdFee | "auto", memo: string): Promise<DeliverTxResponse>;
+  transfer(signerAddress: string, message: MsgTransfer, fee: number | StdFee | "auto", memo: string): Promise<DeliverTxResponse>;
 }
 export class MsgClientImpl implements Msg {
   private readonly rpc: TxRpc;

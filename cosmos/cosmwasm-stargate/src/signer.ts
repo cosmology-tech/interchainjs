@@ -1,10 +1,6 @@
 import { HttpEndpoint } from "@cosmonauts/core";
 import { AminoConverters, AminoSigner } from "@cosmonauts/cosmos-amino";
-import {
-  CosmjsSigner,
-  OfflineSigner,
-  SignerOptions,
-} from "@cosmonauts/cosmos-cosmjs";
+import { OfflineSigner, SignerOptions } from "@cosmonauts/cosmos-cosmjs";
 import { Registry } from "@cosmonauts/cosmos-proto";
 import {
   StargateAminoSigner,
@@ -46,7 +42,7 @@ export class CosmWasmCosmjsSigner extends StargateCosmjsSigner {
     );
     const stargateImpl = new CosmWasmImpl();
     stargateImpl.init({
-      ...this.aminoSigner.query.abciQuery,
+      ...this.aminoSigner.request.abciQuery,
       signAndBroadcast: this.signAndBroadcast,
     });
     Object.assign(this, stargateImpl);
@@ -56,7 +52,7 @@ export class CosmWasmCosmjsSigner extends StargateCosmjsSigner {
     endpoint: string | HttpEndpoint,
     signer: OfflineSigner,
     options: SignerOptions = {}
-  ): CosmjsSigner {
+  ): CosmWasmCosmjsSigner {
     const aminoSigner = new AminoSigner().on(endpoint);
     const cosmWasmSigner = new CosmWasmCosmjsSigner(
       aminoSigner,
@@ -65,4 +61,10 @@ export class CosmWasmCosmjsSigner extends StargateCosmjsSigner {
     );
     return cosmWasmSigner;
   }
+
+  upload = this.storeCode;
+  instantiate = this.instantiateContract;
+  instantiate2 = this.instantiateContract2;
+  migrate = this.migrateContract;
+  executeMultiple = this.executeContract;
 }

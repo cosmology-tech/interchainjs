@@ -2,6 +2,22 @@
   "protoDirs": ["./proto"],
   "outPath": "./src/codegen",
   "options": {
+    "interfaces": {
+      "enabled": true,
+      "useGlobalDecoderRegistry": true,
+      "useUnionTypes": true
+    },
+    "prototypes": {
+      "methods": {
+        "toAmino": true,
+        "fromAmino": true
+      }
+    },
+    "aminoEncoding": {
+      "enabled": true,
+      "useLegacyInlineEncoding": false,
+      "disableMsgTypes": true
+    },
     "rpcClients": {
       "serviceImplement": {
         "Msg": {
@@ -12,44 +28,11 @@
         {
           "className": "CosmWasmImpl",
           "include": {
-            "patterns": [
-              "cosmwasm.wasm.v1.storeCode",
-              "cosmwasm.wasm.v1.instantiateContract",
-              "cosmwasm.wasm.v1.instantiateContract2",
-              "cosmwasm.wasm.v1.updateAdmin",
-              "cosmwasm.wasm.v1.clearAdmin",
-              "cosmwasm.wasm.v1.migrateContract",
-              "cosmwasm.wasm.v1.executeContract",
-
-              "cosmwasm.wasm.v1.codes",
-              "cosmwasm.wasm.v1.code",
-              "cosmwasm.wasm.v1.contractsByCode",
-              "cosmwasm.wasm.v1.contractsByCreator",
-              "cosmwasm.wasm.v1.contractInfo",
-              "cosmwasm.wasm.v1.contractHistory",
-              "cosmwasm.wasm.v1.rawContractState",
-              "cosmwasm.wasm.v1.smartContractState"
-            ]
+            "patterns": ["cosmwasm.wasm.v1.*"]
           },
           "nameMapping": {
             "Msg": {
-              "upload": "cosmwasm.wasm.v1.storeCode",
-              "instantiate": "cosmwasm.wasm.v1.instantiateContract",
-              "instantiate2": "cosmwasm.wasm.v1.instantiateContract2",
-              "updateAdmin": "cosmwasm.wasm.v1.updateAdmin",
-              "clearAdmin": "cosmwasm.wasm.v1.clearAdmin",
-              "migrate": "cosmwasm.wasm.v1.migrateContract",
-              "executeMultiple": "cosmwasm.wasm.v1.executeContract"
-            },
-            "Query": {
-              "getCodes": "cosmwasm.wasm.v1.codes",
-              "getCodeDetails": "cosmwasm.wasm.v1.code",
-              "getContracts": "cosmwasm.wasm.v1.contractsByCode",
-              "getContractsByCreator": "cosmwasm.wasm.v1.contractsByCreator",
-              "getContract": "cosmwasm.wasm.v1.contractInfo",
-              "getContractCodeHistory": "cosmwasm.wasm.v1.contractHistory",
-              "queryContractRaw": "cosmwasm.wasm.v1.rawContractState",
-              "queryContractSmart": "cosmwasm.wasm.v1.smartContractState"
+              "updateWasmParams": "cosmwasm.wasm.v1.updateParams"
             }
           }
         }

@@ -4,11 +4,6 @@
     "fieldDefaultIsOptional": false,
     "useSDKTypes": false,
     "useOptionalNullable": true,
-    "interfaces": {
-      "enabled": true,
-      "useGlobalDecoderRegistry": true,
-      "useUnionTypes": true
-    },
     "prototypes": {
       "enableRegistryLoader": false,
       "enableMessageComposer": false,
@@ -17,15 +12,15 @@
         "keepCase": false
       },
       "methods": {
-        "fromJSON": true,
-        "toJSON": true,
+        "fromJSON": false,
+        "toJSON": false,
         "encode": true,
         "decode": true,
         "fromPartial": true,
         "toAmino": true,
         "fromAmino": true,
-        "fromProto": true,
-        "toProto": true
+        "fromProto": false,
+        "toProto": false
       },
       "addTypeUrlToDecoders": false,
       "addTypeUrlToObjects": true,
@@ -46,13 +41,7 @@
       "enabled": false
     },
     "stargateClients": {
-      "enabled": false,
-      "includeCosmosDefaultTypes": true
-    },
-    "aminoEncoding": {
-      "enabled": true,
-      "useLegacyInlineEncoding": false,
-      "disableMsgTypes": true
+      "enabled": false
     },
     "lcdClients": {
       "enabled": false

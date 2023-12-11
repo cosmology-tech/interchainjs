@@ -12,5 +12,15 @@ export class CosmWasmImpl {
     this.migrateContract = _CosmwasmWasmV1Txrpc.createClientImpl(rpc).migrateContract;
     this.updateAdmin = _CosmwasmWasmV1Txrpc.createClientImpl(rpc).updateAdmin;
     this.clearAdmin = _CosmwasmWasmV1Txrpc.createClientImpl(rpc).clearAdmin;
+    this.updateInstantiateConfig = _CosmwasmWasmV1Txrpc.createClientImpl(rpc).updateInstantiateConfig;
+    this.updateWasmParams = _CosmwasmWasmV1Txrpc.createClientImpl(rpc).updateParams;
+    this.sudoContract = _CosmwasmWasmV1Txrpc.createClientImpl(rpc).sudoContract;
+    this.pinCodes = _CosmwasmWasmV1Txrpc.createClientImpl(rpc).pinCodes;
+    this.unpinCodes = _CosmwasmWasmV1Txrpc.createClientImpl(rpc).unpinCodes;
+    this.storeAndInstantiateContract = _CosmwasmWasmV1Txrpc.createClientImpl(rpc).storeAndInstantiateContract;
+    this.removeCodeUploadParamsAddresses = _CosmwasmWasmV1Txrpc.createClientImpl(rpc).removeCodeUploadParamsAddresses;
+    this.addCodeUploadParamsAddresses = _CosmwasmWasmV1Txrpc.createClientImpl(rpc).addCodeUploadParamsAddresses;
+    this.storeAndMigrateContract = _CosmwasmWasmV1Txrpc.createClientImpl(rpc).storeAndMigrateContract;
+    this.updateContractLabel = _CosmwasmWasmV1Txrpc.createClientImpl(rpc).updateContractLabel;
   }
 }

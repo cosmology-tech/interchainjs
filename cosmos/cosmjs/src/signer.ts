@@ -8,23 +8,26 @@ import {
   StdSignDocUtils,
 } from "@cosmonauts/cosmos-amino";
 import {
-  Any,
-  AuthInfo,
-  BinaryWriter,
-  Ed25519PubKey,
   EncodeObject,
   GasPrice,
   Secp256k1PubKey,
-  SignDoc,
   SignerData,
+} from "@cosmonauts/cosmos-proto";
+import {
+  Any,
+  AuthInfo,
+  BaseAccount,
+  IBinaryWriter,
+  SignDoc,
   SignerInfo,
+  SignMode,
   TxBody,
   TxRaw,
-} from "@cosmonauts/cosmos-proto";
-import { SignMode } from "@cosmonauts/cosmos-proto/src/codegen/cosmos/tx/signing/v1beta1/signing";
+} from "@cosmonauts/cosmos-rpc";
 
 import {
   AccountData,
+  Block,
   DeliverTxResponse,
   IndexedTx,
   OfflineAminoSigner,
@@ -78,7 +81,7 @@ export class CosmjsSigner {
   }
 
   private async initAuth(address: string) {
-    const { pubkey } = await this.getAccount(address);
+    const { pubkey } = await this.getAccountData(address);
     const auth: Auth = {
       key: {
         pubkey,
@@ -94,7 +97,7 @@ export class CosmjsSigner {
     this.aminoSigner.by(auth);
   }
 
-  private async getAccount(address: string): Promise<AccountData> {
+  private async getAccountData(address: string): Promise<AccountData> {
     const accounts = await this._getAccounts();
     const account = accounts.find((account) => account.address === address);
     if (!account) {
@@ -106,19 +109,18 @@ export class CosmjsSigner {
   }
 
   private async getPubkey(address: string): Promise<Any> {
-    const account = await this.getAccount(address);
+    const account = await this.getAccountData(address);
     let typeUrl: string;
     let PubKey: {
-      encode(message: { key: Uint8Array }, writer?: BinaryWriter): BinaryWriter;
+      encode(
+        message: { key: Uint8Array },
+        writer?: IBinaryWriter
+      ): IBinaryWriter;
     };
     switch (account.algo) {
       case "secp256k1":
         typeUrl = Secp256k1PubKey.typeUrl;
         PubKey = Secp256k1PubKey;
-        break;
-      case "ed25519":
-        typeUrl = Ed25519PubKey.typeUrl;
-        PubKey = Ed25519PubKey;
         break;
       default:
         throw new Error(`${account.algo} not supported.`);
@@ -130,14 +132,6 @@ export class CosmjsSigner {
       }).finish(),
     };
     return publicKey;
-  }
-
-  async getChainId(): Promise<string> {
-    return await this.aminoSigner.getChainId();
-  }
-
-  async getSequence(address: string): Promise<SequenceResponse> {
-    return await this.aminoSigner.getSequence(address);
   }
 
   async sign(
@@ -226,25 +220,6 @@ export class CosmjsSigner {
     return this.broadcastTxSync(txBytes);
   }
 
-  async getTx(id: string): Promise<IndexedTx | null> {
-    const tx = await this.aminoSigner.query.getTx(id);
-    if (!tx) return null;
-    const txRaw = TxRaw.decode(fromBase64(tx.tx));
-    const txBody = TxBody.decode(txRaw.bodyBytes);
-    return {
-      height: tx.height,
-      txIndex: tx.index,
-      hash: tx.hash,
-      code: tx.tx_result.code,
-      events: tx.tx_result.events,
-      rawLog: tx.tx_result.log,
-      tx: fromBase64(tx.tx),
-      msgResponses: txBody.messages,
-      gasUsed: BigInt(tx.tx_result.gas_used),
-      gasWanted: BigInt(tx.tx_result.gas_wanted),
-    };
-  }
-
   public async broadcastTx(
     tx: Uint8Array,
     timeoutMs = 60_000,
@@ -330,7 +305,7 @@ export class CosmjsSigner {
     const txBody = TxBody.fromPartial({
       messages: EncodeObjectUtils.encode(
         messages,
-        this.aminoSigner.getParserFromTypeUrl
+        this.aminoSigner.getGeneratedFromTypeUrl
       ),
       memo,
     });
@@ -380,7 +355,7 @@ export class CosmjsSigner {
       fee,
       msgs: EncodeObjectUtils.toAminoMsg(
         messages,
-        this.aminoSigner.getParserFromTypeUrl
+        this.aminoSigner.getGeneratedFromTypeUrl
       ),
       memo,
     };
@@ -388,7 +363,7 @@ export class CosmjsSigner {
     const { bodyBytes, authInfoBytes } = StdSignDocUtils.toSignDoc(
       signed,
       await this.getPubkey(signerAddress),
-      this.aminoSigner.getParserFromAminoType
+      this.aminoSigner.getGeneratedFromAminoType
     );
     const txRaw = TxRaw.fromPartial({
       bodyBytes,
@@ -397,4 +372,82 @@ export class CosmjsSigner {
     });
     return txRaw;
   }
+
+  /*****************
+   * Query Methods *
+   *****************/
+
+  get request() {
+    return this.aminoSigner.request;
+  }
+
+  async getAccount(address: string): Promise<BaseAccount | null> {
+    try {
+      const account = await this.request.getBaseAccount(address);
+      return account;
+    } catch (error: any) {
+      if (/Account is undefined\./i.test(error.toString())) {
+        return null;
+      }
+      throw error;
+    }
+  }
+
+  async getBlock(height?: number): Promise<Block> {
+    const resp = await this.request.getBlock(height);
+    console.log("%csigner.ts line:398 resp", "color: #007acc;", resp);
+    return {
+      id: resp.block_id.hash.toUpperCase(),
+      header: {
+        version: {
+          block: resp.block.header.version.block,
+          app: resp.block.header.version.app,
+        },
+        height: resp.block.header.height,
+        chainId: resp.block.header.chain_id,
+        time: resp.block.header.time,
+      },
+      txs: resp.block.data.txs.map((tx: string) => fromBase64(tx)),
+    };
+  }
+
+  async getChainId(): Promise<string> {
+    return await this.aminoSigner.getChainId();
+  }
+
+  async getSequence(address: string): Promise<SequenceResponse> {
+    return await this.aminoSigner.getSequence(address);
+  }
+
+  async getTx(id: string): Promise<IndexedTx | null> {
+    const tx = await this.request.getTx(id);
+    if (!tx) return null;
+    const txRaw = TxRaw.decode(fromBase64(tx.tx));
+    const txBody = TxBody.decode(txRaw.bodyBytes);
+    return {
+      height: tx.height,
+      txIndex: tx.index,
+      hash: tx.hash,
+      code: tx.tx_result.code,
+      events: tx.tx_result.events,
+      rawLog: tx.tx_result.log,
+      tx: fromBase64(tx.tx),
+      msgResponses: txBody.messages,
+      gasUsed: BigInt(tx.tx_result.gas_used),
+      gasWanted: BigInt(tx.tx_result.gas_wanted),
+    };
+  }
+
+  getBalance = this.request.balance;
+  getAllBalances = this.request.allBalances;
+  getBalanceStaked = this.request.delegatorDelegations;
+  getDelegation = this.request.delegation;
+  getCodes = this.request.codes;
+  getCodeDetails = this.request.code;
+  getContracts = this.request.contractsByCode;
+  getContractsByCreator = this.request.contractsByCreator;
+  getContract = this.request.contractInfo;
+  getContractCodeHistory = this.request.contractHistory;
+  queryContractRaw = this.request.rawContractState;
+  queryContractSmart = this.request.smartContractState;
 }

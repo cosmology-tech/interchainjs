@@ -8,11 +8,6 @@
     "fieldDefaultIsOptional": false,
     "useSDKTypes": false,
     "useOptionalNullable": true,
-    "interfaces": {
-      "enabled": true,
-      "useGlobalDecoderRegistry": true,
-      "useUnionTypes": true
-    },
     "prototypes": {
       "enableRegistryLoader": false,
       "enableMessageComposer": false,
@@ -21,15 +16,15 @@
         "keepCase": false
       },
       "methods": {
-        "fromJSON": true,
-        "toJSON": true,
+        "fromJSON": false,
+        "toJSON": false,
         "encode": true,
         "decode": true,
         "fromPartial": true,
         "toAmino": true,
         "fromAmino": true,
-        "fromProto": true,
-        "toProto": true
+        "fromProto": false,
+        "toProto": false
       },
       "addTypeUrlToDecoders": false,
       "addTypeUrlToObjects": true,
@@ -50,13 +45,7 @@
       "enabled": false
     },
     "stargateClients": {
-      "enabled": false,
-      "includeCosmosDefaultTypes": true
-    },
-    "aminoEncoding": {
-      "enabled": true,
-      "useLegacyInlineEncoding": false,
-      "disableMsgTypes": true
+      "enabled": false
     },
     "lcdClients": {
       "enabled": false
@@ -64,7 +53,7 @@
     "rpcClients": {
       "enabled": true,
       "inline": false,
-      "extensions": true,
+      "extensions": false,
       "camelCase": true,
       "enabledServices": [
         "Query"
@@ -79,28 +68,26 @@
           "className": "CosmWasmImpl",
           "include": {
             "patterns": [
-              "cosmwasm.wasm.v1.storeCode",
-              "cosmwasm.wasm.v1.instantiateContract",
-              "cosmwasm.wasm.v1.instantiateContract2",
-              "cosmwasm.wasm.v1.updateAdmin",
-              "cosmwasm.wasm.v1.clearAdmin",
-              "cosmwasm.wasm.v1.migrateContract",
-              "cosmwasm.wasm.v1.executeContract"
+              "cosmwasm.wasm.v1.*"
             ]
           },
           "nameMapping": {
-            "Tx": {
-              "upload": "cosmwasm.wasm.v1.storeCode",
-              "instantiate": "cosmwasm.wasm.v1.instantiateContract",
-              "instantiate2": "cosmwasm.wasm.v1.instantiateContract2",
-              "updateAdmin": "cosmwasm.wasm.v1.updateAdmin",
-              "clearAdmin": "cosmwasm.wasm.v1.clearAdmin",
-              "migrate": "cosmwasm.wasm.v1.migrateContract",
-              "executeMultiple": "cosmwasm.wasm.v1.executeContract"
+            "Msg": {
+              "updateWasmParams": "cosmwasm.wasm.v1.updateParams"
             }
           }
         }
       ]
+    },
+    "interfaces": {
+      "enabled": true,
+      "useGlobalDecoderRegistry": true,
+      "useUnionTypes": true
+    },
+    "aminoEncoding": {
+      "enabled": true,
+      "useLegacyInlineEncoding": false,
+      "disableMsgTypes": true
     }
   }
 }

@@ -1,11 +1,7 @@
 import { Secp256k1HdWallet } from "@cosmjs/amino";
 import { SigningStargateClient } from "@cosmjs/stargate";
 import { AminoSigner } from "@cosmonauts/cosmos-amino";
-import {
-  CosmjsSigner,
-  OfflineSigner,
-  Secp256k1Wallet,
-} from "@cosmonauts/cosmos-cosmjs";
+import { OfflineSigner, Secp256k1Wallet } from "@cosmonauts/cosmos-cosmjs";
 import {
   CosmWasmAminoSigner,
   CosmWasmCosmjsSigner,
@@ -20,9 +16,9 @@ export class Store {
   readonly offlineSigner: OfflineSigner;
   readonly wallet: Secp256k1Wallet;
   readonly aminoSigner: AminoSigner;
-  readonly cosmjsSigner: CosmjsSigner;
+  readonly cosmWasmCosmjsSigner: CosmWasmCosmjsSigner;
   readonly stargateCosmjsSigner: StargateCosmjsSigner;
-  readonly signingClient: SigningStargateClient;
+  readonly signingStargateClient: SigningStargateClient;
 
   constructor(
     public readonly chainData: ChainData,
@@ -40,12 +36,12 @@ export class Store {
     this.aminoSigner = new CosmWasmAminoSigner()
       .on(this.chainData.rpc)
       .by(this.auth);
-    this.cosmjsSigner = CosmWasmCosmjsSigner.connectWithSigner(
+    this.cosmWasmCosmjsSigner = CosmWasmCosmjsSigner.connectWithSigner(
       this.chainData.rpc,
       this.offlineSigner
     );
-    this.stargateCosmjsSigner = StargateCosmjsSigner.connectWithSigner(
-      this.chainData.rpc,
+    this.stargateCosmjsSigner = new StargateCosmjsSigner(
+      this.aminoSigner,
       this.offlineSigner
     );
   }

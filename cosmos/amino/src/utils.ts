@@ -1,17 +1,19 @@
 import { fromUtf8 } from "@cosmonauts/core";
 import {
+  EncodeObject,
+  EncodeObjectUtils as _EncodeObjectUtils,
+  Generated,
+} from "@cosmonauts/cosmos-proto";
+import {
   Any,
   AuthInfo,
   Coin,
-  EncodeObject,
-  EncodeObjectUtils as _EncodeObjectUtils,
   Fee,
-  Parser,
   SignDoc,
   SignerInfo,
+  SignMode,
   TxBody,
-} from "@cosmonauts/cosmos-proto";
-import { SignMode } from "@cosmonauts/cosmos-proto/src/codegen/cosmos/tx/signing/v1beta1/signing";
+} from "@cosmonauts/cosmos-rpc";
 
 import { AminoMsg, StdFee, StdSignDoc } from "./types";
 
@@ -84,11 +86,11 @@ export const StdSignDocUtils = {
   toSignDoc(
     doc: StdSignDoc,
     publicKey: Any,
-    getParserFromAminoType: (type: string) => Parser
+    getGeneratedFromAminoType: (type: string) => Generated
   ): SignDoc {
     const txBody: TxBody = TxBody.fromPartial({
       messages: doc.msgs.map((msg) => {
-        const generated = getParserFromAminoType(msg.type);
+        const generated = getGeneratedFromAminoType(msg.type);
         if (!generated.amino) {
           throw new Error(
             `No such aminoConverter provided for aminoType ${msg.type}`
@@ -131,18 +133,18 @@ export const EncodeObjectUtils = {
   ..._EncodeObjectUtils,
   toAminoMsg(
     msgs: EncodeObject[],
-    getParserFromTypeUrl: (typeUrl: string) => Parser
+    getGeneratedFromTypeUrl: (typeUrl: string) => Generated
   ): AminoMsg[] {
     return msgs.map((msg) => {
-      const parser = getParserFromTypeUrl(msg.typeUrl);
-      if (!parser.amino) {
+      const generated = getGeneratedFromTypeUrl(msg.typeUrl);
+      if (!generated.amino) {
         throw new Error(
           `No such aminoConverter provided for typeUrl ${msg.typeUrl}`
         );
       }
       return {
-        type: parser.amino.aminoType,
-        value: parser.amino.toAmino(parser.fromPartial(msg.value)),
+        type: generated.amino.aminoType,
+        value: generated.amino.toAmino(generated.fromPartial(msg.value)),
       };
     });
   },

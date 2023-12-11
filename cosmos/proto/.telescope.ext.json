@@ -1,4 +1,22 @@
 {
   "protoDirs": ["./proto"],
-  "outPath": "./src/codegen"
+  "outPath": "./src/codegen",
+  "options": {
+    "interfaces": {
+      "enabled": false
+    },
+    "prototypes": {
+      "methods": {
+        "toAmino": false,
+        "fromAmino": false
+      }
+    },
+    "addAminoTypeToObjects": false,
+    "aminoEncoding": {
+      "enabled": false
+    },
+    "rpcClients": {
+      "enabled": false
+    }
+  }
 }

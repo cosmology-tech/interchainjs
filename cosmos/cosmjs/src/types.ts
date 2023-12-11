@@ -168,3 +168,22 @@ export interface WalletOptions {
   hdPaths?: HdPath[];
   prefix?: string;
 }
+
+export interface BlockHeader {
+  version: {
+    block: string;
+    app: string;
+  };
+  height: number;
+  chainId: string;
+  /** An RFC 3339 time string like e.g. '2020-02-15T10:39:10.4696305Z' */
+  time: string;
+}
+
+export interface Block {
+  /** The ID is a hash of the block header (uppercase hex) */
+  id: string;
+  header: BlockHeader;
+  /** Array of raw transactions */
+  txs: Uint8Array[];
+}

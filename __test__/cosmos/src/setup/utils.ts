@@ -32,7 +32,7 @@ export async function signAndBroadcast<T>(
 ) {
   const before = await getRecord?.(store);
 
-  const resp = await store.cosmjsSigner.signAndBroadcast(
+  const resp = await store.cosmWasmCosmjsSigner.signAndBroadcast(
     signerAddress,
     messages,
     mockFee(chainData)
@@ -87,7 +87,7 @@ export async function sign(
   store: Store
 ) {
   const fee = mockFee(chainData);
-  const fromSign = await store.cosmjsSigner.sign(
+  const fromSign = await store.cosmWasmCosmjsSigner.sign(
     signerAddress,
     messages,
     fee,

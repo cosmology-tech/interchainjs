@@ -8,11 +8,6 @@
     "fieldDefaultIsOptional": false,
     "useSDKTypes": false,
     "useOptionalNullable": true,
-    "interfaces": {
-      "enabled": true,
-      "useGlobalDecoderRegistry": true,
-      "useUnionTypes": true
-    },
     "prototypes": {
       "enableRegistryLoader": false,
       "enableMessageComposer": false,
@@ -21,15 +16,15 @@
         "keepCase": false
       },
       "methods": {
-        "fromJSON": true,
-        "toJSON": true,
+        "fromJSON": false,
+        "toJSON": false,
         "encode": true,
         "decode": true,
         "fromPartial": true,
         "toAmino": true,
         "fromAmino": true,
-        "fromProto": true,
-        "toProto": true
+        "fromProto": false,
+        "toProto": false
       },
       "addTypeUrlToDecoders": false,
       "addTypeUrlToObjects": true,
@@ -50,13 +45,7 @@
       "enabled": false
     },
     "stargateClients": {
-      "enabled": false,
-      "includeCosmosDefaultTypes": true
-    },
-    "aminoEncoding": {
-      "enabled": true,
-      "useLegacyInlineEncoding": false,
-      "disableMsgTypes": true
+      "enabled": false
     },
     "lcdClients": {
       "enabled": false
@@ -72,9 +61,6 @@
       "serviceImplement": {
         "Msg": {
           "type": "Tx"
-        },
-        "Query": {
-          "type": "Query"
         }
       },
       "instantOps": [
@@ -82,34 +68,34 @@
           "className": "StargateImpl",
           "include": {
             "patterns": [
-              "cosmos.bank.v1beta1.send",
-              "cosmos.staking.v1beta1.delegate",
-              "cosmos.staking.v1beta1.undelegate",
-              "cosmos.distribution.v1beta1.withdrawDelegatorReward",
-              "ibc.applications.transfer.v1.transfer",
-              "cosmos.bank.v1beta1.balance",
-              "cosmos.bank.v1beta1.allBalances",
-              "cosmos.staking.v1beta1.delegatorDelegations",
-              "cosmos.staking.v1beta1.delegation"
+              "cosmos.authz.v1beta1.*",
+              "cosmos.bank.v1beta1.*",
+              "cosmos.gov.v1beta1.*",
+              "cosmos.staking.v1beta1.*",
+              "cosmos.distribution.v1beta1.*",
+              "ibc.applications.transfer.v1.*"
             ]
           },
           "nameMapping": {
             "Msg": {
-              "sendTokens": "cosmos.bank.v1beta1.send",
-              "delegateTokens": "cosmos.staking.v1beta1.delegate",
-              "undelegateTokens": "cosmos.staking.v1beta1.undelegate",
-              "withdrawRewards": "cosmos.distribution.v1beta1.withdrawDelegatorReward",
-              "sendIbcTokens": "ibc.applications.transfer.v1.transfer"
-            },
-            "Query": {
-              "getBalance": "cosmos.bank.v1beta1.balance",
-              "getAllBalances": "cosmos.bank.v1beta1.allBalances",
-              "getBalanceStaked": "cosmos.staking.v1beta1.delegatorDelegations",
-              "getDelegation": "cosmos.staking.v1beta1.delegation"
+              "updateAuthParams": "cosmos.auth.v1beta1.updateParams",
+              "updateBankParams": "cosmos.bank.v1beta1.updateParams",
+              "updateGovParams": "cosmos.gov.v1beta1.updateParams",
+              "updateStakingParams": "cosmos.staking.v1beta1.updateParams"
             }
           }
         }
       ]
+    },
+    "interfaces": {
+      "enabled": true,
+      "useGlobalDecoderRegistry": true,
+      "useUnionTypes": true
+    },
+    "aminoEncoding": {
+      "enabled": true,
+      "useLegacyInlineEncoding": false,
+      "disableMsgTypes": true
     }
   }
 }

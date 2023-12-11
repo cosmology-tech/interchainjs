@@ -1,6 +1,6 @@
 import { Decimal } from "@cosmonauts/core";
+import { Fee } from "@cosmonauts/cosmos-rpc";
 
-import { Fee } from "../codegen/cosmos/tx/v1beta1/tx";
 import feeTokensJson from "../config/fee-tokens.json";
 
 /**

@@ -107,6 +107,68 @@ export interface CosmWasmImpl {
   updateAdmin(signerAddress: string, message: MsgUpdateAdmin, fee: number | StdFee | "auto", memo: string): Promise<DeliverTxResponse>;
   /** ClearAdmin removes any admin stored for a smart contract */
   clearAdmin(signerAddress: string, message: MsgClearAdmin, fee: number | StdFee | "auto", memo: string): Promise<DeliverTxResponse>;
+  /** UpdateInstantiateConfig updates instantiate config for a smart contract */
+  updateInstantiateConfig(signerAddress: string, message: MsgUpdateInstantiateConfig, fee: number | StdFee | "auto", memo: string): Promise<DeliverTxResponse>;
+  /**
+   * UpdateParams defines a governance operation for updating the x/wasm
+   * module parameters. The authority is defined in the keeper.
+   * 
+   * Since: 0.40
+   */
+  updateWasmParams(signerAddress: string, message: MsgUpdateParams, fee: number | StdFee | "auto", memo: string): Promise<DeliverTxResponse>;
+  /**
+   * SudoContract defines a governance operation for calling sudo
+   * on a contract. The authority is defined in the keeper.
+   * 
+   * Since: 0.40
+   */
+  sudoContract(signerAddress: string, message: MsgSudoContract, fee: number | StdFee | "auto", memo: string): Promise<DeliverTxResponse>;
+  /**
+   * PinCodes defines a governance operation for pinning a set of
+   * code ids in the wasmvm cache. The authority is defined in the keeper.
+   * 
+   * Since: 0.40
+   */
+  pinCodes(signerAddress: string, message: MsgPinCodes, fee: number | StdFee | "auto", memo: string): Promise<DeliverTxResponse>;
+  /**
+   * UnpinCodes defines a governance operation for unpinning a set of
+   * code ids in the wasmvm cache. The authority is defined in the keeper.
+   * 
+   * Since: 0.40
+   */
+  unpinCodes(signerAddress: string, message: MsgUnpinCodes, fee: number | StdFee | "auto", memo: string): Promise<DeliverTxResponse>;
+  /**
+   * StoreAndInstantiateContract defines a governance operation for storing
+   * and instantiating the contract. The authority is defined in the keeper.
+   * 
+   * Since: 0.40
+   */
+  storeAndInstantiateContract(signerAddress: string, message: MsgStoreAndInstantiateContract, fee: number | StdFee | "auto", memo: string): Promise<DeliverTxResponse>;
+  /**
+   * RemoveCodeUploadParamsAddresses defines a governance operation for
+   * removing addresses from code upload params.
+   * The authority is defined in the keeper.
+   */
+  removeCodeUploadParamsAddresses(signerAddress: string, message: MsgRemoveCodeUploadParamsAddresses, fee: number | StdFee | "auto", memo: string): Promise<DeliverTxResponse>;
+  /**
+   * AddCodeUploadParamsAddresses defines a governance operation for
+   * adding addresses to code upload params.
+   * The authority is defined in the keeper.
+   */
+  addCodeUploadParamsAddresses(signerAddress: string, message: MsgAddCodeUploadParamsAddresses, fee: number | StdFee | "auto", memo: string): Promise<DeliverTxResponse>;
+  /**
+   * StoreAndMigrateContract defines a governance operation for storing
+   * and migrating the contract. The authority is defined in the keeper.
+   * 
+   * Since: 0.42
+   */
+  storeAndMigrateContract(signerAddress: string, message: MsgStoreAndMigrateContract, fee: number | StdFee | "auto", memo: string): Promise<DeliverTxResponse>;
+  /**
+   * UpdateContractLabel sets a new label for a smart contract
+   * 
+   * Since: 0.43
+   */
+  updateContractLabel(signerAddress: string, message: MsgUpdateContractLabel, fee: number | StdFee | "auto", memo: string): Promise<DeliverTxResponse>;
 }
 export class MsgClientImpl implements Msg {
   private readonly rpc: TxRpc;

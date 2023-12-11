@@ -4,24 +4,24 @@ import {
   Bech32Address,
   HttpEndpoint,
 } from "@cosmonauts/core";
-
-import { SignMode } from "./codegen/cosmos/tx/signing/v1beta1/signing";
 import {
   AuthInfo,
   Fee,
+  RpcClient,
   SignDoc,
   SignerInfo,
+  SignMode,
   Tx,
   TxBody,
   TxRaw,
-} from "./codegen/cosmos/tx/v1beta1/tx";
+} from "@cosmonauts/cosmos-rpc";
+
 import prefixJson from "./config/prefix.json";
 import { CosmosDefaultOptions } from "./defaults";
-import { QueryParser } from "./query.parser";
 import {
   AccountData,
   EncodeObject,
-  Parser,
+  Generated,
   Registry,
   Signed,
   SignerOptions,
@@ -30,15 +30,15 @@ import { toBech32 } from "./utils/account";
 import { calculateFee, GasPrice, getAvgGasPrice } from "./utils/fee";
 import { EncodeObjectUtils, TxUtils } from "./utils/tx";
 
-export class Signer extends BaseSigner<QueryParser> {
+export class Signer extends BaseSigner<RpcClient> {
   protected hash = CosmosDefaultOptions.hash;
   protected signatureConverter = CosmosDefaultOptions.signatureConverter;
   protected encodePubKey = CosmosDefaultOptions.encodePubKey;
-  protected parsers: Parser[] = [];
+  protected parsers: Generated[] = [];
   accountData: AccountData;
 
   constructor(registry?: Registry, options?: SignerOptions) {
-    super(QueryParser);
+    super(RpcClient);
     if (options?.hash) this.hash = options?.hash;
     if (options?.signatureConverter)
       this.signatureConverter = options?.signatureConverter;
@@ -53,7 +53,7 @@ export class Signer extends BaseSigner<QueryParser> {
   }
 
   on(endpoint: string | HttpEndpoint) {
-    this._query = new this._Query(endpoint);
+    this._request = new this._RequestClient(endpoint);
     this.accountData = void 0;
     return this;
   }
@@ -87,16 +87,16 @@ export class Signer extends BaseSigner<QueryParser> {
   }
 
   async getChainId(): Promise<string> {
-    return this.query.getChainId();
+    return this.request.getChainId();
   }
 
   async getSequence(address: Bech32Address) {
     const { sequence, accountNumber } =
-      await this.query.getBaseAccount(address);
+      await this.request.getBaseAccount(address);
     return { sequence, accountNumber };
   }
 
-  getParserFromTypeUrl = (typeUrl: string): Parser => {
+  getGeneratedFromTypeUrl = (typeUrl: string): Generated => {
     const generated = this.parsers.find((g) => g.typeUrl === typeUrl);
     if (!generated) {
       throw new Error(
@@ -113,11 +113,11 @@ export class Signer extends BaseSigner<QueryParser> {
     const tx = TxUtils.toTxForGasEstimation(
       messages,
       this.encodePubKey(this.auth.key.pubkey),
-      this.getParserFromTypeUrl,
+      this.getGeneratedFromTypeUrl,
       this.accountData.sequence,
       memo
     );
-    return this.query.estimateGas(Tx.encode(tx).finish());
+    return this.request.estimateGas(Tx.encode(tx).finish());
   }
 
   async estimateFee(
@@ -161,7 +161,10 @@ export class Signer extends BaseSigner<QueryParser> {
     }
 
     const txBody: TxBody = TxBody.fromPartial({
-      messages: EncodeObjectUtils.encode(messages, this.getParserFromTypeUrl),
+      messages: EncodeObjectUtils.encode(
+        messages,
+        this.getGeneratedFromTypeUrl
+      ),
       memo,
     });
 
@@ -215,7 +218,7 @@ export class Signer extends BaseSigner<QueryParser> {
         : checkTx
           ? "broadcast_tx_sync"
           : "broadcast_tx_async";
-    const txResponse = await this.query.broadcast(raw, mode);
+    const txResponse = await this.request.broadcast(raw, mode);
     return txResponse;
   }
 }

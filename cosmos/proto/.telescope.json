@@ -8,11 +8,6 @@
     "fieldDefaultIsOptional": false,
     "useSDKTypes": false,
     "useOptionalNullable": true,
-    "interfaces": {
-      "enabled": true,
-      "useGlobalDecoderRegistry": true,
-      "useUnionTypes": true
-    },
     "prototypes": {
       "enableRegistryLoader": false,
       "enableMessageComposer": false,
@@ -21,15 +16,15 @@
         "keepCase": false
       },
       "methods": {
-        "fromJSON": true,
-        "toJSON": true,
+        "fromJSON": false,
+        "toJSON": false,
         "encode": true,
         "decode": true,
         "fromPartial": true,
-        "toAmino": true,
-        "fromAmino": true,
-        "fromProto": true,
-        "toProto": true
+        "toAmino": false,
+        "fromAmino": false,
+        "fromProto": false,
+        "toProto": false
       },
       "addTypeUrlToDecoders": false,
       "addTypeUrlToObjects": true,
@@ -50,11 +45,10 @@
       "enabled": false
     },
     "stargateClients": {
-      "enabled": false,
-      "includeCosmosDefaultTypes": true
+      "enabled": false
     },
     "aminoEncoding": {
-      "enabled": true,
+      "enabled": false,
       "useLegacyInlineEncoding": false,
       "disableMsgTypes": true
     },
@@ -62,13 +56,17 @@
       "enabled": false
     },
     "rpcClients": {
-      "enabled": true,
+      "enabled": false,
       "inline": false,
-      "extensions": true,
+      "extensions": false,
       "camelCase": true,
       "enabledServices": [
         "Query"
       ]
-    }
+    },
+    "interfaces": {
+      "enabled": false
+    },
+    "addAminoTypeToObjects": false
   }
 }

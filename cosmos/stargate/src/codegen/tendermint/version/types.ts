@@ -1,5 +1,5 @@
 import { BinaryReader, BinaryWriter } from "../../binary";
-import { isSet, DeepPartial } from "../../helpers";
+import { DeepPartial } from "../../helpers";
 import { GlobalDecoderRegistry } from "../../registry";
 /**
  * App includes the protocol and software version for the application.
@@ -20,8 +20,8 @@ export interface AppProtoMsg {
  * updated in ResponseEndBlock.
  */
 export interface AppAmino {
-  protocol: string;
-  software: string;
+  protocol?: string;
+  software?: string;
 }
 /**
  * Consensus captures the consensus rules for processing a block in the blockchain,
@@ -42,8 +42,8 @@ export interface ConsensusProtoMsg {
  * state transition machine.
  */
 export interface ConsensusAmino {
-  block: string;
-  app: string;
+  block?: string;
+  app?: string;
 }
 function createBaseApp(): App {
   return {
@@ -88,18 +88,6 @@ export const App = {
     }
     return message;
   },
-  fromJSON(object: any): App {
-    return {
-      protocol: isSet(object.protocol) ? BigInt(object.protocol.toString()) : BigInt(0),
-      software: isSet(object.software) ? String(object.software) : ""
-    };
-  },
-  toJSON(message: App): unknown {
-    const obj: any = {};
-    message.protocol !== undefined && (obj.protocol = (message.protocol || BigInt(0)).toString());
-    message.software !== undefined && (obj.software = message.software);
-    return obj;
-  },
   fromPartial(object: DeepPartial<App>): App {
     const message = createBaseApp();
     message.protocol = object.protocol !== undefined && object.protocol !== null ? BigInt(object.protocol.toString()) : BigInt(0);
@@ -107,10 +95,14 @@ export const App = {
     return message;
   },
   fromAmino(object: AppAmino): App {
-    return {
-      protocol: BigInt(object.protocol),
-      software: object.software
-    };
+    const message = createBaseApp();
+    if (object.protocol !== undefined && object.protocol !== null) {
+      message.protocol = BigInt(object.protocol);
+    }
+    if (object.software !== undefined && object.software !== null) {
+      message.software = object.software;
+    }
+    return message;
   },
   toAmino(message: App): AppAmino {
     const obj: any = {};
@@ -175,18 +167,6 @@ export const Consensus = {
     }
     return message;
   },
-  fromJSON(object: any): Consensus {
-    return {
-      block: isSet(object.block) ? BigInt(object.block.toString()) : BigInt(0),
-      app: isSet(object.app) ? BigInt(object.app.toString()) : BigInt(0)
-    };
-  },
-  toJSON(message: Consensus): unknown {
-    const obj: any = {};
-    message.block !== undefined && (obj.block = (message.block || BigInt(0)).toString());
-    message.app !== undefined && (obj.app = (message.app || BigInt(0)).toString());
-    return obj;
-  },
   fromPartial(object: DeepPartial<Consensus>): Consensus {
     const message = createBaseConsensus();
     message.block = object.block !== undefined && object.block !== null ? BigInt(object.block.toString()) : BigInt(0);
@@ -194,10 +174,14 @@ export const Consensus = {
     return message;
   },
   fromAmino(object: ConsensusAmino): Consensus {
-    return {
-      block: BigInt(object.block),
-      app: BigInt(object.app)
-    };
+    const message = createBaseConsensus();
+    if (object.block !== undefined && object.block !== null) {
+      message.block = BigInt(object.block);
+    }
+    if (object.app !== undefined && object.app !== null) {
+      message.app = BigInt(object.app);
+    }
+    return message;
   },
   toAmino(message: Consensus): ConsensusAmino {
     const obj: any = {};

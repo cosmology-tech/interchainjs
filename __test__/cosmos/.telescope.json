@@ -1,4 +1,0 @@
-{
-  "protoDirs": ["./proto"],
-  "outPath": "./codegen"
-}

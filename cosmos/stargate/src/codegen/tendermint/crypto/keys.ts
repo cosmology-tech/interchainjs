@@ -1,5 +1,5 @@
 import { BinaryReader, BinaryWriter } from "../../binary";
-import { isSet, bytesFromBase64, base64FromBytes, DeepPartial } from "../../helpers";
+import { DeepPartial, bytesFromBase64, base64FromBytes } from "../../helpers";
 import { GlobalDecoderRegistry } from "../../registry";
 /** PublicKey defines the keys available for use with Validators */
 export interface PublicKey {
@@ -12,8 +12,8 @@ export interface PublicKeyProtoMsg {
 }
 /** PublicKey defines the keys available for use with Validators */
 export interface PublicKeyAmino {
-  ed25519?: Uint8Array;
-  secp256k1?: Uint8Array;
+  ed25519?: string;
+  secp256k1?: string;
 }
 function createBasePublicKey(): PublicKey {
   return {
@@ -58,18 +58,6 @@ export const PublicKey = {
     }
     return message;
   },
-  fromJSON(object: any): PublicKey {
-    return {
-      ed25519: isSet(object.ed25519) ? bytesFromBase64(object.ed25519) : undefined,
-      secp256k1: isSet(object.secp256k1) ? bytesFromBase64(object.secp256k1) : undefined
-    };
-  },
-  toJSON(message: PublicKey): unknown {
-    const obj: any = {};
-    message.ed25519 !== undefined && (obj.ed25519 = message.ed25519 !== undefined ? base64FromBytes(message.ed25519) : undefined);
-    message.secp256k1 !== undefined && (obj.secp256k1 = message.secp256k1 !== undefined ? base64FromBytes(message.secp256k1) : undefined);
-    return obj;
-  },
   fromPartial(object: DeepPartial<PublicKey>): PublicKey {
     const message = createBasePublicKey();
     message.ed25519 = object.ed25519 ?? undefined;
@@ -77,15 +65,19 @@ export const PublicKey = {
     return message;
   },
   fromAmino(object: PublicKeyAmino): PublicKey {
-    return {
-      ed25519: object?.ed25519,
-      secp256k1: object?.secp256k1
-    };
+    const message = createBasePublicKey();
+    if (object.ed25519 !== undefined && object.ed25519 !== null) {
+      message.ed25519 = bytesFromBase64(object.ed25519);
+    }
+    if (object.secp256k1 !== undefined && object.secp256k1 !== null) {
+      message.secp256k1 = bytesFromBase64(object.secp256k1);
+    }
+    return message;
   },
   toAmino(message: PublicKey): PublicKeyAmino {
     const obj: any = {};
-    obj.ed25519 = message.ed25519;
-    obj.secp256k1 = message.secp256k1;
+    obj.ed25519 = message.ed25519 ? base64FromBytes(message.ed25519) : undefined;
+    obj.secp256k1 = message.secp256k1 ? base64FromBytes(message.secp256k1) : undefined;
     return obj;
   },
   fromProtoMsg(message: PublicKeyProtoMsg): PublicKey {

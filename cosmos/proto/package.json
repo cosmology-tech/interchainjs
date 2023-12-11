@@ -22,7 +22,8 @@
     "README.md"
   ],
   "dependencies": {
-    "@cosmonauts/core": "^1.0.0",
+    "@cosmonauts/core": "^1.0.4",
+    "@cosmonauts/cosmos-rpc": "^1.0.0",
     "bech32": "^2.0.0"
   },
   "peerDependencies": {

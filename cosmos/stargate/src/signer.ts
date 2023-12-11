@@ -39,7 +39,7 @@ export class StargateCosmjsSigner extends CosmjsSigner {
     );
     const stargateImpl = new StargateImpl();
     stargateImpl.init({
-      ...this.aminoSigner.query.abciQuery,
+      ...this.aminoSigner.request.abciQuery,
       signAndBroadcast: this.signAndBroadcast,
     });
     Object.assign(this, stargateImpl);
@@ -49,7 +49,7 @@ export class StargateCosmjsSigner extends CosmjsSigner {
     endpoint: string | HttpEndpoint,
     signer: OfflineSigner,
     options: SignerOptions = {}
-  ): CosmjsSigner {
+  ): StargateCosmjsSigner {
     const aminoSigner = new AminoSigner().on(endpoint);
     const stargateSigner = new StargateCosmjsSigner(
       aminoSigner,
@@ -58,4 +58,10 @@ export class StargateCosmjsSigner extends CosmjsSigner {
     );
     return stargateSigner;
   }
+
+  sendTokens = this.send;
+  delegateTokens = this.delegate;
+  undelegateTokens = this.undelegate;
+  withdrawRewards = this.withdrawDelegatorReward;
+  sendIbcTokens = this.transfer;
 }

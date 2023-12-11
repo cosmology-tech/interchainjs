@@ -75,13 +75,13 @@ describe("Send tokens", () => {
     expect(before.toAmount + BigInt(amount)).toEqual(after.toAmount);
   });
 
-  it("should success with StargateImpl", async () => {
-    const resp = await directStore.stargateCosmjsSigner.send({
+  it("should success with helper methods", async () => {
+    const resp = await directStore.stargateCosmjsSigner.sendTokens(
       signerAddress,
-      message: msgSend,
-      fee: mockFee(chainData),
-      memo: "",
-    });
+      msgSend,
+      mockFee(chainData),
+      ""
+    );
     expect(resp.code).toEqual(0);
   });
 

@@ -1,5 +1,5 @@
 import { BinaryReader, BinaryWriter } from "../../binary";
-import { isSet, DeepPartial, fromJsonTimestamp, fromTimestamp } from "../../helpers";
+import { DeepPartial, fromJsonTimestamp, fromTimestamp } from "../../helpers";
 import { GlobalDecoderRegistry } from "../../registry";
 /**
  * A Timestamp represents a point in time independent of any time zone or local
@@ -245,18 +245,6 @@ export const Timestamp = {
       }
     }
     return message;
-  },
-  fromJSON(object: any): Timestamp {
-    return {
-      seconds: isSet(object.seconds) ? BigInt(object.seconds.toString()) : BigInt(0),
-      nanos: isSet(object.nanos) ? Number(object.nanos) : 0
-    };
-  },
-  toJSON(message: Timestamp): unknown {
-    const obj: any = {};
-    message.seconds !== undefined && (obj.seconds = (message.seconds || BigInt(0)).toString());
-    message.nanos !== undefined && (obj.nanos = Math.round(message.nanos));
-    return obj;
   },
   fromPartial(object: DeepPartial<Timestamp>): Timestamp {
     const message = createBaseTimestamp();

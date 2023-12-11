@@ -5,14 +5,12 @@ source ../../scripts/download-proto.sh
 cosmosSdkFiles=(
     "cosmos/authz/v1beta1/tx.proto"
     "cosmos/bank/v1beta1/tx.proto"
-    "cosmos/bank/v1beta1/query.proto"
     "cosmos/distribution/v1beta1/tx.proto"
     "cosmos/feegrant/v1beta1/tx.proto"
     "cosmos/gov/v1beta1/tx.proto"
     "cosmos/gov/v1/tx.proto"
     "cosmos/group/v1/tx.proto"
     "cosmos/staking/v1beta1/tx.proto"
-    "cosmos/staking/v1beta1/query.proto"
     "cosmos/vesting/v1beta1/tx.proto"
     )
 

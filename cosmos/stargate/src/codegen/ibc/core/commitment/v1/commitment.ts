@@ -1,6 +1,6 @@
 import { CommitmentProof, CommitmentProofAmino } from "../../../../cosmos/ics23/v1/proofs";
 import { BinaryReader, BinaryWriter } from "../../../../binary";
-import { isSet, bytesFromBase64, base64FromBytes, DeepPartial } from "../../../../helpers";
+import { DeepPartial, bytesFromBase64, base64FromBytes } from "../../../../helpers";
 import { GlobalDecoderRegistry } from "../../../../registry";
 /**
  * MerkleRoot defines a merkle root hash.
@@ -18,7 +18,7 @@ export interface MerkleRootProtoMsg {
  * In the Cosmos SDK, the AppHash of a block header becomes the root.
  */
 export interface MerkleRootAmino {
-  hash: Uint8Array;
+  hash?: string;
 }
 /**
  * MerklePrefix is merkle path prefixed to the key.
@@ -38,7 +38,7 @@ export interface MerklePrefixProtoMsg {
  * append(Path.KeyPrefix, key...))
  */
 export interface MerklePrefixAmino {
-  key_prefix: Uint8Array;
+  key_prefix?: string;
 }
 /**
  * MerklePath is the path used to verify commitment proofs, which can be an
@@ -58,7 +58,7 @@ export interface MerklePathProtoMsg {
  * MerklePath is represented from root-to-leaf
  */
 export interface MerklePathAmino {
-  key_path: string[];
+  key_path?: string[];
 }
 /**
  * MerkleProof is a wrapper type over a chain of CommitmentProofs.
@@ -82,7 +82,7 @@ export interface MerkleProofProtoMsg {
  * MerkleProofs are ordered from leaf-to-root
  */
 export interface MerkleProofAmino {
-  proofs: CommitmentProofAmino[];
+  proofs?: CommitmentProofAmino[];
 }
 function createBaseMerkleRoot(): MerkleRoot {
   return {
@@ -121,29 +121,21 @@ export const MerkleRoot = {
     }
     return message;
   },
-  fromJSON(object: any): MerkleRoot {
-    return {
-      hash: isSet(object.hash) ? bytesFromBase64(object.hash) : new Uint8Array()
-    };
-  },
-  toJSON(message: MerkleRoot): unknown {
-    const obj: any = {};
-    message.hash !== undefined && (obj.hash = base64FromBytes(message.hash !== undefined ? message.hash : new Uint8Array()));
-    return obj;
-  },
   fromPartial(object: DeepPartial<MerkleRoot>): MerkleRoot {
     const message = createBaseMerkleRoot();
     message.hash = object.hash ?? new Uint8Array();
     return message;
   },
   fromAmino(object: MerkleRootAmino): MerkleRoot {
-    return {
-      hash: object.hash
-    };
+    const message = createBaseMerkleRoot();
+    if (object.hash !== undefined && object.hash !== null) {
+      message.hash = bytesFromBase64(object.hash);
+    }
+    return message;
   },
   toAmino(message: MerkleRoot): MerkleRootAmino {
     const obj: any = {};
-    obj.hash = message.hash;
+    obj.hash = message.hash ? base64FromBytes(message.hash) : undefined;
     return obj;
   },
   fromProtoMsg(message: MerkleRootProtoMsg): MerkleRoot {
@@ -160,6 +152,7 @@ export const MerkleRoot = {
   }
 };
 GlobalDecoderRegistry.register(MerkleRoot.typeUrl, MerkleRoot);
+GlobalDecoderRegistry.registerAminoProtoMapping(MerkleRoot.aminoType, MerkleRoot.typeUrl);
 function createBaseMerklePrefix(): MerklePrefix {
   return {
     keyPrefix: new Uint8Array()
@@ -197,29 +190,21 @@ export const MerklePrefix = {
     }
     return message;
   },
-  fromJSON(object: any): MerklePrefix {
-    return {
-      keyPrefix: isSet(object.keyPrefix) ? bytesFromBase64(object.keyPrefix) : new Uint8Array()
-    };
-  },
-  toJSON(message: MerklePrefix): unknown {
-    const obj: any = {};
-    message.keyPrefix !== undefined && (obj.keyPrefix = base64FromBytes(message.keyPrefix !== undefined ? message.keyPrefix : new Uint8Array()));
-    return obj;
-  },
   fromPartial(object: DeepPartial<MerklePrefix>): MerklePrefix {
     const message = createBaseMerklePrefix();
     message.keyPrefix = object.keyPrefix ?? new Uint8Array();
     return message;
   },
   fromAmino(object: MerklePrefixAmino): MerklePrefix {
-    return {
-      keyPrefix: object.key_prefix
-    };
+    const message = createBaseMerklePrefix();
+    if (object.key_prefix !== undefined && object.key_prefix !== null) {
+      message.keyPrefix = bytesFromBase64(object.key_prefix);
+    }
+    return message;
   },
   toAmino(message: MerklePrefix): MerklePrefixAmino {
     const obj: any = {};
-    obj.key_prefix = message.keyPrefix;
+    obj.key_prefix = message.keyPrefix ? base64FromBytes(message.keyPrefix) : undefined;
     return obj;
   },
   fromProtoMsg(message: MerklePrefixProtoMsg): MerklePrefix {
@@ -236,6 +221,7 @@ export const MerklePrefix = {
   }
 };
 GlobalDecoderRegistry.register(MerklePrefix.typeUrl, MerklePrefix);
+GlobalDecoderRegistry.registerAminoProtoMapping(MerklePrefix.aminoType, MerklePrefix.typeUrl);
 function createBaseMerklePath(): MerklePath {
   return {
     keyPath: []
@@ -273,29 +259,15 @@ export const MerklePath = {
     }
     return message;
   },
-  fromJSON(object: any): MerklePath {
-    return {
-      keyPath: Array.isArray(object?.keyPath) ? object.keyPath.map((e: any) => String(e)) : []
-    };
-  },
-  toJSON(message: MerklePath): unknown {
-    const obj: any = {};
-    if (message.keyPath) {
-      obj.keyPath = message.keyPath.map(e => e);
-    } else {
-      obj.keyPath = [];
-    }
-    return obj;
-  },
   fromPartial(object: DeepPartial<MerklePath>): MerklePath {
     const message = createBaseMerklePath();
     message.keyPath = object.keyPath?.map(e => e) || [];
     return message;
   },
   fromAmino(object: MerklePathAmino): MerklePath {
-    return {
-      keyPath: Array.isArray(object?.key_path) ? object.key_path.map((e: any) => e) : []
-    };
+    const message = createBaseMerklePath();
+    message.keyPath = object.key_path?.map(e => e) || [];
+    return message;
   },
   toAmino(message: MerklePath): MerklePathAmino {
     const obj: any = {};
@@ -320,6 +292,7 @@ export const MerklePath = {
   }
 };
 GlobalDecoderRegistry.register(MerklePath.typeUrl, MerklePath);
+GlobalDecoderRegistry.registerAminoProtoMapping(MerklePath.aminoType, MerklePath.typeUrl);
 function createBaseMerkleProof(): MerkleProof {
   return {
     proofs: []
@@ -357,29 +330,15 @@ export const MerkleProof = {
     }
     return message;
   },
-  fromJSON(object: any): MerkleProof {
-    return {
-      proofs: Array.isArray(object?.proofs) ? object.proofs.map((e: any) => CommitmentProof.fromJSON(e)) : []
-    };
-  },
-  toJSON(message: MerkleProof): unknown {
-    const obj: any = {};
-    if (message.proofs) {
-      obj.proofs = message.proofs.map(e => e ? CommitmentProof.toJSON(e) : undefined);
-    } else {
-      obj.proofs = [];
-    }
-    return obj;
-  },
   fromPartial(object: DeepPartial<MerkleProof>): MerkleProof {
     const message = createBaseMerkleProof();
     message.proofs = object.proofs?.map(e => CommitmentProof.fromPartial(e)) || [];
     return message;
   },
   fromAmino(object: MerkleProofAmino): MerkleProof {
-    return {
-      proofs: Array.isArray(object?.proofs) ? object.proofs.map((e: any) => CommitmentProof.fromAmino(e)) : []
-    };
+    const message = createBaseMerkleProof();
+    message.proofs = object.proofs?.map(e => CommitmentProof.fromAmino(e)) || [];
+    return message;
   },
   toAmino(message: MerkleProof): MerkleProofAmino {
     const obj: any = {};
@@ -404,3 +363,4 @@ export const MerkleProof = {
   }
 };
 GlobalDecoderRegistry.register(MerkleProof.typeUrl, MerkleProof);
+GlobalDecoderRegistry.registerAminoProtoMapping(MerkleProof.aminoType, MerkleProof.typeUrl);
