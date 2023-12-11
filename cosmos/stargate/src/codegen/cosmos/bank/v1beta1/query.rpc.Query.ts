@@ -1,6 +1,5 @@
 import { TxRpc } from "../../../types";
 import { BinaryReader } from "../../../binary";
-import { QueryClient, createProtobufRpcClient } from "@cosmjs/stargate";
 import { QueryBalanceRequest, QueryBalanceResponse, QueryAllBalancesRequest, QueryAllBalancesResponse, QuerySpendableBalancesRequest, QuerySpendableBalancesResponse, QuerySpendableBalanceByDenomRequest, QuerySpendableBalanceByDenomResponse, QueryTotalSupplyRequest, QueryTotalSupplyResponse, QuerySupplyOfRequest, QuerySupplyOfResponse, QueryParamsRequest, QueryParamsResponse, QueryDenomMetadataRequest, QueryDenomMetadataResponse, QueryDenomsMetadataRequest, QueryDenomsMetadataResponse, QueryDenomOwnersRequest, QueryDenomOwnersResponse, QuerySendEnabledRequest, QuerySendEnabledResponse } from "./query";
 /** Query defines the gRPC querier service. */
 export interface Query {
@@ -165,42 +164,6 @@ export class QueryClientImpl implements Query {
     return promise.then(data => QuerySendEnabledResponse.decode(new BinaryReader(data)));
   }
 }
-export const createRpcQueryExtension = (base: QueryClient) => {
-  const rpc = createProtobufRpcClient(base);
-  const queryService = new QueryClientImpl(rpc);
-  return {
-    balance(request: QueryBalanceRequest): Promise<QueryBalanceResponse> {
-      return queryService.balance(request);
-    },
-    allBalances(request: QueryAllBalancesRequest): Promise<QueryAllBalancesResponse> {
-      return queryService.allBalances(request);
-    },
-    spendableBalances(request: QuerySpendableBalancesRequest): Promise<QuerySpendableBalancesResponse> {
-      return queryService.spendableBalances(request);
-    },
-    spendableBalanceByDenom(request: QuerySpendableBalanceByDenomRequest): Promise<QuerySpendableBalanceByDenomResponse> {
-      return queryService.spendableBalanceByDenom(request);
-    },
-    totalSupply(request?: QueryTotalSupplyRequest): Promise<QueryTotalSupplyResponse> {
-      return queryService.totalSupply(request);
-    },
-    supplyOf(request: QuerySupplyOfRequest): Promise<QuerySupplyOfResponse> {
-      return queryService.supplyOf(request);
-    },
-    params(request?: QueryParamsRequest): Promise<QueryParamsResponse> {
-      return queryService.params(request);
-    },
-    denomMetadata(request: QueryDenomMetadataRequest): Promise<QueryDenomMetadataResponse> {
-      return queryService.denomMetadata(request);
-    },
-    denomsMetadata(request?: QueryDenomsMetadataRequest): Promise<QueryDenomsMetadataResponse> {
-      return queryService.denomsMetadata(request);
-    },
-    denomOwners(request: QueryDenomOwnersRequest): Promise<QueryDenomOwnersResponse> {
-      return queryService.denomOwners(request);
-    },
-    sendEnabled(request: QuerySendEnabledRequest): Promise<QuerySendEnabledResponse> {
-      return queryService.sendEnabled(request);
-    }
-  };
+export const createClientImpl = (rpc: TxRpc) => {
+  return new QueryClientImpl(rpc);
 };
