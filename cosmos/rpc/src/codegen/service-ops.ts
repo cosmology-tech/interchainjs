@@ -3,8 +3,9 @@ import * as _CosmosAuthV1beta1Queryrpc from "./cosmos/auth/v1beta1/query.rpc.Que
 import * as _CosmosBankV1beta1Queryrpc from "./cosmos/bank/v1beta1/query.rpc.Query";
 import * as _CosmosGovV1beta1Queryrpc from "./cosmos/gov/v1beta1/query.rpc.Query";
 import * as _CosmosStakingV1beta1Queryrpc from "./cosmos/staking/v1beta1/query.rpc.Query";
+import * as _CosmosTxV1beta1Servicerpc from "./cosmos/tx/v1beta1/service.rpc.Service";
 import * as _CosmwasmWasmV1Queryrpc from "./cosmwasm/wasm/v1/query.rpc.Query";
-export interface QueryImpl extends _CosmosAuthV1beta1Queryrpc.QueryImpl, _CosmosBankV1beta1Queryrpc.QueryImpl, _CosmosGovV1beta1Queryrpc.QueryImpl, _CosmosStakingV1beta1Queryrpc.QueryImpl, _CosmwasmWasmV1Queryrpc.QueryImpl {}
+export interface QueryImpl extends _CosmosAuthV1beta1Queryrpc.QueryImpl, _CosmosBankV1beta1Queryrpc.QueryImpl, _CosmosGovV1beta1Queryrpc.QueryImpl, _CosmosStakingV1beta1Queryrpc.QueryImpl, _CosmosTxV1beta1Servicerpc.QueryImpl, _CosmwasmWasmV1Queryrpc.QueryImpl {}
 export class QueryImpl {
   rpc: TxRpc;
   init(rpc: TxRpc) {
@@ -52,6 +53,7 @@ export class QueryImpl {
     this.historicalInfo = _CosmosStakingV1beta1Queryrpc.createClientImpl(rpc).historicalInfo;
     this.pool = _CosmosStakingV1beta1Queryrpc.createClientImpl(rpc).pool;
     this.stakingParams = _CosmosStakingV1beta1Queryrpc.createClientImpl(rpc).params;
+    this.simulate = _CosmosTxV1beta1Servicerpc.createClientImpl(rpc).simulate;
     this.contractInfo = _CosmwasmWasmV1Queryrpc.createClientImpl(rpc).contractInfo;
     this.contractHistory = _CosmwasmWasmV1Queryrpc.createClientImpl(rpc).contractHistory;
     this.contractsByCode = _CosmwasmWasmV1Queryrpc.createClientImpl(rpc).contractsByCode;

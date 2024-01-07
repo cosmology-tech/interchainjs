@@ -1,0 +1,27 @@
+{
+  "protoDirs": ["./proto"],
+  "outPath": "./src/codegen",
+  "options": {
+    "interfaces": {
+      "enabled": false
+    },
+    "prototypes": {
+      "includes": {
+        "packages": ["tendermint.**"]
+      },
+      "methods": {
+        "toAmino": false,
+        "fromAmino": false
+      }
+    },
+    "addAminoTypeToObjects": false,
+    "aminoEncoding": {
+      "enabled": true,
+      "useLegacyInlineEncoding": false,
+      "useProtoOptionality": true
+    },
+    "rpcClients": {
+      "enabled": false
+    }
+  }
+}

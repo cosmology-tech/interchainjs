@@ -10,7 +10,7 @@
   "scripts": {
     "build": "rm -rf dist && tsc",
     "proto:download": "rm -rf ./proto && ./scripts/download-proto.sh",
-    "proto:codegen": "rm -rf ./src/codegen ./.telescope && npx telescope transpile --config ../../.telescope.json --config ./.telescope.ext.json",
+    "proto:codegen": "rm -rf ./src/codegen ./.telescope && npx telescope transpile --config ../../.telescope.json --config ./.telescope.ext.json && npx telescope transpile --config ../../.telescope.json --config ./.telescope.ext.tendermint.json",
     "proto:update": "yarn proto:download && yarn proto:codegen",
     "clear": "rimraf dist"
   },

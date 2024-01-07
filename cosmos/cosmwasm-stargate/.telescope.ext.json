@@ -16,7 +16,8 @@
     "aminoEncoding": {
       "enabled": true,
       "useLegacyInlineEncoding": false,
-      "disableMsgTypes": true
+      "disableMsgTypes": true,
+      "useProtoOptionality": true
     },
     "rpcClients": {
       "serviceImplement": {

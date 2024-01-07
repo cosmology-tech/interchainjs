@@ -18,6 +18,7 @@ import {
   AuthInfo,
   BaseAccount,
   IBinaryWriter,
+  SearchTxQuery,
   SignDoc,
   SignerInfo,
   SignMode,
@@ -394,20 +395,19 @@ export class CosmjsSigner {
   }
 
   async getBlock(height?: number): Promise<Block> {
-    const resp = await this.request.getBlock(height);
-    console.log("%csigner.ts line:398 resp", "color: #007acc;", resp);
+    const { block_id, block } = await this.request.getBlock(height);
     return {
-      id: resp.block_id.hash.toUpperCase(),
+      id: block_id.hash.toUpperCase(),
       header: {
         version: {
-          block: resp.block.header.version.block,
-          app: resp.block.header.version.app,
+          block: block.header.version.block,
+          app: block.header.version.app,
         },
-        height: resp.block.header.height,
-        chainId: resp.block.header.chain_id,
-        time: resp.block.header.time,
+        height: Number(block.header.height),
+        chainId: block.header.chain_id,
+        time: block.header.time,
       },
-      txs: resp.block.data.txs.map((tx: string) => fromBase64(tx)),
+      txs: block.data.txs.map((tx: string) => fromBase64(tx)),
     };
   }
 
@@ -436,6 +436,20 @@ export class CosmjsSigner {
       gasUsed: BigInt(tx.tx_result.gas_used),
       gasWanted: BigInt(tx.tx_result.gas_wanted),
     };
+  }
+
+  async searchTx(query: SearchTxQuery): Promise<IndexedTx[]> {
+    let rawQuery: string;
+    if (typeof query === "string") {
+      rawQuery = query;
+    } else if (Array.isArray(query)) {
+      rawQuery = query.map((t) => `${t.key}='${t.value}'`).join(" AND ");
+    } else {
+      throw new Error(
+        "Got unsupported query type. See CosmJS 0.31 CHANGELOG for API breaking changes here."
+      );
+    }
+    return this.txsQuery(rawQuery);
   }
 
   getBalance = this.request.balance;

@@ -1,9 +1,11 @@
 import { fromBase64, HttpEndpoint, toBase64, toHex } from "@cosmonauts/core";
 
-import { AbciQueryRpc, BroadcastRpc } from "../types";
+import { AbciQueryRequest, BroadcastRequest } from "../types";
 import { randomId } from "./random";
 
-export function createAbciQuery(endpoint: string | HttpEndpoint): AbciQueryRpc {
+export function createAbciQuery(
+  endpoint: string | HttpEndpoint
+): AbciQueryRequest {
   return {
     request: async (
       service: string,
@@ -50,7 +52,9 @@ export function createAbciQuery(endpoint: string | HttpEndpoint): AbciQueryRpc {
   };
 }
 
-export function createTxService(endpoint: string | HttpEndpoint): BroadcastRpc {
+export function createTxService(
+  endpoint: string | HttpEndpoint
+): BroadcastRequest {
   let _endpoint: string;
   let headers: Record<string, string> = {};
   if (typeof endpoint === "string") {

@@ -1,5 +1,6 @@
 {
   "options": {
+    "classesUseArrowFunctions": true,
     "env": "v-next",
     "fieldDefaultIsOptional": false,
     "useSDKTypes": false,

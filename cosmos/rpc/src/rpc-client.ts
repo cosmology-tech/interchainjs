@@ -1,16 +1,18 @@
 import { HttpEndpoint } from "@cosmonauts/core";
 
 import { BaseAccount } from "./codegen/cosmos/auth/v1beta1/auth";
-import { QueryClientImpl as Auth } from "./codegen/cosmos/auth/v1beta1/query.rpc.Query";
-import { ServiceClientImpl as Tx } from "./codegen/cosmos/tx/v1beta1/service.rpc.Service";
 import { QueryImpl } from "./codegen/service-ops";
 import {
-  AbciQueryRpc,
-  AccountType,
-  BroadcastRpc,
-  BroadcastTxCommitResponse,
-  BroadcastTxResponse,
-  IndexedTx,
+  AbciQueryRequest,
+  AccountResponse,
+  BlockResponse,
+  BroadcastCommitResponse,
+  BroadcastNoCommitResponse,
+  BroadcastRequest,
+  BroadcastResponse,
+  SearchTxQuery,
+  SearchTxResponse,
+  StatusResponse,
   TxResponse,
 } from "./types";
 import { Accounts } from "./utils/account";
@@ -18,8 +20,8 @@ import { createAbciQuery, createTxService } from "./utils/request";
 
 export class RpcClient extends QueryImpl {
   readonly endpoint: string | HttpEndpoint;
-  abciQuery: AbciQueryRpc;
-  txService: BroadcastRpc;
+  abciQuery: AbciQueryRequest;
+  txService: BroadcastRequest;
 
   constructor(endpoint: string | HttpEndpoint) {
     super();
@@ -29,25 +31,13 @@ export class RpcClient extends QueryImpl {
     this.init(this.abciQuery);
   }
 
-  about<T>(Cls: { new (rpc: AbciQueryRpc): T }) {
-    return new Cls(this.abciQuery);
-  }
-
-  get auth() {
-    return this.about(Auth);
-  }
-
-  get tx() {
-    return this.about(Tx);
-  }
-
-  async getStatus() {
+  async getStatus(): Promise<StatusResponse> {
     const data = await fetch(`${this.endpoint}/status`);
     const json = await data.json();
     return json["result"];
   }
 
-  async getBlock(height?: number) {
+  async getBlock(height?: number): Promise<BlockResponse> {
     const data = await fetch(
       height == void 0
         ? `${this.endpoint}/block?height=${height}`
@@ -57,14 +47,33 @@ export class RpcClient extends QueryImpl {
     return json["result"];
   }
 
-  async getTx(id: string): Promise<IndexedTx | null> {
+  async getTx(id: string): Promise<TxResponse> {
     const data = await fetch(`${this.endpoint}/tx?hash=0x${id}`);
     const json = await data.json();
-    return json["result"] || null;
+    return json["result"];
   }
 
-  async getAccount(address: string) {
-    const accountResp = await this.auth.account({ address });
+  async searchTx(
+    query: SearchTxQuery,
+    orderBy: "asc" | "desc" = "asc"
+  ): Promise<SearchTxResponse> {
+    let rawQuery: string;
+    if (typeof query === "string") {
+      rawQuery = query;
+    } else if (Array.isArray(query)) {
+      rawQuery = query.map((t) => `${t.key}=${t.value}`).join(" AND ");
+    } else {
+      throw new Error("Got unsupported query type.");
+    }
+    const data = await fetch(
+      `${this.endpoint}/tx_search?query="${rawQuery}"&order_by="${orderBy}"&page=1&per_page=100`
+    );
+    const json = await data.json();
+    return json["result"];
+  }
+
+  async getAccount(address: string): Promise<AccountResponse> {
+    const accountResp = await this.account({ address });
 
     if (!accountResp || !accountResp.account) {
       throw new Error(`Account is undefined.`);
@@ -80,7 +89,7 @@ export class RpcClient extends QueryImpl {
       );
     }
 
-    const account: AccountType = Account.fromPartial(
+    const account: AccountResponse = Account.fromPartial(
       Account.decode(accountResp.account.value)
     );
     return account;
@@ -100,28 +109,20 @@ export class RpcClient extends QueryImpl {
     return (status as any)["node_info"]["network"];
   }
 
-  async estimateGas(tx: Uint8Array) {
-    const { gasInfo } = await this.tx.simulate({ tx: void 0, txBytes: tx });
-    if (typeof gasInfo === "undefined") {
-      throw new Error("Fail to estimate gas by simulate tx.");
-    }
-    return gasInfo;
-  }
-
   async broadcast(
     tx: Uint8Array,
     method: "broadcast_tx_async" | "broadcast_tx_sync" | "broadcast_tx_commit"
-  ): Promise<TxResponse> {
+  ): Promise<BroadcastResponse> {
     const resp = await this.txService.request(method, tx);
     switch (method) {
       case "broadcast_tx_async":
-        const { hash: hash1, ...rest1 } = resp as BroadcastTxResponse;
+        const { hash: hash1, ...rest1 } = resp as BroadcastNoCommitResponse;
         return {
           hash: hash1,
           add_tx: rest1,
         };
       case "broadcast_tx_sync":
-        const { hash: hash2, ...rest2 } = resp as BroadcastTxResponse;
+        const { hash: hash2, ...rest2 } = resp as BroadcastNoCommitResponse;
         return {
           hash: hash2,
           check_tx: rest2,
@@ -133,7 +134,7 @@ export class RpcClient extends QueryImpl {
           deliver_tx,
           height,
           hash: hash3,
-        } = resp as BroadcastTxCommitResponse;
+        } = resp as BroadcastCommitResponse;
         return {
           hash: hash3,
           check_tx,

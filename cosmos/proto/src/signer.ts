@@ -117,7 +117,14 @@ export class Signer extends BaseSigner<RpcClient> {
       this.accountData.sequence,
       memo
     );
-    return this.request.estimateGas(Tx.encode(tx).finish());
+    const { gasInfo } = await this.request.simulate({
+      tx: void 0,
+      txBytes: Tx.encode(tx).finish(),
+    });
+    if (typeof gasInfo === "undefined") {
+      throw new Error("Fail to estimate gas by simulate tx.");
+    }
+    return gasInfo;
   }
 
   async estimateFee(

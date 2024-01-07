@@ -113,69 +113,86 @@ export class QueryClientImpl implements Query {
   private readonly rpc: TxRpc;
   constructor(rpc: TxRpc) {
     this.rpc = rpc;
-    this.accounts = this.accounts.bind(this);
-    this.account = this.account.bind(this);
-    this.accountAddressByID = this.accountAddressByID.bind(this);
-    this.params = this.params.bind(this);
-    this.moduleAccounts = this.moduleAccounts.bind(this);
-    this.moduleAccountByName = this.moduleAccountByName.bind(this);
-    this.bech32Prefix = this.bech32Prefix.bind(this);
-    this.addressBytesToString = this.addressBytesToString.bind(this);
-    this.addressStringToBytes = this.addressStringToBytes.bind(this);
-    this.accountInfo = this.accountInfo.bind(this);
   }
-  accounts(request: QueryAccountsRequest = {
+  /* Accounts returns all the existing accounts.
+  
+   When called from another module, this query might consume a high amount of
+   gas if the pagination field is incorrectly set.
+  
+   Since: cosmos-sdk 0.43 */
+  accounts = async (request: QueryAccountsRequest = {
     pagination: undefined
-  }): Promise<QueryAccountsResponse> {
+  }): Promise<QueryAccountsResponse> => {
     const data = QueryAccountsRequest.encode(request).finish();
     const promise = this.rpc.request("cosmos.auth.v1beta1.Query", "Accounts", data);
     return promise.then(data => QueryAccountsResponse.decode(new BinaryReader(data)));
-  }
-  account(request: QueryAccountRequest): Promise<QueryAccountResponse> {
+  };
+  /* Account returns account details based on address. */
+  account = async (request: QueryAccountRequest): Promise<QueryAccountResponse> => {
     const data = QueryAccountRequest.encode(request).finish();
     const promise = this.rpc.request("cosmos.auth.v1beta1.Query", "Account", data);
     return promise.then(data => QueryAccountResponse.decode(new BinaryReader(data)));
-  }
-  accountAddressByID(request: QueryAccountAddressByIDRequest): Promise<QueryAccountAddressByIDResponse> {
+  };
+  /* AccountAddressByID returns account address based on account number.
+  
+   Since: cosmos-sdk 0.46.2 */
+  accountAddressByID = async (request: QueryAccountAddressByIDRequest): Promise<QueryAccountAddressByIDResponse> => {
     const data = QueryAccountAddressByIDRequest.encode(request).finish();
     const promise = this.rpc.request("cosmos.auth.v1beta1.Query", "AccountAddressByID", data);
     return promise.then(data => QueryAccountAddressByIDResponse.decode(new BinaryReader(data)));
-  }
-  params(request: QueryParamsRequest = {}): Promise<QueryParamsResponse> {
+  };
+  /* Params queries all parameters. */
+  params = async (request: QueryParamsRequest = {}): Promise<QueryParamsResponse> => {
     const data = QueryParamsRequest.encode(request).finish();
     const promise = this.rpc.request("cosmos.auth.v1beta1.Query", "Params", data);
     return promise.then(data => QueryParamsResponse.decode(new BinaryReader(data)));
-  }
-  moduleAccounts(request: QueryModuleAccountsRequest = {}): Promise<QueryModuleAccountsResponse> {
+  };
+  /* ModuleAccounts returns all the existing module accounts.
+  
+   Since: cosmos-sdk 0.46 */
+  moduleAccounts = async (request: QueryModuleAccountsRequest = {}): Promise<QueryModuleAccountsResponse> => {
     const data = QueryModuleAccountsRequest.encode(request).finish();
     const promise = this.rpc.request("cosmos.auth.v1beta1.Query", "ModuleAccounts", data);
     return promise.then(data => QueryModuleAccountsResponse.decode(new BinaryReader(data)));
-  }
-  moduleAccountByName(request: QueryModuleAccountByNameRequest): Promise<QueryModuleAccountByNameResponse> {
+  };
+  /* ModuleAccountByName returns the module account info by module name */
+  moduleAccountByName = async (request: QueryModuleAccountByNameRequest): Promise<QueryModuleAccountByNameResponse> => {
     const data = QueryModuleAccountByNameRequest.encode(request).finish();
     const promise = this.rpc.request("cosmos.auth.v1beta1.Query", "ModuleAccountByName", data);
     return promise.then(data => QueryModuleAccountByNameResponse.decode(new BinaryReader(data)));
-  }
-  bech32Prefix(request: Bech32PrefixRequest = {}): Promise<Bech32PrefixResponse> {
+  };
+  /* Bech32Prefix queries bech32Prefix
+  
+   Since: cosmos-sdk 0.46 */
+  bech32Prefix = async (request: Bech32PrefixRequest = {}): Promise<Bech32PrefixResponse> => {
     const data = Bech32PrefixRequest.encode(request).finish();
     const promise = this.rpc.request("cosmos.auth.v1beta1.Query", "Bech32Prefix", data);
     return promise.then(data => Bech32PrefixResponse.decode(new BinaryReader(data)));
-  }
-  addressBytesToString(request: AddressBytesToStringRequest): Promise<AddressBytesToStringResponse> {
+  };
+  /* AddressBytesToString converts Account Address bytes to string
+  
+   Since: cosmos-sdk 0.46 */
+  addressBytesToString = async (request: AddressBytesToStringRequest): Promise<AddressBytesToStringResponse> => {
     const data = AddressBytesToStringRequest.encode(request).finish();
     const promise = this.rpc.request("cosmos.auth.v1beta1.Query", "AddressBytesToString", data);
     return promise.then(data => AddressBytesToStringResponse.decode(new BinaryReader(data)));
-  }
-  addressStringToBytes(request: AddressStringToBytesRequest): Promise<AddressStringToBytesResponse> {
+  };
+  /* AddressStringToBytes converts Address string to bytes
+  
+   Since: cosmos-sdk 0.46 */
+  addressStringToBytes = async (request: AddressStringToBytesRequest): Promise<AddressStringToBytesResponse> => {
     const data = AddressStringToBytesRequest.encode(request).finish();
     const promise = this.rpc.request("cosmos.auth.v1beta1.Query", "AddressStringToBytes", data);
     return promise.then(data => AddressStringToBytesResponse.decode(new BinaryReader(data)));
-  }
-  accountInfo(request: QueryAccountInfoRequest): Promise<QueryAccountInfoResponse> {
+  };
+  /* AccountInfo queries account info which is common to all account types.
+  
+   Since: cosmos-sdk 0.47 */
+  accountInfo = async (request: QueryAccountInfoRequest): Promise<QueryAccountInfoResponse> => {
     const data = QueryAccountInfoRequest.encode(request).finish();
     const promise = this.rpc.request("cosmos.auth.v1beta1.Query", "AccountInfo", data);
     return promise.then(data => QueryAccountInfoResponse.decode(new BinaryReader(data)));
-  }
+  };
 }
 export const createClientImpl = (rpc: TxRpc) => {
   return new QueryClientImpl(rpc);

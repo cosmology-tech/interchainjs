@@ -1,6 +1,7 @@
 import { Bech32Address, HdPath } from "@cosmonauts/core";
 import { AminoConverters, StdSignDoc } from "@cosmonauts/cosmos-amino";
-import { GasPrice, Registry, SignDoc } from "@cosmonauts/cosmos-proto";
+import { GasPrice, Registry } from "@cosmonauts/cosmos-proto";
+import { Event, SignDoc } from "@cosmonauts/cosmos-rpc";
 
 export interface SequenceResponse {
   accountNumber: bigint;
@@ -99,16 +100,6 @@ export interface DeliverTxResponse {
   }>;
   gasUsed: bigint;
   gasWanted: bigint;
-}
-
-export interface Attribute {
-  key: string;
-  value: string;
-}
-
-export interface Event {
-  type: string;
-  attributes: Attribute[];
 }
 
 /** A transaction that is indexed as part of the transaction history */
