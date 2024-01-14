@@ -1,6 +1,6 @@
 import { toBase64 } from "@cosmonauts/core";
 import { DeliverTxResponse } from "@cosmonauts/cosmos-cosmjs";
-import { TxRaw } from "@cosmonauts/cosmos-rpc";
+import { TxRaw } from "@cosmonauts/cosmos-proto";
 
 export function expectTxRawMatch(t1: TxRaw, t2: TxRaw) {
   expect(toBase64(t1.bodyBytes)).toEqual(toBase64(t2.bodyBytes));

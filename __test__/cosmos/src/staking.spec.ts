@@ -1,9 +1,10 @@
-import { CosmjsSigner, DeliverTxResponse } from "@cosmonauts/cosmos-cosmjs";
+import { DeliverTxResponse } from "@cosmonauts/cosmos-cosmjs";
 import { Message } from "@cosmonauts/cosmos-proto";
+import { StargateCosmjsSigner } from "@cosmonauts/cosmos-stargate";
 import {
   BondStatus,
   bondStatusToJSON,
-} from "@cosmonauts/cosmos-rpc/src/codegen/cosmos/staking/v1beta1/staking";
+} from "@cosmonauts/cosmos-stargate/src/codegen/cosmos/staking/v1beta1/staking";
 import {
   MsgDelegate,
   MsgUndelegate,
@@ -12,8 +13,8 @@ import {
 import { address, chain, ChainData, seed } from "./setup/data";
 import { expectTxRawMatch } from "./setup/expect";
 import {
-  getCosmjsSigner,
   getSigningStargateClient,
+  getStargateCosmjsSigner,
   helperBroadcast,
   sign,
   signAndBroadcast,
@@ -26,13 +27,13 @@ const params = {
   chainData,
   seed: seed.genesis,
 };
-const directSigner = getCosmjsSigner(params);
-const aminoSigner = getCosmjsSigner(params, "amino");
+const directSigner = getStargateCosmjsSigner(params);
+const aminoSigner = getStargateCosmjsSigner(params, "amino");
 
 let validatorAddress: string;
 
 beforeAll(async () => {
-  const { validators } = await directSigner.request.validators({
+  const { validators } = await directSigner.validators({
     status: bondStatusToJSON(BondStatus.BOND_STATUS_BONDED),
   });
   // console.log("All validatores:", validators);
@@ -43,7 +44,7 @@ beforeAll(async () => {
   console.log("Validator:", validatorAddress);
 });
 
-async function getRecord(signer: CosmjsSigner) {
+async function getRecord(signer: StargateCosmjsSigner) {
   const { sequence } = await signer.request.getBaseAccount(signerAddress);
   const { delegationResponse } = await signer.getDelegation({
     delegatorAddr: signerAddress,
@@ -107,7 +108,7 @@ describe("Delegate tokens", () => {
       expectSuccessfulBroadcast(resp, before, after);
     });
 
-    it("should success with helper methods", async () => {
+    it("should success with helper method", async () => {
       const { resp, before, after } = await helperBroadcast({
         ...signParams,
         signer: directSigner,

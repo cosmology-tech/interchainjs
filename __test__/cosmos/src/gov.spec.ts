@@ -12,8 +12,8 @@ import {
 import { address, chain, ChainData, seed } from "./setup/data";
 import { expectSuccessfulBroadcast, expectTxRawMatch } from "./setup/expect";
 import {
-  getCosmjsSigner,
   getSigningStargateClient,
+  getStargateCosmjsSigner,
   helperBroadcast,
   sign,
   signAndBroadcast,
@@ -26,8 +26,8 @@ const params = {
   chainData,
   seed: seed.genesis,
 };
-const directSigner = getCosmjsSigner(params);
-const aminoSigner = getCosmjsSigner(params, "amino");
+const directSigner = getStargateCosmjsSigner(params);
+const aminoSigner = getStargateCosmjsSigner(params, "amino");
 
 async function getRecord(signer: CosmjsSigner) {
   const { sequence } = await signer.getSequence(signerAddress);

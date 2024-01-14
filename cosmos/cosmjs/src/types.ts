@@ -1,7 +1,7 @@
 import { Bech32Address, HdPath } from "@cosmonauts/core";
 import { AminoConverters, StdSignDoc } from "@cosmonauts/cosmos-amino";
-import { GasPrice, Registry } from "@cosmonauts/cosmos-proto";
-import { Event, SignDoc } from "@cosmonauts/cosmos-rpc";
+import { GasPrice, Registry, SignDoc } from "@cosmonauts/cosmos-proto";
+import { Event } from "@cosmonauts/cosmos-rpc";
 
 export interface SequenceResponse {
   accountNumber: bigint;

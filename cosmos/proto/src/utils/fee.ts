@@ -1,5 +1,5 @@
 import { Decimal } from "@cosmonauts/core";
-import { Fee } from "@cosmonauts/cosmos-rpc";
+import { Fee } from "@cosmonauts/cosmos-proto";
 
 import feeTokensJson from "../config/fee-tokens.json";
 

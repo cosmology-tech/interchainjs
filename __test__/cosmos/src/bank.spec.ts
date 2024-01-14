@@ -1,12 +1,13 @@
-import { CosmjsSigner, DeliverTxResponse } from "@cosmonauts/cosmos-cosmjs";
+import { DeliverTxResponse } from "@cosmonauts/cosmos-cosmjs";
 import { Message } from "@cosmonauts/cosmos-proto";
+import { StargateCosmjsSigner } from "@cosmonauts/cosmos-stargate";
 import { MsgSend } from "@cosmonauts/cosmos-stargate/src/codegen/cosmos/bank/v1beta1/tx";
 
 import { address, chain, ChainData, seed } from "./setup/data";
 import { expectTxRawMatch } from "./setup/expect";
 import {
-  getCosmjsSigner,
   getSigningStargateClient,
+  getStargateCosmjsSigner,
   helperBroadcast,
   sign,
   signAndBroadcast,
@@ -19,25 +20,24 @@ const params = {
   chainData,
   seed: seed.genesis,
 };
-const directSigner = getCosmjsSigner(params);
-const aminoSigner = getCosmjsSigner(params, "amino");
+const directSigner = getStargateCosmjsSigner(params);
+const aminoSigner = getStargateCosmjsSigner(params, "amino");
 
 describe("Send tokens", () => {
   const amount = "1000000";
-  const msgSend: MsgSend = {
-    amount: [
-      {
-        amount,
-        denom: chainData.denom,
-      },
-    ],
-    fromAddress: signerAddress,
-    toAddress: address.osmosis.test1,
-  };
   const messages: Message<MsgSend>[] = [
     {
       typeUrl: "/cosmos.bank.v1beta1.MsgSend",
-      value: msgSend,
+      value: {
+        amount: [
+          {
+            amount,
+            denom: chainData.denom,
+          },
+        ],
+        fromAddress: signerAddress,
+        toAddress: address.osmosis.test1,
+      },
     },
   ];
 
@@ -47,7 +47,7 @@ describe("Send tokens", () => {
     messages,
   };
 
-  async function getRecord(signer: CosmjsSigner) {
+  async function getRecord(signer: StargateCosmjsSigner) {
     const { sequence: fromSequence } = await signer.getSequence(signerAddress);
     const toAmount = BigInt(
       (
@@ -89,7 +89,7 @@ describe("Send tokens", () => {
       expectSuccessfulBroadcast(resp, before, after);
     });
 
-    it("should success with helper methods", async () => {
+    it("should success with helper method", async () => {
       const { resp, before, after } = await helperBroadcast({
         ...signParams,
         signer: directSigner,

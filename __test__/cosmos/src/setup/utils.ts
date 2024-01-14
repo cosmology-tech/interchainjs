@@ -28,8 +28,8 @@ interface BroadcastParams<T> {
   chainData: ChainData;
   signerAddress: string;
   messages: any;
-  signer: CosmjsSigner;
-  getRecord?: (signer: CosmjsSigner) => T;
+  signer: StargateCosmjsSigner;
+  getRecord?: (signer: StargateCosmjsSigner) => T;
 }
 
 export async function signAndBroadcast<T>({
@@ -43,7 +43,7 @@ export async function signAndBroadcast<T>({
 
   const resp = await signer.signAndBroadcast(
     signerAddress,
-    messages,
+    messages.v2 ?? messages,
     mockFee(chainData)
   );
   console.log("resp:", resp);
@@ -76,7 +76,7 @@ export async function helperBroadcast<T>({
 
   const resp = await helper(
     signerAddress,
-    messages[0].value,
+    (messages.v2 ?? messages)[0].value,
     mockFee(chainData),
     ""
   );
@@ -110,8 +110,18 @@ export async function sign({
   signerV2,
 }: SignParams) {
   const fee = mockFee(chainData);
-  const v1Result = await signerV1.sign(signerAddress, messages, fee, "");
-  const v2Result = await signerV2.sign(signerAddress, messages, fee, "");
+  const v1Result = await signerV1.sign(
+    signerAddress,
+    messages.v1 ?? messages,
+    fee,
+    ""
+  );
+  const v2Result = await signerV2.sign(
+    signerAddress,
+    messages.v2 ?? messages,
+    fee,
+    ""
+  );
 
   return {
     v1Result,
@@ -124,7 +134,7 @@ interface SignerParams {
   seed: string;
 }
 
-export function getCosmjsSigner(
+export function getStargateCosmjsSigner(
   { chainData, seed }: SignerParams,
   signType = "direct"
 ) {

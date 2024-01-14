@@ -1,13 +1,12 @@
 import { toUtf8 } from "@cosmonauts/core";
 
 import { chain, seed } from "./setup/data";
-import { getCosmjsSigner } from "./setup/utils";
+import { getStargateCosmjsSigner } from "./setup/utils";
 
-const signer = getCosmjsSigner({
+const signer = getStargateCosmjsSigner({
   chainData: chain.osmosis,
   seed: seed.genesis,
 });
-const request = signer.request;
 
 describe("Test Query", () => {
   it("should get status", async () => {
@@ -26,26 +25,26 @@ describe("Test Query", () => {
   // });
 
   it("should get target proposal", async () => {
-    const proposal = await request.proposal({ proposalId: 4n });
+    const proposal = await signer.proposal({ proposalId: 4n });
     console.log(proposal);
   });
 
   it("should get votingParams", async () => {
-    const votingParams = await request.govParams({
+    const votingParams = await signer.getGovParams({
       paramsType: "voting",
     });
     console.log(votingParams);
   });
 
   it("should get depositParams", async () => {
-    const depositParams = await request.govParams({
+    const depositParams = await signer.getGovParams({
       paramsType: "deposit",
     });
     console.log(depositParams);
   });
 
   it("should get tallyParams", async () => {
-    const { tallyParams } = await request.govParams({
+    const { tallyParams } = await signer.getGovParams({
       paramsType: "tallying",
     });
     console.log("quorum", toUtf8(tallyParams.quorum));

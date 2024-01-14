@@ -31,7 +31,7 @@
     "@cosmonauts/cosmos-proto": "^1.0.0"
   },
   "devDependencies": {
-    "@cosmology/telescope": "^1.0.1",
+    "@cosmology/telescope": "^1.4.3",
     "axios": "^1.5.1",
     "rimraf": "^5.0.1"
   }

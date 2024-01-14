@@ -1,12 +1,12 @@
 import {
-  Any,
   AuthInfo,
   Fee,
   SignerInfo,
   SignMode,
   Tx,
   TxBody,
-} from "@cosmonauts/cosmos-rpc";
+} from "@cosmonauts/cosmos-proto";
+import { Any } from "@cosmonauts/cosmos-rpc";
 
 import { EncodeObject, Generated } from "../types";
 
