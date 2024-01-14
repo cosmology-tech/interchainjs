@@ -1,4 +1,3 @@
 node_modules
-dist
-# protos
-# scripts
+esm
+cjs

@@ -4,6 +4,7 @@
   ],
   "outPath": "./src/codegen",
   "options": {
+    "classesUseArrowFunctions": true,
     "env": "v-next",
     "fieldDefaultIsOptional": false,
     "useSDKTypes": false,
@@ -47,11 +48,6 @@
     "stargateClients": {
       "enabled": false
     },
-    "aminoEncoding": {
-      "enabled": false,
-      "useLegacyInlineEncoding": false,
-      "disableMsgTypes": true
-    },
     "lcdClients": {
       "enabled": false
     },
@@ -67,6 +63,9 @@
     "interfaces": {
       "enabled": false
     },
-    "addAminoTypeToObjects": false
+    "addAminoTypeToObjects": false,
+    "aminoEncoding": {
+      "enabled": false
+    }
   }
 }

@@ -14,7 +14,8 @@
     "access": "restricted"
   },
   "scripts": {
-    "build": "lerna run build",
+    "build": "lerna run prepare",
+    "bootstrap": "lerna bootstrap",
     "proto:download": "lerna run proto:download",
     "proto:codegen": "lerna run proto:codegen",
     "proto:update": "lerna run proto:update",

@@ -62,9 +62,19 @@ export class CosmWasmCosmjsSigner extends StargateCosmjsSigner {
     return cosmWasmSigner;
   }
 
-  upload = this.storeCode;
-  instantiate = this.instantiateContract;
-  instantiate2 = this.instantiateContract2;
-  migrate = this.migrateContract;
-  executeMultiple = this.executeContract;
+  get upload() {
+    return this.storeCode;
+  }
+  get instantiate() {
+    return this.instantiateContract;
+  }
+  get instantiate2() {
+    return this.instantiateContract2;
+  }
+  get migrate() {
+    return this.migrateContract;
+  }
+  get executeMultiple() {
+    return this.executeContract;
+  }
 }

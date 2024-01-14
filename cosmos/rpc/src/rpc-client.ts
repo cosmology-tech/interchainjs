@@ -6,13 +6,12 @@ import {
   AbciQueryRequest,
   AccountResponse,
   BlockResponse,
-  BroadcastCommitResponse,
-  BroadcastNoCommitResponse,
   BroadcastRequest,
   BroadcastResponse,
   SearchTxQuery,
   SearchTxResponse,
   StatusResponse,
+  TendermintBroadcastTxResponse,
   TxResponse,
 } from "./types";
 import { Accounts } from "./utils/account";
@@ -66,7 +65,8 @@ export class RpcClient extends QueryImpl {
       throw new Error("Got unsupported query type.");
     }
     const data = await fetch(
-      `${this.endpoint}/tx_search?query="${rawQuery}"&order_by="${orderBy}"&page=1&per_page=100`
+      `${this.endpoint}/tx_search?query="${rawQuery}"&order_by="${orderBy}"`
+      // `${this.endpoint}/tx_search?query="${rawQuery}"&order_by="${orderBy}"&page=1&per_page=100`
     );
     const json = await data.json();
     return json["result"];
@@ -116,13 +116,15 @@ export class RpcClient extends QueryImpl {
     const resp = await this.txService.request(method, tx);
     switch (method) {
       case "broadcast_tx_async":
-        const { hash: hash1, ...rest1 } = resp as BroadcastNoCommitResponse;
+        const { hash: hash1, ...rest1 } =
+          resp as TendermintBroadcastTxResponse.Async;
         return {
           hash: hash1,
           add_tx: rest1,
         };
       case "broadcast_tx_sync":
-        const { hash: hash2, ...rest2 } = resp as BroadcastNoCommitResponse;
+        const { hash: hash2, ...rest2 } =
+          resp as TendermintBroadcastTxResponse.Sync;
         return {
           hash: hash2,
           check_tx: rest2,
@@ -134,7 +136,7 @@ export class RpcClient extends QueryImpl {
           deliver_tx,
           height,
           hash: hash3,
-        } = resp as BroadcastCommitResponse;
+        } = resp as TendermintBroadcastTxResponse.Commit;
         return {
           hash: hash3,
           check_tx,

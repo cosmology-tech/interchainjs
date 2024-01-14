@@ -3,6 +3,7 @@
 source ../../scripts/download-proto.sh
 
 cosmosSdkFiles=(
+    "cosmos/tx/v1beta1/service.proto"
     "cosmos/crypto/secp256k1/keys.proto"
     )
 

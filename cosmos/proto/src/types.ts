@@ -2,8 +2,8 @@
 import { Bech32Address, GeneralSigned, SigObj } from "@cosmonauts/core";
 import {
   Any,
+  BroadcastResponse,
   TelescopeGeneratedType,
-  TxResponse,
 } from "@cosmonauts/cosmos-rpc";
 
 export interface AccountData {
@@ -23,7 +23,7 @@ export interface Signed<T> extends GeneralSigned<T> {
   broadcast: (
     checkTx?: boolean,
     deliverTx?: boolean
-  ) => Promise<TxResponse | undefined>;
+  ) => Promise<BroadcastResponse | undefined>;
 }
 
 export interface AminoConverter {

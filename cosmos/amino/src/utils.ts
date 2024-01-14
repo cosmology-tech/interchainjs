@@ -5,15 +5,14 @@ import {
   Generated,
 } from "@cosmonauts/cosmos-proto";
 import {
-  Any,
   AuthInfo,
-  Coin,
   Fee,
   SignDoc,
   SignerInfo,
   SignMode,
   TxBody,
-} from "@cosmonauts/cosmos-rpc";
+} from "@cosmonauts/cosmos-proto";
+import { Any, Coin } from "@cosmonauts/cosmos-rpc";
 
 import { AminoMsg, StdFee, StdSignDoc } from "./types";
 

@@ -2,22 +2,36 @@
   "name": "@cosmonauts/cosmos-stargate",
   "version": "1.0.2",
   "description": "Cosmos sign and broadcast instances",
-  "main": "dist/index.js",
-  "module": "dist/index.js",
-  "types": "dist/index.d.ts",
   "author": "liujun93 <ljun8575@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "build": "rm -rf dist && tsc",
     "proto:download": "rm -rf ./proto && ./scripts/download-proto.sh",
     "proto:codegen": "rm -rf ./src/codegen ./.telescope && npx telescope transpile --config ../../.telescope.json --config ./.telescope.ext.json",
     "proto:update": "yarn proto:download && yarn proto:codegen",
-    "clear": "rimraf dist"
+    "build:cjs": "yarn tsc -p tsconfig.json --outDir cjs --module commonjs || true",
+    "build:esm": "yarn tsc -p tsconfig.json --outDir esm --module es2022 --declaration false || true",
+    "clean:cjs": "rimraf cjs",
+    "clean:esm": "rimraf esm",
+    "clean": "npm run clean:cjs && npm run clean:esm",
+    "build": "npm run clean && npm run build:cjs && npm run build:esm",
+    "prepare": "npm run build"
   },
   "files": [
     "dist",
     "README.md"
   ],
+  "exports": {
+    ".": {
+      "types": "./cjs/index.d.ts",
+      "import": "./esm/index.js",
+      "require": "./cjs/index.js"
+    },
+    "./cosmos/gov/v1beta1/gov": {
+      "types": "./cjs/codegen/cosmos/gov/v1beta1/gov.d.ts",
+      "import": "./esm/codegen/cosmos/gov/v1beta1/gov.js",
+      "require": "./cjs/codegen/cosmos/gov/v1beta1/gov.js"
+    }
+  },
   "publishConfig": {
     "access": "public"
   },

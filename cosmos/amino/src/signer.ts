@@ -7,7 +7,7 @@ import {
   Signer,
   SignerOptions,
 } from "@cosmonauts/cosmos-proto";
-import { Fee, TxRaw } from "@cosmonauts/cosmos-rpc";
+import { Fee, TxRaw } from "@cosmonauts/cosmos-proto";
 
 import { AminoConverters, StdFee, StdSignDoc } from "./types";
 import { EncodeObjectUtils, StdFeeUtils, StdSignDocUtils } from "./utils";

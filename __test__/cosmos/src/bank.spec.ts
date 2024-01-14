@@ -1,24 +1,26 @@
-import { toBase64 } from "@cosmonauts/core";
+import { CosmjsSigner, DeliverTxResponse } from "@cosmonauts/cosmos-cosmjs";
 import { Message } from "@cosmonauts/cosmos-proto";
-import { MsgSend } from "@cosmonauts/cosmos-stargate";
+import { MsgSend } from "@cosmonauts/cosmos-stargate/src/codegen/cosmos/bank/v1beta1/tx";
 
+import { address, chain, ChainData, seed } from "./setup/data";
+import { expectTxRawMatch } from "./setup/expect";
 import {
-  address,
-  chain,
-  ChainData,
-  mockFee,
-  seed,
+  getCosmjsSigner,
+  getSigningStargateClient,
+  helperBroadcast,
   sign,
-  signAmino,
   signAndBroadcast,
-  signAndBroadcastWithCosmjs,
-  Store,
-} from "./setup";
+} from "./setup/utils";
 
 const chainData: ChainData = chain.osmosis;
 const signerAddress: string = address.osmosis.genesis;
-const directStore: Store = new Store(chain.osmosis, seed.genesis);
-const aminoStore: Store = new Store(chain.osmosis, seed.genesis, "amino");
+
+const params = {
+  chainData,
+  seed: seed.genesis,
+};
+const directSigner = getCosmjsSigner(params);
+const aminoSigner = getCosmjsSigner(params, "amino");
 
 describe("Send tokens", () => {
   const amount = "1000000";
@@ -39,92 +41,82 @@ describe("Send tokens", () => {
     },
   ];
 
-  async function getRecord(store: Store) {
-    const { sequence: fromSequence } =
-      await store.query.getBaseAccount(signerAddress);
+  const signParams = {
+    chainData,
+    signerAddress,
+    messages,
+  };
+
+  async function getRecord(signer: CosmjsSigner) {
+    const { sequence: fromSequence } = await signer.getSequence(signerAddress);
     const toAmount = BigInt(
-      (await store.query.getBalance(address.osmosis.test1, chainData.denom))
-        .amount
+      (
+        await signer.getBalance({
+          address: address.osmosis.test1,
+          denom: chainData.denom,
+        })
+      ).balance.amount
     );
     return { fromSequence, toAmount };
   }
 
-  it("should success with DIRECT signing", async () => {
-    const { resp, before, after } = await signAndBroadcast(
-      chainData,
-      signerAddress,
-      messages,
-      directStore,
-      getRecord
-    );
+  function expectSuccessfulBroadcast(
+    resp: DeliverTxResponse,
+    before?: { fromSequence: bigint; toAmount: bigint },
+    after?: { fromSequence: bigint; toAmount: bigint }
+  ) {
     expect(resp.code).toEqual(0);
     expect(before.fromSequence + 1n).toEqual(after.fromSequence);
     expect(before.toAmount + BigInt(amount)).toEqual(after.toAmount);
+  }
+
+  describe("DIRECT signing", () => {
+    it("should match signing result with V1", async () => {
+      const { v1Result, v2Result } = await sign({
+        ...signParams,
+        signerV1: await getSigningStargateClient(params),
+        signerV2: directSigner,
+      });
+      expectTxRawMatch(v1Result, v2Result);
+    });
+
+    it("should successfully broadcast", async () => {
+      const { resp, before, after } = await signAndBroadcast({
+        ...signParams,
+        signer: directSigner,
+        getRecord,
+      });
+      expectSuccessfulBroadcast(resp, before, after);
+    });
+
+    it("should success with helper methods", async () => {
+      const { resp, before, after } = await helperBroadcast({
+        ...signParams,
+        signer: directSigner,
+        getRecord,
+        helper: directSigner.sendTokens,
+      });
+      expectSuccessfulBroadcast(resp, before, after);
+    });
   });
 
-  it("should success with AMINO signing", async () => {
-    const { resp, before, after } = await signAndBroadcast(
-      chainData,
-      signerAddress,
-      messages,
-      aminoStore,
-      getRecord
-    );
-    expect(resp.code).toEqual(0);
-    expect(before.fromSequence + 1n).toEqual(after.fromSequence);
-    expect(before.toAmount + BigInt(amount)).toEqual(after.toAmount);
-  });
+  describe("AMINO signing", () => {
+    it("should match signing result with V1", async () => {
+      const { v1Result, v2Result } = await sign({
+        ...signParams,
+        signerV1: await getSigningStargateClient(params, "amino"),
+        signerV2: aminoSigner,
+      });
+      expectTxRawMatch(v1Result, v2Result);
+    });
 
-  it("should success with helper methods", async () => {
-    const resp = await directStore.stargateCosmjsSigner.sendTokens(
-      signerAddress,
-      msgSend,
-      mockFee(chainData),
-      ""
-    );
-    expect(resp.code).toEqual(0);
-  });
-
-  it("should success with AMINO signing using @cosmjs", async () => {
-    const { resp, before, after } = await signAndBroadcastWithCosmjs(
-      chainData,
-      signerAddress,
-      messages,
-      aminoStore,
-      getRecord
-    );
-    expect(resp.code).toEqual(0);
-    expect(before.fromSequence + 1n).toEqual(after.fromSequence);
-    expect(before.toAmount + BigInt(amount)).toEqual(after.toAmount);
-  });
-
-  it("should match wallet AMINO signing with @cosmjs", async () => {
-    const { fromSign, fromCosmjs } = await signAmino(
-      chainData,
-      signerAddress,
-      messages,
-      aminoStore
-    );
-    expect(fromSign.signature.signature).toEqual(
-      fromCosmjs.signature.signature
-    );
-  });
-
-  it("should match signer/signingClient AMINO signing with @cosmjs", async () => {
-    const { fromSign, fromCosmjs } = await sign(
-      chainData,
-      signerAddress,
-      messages,
-      aminoStore
-    );
-    expect(toBase64(fromSign.bodyBytes)).toEqual(
-      toBase64(fromCosmjs.bodyBytes)
-    );
-    expect(toBase64(fromSign.authInfoBytes)).toEqual(
-      toBase64(fromCosmjs.authInfoBytes)
-    );
-    expect(toBase64(fromSign.signatures[0])).toEqual(
-      toBase64(fromCosmjs.signatures[0])
-    );
+    it("should successfully broadcast", async () => {
+      const { resp, before, after } = await signAndBroadcast({
+        ...signParams,
+        signer: aminoSigner,
+        getRecord,
+      });
+      expectSuccessfulBroadcast(resp, before, after);
+    });
   });
 });

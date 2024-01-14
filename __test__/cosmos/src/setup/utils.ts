@@ -1,11 +1,15 @@
+import { Secp256k1HdWallet } from "@cosmjs/amino";
+import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
+import { SigningStargateClient } from "@cosmjs/stargate";
+import { StdFee } from "@cosmonauts/cosmos-amino";
 import {
-  EncodeObjectUtils,
-  StdFee,
-  StdSignDoc,
-} from "@cosmonauts/cosmos-amino";
+  CosmjsSigner,
+  DeliverTxResponse,
+  Secp256k1Wallet,
+} from "@cosmonauts/cosmos-cosmjs";
+import { StargateCosmjsSigner } from "@cosmonauts/cosmos-stargate";
 
 import { ChainData } from "./data";
-import { Store } from "./store";
 
 export function mockFee(chainData: ChainData): StdFee {
   const fee: StdFee = {
@@ -20,26 +24,31 @@ export function mockFee(chainData: ChainData): StdFee {
   return fee;
 }
 
-/**
- * Get `signAndBroadcast` result of `CosmjsSigner` from @sign
- */
-export async function signAndBroadcast<T>(
-  chainData: ChainData,
-  signerAddress: string,
-  messages: any,
-  store: Store,
-  getRecord?: (store: Store) => T
-) {
-  const before = await getRecord?.(store);
+interface BroadcastParams<T> {
+  chainData: ChainData;
+  signerAddress: string;
+  messages: any;
+  signer: CosmjsSigner;
+  getRecord?: (signer: CosmjsSigner) => T;
+}
 
-  const resp = await store.cosmWasmCosmjsSigner.signAndBroadcast(
+export async function signAndBroadcast<T>({
+  chainData,
+  signerAddress,
+  messages,
+  signer,
+  getRecord,
+}: BroadcastParams<T>) {
+  const before = await getRecord?.(signer);
+
+  const resp = await signer.signAndBroadcast(
     signerAddress,
     messages,
     mockFee(chainData)
   );
   console.log("resp:", resp);
 
-  const after = await getRecord?.(store);
+  const after = await getRecord?.(signer);
 
   return {
     resp,
@@ -48,85 +57,101 @@ export async function signAndBroadcast<T>(
   };
 }
 
-/**
- * Get `signAndBroadcast` result of `SigningClient` from @cosmjs
- */
-export async function signAndBroadcastWithCosmjs<T>(
-  chainData: ChainData,
-  signerAddress: string,
-  messages: any,
-  store: Store,
-  getRecord?: (store: Store) => T
-) {
-  const before = await getRecord?.(store);
+export async function helperBroadcast<T>({
+  chainData,
+  signerAddress,
+  messages,
+  signer,
+  getRecord,
+  helper,
+}: BroadcastParams<T> & {
+  helper: (
+    signerAddress: string,
+    message: any,
+    fee: number | StdFee | "auto",
+    memo: string
+  ) => Promise<DeliverTxResponse>;
+}) {
+  const before = await getRecord?.(signer);
 
-  const signingClient = await store.getSigningClient();
-  const resp = await signingClient.signAndBroadcast(
+  const resp = await helper(
     signerAddress,
-    messages,
-    mockFee(chainData)
-  );
-  console.log("resp:", resp);
-
-  const after = await getRecord?.(store);
-
-  return {
-    resp,
-    before,
-    after,
-  };
-}
-
-/**
- * Get `sign` result of signer from @sign and signingClient @cosmjs respectively
- */
-export async function sign(
-  chainData: ChainData,
-  signerAddress: string,
-  messages: any,
-  store: Store
-) {
-  const fee = mockFee(chainData);
-  const fromSign = await store.cosmWasmCosmjsSigner.sign(
-    signerAddress,
-    messages,
-    fee,
+    messages[0].value,
+    mockFee(chainData),
     ""
   );
-  const signingClient = await store.getSigningClient();
-  const fromCosmjs = await signingClient.sign(signerAddress, messages, fee, "");
+  console.log("resp:", resp);
+
+  const after = await getRecord?.(signer);
 
   return {
-    fromSign,
-    fromCosmjs,
+    resp,
+    before,
+    after,
   };
 }
 
+interface SignParams {
+  chainData: ChainData;
+  signerAddress: string;
+  messages: any;
+  signerV1: SigningStargateClient;
+  signerV2: CosmjsSigner;
+}
+
 /**
- * Get `signAmino` result of wallet from @sign and @cosmjs respectively
+ * Get `sign` result of signer from StargateCosmjsSigner and SigningStargateClient respectively
  */
-export async function signAmino(
-  chainData: ChainData,
-  signerAddress: string,
-  messages: any,
-  store: Store
-) {
-  const signWallet = store.wallet;
-  const cosmjsWallet = await store.getWalletWithCosmjs();
-  const { accountNumber, sequence } =
-    await store.query.getBaseAccount(signerAddress);
-  const doc: StdSignDoc = {
-    chain_id: chainData.chainId,
-    account_number: accountNumber.toString(),
-    sequence: sequence.toString(),
-    msgs: EncodeObjectUtils.toAminoMsg(
-      messages,
-      store.aminoSigner.getParserFromTypeUrl
-    ),
-    memo: "",
-    fee: mockFee(chainData),
+export async function sign({
+  chainData,
+  signerAddress,
+  messages,
+  signerV1,
+  signerV2,
+}: SignParams) {
+  const fee = mockFee(chainData);
+  const v1Result = await signerV1.sign(signerAddress, messages, fee, "");
+  const v2Result = await signerV2.sign(signerAddress, messages, fee, "");
+
+  return {
+    v1Result,
+    v2Result,
   };
-  const fromSign = signWallet.signAmino(signerAddress, doc);
-  const fromCosmjs = await cosmjsWallet.signAmino(signerAddress, doc);
-  return { fromSign, fromCosmjs };
+}
+
+interface SignerParams {
+  chainData: ChainData;
+  seed: string;
+}
+
+export function getCosmjsSigner(
+  { chainData, seed }: SignerParams,
+  signType = "direct"
+) {
+  const wallet = Secp256k1Wallet.fromMnemonic(seed, {
+    prefix: chainData.prefix,
+  });
+  const offlineSigner =
+    signType === "direct"
+      ? wallet.toOfflineDirectSigner()
+      : wallet.toOfflineAminoSigner();
+  return StargateCosmjsSigner.connectWithSigner(chainData.rpc, offlineSigner);
+}
+
+export async function getSigningStargateClient(
+  { chainData, seed }: SignerParams,
+  signType = "direct"
+) {
+  const offlineSigner =
+    signType === "direct"
+      ? await DirectSecp256k1HdWallet.fromMnemonic(seed, {
+          prefix: chainData.prefix,
+        })
+      : await Secp256k1HdWallet.fromMnemonic(seed, {
+          prefix: chainData.prefix,
+        });
+  return await SigningStargateClient.connectWithSigner(
+    chainData.rpc,
+    offlineSigner
+  );
 }

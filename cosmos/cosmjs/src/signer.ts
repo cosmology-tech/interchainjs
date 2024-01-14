@@ -14,16 +14,18 @@ import {
   SignerData,
 } from "@cosmonauts/cosmos-proto";
 import {
-  Any,
   AuthInfo,
-  BaseAccount,
-  IBinaryWriter,
-  SearchTxQuery,
   SignDoc,
   SignerInfo,
   SignMode,
   TxBody,
   TxRaw,
+} from "@cosmonauts/cosmos-proto";
+import {
+  Any,
+  BaseAccount,
+  IBinaryWriter,
+  SearchTxQuery,
 } from "@cosmonauts/cosmos-rpc";
 
 import {
@@ -439,29 +441,58 @@ export class CosmjsSigner {
   }
 
   async searchTx(query: SearchTxQuery): Promise<IndexedTx[]> {
-    let rawQuery: string;
-    if (typeof query === "string") {
-      rawQuery = query;
-    } else if (Array.isArray(query)) {
-      rawQuery = query.map((t) => `${t.key}='${t.value}'`).join(" AND ");
-    } else {
-      throw new Error(
-        "Got unsupported query type. See CosmJS 0.31 CHANGELOG for API breaking changes here."
-      );
-    }
-    return this.txsQuery(rawQuery);
+    const { txs } = await this.request.searchTx(query);
+    return txs.map((tx) => {
+      return {
+        height: Number.parseInt(tx.height),
+        txIndex: tx.index,
+        hash: tx.hash,
+        code: 0,
+        // events: tx.tx_result.tags,
+        events: [],
+        rawLog: tx.tx_result.log || "",
+        tx: fromBase64(tx.tx),
+        msgResponses: [],
+        gasUsed: BigInt(tx.tx_result.gas_used),
+        gasWanted: BigInt(tx.tx_result.gas_wanted),
+      } as IndexedTx;
+    });
   }
 
-  getBalance = this.request.balance;
-  getAllBalances = this.request.allBalances;
-  getBalanceStaked = this.request.delegatorDelegations;
-  getDelegation = this.request.delegation;
-  getCodes = this.request.codes;
-  getCodeDetails = this.request.code;
-  getContracts = this.request.contractsByCode;
-  getContractsByCreator = this.request.contractsByCreator;
-  getContract = this.request.contractInfo;
-  getContractCodeHistory = this.request.contractHistory;
-  queryContractRaw = this.request.rawContractState;
-  queryContractSmart = this.request.smartContractState;
+  get getBalance() {
+    return this.request.balance;
+  }
+  get getAllBalances() {
+    return this.request.allBalances;
+  }
+  get getBalanceStaked() {
+    return this.request.delegatorDelegations;
+  }
+  get getDelegation() {
+    return this.request.delegation;
+  }
+  get getCodes() {
+    return this.request.codes;
+  }
+  get getCodeDetails() {
+    return this.request.code;
+  }
+  get getContracts() {
+    return this.request.contractsByCode;
+  }
+  get getContractsByCreator() {
+    return this.request.contractsByCreator;
+  }
+  get getContract() {
+    return this.request.contractInfo;
+  }
+  get getContractCodeHistory() {
+    return this.request.contractHistory;
+  }
+  get queryContractRaw() {
+    return this.request.rawContractState;
+  }
+  get queryContractSmart() {
+    return this.request.smartContractState;
+  }
 }

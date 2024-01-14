@@ -18,6 +18,7 @@ export enum Edition {
    * comparison.
    */
   EDITION_2023 = 1000,
+  EDITION_2024 = 1001,
   /**
    * EDITION_1_TEST_ONLY - Placeholder editions for testing feature resolution.  These should not be
    * used or relyed on outside of tests.
@@ -50,6 +51,9 @@ export function editionFromJSON(object: any): Edition {
     case 1000:
     case "EDITION_2023":
       return Edition.EDITION_2023;
+    case 1001:
+    case "EDITION_2024":
+      return Edition.EDITION_2024;
     case 1:
     case "EDITION_1_TEST_ONLY":
       return Edition.EDITION_1_TEST_ONLY;
@@ -84,6 +88,8 @@ export function editionToJSON(object: Edition): string {
       return "EDITION_PROTO3";
     case Edition.EDITION_2023:
       return "EDITION_2023";
+    case Edition.EDITION_2024:
+      return "EDITION_2024";
     case Edition.EDITION_1_TEST_ONLY:
       return "EDITION_1_TEST_ONLY";
     case Edition.EDITION_2_TEST_ONLY:
@@ -1580,7 +1586,6 @@ export interface FileOptions {
   ccGenericServices: boolean;
   javaGenericServices: boolean;
   pyGenericServices: boolean;
-  phpGenericServices: boolean;
   /**
    * Is this file deprecated?
    * Depending on the target platform, this can emit Deprecated annotations
@@ -1703,7 +1708,6 @@ export interface FileOptionsAmino {
   cc_generic_services: boolean;
   java_generic_services: boolean;
   py_generic_services: boolean;
-  php_generic_services: boolean;
   /**
    * Is this file deprecated?
    * Depending on the target platform, this can emit Deprecated annotations
@@ -1801,10 +1805,6 @@ export interface MessageOptions {
    */
   deprecated: boolean;
   /**
-   * NOTE: Do not set the option in .proto files. Always use the maps syntax
-   * instead. The option should only be implicitly set by the proto compiler
-   * parser.
-   * 
    * Whether the message is an automatically generated map entry type for the
    * maps field.
    * 
@@ -1822,6 +1822,10 @@ export interface MessageOptions {
    * use a native map in the target language to hold the keys and values.
    * The reflection APIs in such implementations still need to work as
    * if the field is a repeated message field.
+   * 
+   * NOTE: Do not set the option in .proto files. Always use the maps syntax
+   * instead. The option should only be implicitly set by the proto compiler
+   * parser.
    */
   mapEntry: boolean;
   /**
@@ -1883,10 +1887,6 @@ export interface MessageOptionsAmino {
    */
   deprecated: boolean;
   /**
-   * NOTE: Do not set the option in .proto files. Always use the maps syntax
-   * instead. The option should only be implicitly set by the proto compiler
-   * parser.
-   * 
    * Whether the message is an automatically generated map entry type for the
    * maps field.
    * 
@@ -1904,6 +1904,10 @@ export interface MessageOptionsAmino {
    * use a native map in the target language to hold the keys and values.
    * The reflection APIs in such implementations still need to work as
    * if the field is a repeated message field.
+   * 
+   * NOTE: Do not set the option in .proto files. Always use the maps syntax
+   * instead. The option should only be implicitly set by the proto compiler
+   * parser.
    */
   map_entry: boolean;
   /**
@@ -1981,19 +1985,11 @@ export interface FieldOptions {
    * call from multiple threads concurrently, while non-const methods continue
    * to require exclusive access.
    * 
-   * Note that implementations may choose not to check required fields within
-   * a lazy sub-message.  That is, calling IsInitialized() on the outer message
-   * may return true even if the inner message has missing required fields.
-   * This is necessary because otherwise the inner message would have to be
-   * parsed in order to perform the check, defeating the purpose of lazy
-   * parsing.  An implementation which chooses not to check required fields
-   * must be consistent about it.  That is, for any particular sub-message, the
-   * implementation must either *always* check its required fields, or *never*
-   * check its required fields, regardless of whether or not the message has
-   * been parsed.
-   * 
-   * As of May 2022, lazy verifies the contents of the byte stream during
-   * parsing.  An invalid byte stream will cause the overall parsing to fail.
+   * Note that lazy message fields are still eagerly verified to check
+   * ill-formed wireformat or missing required fields. Calling IsInitialized()
+   * on the outer message would fail if the inner message has missing required
+   * fields. Failed verification would result in parsing failure (except when
+   * uninitialized messages are acceptable).
    */
   lazy: boolean;
   /**
@@ -2080,19 +2076,11 @@ export interface FieldOptionsAmino {
    * call from multiple threads concurrently, while non-const methods continue
    * to require exclusive access.
    * 
-   * Note that implementations may choose not to check required fields within
-   * a lazy sub-message.  That is, calling IsInitialized() on the outer message
-   * may return true even if the inner message has missing required fields.
-   * This is necessary because otherwise the inner message would have to be
-   * parsed in order to perform the check, defeating the purpose of lazy
-   * parsing.  An implementation which chooses not to check required fields
-   * must be consistent about it.  That is, for any particular sub-message, the
-   * implementation must either *always* check its required fields, or *never*
-   * check its required fields, regardless of whether or not the message has
-   * been parsed.
-   * 
-   * As of May 2022, lazy verifies the contents of the byte stream during
-   * parsing.  An invalid byte stream will cause the overall parsing to fail.
+   * Note that lazy message fields are still eagerly verified to check
+   * ill-formed wireformat or missing required fields. Calling IsInitialized()
+   * on the outer message would fail if the inner message has missing required
+   * fields. Failed verification would result in parsing failure (except when
+   * uninitialized messages are acceptable).
    */
   lazy: boolean;
   /**
@@ -2657,7 +2645,7 @@ export interface SourceCodeInfo_Location {
    * location.
    * 
    * Each element is a field number or an index.  They form a path from
-   * the root FileDescriptorProto to the place where the definition occurs.
+   * the root FileDescriptorProto to the place where the definition appears.
    * For example, this path:
    *   [ 4, 3, 2, 7, 1 ]
    * refers to:
@@ -2749,7 +2737,7 @@ export interface SourceCodeInfo_LocationAmino {
    * location.
    * 
    * Each element is a field number or an index.  They form a path from
-   * the root FileDescriptorProto to the place where the definition occurs.
+   * the root FileDescriptorProto to the place where the definition appears.
    * For example, this path:
    *   [ 4, 3, 2, 7, 1 ]
    * refers to:
@@ -4545,7 +4533,6 @@ function createBaseFileOptions(): FileOptions {
     ccGenericServices: false,
     javaGenericServices: false,
     pyGenericServices: false,
-    phpGenericServices: false,
     deprecated: false,
     ccEnableArenas: false,
     objcClassPrefix: "",
@@ -4591,9 +4578,6 @@ export const FileOptions = {
     }
     if (message.pyGenericServices === true) {
       writer.uint32(144).bool(message.pyGenericServices);
-    }
-    if (message.phpGenericServices === true) {
-      writer.uint32(336).bool(message.phpGenericServices);
     }
     if (message.deprecated === true) {
       writer.uint32(184).bool(message.deprecated);
@@ -4667,9 +4651,6 @@ export const FileOptions = {
         case 18:
           message.pyGenericServices = reader.bool();
           break;
-        case 42:
-          message.phpGenericServices = reader.bool();
-          break;
         case 23:
           message.deprecated = reader.bool();
           break;
@@ -4722,7 +4703,6 @@ export const FileOptions = {
     message.ccGenericServices = object.ccGenericServices ?? false;
     message.javaGenericServices = object.javaGenericServices ?? false;
     message.pyGenericServices = object.pyGenericServices ?? false;
-    message.phpGenericServices = object.phpGenericServices ?? false;
     message.deprecated = object.deprecated ?? false;
     message.ccEnableArenas = object.ccEnableArenas ?? false;
     message.objcClassPrefix = object.objcClassPrefix ?? "";
@@ -4767,9 +4747,6 @@ export const FileOptions = {
     }
     if (object.py_generic_services !== undefined && object.py_generic_services !== null) {
       message.pyGenericServices = object.py_generic_services;
-    }
-    if (object.php_generic_services !== undefined && object.php_generic_services !== null) {
-      message.phpGenericServices = object.php_generic_services;
     }
     if (object.deprecated !== undefined && object.deprecated !== null) {
       message.deprecated = object.deprecated;
@@ -4816,7 +4793,6 @@ export const FileOptions = {
     obj.cc_generic_services = message.ccGenericServices;
     obj.java_generic_services = message.javaGenericServices;
     obj.py_generic_services = message.pyGenericServices;
-    obj.php_generic_services = message.phpGenericServices;
     obj.deprecated = message.deprecated;
     obj.cc_enable_arenas = message.ccEnableArenas;
     obj.objc_class_prefix = message.objcClassPrefix;

@@ -43,17 +43,17 @@ export interface TxResponse {
 
 export interface SearchTxResponse {
   txs: {
-    hash?: string;
-    height?: string;
-    index?: number;
-    tx_result?: {
+    hash: string;
+    height: string;
+    index: number;
+    tx_result: {
       log: string;
       gas_wanted: string;
       gas_used: string;
       tags: EventAttributeAmino[];
     };
-    tx?: string;
-    proof?: {
+    tx: string;
+    proof: {
       RootHash: string;
       Data: string;
       Proof: {

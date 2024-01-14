@@ -1,27 +1,38 @@
-import { toBase64, toUtf8 } from "@cosmonauts/core";
-import { DeliverTxResponse } from "@cosmonauts/cosmos-cosmjs";
+import { CosmjsSigner, DeliverTxResponse } from "@cosmonauts/cosmos-cosmjs";
 import { Message } from "@cosmonauts/cosmos-proto";
-import { MsgSubmitProposal, MsgVote } from "@cosmonauts/cosmos-stargate";
-
-import { TextProposal, VoteOption } from "../codegen/cosmos/gov/v1beta1/gov";
 import {
-  address,
-  chain,
-  ChainData,
-  QueryParserExt,
-  seed,
+  TextProposal,
+  VoteOption,
+} from "@cosmonauts/cosmos-stargate/src/codegen/cosmos/gov/v1beta1/gov";
+import {
+  MsgSubmitProposal,
+  MsgVote,
+} from "@cosmonauts/cosmos-stargate/src/codegen/cosmos/gov/v1beta1/tx";
+
+import { address, chain, ChainData, seed } from "./setup/data";
+import { expectSuccessfulBroadcast, expectTxRawMatch } from "./setup/expect";
+import {
+  getCosmjsSigner,
+  getSigningStargateClient,
+  helperBroadcast,
   sign,
-  signAmino,
   signAndBroadcast,
-  signAndBroadcastWithCosmjs,
-  Store,
-} from "./setup";
+} from "./setup/utils";
 
 const chainData: ChainData = chain.osmosis;
 const signerAddress: string = address.osmosis.genesis;
-const directStore: Store = new Store(chain.osmosis, seed.genesis);
-const aminoStore: Store = new Store(chain.osmosis, seed.genesis, "amino");
-const query: QueryParserExt = directStore.query;
+
+const params = {
+  chainData,
+  seed: seed.genesis,
+};
+const directSigner = getCosmjsSigner(params);
+const aminoSigner = getCosmjsSigner(params, "amino");
+
+async function getRecord(signer: CosmjsSigner) {
+  const { sequence } = await signer.getSequence(signerAddress);
+  return { sequence };
+}
 
 let proposalId: bigint;
 
@@ -50,11 +61,6 @@ describe("Submit a proposal", () => {
     },
   ];
 
-  async function getRecord(store: Store) {
-    const { sequence } = await store.query.getBaseAccount(signerAddress);
-    return { sequence };
-  }
-
   function getProposalId(resp: DeliverTxResponse) {
     const proposalIdEvent = resp.events.find(
       (event) => event.type === "submit_proposal"
@@ -66,72 +72,52 @@ describe("Submit a proposal", () => {
     return proposalId;
   }
 
-  it("should success with DIRECT signing", async () => {
-    const { resp, before, after } = await signAndBroadcast(
-      chainData,
-      signerAddress,
-      messages,
-      directStore,
-      getRecord
-    );
-    proposalId = getProposalId(resp);
-    expect(resp.code).toEqual(0);
-    expect(before.sequence + 1n).toEqual(after.sequence);
+  const signParams = {
+    chainData,
+    signerAddress,
+    messages,
+  };
+
+  describe("DIRECT signing", () => {
+    it("should match signing result with V1", async () => {
+      const { v1Result, v2Result } = await sign({
+        ...signParams,
+        signerV1: await getSigningStargateClient(params),
+        signerV2: directSigner,
+      });
+      expectTxRawMatch(v1Result, v2Result);
+    });
+
+    it("should successfully broadcast", async () => {
+      const { resp, before, after } = await signAndBroadcast({
+        ...signParams,
+        signer: directSigner,
+        getRecord,
+      });
+      proposalId = getProposalId(resp);
+      expectSuccessfulBroadcast(resp, before, after);
+    });
   });
 
-  it("should success with AMINO signing", async () => {
-    const { resp, before, after } = await signAndBroadcast(
-      chainData,
-      signerAddress,
-      messages,
-      aminoStore,
-      getRecord
-    );
-    proposalId = getProposalId(resp);
-    expect(resp.code).toEqual(0);
-    expect(before.sequence + 1n).toEqual(after.sequence);
-  });
+  describe("AMINO signing", () => {
+    it("should match signing result with V1", async () => {
+      const { v1Result, v2Result } = await sign({
+        ...signParams,
+        signerV1: await getSigningStargateClient(params, "amino"),
+        signerV2: aminoSigner,
+      });
+      expectTxRawMatch(v1Result, v2Result);
+    });
 
-  it("should success with AMINO signing using @cosmjs", async () => {
-    const { resp, before, after } = await signAndBroadcastWithCosmjs(
-      chainData,
-      signerAddress,
-      messages,
-      aminoStore,
-      getRecord
-    );
-    expect(resp.code).toEqual(0);
-    expect(before.sequence + 1n).toEqual(after.sequence);
-  });
-
-  it("should match wallet AMINO signing with @cosmjs", async () => {
-    const { fromSign, fromCosmjs } = await signAmino(
-      chainData,
-      signerAddress,
-      messages,
-      aminoStore
-    );
-    expect(fromSign.signature.signature).toEqual(
-      fromCosmjs.signature.signature
-    );
-  });
-
-  it("should match signer/signingClient AMINO signing with @cosmjs", async () => {
-    const { fromSign, fromCosmjs } = await sign(
-      chainData,
-      signerAddress,
-      messages,
-      aminoStore
-    );
-    expect(toBase64(fromSign.bodyBytes)).toEqual(
-      toBase64(fromCosmjs.bodyBytes)
-    );
-    expect(toBase64(fromSign.authInfoBytes)).toEqual(
-      toBase64(fromCosmjs.authInfoBytes)
-    );
-    expect(toBase64(fromSign.signatures[0])).toEqual(
-      toBase64(fromCosmjs.signatures[0])
-    );
+    it("should successfully broadcast", async () => {
+      const { resp, before, after } = await signAndBroadcast({
+        ...signParams,
+        signer: aminoSigner,
+        getRecord,
+      });
+      proposalId = getProposalId(resp);
+      expectSuccessfulBroadcast(resp, before, after);
+    });
   });
 });
 
@@ -149,54 +135,63 @@ describe("Vote a proposal", () => {
     ];
   }
 
-  async function getRecord(store: Store) {
-    const { sequence } = await store.query.getBaseAccount(signerAddress);
-    return { sequence };
-  }
+  const signParams = {
+    chainData,
+    signerAddress,
+  };
 
-  it("should get target proposal", async () => {
-    const proposal = await query.getProposal(4n);
-    console.log(proposal);
+  describe("DIRECT signing", () => {
+    it("should match signing result with V1", async () => {
+      const { v1Result, v2Result } = await sign({
+        ...signParams,
+        messages: await getMessages(),
+        signerV1: await getSigningStargateClient(params),
+        signerV2: directSigner,
+      });
+      expectTxRawMatch(v1Result, v2Result);
+    });
+
+    it("should successfully broadcast", async () => {
+      const { resp, before, after } = await signAndBroadcast({
+        ...signParams,
+        messages: await getMessages(),
+        signer: directSigner,
+        getRecord,
+      });
+      expectSuccessfulBroadcast(resp, before, after);
+    });
+
+    it("should successfully helper method", async () => {
+      const { resp, before, after } = await helperBroadcast({
+        ...signParams,
+        messages: await getMessages(),
+        signer: directSigner,
+        getRecord,
+        helper: directSigner.vote,
+      });
+      expectSuccessfulBroadcast(resp, before, after);
+    });
   });
 
-  it("should get votingParams", async () => {
-    const votingParams = await query.getVotingParams();
-    console.log(votingParams);
-  });
+  describe("AMINO signing", () => {
+    it("should match signing result with V1", async () => {
+      const { v1Result, v2Result } = await sign({
+        ...signParams,
+        messages: await getMessages(),
+        signerV1: await getSigningStargateClient(params, "amino"),
+        signerV2: aminoSigner,
+      });
+      expectTxRawMatch(v1Result, v2Result);
+    });
 
-  it("should get depositParams", async () => {
-    const depositParams = await query.getDepositParams();
-    console.log(depositParams);
-  });
-
-  it("should get tallyParams", async () => {
-    const tallyParams = await query.getTallyParams();
-    console.log("quorum", toUtf8(tallyParams.quorum));
-    console.log("threshold", toUtf8(tallyParams.threshold));
-    console.log("vetoThreshold", toUtf8(tallyParams.vetoThreshold));
-  });
-
-  it("should success with DIRECT signing", async () => {
-    const { resp, before, after } = await signAndBroadcast(
-      chainData,
-      signerAddress,
-      await getMessages(),
-      directStore,
-      getRecord
-    );
-    expect(resp.code).toEqual(0);
-    expect(before.sequence + 1n).toEqual(after.sequence);
-  });
-
-  it("should success with AMINO signing", async () => {
-    const { resp, before, after } = await signAndBroadcast(
-      chainData,
-      signerAddress,
-      await getMessages(),
-      aminoStore,
-      getRecord
-    );
-    expect(resp.code).toEqual(0);
-    expect(before.sequence + 1n).toEqual(after.sequence);
+    it("should successfully broadcast", async () => {
+      const { resp, before, after } = await signAndBroadcast({
+        ...signParams,
+        messages: await getMessages(),
+        signer: aminoSigner,
+        getRecord,
+      });
+      expectSuccessfulBroadcast(resp, before, after);
+    });
   });
 });

@@ -7,14 +7,14 @@ import {
 import {
   AuthInfo,
   Fee,
-  RpcClient,
   SignDoc,
   SignerInfo,
   SignMode,
   Tx,
   TxBody,
   TxRaw,
-} from "@cosmonauts/cosmos-rpc";
+} from "@cosmonauts/cosmos-proto";
+import { RpcClient } from "@cosmonauts/cosmos-rpc";
 
 import prefixJson from "./config/prefix.json";
 import { CosmosDefaultOptions } from "./defaults";

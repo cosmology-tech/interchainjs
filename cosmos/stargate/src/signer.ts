@@ -59,9 +59,19 @@ export class StargateCosmjsSigner extends CosmjsSigner {
     return stargateSigner;
   }
 
-  sendTokens = this.send;
-  delegateTokens = this.delegate;
-  undelegateTokens = this.undelegate;
-  withdrawRewards = this.withdrawDelegatorReward;
-  sendIbcTokens = this.transfer;
+  get sendTokens() {
+    return this.send;
+  }
+  get delegateTokens() {
+    return this.delegate;
+  }
+  get undelegateTokens() {
+    return this.undelegate;
+  }
+  get withdrawRewards() {
+    return this.withdrawDelegatorReward;
+  }
+  get sendIbcTokens() {
+    return this.transfer;
+  }
 }
