@@ -27,9 +27,9 @@ export type MsgCreateValidatorEncoded = Omit<MsgCreateValidator, "pubkey"> & {
 export interface MsgCreateValidatorAmino {
   description: DescriptionAmino;
   commission: CommissionRatesAmino;
-  min_self_delegation?: string;
-  delegator_address?: string;
-  validator_address?: string;
+  min_self_delegation: string;
+  delegator_address: string;
+  validator_address: string;
   pubkey?: AnyAmino;
   value: CoinAmino;
 }
@@ -61,15 +61,15 @@ export interface MsgEditValidatorProtoMsg {
 /** MsgEditValidator defines a SDK message for editing an existing validator. */
 export interface MsgEditValidatorAmino {
   description: DescriptionAmino;
-  validator_address?: string;
+  validator_address: string;
   /**
    * We pass a reference to the new commission rate and min self delegation as
    * it's not mandatory to update. If not updated, the deserialized rate will be
    * zero with no way to distinguish if an update was intended.
    * REF: #2373
    */
-  commission_rate?: string;
-  min_self_delegation?: string;
+  commission_rate: string;
+  min_self_delegation: string;
 }
 /** MsgEditValidatorResponse defines the Msg/EditValidator response type. */
 export interface MsgEditValidatorResponse {}
@@ -97,8 +97,8 @@ export interface MsgDelegateProtoMsg {
  * from a delegator to a validator.
  */
 export interface MsgDelegateAmino {
-  delegator_address?: string;
-  validator_address?: string;
+  delegator_address: string;
+  validator_address: string;
   amount: CoinAmino;
 }
 /** MsgDelegateResponse defines the Msg/Delegate response type. */
@@ -128,9 +128,9 @@ export interface MsgBeginRedelegateProtoMsg {
  * of coins from a delegator and source validator to a destination validator.
  */
 export interface MsgBeginRedelegateAmino {
-  delegator_address?: string;
-  validator_src_address?: string;
-  validator_dst_address?: string;
+  delegator_address: string;
+  validator_src_address: string;
+  validator_dst_address: string;
   amount: CoinAmino;
 }
 /** MsgBeginRedelegateResponse defines the Msg/BeginRedelegate response type. */
@@ -163,8 +163,8 @@ export interface MsgUndelegateProtoMsg {
  * delegate and a validator.
  */
 export interface MsgUndelegateAmino {
-  delegator_address?: string;
-  validator_address?: string;
+  delegator_address: string;
+  validator_address: string;
   amount: CoinAmino;
 }
 /** MsgUndelegateResponse defines the Msg/Undelegate response type. */
@@ -202,12 +202,12 @@ export interface MsgCancelUnbondingDelegationProtoMsg {
  * Since: cosmos-sdk 0.46
  */
 export interface MsgCancelUnbondingDelegationAmino {
-  delegator_address?: string;
-  validator_address?: string;
+  delegator_address: string;
+  validator_address: string;
   /** amount is always less than or equal to unbonding delegation entry balance */
   amount: CoinAmino;
   /** creation_height is the height which the unbonding took place. */
-  creation_height?: string;
+  creation_height: string;
 }
 /**
  * MsgCancelUnbondingDelegationResponse
@@ -251,7 +251,7 @@ export interface MsgUpdateParamsProtoMsg {
  */
 export interface MsgUpdateParamsAmino {
   /** authority is the address that controls the module (defaults to x/gov unless overwritten). */
-  authority?: string;
+  authority: string;
   /**
    * params defines the x/staking parameters to update.
    * 

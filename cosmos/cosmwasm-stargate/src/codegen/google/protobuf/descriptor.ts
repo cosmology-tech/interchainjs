@@ -19,6 +19,7 @@ export enum Edition {
    * comparison.
    */
   EDITION_2023 = 1000,
+  EDITION_2024 = 1001,
   /**
    * EDITION_1_TEST_ONLY - Placeholder editions for testing feature resolution.  These should not be
    * used or relyed on outside of tests.
@@ -51,6 +52,9 @@ export function editionFromJSON(object: any): Edition {
     case 1000:
     case "EDITION_2023":
       return Edition.EDITION_2023;
+    case 1001:
+    case "EDITION_2024":
+      return Edition.EDITION_2024;
     case 1:
     case "EDITION_1_TEST_ONLY":
       return Edition.EDITION_1_TEST_ONLY;
@@ -85,6 +89,8 @@ export function editionToJSON(object: Edition): string {
       return "EDITION_PROTO3";
     case Edition.EDITION_2023:
       return "EDITION_2023";
+    case Edition.EDITION_2024:
+      return "EDITION_2024";
     case Edition.EDITION_1_TEST_ONLY:
       return "EDITION_1_TEST_ONLY";
     case Edition.EDITION_2_TEST_ONLY:
@@ -916,7 +922,7 @@ export interface FileDescriptorSetProtoMsg {
  * files it parses.
  */
 export interface FileDescriptorSetAmino {
-  file?: FileDescriptorProtoAmino[];
+  file: FileDescriptorProtoAmino[];
 }
 /** Describes a complete .proto file. */
 export interface FileDescriptorProto {
@@ -962,22 +968,22 @@ export interface FileDescriptorProtoProtoMsg {
 /** Describes a complete .proto file. */
 export interface FileDescriptorProtoAmino {
   /** file name, relative to root of source tree */
-  name?: string;
-  package?: string;
+  name: string;
+  package: string;
   /** Names of files imported by this file. */
-  dependency?: string[];
+  dependency: string[];
   /** Indexes of the public imported files in the dependency list above. */
-  public_dependency?: number[];
+  public_dependency: number[];
   /**
    * Indexes of the weak imported files in the dependency list.
    * For Google-internal migration only. Do not use.
    */
-  weak_dependency?: number[];
+  weak_dependency: number[];
   /** All top-level definitions in this file. */
-  message_type?: DescriptorProtoAmino[];
-  enum_type?: EnumDescriptorProtoAmino[];
-  service?: ServiceDescriptorProtoAmino[];
-  extension?: FieldDescriptorProtoAmino[];
+  message_type: DescriptorProtoAmino[];
+  enum_type: EnumDescriptorProtoAmino[];
+  service: ServiceDescriptorProtoAmino[];
+  extension: FieldDescriptorProtoAmino[];
   options?: FileOptionsAmino;
   /**
    * This field contains optional information about the original source code.
@@ -992,9 +998,9 @@ export interface FileDescriptorProtoAmino {
    * 
    * If `edition` is present, this value must be "editions".
    */
-  syntax?: string;
+  syntax: string;
   /** The edition of the proto file. */
-  edition?: Edition;
+  edition: Edition;
 }
 /** Describes a message type. */
 export interface DescriptorProto {
@@ -1019,20 +1025,20 @@ export interface DescriptorProtoProtoMsg {
 }
 /** Describes a message type. */
 export interface DescriptorProtoAmino {
-  name?: string;
-  field?: FieldDescriptorProtoAmino[];
-  extension?: FieldDescriptorProtoAmino[];
-  nested_type?: DescriptorProtoAmino[];
-  enum_type?: EnumDescriptorProtoAmino[];
-  extension_range?: DescriptorProto_ExtensionRangeAmino[];
-  oneof_decl?: OneofDescriptorProtoAmino[];
+  name: string;
+  field: FieldDescriptorProtoAmino[];
+  extension: FieldDescriptorProtoAmino[];
+  nested_type: DescriptorProtoAmino[];
+  enum_type: EnumDescriptorProtoAmino[];
+  extension_range: DescriptorProto_ExtensionRangeAmino[];
+  oneof_decl: OneofDescriptorProtoAmino[];
   options?: MessageOptionsAmino;
-  reserved_range?: DescriptorProto_ReservedRangeAmino[];
+  reserved_range: DescriptorProto_ReservedRangeAmino[];
   /**
    * Reserved field names, which may not be used by fields in the same message.
    * A given name may only be reserved once.
    */
-  reserved_name?: string[];
+  reserved_name: string[];
 }
 export interface DescriptorProto_ExtensionRange {
   /** Inclusive. */
@@ -1047,9 +1053,9 @@ export interface DescriptorProto_ExtensionRangeProtoMsg {
 }
 export interface DescriptorProto_ExtensionRangeAmino {
   /** Inclusive. */
-  start?: number;
+  start: number;
   /** Exclusive. */
-  end?: number;
+  end: number;
   options?: ExtensionRangeOptionsAmino;
 }
 /**
@@ -1074,9 +1080,9 @@ export interface DescriptorProto_ReservedRangeProtoMsg {
  */
 export interface DescriptorProto_ReservedRangeAmino {
   /** Inclusive. */
-  start?: number;
+  start: number;
   /** Exclusive. */
-  end?: number;
+  end: number;
 }
 export interface ExtensionRangeOptions {
   /** The parser stores options it doesn't recognize here. See above. */
@@ -1102,13 +1108,13 @@ export interface ExtensionRangeOptionsProtoMsg {
 }
 export interface ExtensionRangeOptionsAmino {
   /** The parser stores options it doesn't recognize here. See above. */
-  uninterpreted_option?: UninterpretedOptionAmino[];
+  uninterpreted_option: UninterpretedOptionAmino[];
   /**
    * For external users: DO NOT USE. We are in the process of open sourcing
    * extension declaration and executing internal cleanups before it can be
    * used externally.
    */
-  declaration?: ExtensionRangeOptions_DeclarationAmino[];
+  declaration: ExtensionRangeOptions_DeclarationAmino[];
   /** Any features defined in the specific edition. */
   features?: FeatureSetAmino;
   /**
@@ -1116,7 +1122,7 @@ export interface ExtensionRangeOptionsAmino {
    * TODO: flip the default to DECLARATION once all empty ranges
    * are marked as UNVERIFIED.
    */
-  verification?: ExtensionRangeOptions_VerificationState;
+  verification: ExtensionRangeOptions_VerificationState;
 }
 export interface ExtensionRangeOptions_Declaration {
   /** The extension number declared within the extension range. */
@@ -1150,29 +1156,29 @@ export interface ExtensionRangeOptions_DeclarationProtoMsg {
 }
 export interface ExtensionRangeOptions_DeclarationAmino {
   /** The extension number declared within the extension range. */
-  number?: number;
+  number: number;
   /**
    * The fully-qualified name of the extension field. There must be a leading
    * dot in front of the full name.
    */
-  full_name?: string;
+  full_name: string;
   /**
    * The fully-qualified type name of the extension field. Unlike
    * Metadata.type, Declaration.type must have a leading dot for messages
    * and enums.
    */
-  type?: string;
+  type: string;
   /**
    * If true, indicates that the number is reserved in the extension range,
    * and any extension field with the number will fail to compile. Set this
    * when a declared extension field is deleted.
    */
-  reserved?: boolean;
+  reserved: boolean;
   /**
    * If true, indicates that the extension must be defined as repeated.
    * Otherwise the extension must be defined as optional.
    */
-  repeated?: boolean;
+  repeated: boolean;
 }
 /** Describes a field within a message. */
 export interface FieldDescriptorProto {
@@ -1248,14 +1254,14 @@ export interface FieldDescriptorProtoProtoMsg {
 }
 /** Describes a field within a message. */
 export interface FieldDescriptorProtoAmino {
-  name?: string;
-  number?: number;
-  label?: FieldDescriptorProto_Label;
+  name: string;
+  number: number;
+  label: FieldDescriptorProto_Label;
   /**
    * If type_name is set, this need not be set.  If both this and type_name
    * are set, this must be one of TYPE_ENUM, TYPE_MESSAGE or TYPE_GROUP.
    */
-  type?: FieldDescriptorProto_Type;
+  type: FieldDescriptorProto_Type;
   /**
    * For message and enum types, this is the name of the type.  If the name
    * starts with a '.', it is fully-qualified.  Otherwise, C++-like scoping
@@ -1263,31 +1269,31 @@ export interface FieldDescriptorProtoAmino {
    * message are searched, then within the parent, on up to the root
    * namespace).
    */
-  type_name?: string;
+  type_name: string;
   /**
    * For extensions, this is the name of the type being extended.  It is
    * resolved in the same manner as type_name.
    */
-  extendee?: string;
+  extendee: string;
   /**
    * For numeric types, contains the original text representation of the value.
    * For booleans, "true" or "false".
    * For strings, contains the default text contents (not escaped in any way).
    * For bytes, contains the C escaped value.  All bytes >= 128 are escaped.
    */
-  default_value?: string;
+  default_value: string;
   /**
    * If set, gives the index of a oneof in the containing type's oneof_decl
    * list.  This field is a member of that oneof.
    */
-  oneof_index?: number;
+  oneof_index: number;
   /**
    * JSON name of this field. The value is set by protocol compiler. If the
    * user has set a "json_name" option on this field, that option's value
    * will be used. Otherwise, it's deduced from the field's name by converting
    * it to camelCase.
    */
-  json_name?: string;
+  json_name: string;
   options?: FieldOptionsAmino;
   /**
    * If true, this is a proto3 "optional". When a proto3 field is optional, it
@@ -1312,7 +1318,7 @@ export interface FieldDescriptorProtoAmino {
    * Proto2 optional fields do not set this flag, because they already indicate
    * optional with `LABEL_OPTIONAL`.
    */
-  proto3_optional?: boolean;
+  proto3_optional: boolean;
 }
 /** Describes a oneof. */
 export interface OneofDescriptorProto {
@@ -1325,7 +1331,7 @@ export interface OneofDescriptorProtoProtoMsg {
 }
 /** Describes a oneof. */
 export interface OneofDescriptorProtoAmino {
-  name?: string;
+  name: string;
   options?: OneofOptionsAmino;
 }
 /** Describes an enum type. */
@@ -1351,20 +1357,20 @@ export interface EnumDescriptorProtoProtoMsg {
 }
 /** Describes an enum type. */
 export interface EnumDescriptorProtoAmino {
-  name?: string;
-  value?: EnumValueDescriptorProtoAmino[];
+  name: string;
+  value: EnumValueDescriptorProtoAmino[];
   options?: EnumOptionsAmino;
   /**
    * Range of reserved numeric values. Reserved numeric values may not be used
    * by enum values in the same enum declaration. Reserved ranges may not
    * overlap.
    */
-  reserved_range?: EnumDescriptorProto_EnumReservedRangeAmino[];
+  reserved_range: EnumDescriptorProto_EnumReservedRangeAmino[];
   /**
    * Reserved enum value names, which may not be reused. A given name may only
    * be reserved once.
    */
-  reserved_name?: string[];
+  reserved_name: string[];
 }
 /**
  * Range of reserved numeric values. Reserved values may not be used by
@@ -1394,9 +1400,9 @@ export interface EnumDescriptorProto_EnumReservedRangeProtoMsg {
  */
 export interface EnumDescriptorProto_EnumReservedRangeAmino {
   /** Inclusive. */
-  start?: number;
+  start: number;
   /** Inclusive. */
-  end?: number;
+  end: number;
 }
 /** Describes a value within an enum. */
 export interface EnumValueDescriptorProto {
@@ -1410,8 +1416,8 @@ export interface EnumValueDescriptorProtoProtoMsg {
 }
 /** Describes a value within an enum. */
 export interface EnumValueDescriptorProtoAmino {
-  name?: string;
-  number?: number;
+  name: string;
+  number: number;
   options?: EnumValueOptionsAmino;
 }
 /** Describes a service. */
@@ -1426,8 +1432,8 @@ export interface ServiceDescriptorProtoProtoMsg {
 }
 /** Describes a service. */
 export interface ServiceDescriptorProtoAmino {
-  name?: string;
-  method?: MethodDescriptorProtoAmino[];
+  name: string;
+  method: MethodDescriptorProtoAmino[];
   options?: ServiceOptionsAmino;
 }
 /** Describes a method of a service. */
@@ -1451,18 +1457,18 @@ export interface MethodDescriptorProtoProtoMsg {
 }
 /** Describes a method of a service. */
 export interface MethodDescriptorProtoAmino {
-  name?: string;
+  name: string;
   /**
    * Input and output type names.  These are resolved in the same way as
    * FieldDescriptorProto.type_name, but must refer to a message type.
    */
-  input_type?: string;
-  output_type?: string;
+  input_type: string;
+  output_type: string;
   options?: MethodOptionsAmino;
   /** Identifies if client streams multiple client messages */
-  client_streaming?: boolean;
+  client_streaming: boolean;
   /** Identifies if server streams multiple server messages */
-  server_streaming?: boolean;
+  server_streaming: boolean;
 }
 export interface FileOptions {
   /**
@@ -1525,7 +1531,6 @@ export interface FileOptions {
   ccGenericServices: boolean;
   javaGenericServices: boolean;
   pyGenericServices: boolean;
-  phpGenericServices: boolean;
   /**
    * Is this file deprecated?
    * Depending on the target platform, this can emit Deprecated annotations
@@ -1594,7 +1599,7 @@ export interface FileOptionsAmino {
    * inappropriate because proto packages do not normally start with backwards
    * domain names.
    */
-  java_package?: string;
+  java_package: string;
   /**
    * Controls the name of the wrapper Java class generated for the .proto file.
    * That class will always contain the .proto file's getDescriptor() method as
@@ -1602,7 +1607,7 @@ export interface FileOptionsAmino {
    * If java_multiple_files is disabled, then all the other classes from the
    * .proto file will be nested inside the single wrapper outer class.
    */
-  java_outer_classname?: string;
+  java_outer_classname: string;
   /**
    * If enabled, then the Java code generator will generate a separate .java
    * file for each top-level message, enum, and service defined in the .proto
@@ -1611,10 +1616,10 @@ export interface FileOptionsAmino {
    * generated to contain the file's getDescriptor() method as well as any
    * top-level extensions defined in the file.
    */
-  java_multiple_files?: boolean;
+  java_multiple_files: boolean;
   /** This option does nothing. */
   /** @deprecated */
-  java_generate_equals_and_hash?: boolean;
+  java_generate_equals_and_hash: boolean;
   /**
    * If set true, then the Java2 code generator will generate code that
    * throws an exception whenever an attempt is made to assign a non-UTF-8
@@ -1623,8 +1628,8 @@ export interface FileOptionsAmino {
    * However, an extension field still accepts non-UTF-8 byte sequences.
    * This option has no effect on when used with the lite runtime.
    */
-  java_string_check_utf8?: boolean;
-  optimize_for?: FileOptions_OptimizeMode;
+  java_string_check_utf8: boolean;
+  optimize_for: FileOptions_OptimizeMode;
   /**
    * Sets the Go package where structs generated from this .proto will be
    * placed. If omitted, the Go package will be derived from the following:
@@ -1632,7 +1637,7 @@ export interface FileOptionsAmino {
    *   - Otherwise, the package statement in the .proto file, if present.
    *   - Otherwise, the basename of the .proto file, without extension.
    */
-  go_package?: string;
+  go_package: string;
   /**
    * Should generic services be generated in each language?  "Generic" services
    * are not specific to any particular RPC system.  They are generated by the
@@ -1645,66 +1650,65 @@ export interface FileOptionsAmino {
    * these default to false.  Old code which depends on generic services should
    * explicitly set them to true.
    */
-  cc_generic_services?: boolean;
-  java_generic_services?: boolean;
-  py_generic_services?: boolean;
-  php_generic_services?: boolean;
+  cc_generic_services: boolean;
+  java_generic_services: boolean;
+  py_generic_services: boolean;
   /**
    * Is this file deprecated?
    * Depending on the target platform, this can emit Deprecated annotations
    * for everything in the file, or it will be completely ignored; in the very
    * least, this is a formalization for deprecating files.
    */
-  deprecated?: boolean;
+  deprecated: boolean;
   /**
    * Enables the use of arenas for the proto messages in this file. This applies
    * only to generated classes for C++.
    */
-  cc_enable_arenas?: boolean;
+  cc_enable_arenas: boolean;
   /**
    * Sets the objective c class prefix which is prepended to all objective c
    * generated classes from this .proto. There is no default.
    */
-  objc_class_prefix?: string;
+  objc_class_prefix: string;
   /** Namespace for generated classes; defaults to the package. */
-  csharp_namespace?: string;
+  csharp_namespace: string;
   /**
    * By default Swift generators will take the proto package and CamelCase it
    * replacing '.' with underscore and use that to prefix the types/symbols
    * defined. When this options is provided, they will use this value instead
    * to prefix the types/symbols defined.
    */
-  swift_prefix?: string;
+  swift_prefix: string;
   /**
    * Sets the php class prefix which is prepended to all php generated classes
    * from this .proto. Default is empty.
    */
-  php_class_prefix?: string;
+  php_class_prefix: string;
   /**
    * Use this option to change the namespace of php generated classes. Default
    * is empty. When this option is empty, the package name will be used for
    * determining the namespace.
    */
-  php_namespace?: string;
+  php_namespace: string;
   /**
    * Use this option to change the namespace of php generated metadata classes.
    * Default is empty. When this option is empty, the proto file name will be
    * used for determining the namespace.
    */
-  php_metadata_namespace?: string;
+  php_metadata_namespace: string;
   /**
    * Use this option to change the package of ruby generated classes. Default
    * is empty. When this option is not set, the package name will be used for
    * determining the ruby package.
    */
-  ruby_package?: string;
+  ruby_package: string;
   /** Any features defined in the specific edition. */
   features?: FeatureSetAmino;
   /**
    * The parser stores options it doesn't recognize here.
    * See the documentation for the "Options" section above.
    */
-  uninterpreted_option?: UninterpretedOptionAmino[];
+  uninterpreted_option: UninterpretedOptionAmino[];
 }
 export interface MessageOptions {
   /**
@@ -1742,10 +1746,6 @@ export interface MessageOptions {
    */
   deprecated: boolean;
   /**
-   * NOTE: Do not set the option in .proto files. Always use the maps syntax
-   * instead. The option should only be implicitly set by the proto compiler
-   * parser.
-   * 
    * Whether the message is an automatically generated map entry type for the
    * maps field.
    * 
@@ -1763,6 +1763,10 @@ export interface MessageOptions {
    * use a native map in the target language to hold the keys and values.
    * The reflection APIs in such implementations still need to work as
    * if the field is a repeated message field.
+   * 
+   * NOTE: Do not set the option in .proto files. Always use the maps syntax
+   * instead. The option should only be implicitly set by the proto compiler
+   * parser.
    */
   mapEntry: boolean;
   /**
@@ -1809,25 +1813,21 @@ export interface MessageOptionsAmino {
    * Because this is an option, the above two restrictions are not enforced by
    * the protocol compiler.
    */
-  message_set_wire_format?: boolean;
+  message_set_wire_format: boolean;
   /**
    * Disables the generation of the standard "descriptor()" accessor, which can
    * conflict with a field of the same name.  This is meant to make migration
    * from proto1 easier; new code should avoid fields named "descriptor".
    */
-  no_standard_descriptor_accessor?: boolean;
+  no_standard_descriptor_accessor: boolean;
   /**
    * Is this message deprecated?
    * Depending on the target platform, this can emit Deprecated annotations
    * for the message, or it will be completely ignored; in the very least,
    * this is a formalization for deprecating messages.
    */
-  deprecated?: boolean;
+  deprecated: boolean;
   /**
-   * NOTE: Do not set the option in .proto files. Always use the maps syntax
-   * instead. The option should only be implicitly set by the proto compiler
-   * parser.
-   * 
    * Whether the message is an automatically generated map entry type for the
    * maps field.
    * 
@@ -1845,8 +1845,12 @@ export interface MessageOptionsAmino {
    * use a native map in the target language to hold the keys and values.
    * The reflection APIs in such implementations still need to work as
    * if the field is a repeated message field.
+   * 
+   * NOTE: Do not set the option in .proto files. Always use the maps syntax
+   * instead. The option should only be implicitly set by the proto compiler
+   * parser.
    */
-  map_entry?: boolean;
+  map_entry: boolean;
   /**
    * Enable the legacy handling of JSON field name conflicts.  This lowercases
    * and strips underscored from the fields before comparison in proto3 only.
@@ -1860,11 +1864,11 @@ export interface MessageOptionsAmino {
    * teams have had time to migrate.
    */
   /** @deprecated */
-  deprecated_legacy_json_field_conflicts?: boolean;
+  deprecated_legacy_json_field_conflicts: boolean;
   /** Any features defined in the specific edition. */
   features?: FeatureSetAmino;
   /** The parser stores options it doesn't recognize here. See above. */
-  uninterpreted_option?: UninterpretedOptionAmino[];
+  uninterpreted_option: UninterpretedOptionAmino[];
 }
 export interface FieldOptions {
   /**
@@ -1918,19 +1922,11 @@ export interface FieldOptions {
    * call from multiple threads concurrently, while non-const methods continue
    * to require exclusive access.
    * 
-   * Note that implementations may choose not to check required fields within
-   * a lazy sub-message.  That is, calling IsInitialized() on the outer message
-   * may return true even if the inner message has missing required fields.
-   * This is necessary because otherwise the inner message would have to be
-   * parsed in order to perform the check, defeating the purpose of lazy
-   * parsing.  An implementation which chooses not to check required fields
-   * must be consistent about it.  That is, for any particular sub-message, the
-   * implementation must either *always* check its required fields, or *never*
-   * check its required fields, regardless of whether or not the message has
-   * been parsed.
-   * 
-   * As of May 2022, lazy verifies the contents of the byte stream during
-   * parsing.  An invalid byte stream will cause the overall parsing to fail.
+   * Note that lazy message fields are still eagerly verified to check
+   * ill-formed wireformat or missing required fields. Calling IsInitialized()
+   * on the outer message would fail if the inner message has missing required
+   * fields. Failed verification would result in parsing failure (except when
+   * uninitialized messages are acceptable).
    */
   lazy: boolean;
   /**
@@ -1974,7 +1970,7 @@ export interface FieldOptionsAmino {
    * type "bytes" in the open source release -- sorry, we'll try to include
    * other types in a future version!
    */
-  ctype?: FieldOptions_CType;
+  ctype: FieldOptions_CType;
   /**
    * The packed option can be enabled for repeated primitive fields to enable
    * a more efficient representation on the wire. Rather than repeatedly
@@ -1984,7 +1980,7 @@ export interface FieldOptionsAmino {
    * Editions, but the `repeated_field_encoding` feature can be used to control
    * the behavior.
    */
-  packed?: boolean;
+  packed: boolean;
   /**
    * The jstype option determines the JavaScript type used for values of the
    * field.  The option is permitted only for 64 bit integral and fixed types
@@ -1998,7 +1994,7 @@ export interface FieldOptionsAmino {
    * This option is an enum to permit additional types to be added, e.g.
    * goog.math.Integer.
    */
-  jstype?: FieldOptions_JSType;
+  jstype: FieldOptions_JSType;
   /**
    * Should this field be parsed lazily?  Lazy applies only to message-type
    * fields.  It means that when the outer message is initially parsed, the
@@ -2017,48 +2013,40 @@ export interface FieldOptionsAmino {
    * call from multiple threads concurrently, while non-const methods continue
    * to require exclusive access.
    * 
-   * Note that implementations may choose not to check required fields within
-   * a lazy sub-message.  That is, calling IsInitialized() on the outer message
-   * may return true even if the inner message has missing required fields.
-   * This is necessary because otherwise the inner message would have to be
-   * parsed in order to perform the check, defeating the purpose of lazy
-   * parsing.  An implementation which chooses not to check required fields
-   * must be consistent about it.  That is, for any particular sub-message, the
-   * implementation must either *always* check its required fields, or *never*
-   * check its required fields, regardless of whether or not the message has
-   * been parsed.
-   * 
-   * As of May 2022, lazy verifies the contents of the byte stream during
-   * parsing.  An invalid byte stream will cause the overall parsing to fail.
+   * Note that lazy message fields are still eagerly verified to check
+   * ill-formed wireformat or missing required fields. Calling IsInitialized()
+   * on the outer message would fail if the inner message has missing required
+   * fields. Failed verification would result in parsing failure (except when
+   * uninitialized messages are acceptable).
    */
-  lazy?: boolean;
+  lazy: boolean;
   /**
    * unverified_lazy does no correctness checks on the byte stream. This should
    * only be used where lazy with verification is prohibitive for performance
    * reasons.
    */
-  unverified_lazy?: boolean;
+  unverified_lazy: boolean;
   /**
    * Is this field deprecated?
    * Depending on the target platform, this can emit Deprecated annotations
    * for accessors, or it will be completely ignored; in the very least, this
    * is a formalization for deprecating fields.
    */
-  deprecated?: boolean;
+  deprecated: boolean;
   /** For Google-internal migration only. Do not use. */
-  weak?: boolean;
+  weak: boolean;
   /**
    * Indicate that the field value should not be printed out when using debug
    * formats, e.g. when the field contains sensitive credentials.
    */
-  debug_redact?: boolean;
-  retention?: FieldOptions_OptionRetention;
-  targets?: FieldOptions_OptionTargetType[];
-  edition_defaults?: FieldOptions_EditionDefaultAmino[];
+  debug_redact: boolean;
+  retention: FieldOptions_OptionRetention;
+  targets: FieldOptions_OptionTargetType[];
+  edition_defaults: FieldOptions_EditionDefaultAmino[];
   /** Any features defined in the specific edition. */
   features?: FeatureSetAmino;
   /** The parser stores options it doesn't recognize here. See above. */
-  uninterpreted_option?: UninterpretedOptionAmino[];
+  uninterpreted_option: UninterpretedOptionAmino[];
 }
 export interface FieldOptions_EditionDefault {
   edition: Edition;
@@ -2070,9 +2058,9 @@ export interface FieldOptions_EditionDefaultProtoMsg {
   value: Uint8Array;
 }
 export interface FieldOptions_EditionDefaultAmino {
-  edition?: Edition;
+  edition: Edition;
   /** Textproto value. */
-  value?: string;
+  value: string;
 }
 export interface OneofOptions {
   /** Any features defined in the specific edition. */
@@ -2088,7 +2076,7 @@ export interface OneofOptionsAmino {
   /** Any features defined in the specific edition. */
   features?: FeatureSetAmino;
   /** The parser stores options it doesn't recognize here. See above. */
-  uninterpreted_option?: UninterpretedOptionAmino[];
+  uninterpreted_option: UninterpretedOptionAmino[];
 }
 export interface EnumOptions {
   /**
@@ -2127,14 +2115,14 @@ export interface EnumOptionsAmino {
    * Set this option to true to allow mapping different tag names to the same
    * value.
    */
-  allow_alias?: boolean;
+  allow_alias: boolean;
   /**
    * Is this enum deprecated?
    * Depending on the target platform, this can emit Deprecated annotations
    * for the enum, or it will be completely ignored; in the very least, this
    * is a formalization for deprecating enums.
    */
-  deprecated?: boolean;
+  deprecated: boolean;
   /**
    * Enable the legacy handling of JSON field name conflicts.  This lowercases
    * and strips underscored from the fields before comparison in proto3 only.
@@ -2144,11 +2132,11 @@ export interface EnumOptionsAmino {
    * had time to migrate.
    */
   /** @deprecated */
-  deprecated_legacy_json_field_conflicts?: boolean;
+  deprecated_legacy_json_field_conflicts: boolean;
   /** Any features defined in the specific edition. */
   features?: FeatureSetAmino;
   /** The parser stores options it doesn't recognize here. See above. */
-  uninterpreted_option?: UninterpretedOptionAmino[];
+  uninterpreted_option: UninterpretedOptionAmino[];
 }
 export interface EnumValueOptions {
   /**
@@ -2180,7 +2168,7 @@ export interface EnumValueOptionsAmino {
    * for the enum value, or it will be completely ignored; in the very least,
    * this is a formalization for deprecating enum values.
    */
-  deprecated?: boolean;
+  deprecated: boolean;
   /** Any features defined in the specific edition. */
   features?: FeatureSetAmino;
   /**
@@ -2188,9 +2176,9 @@ export interface EnumValueOptionsAmino {
    * out when using debug formats, e.g. when the field contains sensitive
    * credentials.
    */
-  debug_redact?: boolean;
+  debug_redact: boolean;
   /** The parser stores options it doesn't recognize here. See above. */
-  uninterpreted_option?: UninterpretedOptionAmino[];
+  uninterpreted_option: UninterpretedOptionAmino[];
 }
 export interface ServiceOptions {
   /** Any features defined in the specific edition. */
@@ -2218,9 +2206,9 @@ export interface ServiceOptionsAmino {
    * for the service, or it will be completely ignored; in the very least,
    * this is a formalization for deprecating services.
    */
-  deprecated?: boolean;
+  deprecated: boolean;
   /** The parser stores options it doesn't recognize here. See above. */
-  uninterpreted_option?: UninterpretedOptionAmino[];
+  uninterpreted_option: UninterpretedOptionAmino[];
 }
 export interface MethodOptions {
   /**
@@ -2247,12 +2235,12 @@ export interface MethodOptionsAmino {
    * for the method, or it will be completely ignored; in the very least,
    * this is a formalization for deprecating methods.
    */
-  deprecated?: boolean;
-  idempotency_level?: MethodOptions_IdempotencyLevel;
+  deprecated: boolean;
+  idempotency_level: MethodOptions_IdempotencyLevel;
   /** Any features defined in the specific edition. */
   features?: FeatureSetAmino;
   /** The parser stores options it doesn't recognize here. See above. */
-  uninterpreted_option?: UninterpretedOptionAmino[];
+  uninterpreted_option: UninterpretedOptionAmino[];
 }
 /**
  * A message representing a option the parser does not recognize. This only
@@ -2288,17 +2276,17 @@ export interface UninterpretedOptionProtoMsg {
  * in them.
  */
 export interface UninterpretedOptionAmino {
-  name?: UninterpretedOption_NamePartAmino[];
+  name: UninterpretedOption_NamePartAmino[];
   /**
    * The value of the uninterpreted option, in whatever type the tokenizer
    * identified it as during parsing. Exactly one of these should be set.
    */
-  identifier_value?: string;
-  positive_int_value?: string;
-  negative_int_value?: string;
-  double_value?: number;
-  string_value?: string;
-  aggregate_value?: string;
+  identifier_value: string;
+  positive_int_value: string;
+  negative_int_value: string;
+  double_value: number;
+  string_value: string;
+  aggregate_value: string;
 }
 /**
  * The name of the uninterpreted option.  Each string represents a segment in
@@ -2323,8 +2311,8 @@ export interface UninterpretedOption_NamePartProtoMsg {
  * "foo.(bar.baz).moo".
  */
 export interface UninterpretedOption_NamePartAmino {
-  name_part?: string;
-  is_extension?: boolean;
+  name_part: string;
+  is_extension: boolean;
 }
 /**
  * TODO Enums in C++ gencode (and potentially other languages) are
@@ -2355,12 +2343,12 @@ export interface FeatureSetProtoMsg {
  * conflict here.
  */
 export interface FeatureSetAmino {
-  field_presence?: FeatureSet_FieldPresence;
-  enum_type?: FeatureSet_EnumType;
-  repeated_field_encoding?: FeatureSet_RepeatedFieldEncoding;
-  utf8_validation?: FeatureSet_Utf8Validation;
-  message_encoding?: FeatureSet_MessageEncoding;
-  json_format?: FeatureSet_JsonFormat;
+  field_presence: FeatureSet_FieldPresence;
+  enum_type: FeatureSet_EnumType;
+  repeated_field_encoding: FeatureSet_RepeatedFieldEncoding;
+  utf8_validation: FeatureSet_Utf8Validation;
+  message_encoding: FeatureSet_MessageEncoding;
+  json_format: FeatureSet_JsonFormat;
 }
 /**
  * A compiled specification for the defaults of a set of features.  These
@@ -2392,17 +2380,17 @@ export interface FeatureSetDefaultsProtoMsg {
  * for the closest matching edition, followed by proto merges.
  */
 export interface FeatureSetDefaultsAmino {
-  defaults?: FeatureSetDefaults_FeatureSetEditionDefaultAmino[];
+  defaults: FeatureSetDefaults_FeatureSetEditionDefaultAmino[];
   /**
    * The minimum supported edition (inclusive) when this was constructed.
    * Editions before this will not have defaults.
    */
-  minimum_edition?: Edition;
+  minimum_edition: Edition;
   /**
    * The maximum known edition (inclusive) when this was constructed. Editions
    * after this will not have reliable defaults.
    */
-  maximum_edition?: Edition;
+  maximum_edition: Edition;
 }
 /**
  * A map from every known edition with a unique set of defaults to its
@@ -2425,7 +2413,7 @@ export interface FeatureSetDefaults_FeatureSetEditionDefaultProtoMsg {
  * be used.  This field must be in strict ascending order by edition.
  */
 export interface FeatureSetDefaults_FeatureSetEditionDefaultAmino {
-  edition?: Edition;
+  edition: Edition;
   features?: FeatureSetAmino;
 }
 /**
@@ -2534,7 +2522,7 @@ export interface SourceCodeInfoAmino {
    *   ignore those that it doesn't understand, as more types of locations could
    *   be recorded in the future.
    */
-  location?: SourceCodeInfo_LocationAmino[];
+  location: SourceCodeInfo_LocationAmino[];
 }
 export interface SourceCodeInfo_Location {
   /**
@@ -2542,7 +2530,7 @@ export interface SourceCodeInfo_Location {
    * location.
    * 
    * Each element is a field number or an index.  They form a path from
-   * the root FileDescriptorProto to the place where the definition occurs.
+   * the root FileDescriptorProto to the place where the definition appears.
    * For example, this path:
    *   [ 4, 3, 2, 7, 1 ]
    * refers to:
@@ -2634,7 +2622,7 @@ export interface SourceCodeInfo_LocationAmino {
    * location.
    * 
    * Each element is a field number or an index.  They form a path from
-   * the root FileDescriptorProto to the place where the definition occurs.
+   * the root FileDescriptorProto to the place where the definition appears.
    * For example, this path:
    *   [ 4, 3, 2, 7, 1 ]
    * refers to:
@@ -2654,7 +2642,7 @@ export interface SourceCodeInfo_LocationAmino {
    * this path refers to the whole field declaration (from the beginning
    * of the label to the terminating semicolon).
    */
-  path?: number[];
+  path: number[];
   /**
    * Always has exactly three or four elements: start line, start column,
    * end line (optional, otherwise assumed same as start line), end column.
@@ -2662,7 +2650,7 @@ export interface SourceCodeInfo_LocationAmino {
    * and column numbers are zero-based -- typically you will want to add
    * 1 to each before displaying to a user.
    */
-  span?: number[];
+  span: number[];
   /**
    * If this SourceCodeInfo represents a complete declaration, these are any
    * comments appearing before and after the declaration which appear to be
@@ -2712,9 +2700,9 @@ export interface SourceCodeInfo_LocationAmino {
    * 
    *   // ignored detached comments.
    */
-  leading_comments?: string;
-  trailing_comments?: string;
-  leading_detached_comments?: string[];
+  leading_comments: string;
+  trailing_comments: string;
+  leading_detached_comments: string[];
 }
 /**
  * Describes the relationship between generated code and its original source
@@ -2742,7 +2730,7 @@ export interface GeneratedCodeInfoAmino {
    * An Annotation connects some span of text in generated code to an element
    * of its generating .proto file.
    */
-  annotation?: GeneratedCodeInfo_AnnotationAmino[];
+  annotation: GeneratedCodeInfo_AnnotationAmino[];
 }
 export interface GeneratedCodeInfo_Annotation {
   /**
@@ -2774,21 +2762,21 @@ export interface GeneratedCodeInfo_AnnotationAmino {
    * Identifies the element in the original source .proto file. This field
    * is formatted the same as SourceCodeInfo.Location.path.
    */
-  path?: number[];
+  path: number[];
   /** Identifies the filesystem path to the original source .proto. */
-  source_file?: string;
+  source_file: string;
   /**
    * Identifies the starting offset in bytes in the generated code
    * that relates to the identified object.
    */
-  begin?: number;
+  begin: number;
   /**
    * Identifies the ending offset in bytes in the generated code that
    * relates to the identified object. The end offset should be one past
    * the last relevant byte (so the length of the text = end - begin).
    */
-  end?: number;
-  semantic?: GeneratedCodeInfo_Annotation_Semantic;
+  end: number;
+  semantic: GeneratedCodeInfo_Annotation_Semantic;
 }
 function createBaseFileDescriptorSet(): FileDescriptorSet {
   return {
@@ -4474,7 +4462,6 @@ function createBaseFileOptions(): FileOptions {
     ccGenericServices: false,
     javaGenericServices: false,
     pyGenericServices: false,
-    phpGenericServices: false,
     deprecated: false,
     ccEnableArenas: false,
     objcClassPrefix: "",
@@ -4491,10 +4478,10 @@ function createBaseFileOptions(): FileOptions {
 export const FileOptions = {
   typeUrl: "/google.protobuf.FileOptions",
   is(o: any): o is FileOptions {
-    return o && (o.$typeUrl === FileOptions.typeUrl || typeof o.javaPackage === "string" && typeof o.javaOuterClassname === "string" && typeof o.javaMultipleFiles === "boolean" && typeof o.javaGenerateEqualsAndHash === "boolean" && typeof o.javaStringCheckUtf8 === "boolean" && isSet(o.optimizeFor) && typeof o.goPackage === "string" && typeof o.ccGenericServices === "boolean" && typeof o.javaGenericServices === "boolean" && typeof o.pyGenericServices === "boolean" && typeof o.phpGenericServices === "boolean" && typeof o.deprecated === "boolean" && typeof o.ccEnableArenas === "boolean" && typeof o.objcClassPrefix === "string" && typeof o.csharpNamespace === "string" && typeof o.swiftPrefix === "string" && typeof o.phpClassPrefix === "string" && typeof o.phpNamespace === "string" && typeof o.phpMetadataNamespace === "string" && typeof o.rubyPackage === "string" && Array.isArray(o.uninterpretedOption) && (!o.uninterpretedOption.length || UninterpretedOption.is(o.uninterpretedOption[0])));
+    return o && (o.$typeUrl === FileOptions.typeUrl || typeof o.javaPackage === "string" && typeof o.javaOuterClassname === "string" && typeof o.javaMultipleFiles === "boolean" && typeof o.javaGenerateEqualsAndHash === "boolean" && typeof o.javaStringCheckUtf8 === "boolean" && isSet(o.optimizeFor) && typeof o.goPackage === "string" && typeof o.ccGenericServices === "boolean" && typeof o.javaGenericServices === "boolean" && typeof o.pyGenericServices === "boolean" && typeof o.deprecated === "boolean" && typeof o.ccEnableArenas === "boolean" && typeof o.objcClassPrefix === "string" && typeof o.csharpNamespace === "string" && typeof o.swiftPrefix === "string" && typeof o.phpClassPrefix === "string" && typeof o.phpNamespace === "string" && typeof o.phpMetadataNamespace === "string" && typeof o.rubyPackage === "string" && Array.isArray(o.uninterpretedOption) && (!o.uninterpretedOption.length || UninterpretedOption.is(o.uninterpretedOption[0])));
   },
   isAmino(o: any): o is FileOptionsAmino {
-    return o && (o.$typeUrl === FileOptions.typeUrl || typeof o.java_package === "string" && typeof o.java_outer_classname === "string" && typeof o.java_multiple_files === "boolean" && typeof o.java_generate_equals_and_hash === "boolean" && typeof o.java_string_check_utf8 === "boolean" && isSet(o.optimize_for) && typeof o.go_package === "string" && typeof o.cc_generic_services === "boolean" && typeof o.java_generic_services === "boolean" && typeof o.py_generic_services === "boolean" && typeof o.php_generic_services === "boolean" && typeof o.deprecated === "boolean" && typeof o.cc_enable_arenas === "boolean" && typeof o.objc_class_prefix === "string" && typeof o.csharp_namespace === "string" && typeof o.swift_prefix === "string" && typeof o.php_class_prefix === "string" && typeof o.php_namespace === "string" && typeof o.php_metadata_namespace === "string" && typeof o.ruby_package === "string" && Array.isArray(o.uninterpreted_option) && (!o.uninterpreted_option.length || UninterpretedOption.isAmino(o.uninterpreted_option[0])));
+    return o && (o.$typeUrl === FileOptions.typeUrl || typeof o.java_package === "string" && typeof o.java_outer_classname === "string" && typeof o.java_multiple_files === "boolean" && typeof o.java_generate_equals_and_hash === "boolean" && typeof o.java_string_check_utf8 === "boolean" && isSet(o.optimize_for) && typeof o.go_package === "string" && typeof o.cc_generic_services === "boolean" && typeof o.java_generic_services === "boolean" && typeof o.py_generic_services === "boolean" && typeof o.deprecated === "boolean" && typeof o.cc_enable_arenas === "boolean" && typeof o.objc_class_prefix === "string" && typeof o.csharp_namespace === "string" && typeof o.swift_prefix === "string" && typeof o.php_class_prefix === "string" && typeof o.php_namespace === "string" && typeof o.php_metadata_namespace === "string" && typeof o.ruby_package === "string" && Array.isArray(o.uninterpreted_option) && (!o.uninterpreted_option.length || UninterpretedOption.isAmino(o.uninterpreted_option[0])));
   },
   encode(message: FileOptions, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.javaPackage !== "") {
@@ -4526,9 +4513,6 @@ export const FileOptions = {
     }
     if (message.pyGenericServices === true) {
       writer.uint32(144).bool(message.pyGenericServices);
-    }
-    if (message.phpGenericServices === true) {
-      writer.uint32(336).bool(message.phpGenericServices);
     }
     if (message.deprecated === true) {
       writer.uint32(184).bool(message.deprecated);
@@ -4602,9 +4586,6 @@ export const FileOptions = {
         case 18:
           message.pyGenericServices = reader.bool();
           break;
-        case 42:
-          message.phpGenericServices = reader.bool();
-          break;
         case 23:
           message.deprecated = reader.bool();
           break;
@@ -4657,7 +4638,6 @@ export const FileOptions = {
     message.ccGenericServices = object.ccGenericServices ?? false;
     message.javaGenericServices = object.javaGenericServices ?? false;
     message.pyGenericServices = object.pyGenericServices ?? false;
-    message.phpGenericServices = object.phpGenericServices ?? false;
     message.deprecated = object.deprecated ?? false;
     message.ccEnableArenas = object.ccEnableArenas ?? false;
     message.objcClassPrefix = object.objcClassPrefix ?? "";
@@ -4702,9 +4682,6 @@ export const FileOptions = {
     }
     if (object.py_generic_services !== undefined && object.py_generic_services !== null) {
       message.pyGenericServices = object.py_generic_services;
-    }
-    if (object.php_generic_services !== undefined && object.php_generic_services !== null) {
-      message.phpGenericServices = object.php_generic_services;
     }
     if (object.deprecated !== undefined && object.deprecated !== null) {
       message.deprecated = object.deprecated;
@@ -4751,7 +4728,6 @@ export const FileOptions = {
     obj.cc_generic_services = message.ccGenericServices;
     obj.java_generic_services = message.javaGenericServices;
     obj.py_generic_services = message.pyGenericServices;
-    obj.php_generic_services = message.phpGenericServices;
     obj.deprecated = message.deprecated;
     obj.cc_enable_arenas = message.ccEnableArenas;
     obj.objc_class_prefix = message.objcClassPrefix;

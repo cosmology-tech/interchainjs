@@ -44,25 +44,25 @@ export interface MsgSubmitProposalProtoMsg {
  */
 export interface MsgSubmitProposalAmino {
   /** messages are the arbitrary messages to be executed if proposal passes. */
-  messages?: AnyAmino[];
+  messages: AnyAmino[];
   /** initial_deposit is the deposit value that must be paid at proposal submission. */
   initial_deposit: CoinAmino[];
   /** proposer is the account address of the proposer. */
-  proposer?: string;
+  proposer: string;
   /** metadata is any arbitrary metadata attached to the proposal. */
-  metadata?: string;
+  metadata: string;
   /**
    * title is the title of the proposal.
    * 
    * Since: cosmos-sdk 0.47
    */
-  title?: string;
+  title: string;
   /**
    * summary is the summary of the proposal
    * 
    * Since: cosmos-sdk 0.47
    */
-  summary?: string;
+  summary: string;
 }
 /** MsgSubmitProposalResponse defines the Msg/SubmitProposal response type. */
 export interface MsgSubmitProposalResponse {
@@ -76,7 +76,7 @@ export interface MsgSubmitProposalResponseProtoMsg {
 /** MsgSubmitProposalResponse defines the Msg/SubmitProposal response type. */
 export interface MsgSubmitProposalResponseAmino {
   /** proposal_id defines the unique id of the proposal. */
-  proposal_id?: string;
+  proposal_id: string;
 }
 /**
  * MsgExecLegacyContent is used to wrap the legacy content field into a message.
@@ -103,7 +103,7 @@ export interface MsgExecLegacyContentAmino {
   /** content is the proposal's content. */
   content?: AnyAmino;
   /** authority must be the gov module address. */
-  authority?: string;
+  authority: string;
 }
 /** MsgExecLegacyContentResponse defines the Msg/ExecLegacyContent response type. */
 export interface MsgExecLegacyContentResponse {}
@@ -133,11 +133,11 @@ export interface MsgVoteAmino {
   /** proposal_id defines the unique id of the proposal. */
   proposal_id: string;
   /** voter is the voter address for the proposal. */
-  voter?: string;
+  voter: string;
   /** option defines the vote option. */
-  option?: VoteOption;
+  option: VoteOption;
   /** metadata is any arbitrary metadata attached to the Vote. */
-  metadata?: string;
+  metadata: string;
 }
 /** MsgVoteResponse defines the Msg/Vote response type. */
 export interface MsgVoteResponse {}
@@ -167,11 +167,11 @@ export interface MsgVoteWeightedAmino {
   /** proposal_id defines the unique id of the proposal. */
   proposal_id: string;
   /** voter is the voter address for the proposal. */
-  voter?: string;
+  voter: string;
   /** options defines the weighted vote options. */
-  options?: WeightedVoteOptionAmino[];
+  options: WeightedVoteOptionAmino[];
   /** metadata is any arbitrary metadata attached to the VoteWeighted. */
-  metadata?: string;
+  metadata: string;
 }
 /** MsgVoteWeightedResponse defines the Msg/VoteWeighted response type. */
 export interface MsgVoteWeightedResponse {}
@@ -199,7 +199,7 @@ export interface MsgDepositAmino {
   /** proposal_id defines the unique id of the proposal. */
   proposal_id: string;
   /** depositor defines the deposit addresses from the proposals. */
-  depositor?: string;
+  depositor: string;
   /** amount to be deposited by depositor. */
   amount: CoinAmino[];
 }
@@ -237,7 +237,7 @@ export interface MsgUpdateParamsProtoMsg {
  */
 export interface MsgUpdateParamsAmino {
   /** authority is the address that controls the module (defaults to x/gov unless overwritten). */
-  authority?: string;
+  authority: string;
   /**
    * params defines the x/gov parameters to update.
    * 

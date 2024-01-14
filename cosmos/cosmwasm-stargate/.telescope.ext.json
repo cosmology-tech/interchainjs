@@ -23,6 +23,9 @@
       "serviceImplement": {
         "Msg": {
           "type": "Tx"
+        },
+        "Query": {
+          "type": "Query"
         }
       },
       "instantOps": [
@@ -34,6 +37,9 @@
           "nameMapping": {
             "Msg": {
               "updateWasmParams": "cosmwasm.wasm.v1.updateParams"
+            },
+            "Query": {
+              "getWasmParams": "cosmwasm.wasm.v1.params"
             }
           }
         }

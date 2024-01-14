@@ -22,7 +22,7 @@ export interface CoinProtoMsg {
  * signatures required by gogoproto.
  */
 export interface CoinAmino {
-  denom?: string;
+  denom: string;
   amount: string;
 }
 /**
@@ -46,8 +46,8 @@ export interface DecCoinProtoMsg {
  * signatures required by gogoproto.
  */
 export interface DecCoinAmino {
-  denom?: string;
-  amount?: string;
+  denom: string;
+  amount: string;
 }
 /** IntProto defines a Protobuf wrapper around an Int object. */
 export interface IntProto {
@@ -59,7 +59,7 @@ export interface IntProtoProtoMsg {
 }
 /** IntProto defines a Protobuf wrapper around an Int object. */
 export interface IntProtoAmino {
-  int?: string;
+  int: string;
 }
 /** DecProto defines a Protobuf wrapper around a Dec object. */
 export interface DecProto {
@@ -71,7 +71,7 @@ export interface DecProtoProtoMsg {
 }
 /** DecProto defines a Protobuf wrapper around a Dec object. */
 export interface DecProtoAmino {
-  dec?: string;
+  dec: string;
 }
 function createBaseCoin(): Coin {
   return {

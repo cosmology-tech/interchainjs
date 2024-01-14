@@ -29,7 +29,7 @@ export interface BaseVestingAccountAmino {
   delegated_free: CoinAmino[];
   delegated_vesting: CoinAmino[];
   /** Vesting end time, as unix timestamp (in seconds). */
-  end_time?: string;
+  end_time: string;
 }
 /**
  * ContinuousVestingAccount implements the VestingAccount interface. It
@@ -51,7 +51,7 @@ export interface ContinuousVestingAccountProtoMsg {
 export interface ContinuousVestingAccountAmino {
   base_vesting_account?: BaseVestingAccountAmino;
   /** Vesting start time, as unix timestamp (in seconds). */
-  start_time?: string;
+  start_time: string;
 }
 /**
  * DelayedVestingAccount implements the VestingAccount interface. It vests all
@@ -86,7 +86,7 @@ export interface PeriodProtoMsg {
 /** Period defines a length of time and amount of coins that will vest. */
 export interface PeriodAmino {
   /** Period duration in seconds. */
-  length?: string;
+  length: string;
   amount: CoinAmino[];
 }
 /**
@@ -108,7 +108,7 @@ export interface PeriodicVestingAccountProtoMsg {
  */
 export interface PeriodicVestingAccountAmino {
   base_vesting_account?: BaseVestingAccountAmino;
-  start_time?: string;
+  start_time: string;
   vesting_periods: PeriodAmino[];
 }
 /**

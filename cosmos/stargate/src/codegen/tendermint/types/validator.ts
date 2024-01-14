@@ -12,9 +12,9 @@ export interface ValidatorSetProtoMsg {
   value: Uint8Array;
 }
 export interface ValidatorSetAmino {
-  validators?: ValidatorAmino[];
+  validators: ValidatorAmino[];
   proposer?: ValidatorAmino;
-  total_voting_power?: string;
+  total_voting_power: string;
 }
 export interface Validator {
   address: Uint8Array;
@@ -27,10 +27,10 @@ export interface ValidatorProtoMsg {
   value: Uint8Array;
 }
 export interface ValidatorAmino {
-  address?: string;
-  pub_key?: PublicKeyAmino;
-  voting_power?: string;
-  proposer_priority?: string;
+  address: string;
+  pub_key: PublicKeyAmino;
+  voting_power: string;
+  proposer_priority: string;
 }
 export interface SimpleValidator {
   pubKey?: PublicKey;
@@ -42,7 +42,7 @@ export interface SimpleValidatorProtoMsg {
 }
 export interface SimpleValidatorAmino {
   pub_key?: PublicKeyAmino;
-  voting_power?: string;
+  voting_power: string;
 }
 function createBaseValidatorSet(): ValidatorSet {
   return {

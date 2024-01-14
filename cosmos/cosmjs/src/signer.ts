@@ -458,41 +458,4 @@ export class CosmjsSigner {
       } as IndexedTx;
     });
   }
-
-  get getBalance() {
-    return this.request.balance;
-  }
-  get getAllBalances() {
-    return this.request.allBalances;
-  }
-  get getBalanceStaked() {
-    return this.request.delegatorDelegations;
-  }
-  get getDelegation() {
-    return this.request.delegation;
-  }
-  get getCodes() {
-    return this.request.codes;
-  }
-  get getCodeDetails() {
-    return this.request.code;
-  }
-  get getContracts() {
-    return this.request.contractsByCode;
-  }
-  get getContractsByCreator() {
-    return this.request.contractsByCreator;
-  }
-  get getContract() {
-    return this.request.contractInfo;
-  }
-  get getContractCodeHistory() {
-    return this.request.contractHistory;
-  }
-  get queryContractRaw() {
-    return this.request.rawContractState;
-  }
-  get queryContractSmart() {
-    return this.request.smartContractState;
-  }
 }

@@ -36,7 +36,7 @@ export interface MsgSubmitProposalAmino {
   /** initial_deposit is the deposit value that must be paid at proposal submission. */
   initial_deposit: CoinAmino[];
   /** proposer is the account address of the proposer. */
-  proposer?: string;
+  proposer: string;
 }
 /** MsgSubmitProposalResponse defines the Msg/SubmitProposal response type. */
 export interface MsgSubmitProposalResponse {
@@ -68,11 +68,11 @@ export interface MsgVoteProtoMsg {
 /** MsgVote defines a message to cast a vote. */
 export interface MsgVoteAmino {
   /** proposal_id defines the unique id of the proposal. */
-  proposal_id?: string;
+  proposal_id: string;
   /** voter is the voter address for the proposal. */
-  voter?: string;
+  voter: string;
   /** option defines the vote option. */
-  option?: VoteOption;
+  option: VoteOption;
 }
 /** MsgVoteResponse defines the Msg/Vote response type. */
 export interface MsgVoteResponse {}
@@ -108,7 +108,7 @@ export interface MsgVoteWeightedAmino {
   /** proposal_id defines the unique id of the proposal. */
   proposal_id: string;
   /** voter is the voter address for the proposal. */
-  voter?: string;
+  voter: string;
   /** options defines the weighted vote options. */
   options: WeightedVoteOptionAmino[];
 }
@@ -146,7 +146,7 @@ export interface MsgDepositAmino {
   /** proposal_id defines the unique id of the proposal. */
   proposal_id: string;
   /** depositor defines the deposit addresses from the proposals. */
-  depositor?: string;
+  depositor: string;
   /** amount to be deposited by depositor. */
   amount: CoinAmino[];
 }

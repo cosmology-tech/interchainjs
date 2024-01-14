@@ -4,6 +4,7 @@
   ],
   "outPath": "./src/codegen",
   "options": {
+    "classesUseArrowFunctions": true,
     "env": "v-next",
     "fieldDefaultIsOptional": false,
     "useSDKTypes": false,
@@ -61,6 +62,9 @@
       "serviceImplement": {
         "Msg": {
           "type": "Tx"
+        },
+        "Query": {
+          "type": "Query"
         }
       },
       "instantOps": [
@@ -74,6 +78,9 @@
           "nameMapping": {
             "Msg": {
               "updateWasmParams": "cosmwasm.wasm.v1.updateParams"
+            },
+            "Query": {
+              "getWasmParams": "cosmwasm.wasm.v1.params"
             }
           }
         }
@@ -87,7 +94,8 @@
     "aminoEncoding": {
       "enabled": true,
       "useLegacyInlineEncoding": false,
-      "disableMsgTypes": true
+      "disableMsgTypes": true,
+      "useProtoOptionality": true
     }
   }
 }

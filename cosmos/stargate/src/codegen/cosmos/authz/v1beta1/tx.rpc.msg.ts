@@ -46,31 +46,37 @@ export class MsgClientImpl implements Msg {
   private readonly rpc: TxRpc;
   constructor(rpc: TxRpc) {
     this.rpc = rpc;
-    this.grant = this.grant.bind(this);
-    this.exec = this.exec.bind(this);
-    this.revoke = this.revoke.bind(this);
   }
-  grant(signerAddress: string, message: MsgGrant, fee: number | StdFee | "auto" = "auto", memo: string = ""): Promise<DeliverTxResponse> {
+  /* Grant grants the provided authorization to the grantee on the granter's
+   account with the provided expiration time. If there is already a grant
+   for the given (granter, grantee, Authorization) triple, then the grant
+   will be overwritten. */
+  grant = async (signerAddress: string, message: MsgGrant, fee: number | StdFee | "auto" = "auto", memo: string = ""): Promise<DeliverTxResponse> => {
     const data = [{
       typeUrl: MsgGrant.typeUrl,
       value: message
     }];
     return this.rpc.signAndBroadcast!(signerAddress, data, fee, memo);
-  }
-  exec(signerAddress: string, message: MsgExec, fee: number | StdFee | "auto" = "auto", memo: string = ""): Promise<DeliverTxResponse> {
+  };
+  /* Exec attempts to execute the provided messages using
+   authorizations granted to the grantee. Each message should have only
+   one signer corresponding to the granter of the authorization. */
+  exec = async (signerAddress: string, message: MsgExec, fee: number | StdFee | "auto" = "auto", memo: string = ""): Promise<DeliverTxResponse> => {
     const data = [{
       typeUrl: MsgExec.typeUrl,
       value: message
     }];
     return this.rpc.signAndBroadcast!(signerAddress, data, fee, memo);
-  }
-  revoke(signerAddress: string, message: MsgRevoke, fee: number | StdFee | "auto" = "auto", memo: string = ""): Promise<DeliverTxResponse> {
+  };
+  /* Revoke revokes any authorization corresponding to the provided method name on the
+   granter's account that has been granted to the grantee. */
+  revoke = async (signerAddress: string, message: MsgRevoke, fee: number | StdFee | "auto" = "auto", memo: string = ""): Promise<DeliverTxResponse> => {
     const data = [{
       typeUrl: MsgRevoke.typeUrl,
       value: message
     }];
     return this.rpc.signAndBroadcast!(signerAddress, data, fee, memo);
-  }
+  };
 }
 export const createClientImpl = (rpc: TxRpc) => {
   return new MsgClientImpl(rpc);

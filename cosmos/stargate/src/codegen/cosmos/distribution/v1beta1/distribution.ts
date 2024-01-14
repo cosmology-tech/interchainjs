@@ -25,20 +25,20 @@ export interface ParamsProtoMsg {
 }
 /** Params defines the set of params for the distribution module. */
 export interface ParamsAmino {
-  community_tax?: string;
+  community_tax: string;
   /**
    * Deprecated: The base_proposer_reward field is deprecated and is no longer used
    * in the x/distribution module's reward mechanism.
    */
   /** @deprecated */
-  base_proposer_reward?: string;
+  base_proposer_reward: string;
   /**
    * Deprecated: The bonus_proposer_reward field is deprecated and is no longer used
    * in the x/distribution module's reward mechanism.
    */
   /** @deprecated */
-  bonus_proposer_reward?: string;
-  withdraw_addr_enabled?: boolean;
+  bonus_proposer_reward: string;
+  withdraw_addr_enabled: boolean;
 }
 /**
  * ValidatorHistoricalRewards represents historical rewards for a validator.
@@ -78,7 +78,7 @@ export interface ValidatorHistoricalRewardsProtoMsg {
  */
 export interface ValidatorHistoricalRewardsAmino {
   cumulative_reward_ratio: DecCoinAmino[];
-  reference_count?: number;
+  reference_count: number;
 }
 /**
  * ValidatorCurrentRewards represents current rewards and current
@@ -100,7 +100,7 @@ export interface ValidatorCurrentRewardsProtoMsg {
  */
 export interface ValidatorCurrentRewardsAmino {
   rewards: DecCoinAmino[];
-  period?: string;
+  period: string;
 }
 /**
  * ValidatorAccumulatedCommission represents accumulated commission
@@ -159,8 +159,8 @@ export interface ValidatorSlashEventProtoMsg {
  * for delegations which are withdrawn after a slash has occurred.
  */
 export interface ValidatorSlashEventAmino {
-  validator_period?: string;
-  fraction?: string;
+  validator_period: string;
+  fraction: string;
 }
 /** ValidatorSlashEvents is a collection of ValidatorSlashEvent messages. */
 export interface ValidatorSlashEvents {
@@ -219,9 +219,9 @@ export interface CommunityPoolSpendProposalProtoMsg {
  */
 /** @deprecated */
 export interface CommunityPoolSpendProposalAmino {
-  title?: string;
-  description?: string;
-  recipient?: string;
+  title: string;
+  description: string;
+  recipient: string;
   amount: CoinAmino[];
 }
 /**
@@ -250,8 +250,8 @@ export interface DelegatorStartingInfoProtoMsg {
  * thus sdk.Dec is used.
  */
 export interface DelegatorStartingInfoAmino {
-  previous_period?: string;
-  stake?: string;
+  previous_period: string;
+  stake: string;
   height: string;
 }
 /**
@@ -271,7 +271,7 @@ export interface DelegationDelegatorRewardProtoMsg {
  * of a delegator's delegation reward.
  */
 export interface DelegationDelegatorRewardAmino {
-  validator_address?: string;
+  validator_address: string;
   reward: DecCoinAmino[];
 }
 /**
@@ -294,11 +294,11 @@ export interface CommunityPoolSpendProposalWithDepositProtoMsg {
  * with a deposit
  */
 export interface CommunityPoolSpendProposalWithDepositAmino {
-  title?: string;
-  description?: string;
-  recipient?: string;
-  amount?: string;
-  deposit?: string;
+  title: string;
+  description: string;
+  recipient: string;
+  amount: string;
+  deposit: string;
 }
 function createBaseParams(): Params {
   return {

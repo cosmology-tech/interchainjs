@@ -43,27 +43,27 @@ export interface MsgTransferProtoMsg {
  */
 export interface MsgTransferAmino {
   /** the port on which the packet will be sent */
-  source_port?: string;
+  source_port: string;
   /** the channel by which the packet will be sent */
-  source_channel?: string;
+  source_channel: string;
   /** the tokens to be transferred */
-  token?: CoinAmino;
+  token: CoinAmino;
   /** the sender address */
-  sender?: string;
+  sender: string;
   /** the recipient address on the destination chain */
-  receiver?: string;
+  receiver: string;
   /**
    * Timeout height relative to the current block height.
    * The timeout is disabled when set to 0.
    */
-  timeout_height?: HeightAmino;
+  timeout_height: HeightAmino;
   /**
    * Timeout timestamp in absolute nanoseconds since unix epoch.
    * The timeout is disabled when set to 0.
    */
-  timeout_timestamp?: string;
+  timeout_timestamp: string;
   /** optional memo */
-  memo?: string;
+  memo: string;
 }
 /** MsgTransferResponse defines the Msg/Transfer response type. */
 export interface MsgTransferResponse {
@@ -77,7 +77,7 @@ export interface MsgTransferResponseProtoMsg {
 /** MsgTransferResponse defines the Msg/Transfer response type. */
 export interface MsgTransferResponseAmino {
   /** sequence number of the transfer packet sent */
-  sequence?: string;
+  sequence: string;
 }
 function createBaseMsgTransfer(): MsgTransfer {
   return {

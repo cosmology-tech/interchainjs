@@ -12,6 +12,11 @@ cosmosSdkFiles=(
     "cosmos/group/v1/tx.proto"
     "cosmos/staking/v1beta1/tx.proto"
     "cosmos/vesting/v1beta1/tx.proto"
+
+    "cosmos/auth/v1beta1/query.proto"
+    "cosmos/bank/v1beta1/query.proto"
+    "cosmos/staking/v1beta1/query.proto"
+    "cosmos/gov/v1beta1/query.proto"
     )
 
 ibcGoFiles=(

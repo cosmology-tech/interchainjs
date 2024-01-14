@@ -20,8 +20,8 @@ export interface AppProtoMsg {
  * updated in ResponseEndBlock.
  */
 export interface AppAmino {
-  protocol?: string;
-  software?: string;
+  protocol: string;
+  software: string;
 }
 /**
  * Consensus captures the consensus rules for processing a block in the blockchain,
@@ -42,8 +42,8 @@ export interface ConsensusProtoMsg {
  * state transition machine.
  */
 export interface ConsensusAmino {
-  block?: string;
-  app?: string;
+  block: string;
+  app: string;
 }
 function createBaseApp(): App {
   return {

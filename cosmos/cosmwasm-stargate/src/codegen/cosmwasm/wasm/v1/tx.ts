@@ -23,9 +23,9 @@ export interface MsgStoreCodeProtoMsg {
 /** MsgStoreCode submit Wasm code to the system */
 export interface MsgStoreCodeAmino {
   /** Sender is the actor that signed the messages */
-  sender?: string;
+  sender: string;
   /** WASMByteCode can be raw or gzip compressed */
-  wasm_byte_code?: string;
+  wasm_byte_code: string;
   /**
    * InstantiatePermission access control to apply on contract creation,
    * optional
@@ -46,9 +46,9 @@ export interface MsgStoreCodeResponseProtoMsg {
 /** MsgStoreCodeResponse returns store result data. */
 export interface MsgStoreCodeResponseAmino {
   /** CodeID is the reference to the stored WASM code */
-  code_id?: string;
+  code_id: string;
   /** Checksum is the sha256 hash of the stored code */
-  checksum?: string;
+  checksum: string;
 }
 /**
  * MsgInstantiateContract create a new smart contract instance for the given
@@ -78,15 +78,15 @@ export interface MsgInstantiateContractProtoMsg {
  */
 export interface MsgInstantiateContractAmino {
   /** Sender is the that actor that signed the messages */
-  sender?: string;
+  sender: string;
   /** Admin is an optional address that can execute migrations */
-  admin?: string;
+  admin: string;
   /** CodeID is the reference to the stored WASM code */
-  code_id?: string;
+  code_id: string;
   /** Label is optional metadata to be stored with a contract instance. */
-  label?: string;
+  label: string;
   /** Msg json encoded message to be passed to the contract on instantiation */
-  msg?: any;
+  msg: any;
   /** Funds coins that are transferred to the contract on instantiation */
   funds: CoinAmino[];
 }
@@ -104,9 +104,9 @@ export interface MsgInstantiateContractResponseProtoMsg {
 /** MsgInstantiateContractResponse return instantiation result data */
 export interface MsgInstantiateContractResponseAmino {
   /** Address is the bech32 address of the new contract instance. */
-  address?: string;
+  address: string;
   /** Data contains bytes to returned from the contract */
-  data?: string;
+  data: string;
 }
 /**
  * MsgInstantiateContract2 create a new smart contract instance for the given
@@ -143,24 +143,24 @@ export interface MsgInstantiateContract2ProtoMsg {
  */
 export interface MsgInstantiateContract2Amino {
   /** Sender is the that actor that signed the messages */
-  sender?: string;
+  sender: string;
   /** Admin is an optional address that can execute migrations */
-  admin?: string;
+  admin: string;
   /** CodeID is the reference to the stored WASM code */
-  code_id?: string;
+  code_id: string;
   /** Label is optional metadata to be stored with a contract instance. */
-  label?: string;
+  label: string;
   /** Msg json encoded message to be passed to the contract on instantiation */
-  msg?: any;
+  msg: any;
   /** Funds coins that are transferred to the contract on instantiation */
   funds: CoinAmino[];
   /** Salt is an arbitrary value provided by the sender. Size can be 1 to 64. */
-  salt?: string;
+  salt: string;
   /**
    * FixMsg include the msg value into the hash for the predictable address.
    * Default is false
    */
-  fix_msg?: boolean;
+  fix_msg: boolean;
 }
 /** MsgInstantiateContract2Response return instantiation result data */
 export interface MsgInstantiateContract2Response {
@@ -176,9 +176,9 @@ export interface MsgInstantiateContract2ResponseProtoMsg {
 /** MsgInstantiateContract2Response return instantiation result data */
 export interface MsgInstantiateContract2ResponseAmino {
   /** Address is the bech32 address of the new contract instance. */
-  address?: string;
+  address: string;
   /** Data contains bytes to returned from the contract */
-  data?: string;
+  data: string;
 }
 /** MsgExecuteContract submits the given message data to a smart contract */
 export interface MsgExecuteContract {
@@ -198,11 +198,11 @@ export interface MsgExecuteContractProtoMsg {
 /** MsgExecuteContract submits the given message data to a smart contract */
 export interface MsgExecuteContractAmino {
   /** Sender is the that actor that signed the messages */
-  sender?: string;
+  sender: string;
   /** Contract is the address of the smart contract */
-  contract?: string;
+  contract: string;
   /** Msg json encoded message to be passed to the contract */
-  msg?: any;
+  msg: any;
   /** Funds coins that are transferred to the contract on execution */
   funds: CoinAmino[];
 }
@@ -218,7 +218,7 @@ export interface MsgExecuteContractResponseProtoMsg {
 /** MsgExecuteContractResponse returns execution result data. */
 export interface MsgExecuteContractResponseAmino {
   /** Data contains bytes to returned from the contract */
-  data?: string;
+  data: string;
 }
 /** MsgMigrateContract runs a code upgrade/ downgrade for a smart contract */
 export interface MsgMigrateContract {
@@ -238,13 +238,13 @@ export interface MsgMigrateContractProtoMsg {
 /** MsgMigrateContract runs a code upgrade/ downgrade for a smart contract */
 export interface MsgMigrateContractAmino {
   /** Sender is the that actor that signed the messages */
-  sender?: string;
+  sender: string;
   /** Contract is the address of the smart contract */
-  contract?: string;
+  contract: string;
   /** CodeID references the new WASM code */
-  code_id?: string;
+  code_id: string;
   /** Msg json encoded message to be passed to the contract on migration */
-  msg?: any;
+  msg: any;
 }
 /** MsgMigrateContractResponse returns contract migration result data. */
 export interface MsgMigrateContractResponse {
@@ -264,7 +264,7 @@ export interface MsgMigrateContractResponseAmino {
    * Data contains same raw bytes returned as data from the wasm contract.
    * (May be empty)
    */
-  data?: string;
+  data: string;
 }
 /** MsgUpdateAdmin sets a new admin for a smart contract */
 export interface MsgUpdateAdmin {
@@ -282,11 +282,11 @@ export interface MsgUpdateAdminProtoMsg {
 /** MsgUpdateAdmin sets a new admin for a smart contract */
 export interface MsgUpdateAdminAmino {
   /** Sender is the that actor that signed the messages */
-  sender?: string;
+  sender: string;
   /** NewAdmin address to be set */
-  new_admin?: string;
+  new_admin: string;
   /** Contract is the address of the smart contract */
-  contract?: string;
+  contract: string;
 }
 /** MsgUpdateAdminResponse returns empty data */
 export interface MsgUpdateAdminResponse {}
@@ -310,9 +310,9 @@ export interface MsgClearAdminProtoMsg {
 /** MsgClearAdmin removes any admin stored for a smart contract */
 export interface MsgClearAdminAmino {
   /** Sender is the actor that signed the messages */
-  sender?: string;
+  sender: string;
   /** Contract is the address of the smart contract */
-  contract?: string;
+  contract: string;
 }
 /** MsgClearAdminResponse returns empty data */
 export interface MsgClearAdminResponse {}
@@ -342,7 +342,7 @@ export interface AccessConfigUpdateProtoMsg {
  */
 export interface AccessConfigUpdateAmino {
   /** CodeID is the reference to the stored WASM code to be updated */
-  code_id?: string;
+  code_id: string;
   /** InstantiatePermission to apply to the set of code ids */
   instantiate_permission: AccessConfigAmino;
 }
@@ -362,9 +362,9 @@ export interface MsgUpdateInstantiateConfigProtoMsg {
 /** MsgUpdateInstantiateConfig updates instantiate config for a smart contract */
 export interface MsgUpdateInstantiateConfigAmino {
   /** Sender is the that actor that signed the messages */
-  sender?: string;
+  sender: string;
   /** CodeID references the stored WASM code */
-  code_id?: string;
+  code_id: string;
   /** NewInstantiatePermission is the new access control */
   new_instantiate_permission?: AccessConfigAmino;
 }
@@ -402,7 +402,7 @@ export interface MsgUpdateParamsProtoMsg {
  */
 export interface MsgUpdateParamsAmino {
   /** Authority is the address of the governance account. */
-  authority?: string;
+  authority: string;
   /**
    * params defines the x/wasm parameters to update.
    * 
@@ -452,11 +452,11 @@ export interface MsgSudoContractProtoMsg {
  */
 export interface MsgSudoContractAmino {
   /** Authority is the address of the governance account. */
-  authority?: string;
+  authority: string;
   /** Contract is the address of the smart contract */
-  contract?: string;
+  contract: string;
   /** Msg json encoded message to be passed to the contract as sudo */
-  msg?: any;
+  msg: any;
 }
 /**
  * MsgSudoContractResponse defines the response structure for executing a
@@ -480,7 +480,7 @@ export interface MsgSudoContractResponseProtoMsg {
  */
 export interface MsgSudoContractResponseAmino {
   /** Data contains bytes to returned from the contract */
-  data?: string;
+  data: string;
 }
 /**
  * MsgPinCodes is the MsgPinCodes request type.
@@ -504,9 +504,9 @@ export interface MsgPinCodesProtoMsg {
  */
 export interface MsgPinCodesAmino {
   /** Authority is the address of the governance account. */
-  authority?: string;
+  authority: string;
   /** CodeIDs references the new WASM codes */
-  code_ids?: string[];
+  code_ids: string[];
 }
 /**
  * MsgPinCodesResponse defines the response structure for executing a
@@ -548,9 +548,9 @@ export interface MsgUnpinCodesProtoMsg {
  */
 export interface MsgUnpinCodesAmino {
   /** Authority is the address of the governance account. */
-  authority?: string;
+  authority: string;
   /** CodeIDs references the WASM codes */
-  code_ids?: string[];
+  code_ids: string[];
 }
 /**
  * MsgUnpinCodesResponse defines the response structure for executing a
@@ -624,39 +624,39 @@ export interface MsgStoreAndInstantiateContractProtoMsg {
  */
 export interface MsgStoreAndInstantiateContractAmino {
   /** Authority is the address of the governance account. */
-  authority?: string;
+  authority: string;
   /** WASMByteCode can be raw or gzip compressed */
-  wasm_byte_code?: string;
+  wasm_byte_code: string;
   /** InstantiatePermission to apply on contract creation, optional */
   instantiate_permission?: AccessConfigAmino;
   /**
    * UnpinCode code on upload, optional. As default the uploaded contract is
    * pinned to cache.
    */
-  unpin_code?: boolean;
+  unpin_code: boolean;
   /** Admin is an optional address that can execute migrations */
-  admin?: string;
+  admin: string;
   /** Label is optional metadata to be stored with a constract instance. */
-  label?: string;
+  label: string;
   /** Msg json encoded message to be passed to the contract on instantiation */
-  msg?: any;
+  msg: any;
   /**
    * Funds coins that are transferred from the authority account to the contract
    * on instantiation
    */
   funds: CoinAmino[];
   /** Source is the URL where the code is hosted */
-  source?: string;
+  source: string;
   /**
    * Builder is the docker image used to build the code deterministically, used
    * for smart contract verification
    */
-  builder?: string;
+  builder: string;
   /**
    * CodeHash is the SHA256 sum of the code outputted by builder, used for smart
    * contract verification
    */
-  code_hash?: string;
+  code_hash: string;
 }
 /**
  * MsgStoreAndInstantiateContractResponse defines the response structure
@@ -682,9 +682,9 @@ export interface MsgStoreAndInstantiateContractResponseProtoMsg {
  */
 export interface MsgStoreAndInstantiateContractResponseAmino {
   /** Address is the bech32 address of the new contract instance. */
-  address?: string;
+  address: string;
   /** Data contains bytes to returned from the contract */
-  data?: string;
+  data: string;
 }
 /**
  * MsgAddCodeUploadParamsAddresses is the
@@ -705,8 +705,8 @@ export interface MsgAddCodeUploadParamsAddressesProtoMsg {
  */
 export interface MsgAddCodeUploadParamsAddressesAmino {
   /** Authority is the address of the governance account. */
-  authority?: string;
-  addresses?: string[];
+  authority: string;
+  addresses: string[];
 }
 /**
  * MsgAddCodeUploadParamsAddressesResponse defines the response
@@ -741,8 +741,8 @@ export interface MsgRemoveCodeUploadParamsAddressesProtoMsg {
  */
 export interface MsgRemoveCodeUploadParamsAddressesAmino {
   /** Authority is the address of the governance account. */
-  authority?: string;
-  addresses?: string[];
+  authority: string;
+  addresses: string[];
 }
 /**
  * MsgRemoveCodeUploadParamsAddressesResponse defines the response
@@ -788,15 +788,15 @@ export interface MsgStoreAndMigrateContractProtoMsg {
  */
 export interface MsgStoreAndMigrateContractAmino {
   /** Authority is the address of the governance account. */
-  authority?: string;
+  authority: string;
   /** WASMByteCode can be raw or gzip compressed */
-  wasm_byte_code?: string;
+  wasm_byte_code: string;
   /** InstantiatePermission to apply on contract creation, optional */
   instantiate_permission?: AccessConfigAmino;
   /** Contract is the address of the smart contract */
-  contract?: string;
+  contract: string;
   /** Msg json encoded message to be passed to the contract on migration */
-  msg?: any;
+  msg: any;
 }
 /**
  * MsgStoreAndMigrateContractResponse defines the response structure
@@ -824,11 +824,11 @@ export interface MsgStoreAndMigrateContractResponseProtoMsg {
  */
 export interface MsgStoreAndMigrateContractResponseAmino {
   /** CodeID is the reference to the stored WASM code */
-  code_id?: string;
+  code_id: string;
   /** Checksum is the sha256 hash of the stored code */
-  checksum?: string;
+  checksum: string;
   /** Data contains bytes to returned from the contract */
-  data?: string;
+  data: string;
 }
 /** MsgUpdateContractLabel sets a new label for a smart contract */
 export interface MsgUpdateContractLabel {
@@ -846,11 +846,11 @@ export interface MsgUpdateContractLabelProtoMsg {
 /** MsgUpdateContractLabel sets a new label for a smart contract */
 export interface MsgUpdateContractLabelAmino {
   /** Sender is the that actor that signed the messages */
-  sender?: string;
+  sender: string;
   /** NewLabel string to be set */
-  new_label?: string;
+  new_label: string;
   /** Contract is the address of the smart contract */
-  contract?: string;
+  contract: string;
 }
 /** MsgUpdateContractLabelResponse returns empty data */
 export interface MsgUpdateContractLabelResponse {}

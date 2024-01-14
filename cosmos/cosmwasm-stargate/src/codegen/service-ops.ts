@@ -1,10 +1,22 @@
 import { TxRpc } from "./types";
+import * as _CosmwasmWasmV1Queryrpc from "./cosmwasm/wasm/v1/query.rpc.Query";
 import * as _CosmwasmWasmV1Txrpc from "./cosmwasm/wasm/v1/tx.rpc.msg";
-export interface CosmWasmImpl extends _CosmwasmWasmV1Txrpc.CosmWasmImpl {}
+export interface CosmWasmImpl extends _CosmwasmWasmV1Queryrpc.CosmWasmImpl, _CosmwasmWasmV1Txrpc.CosmWasmImpl {}
 export class CosmWasmImpl {
   rpc: TxRpc;
   init(rpc: TxRpc) {
     this.rpc = rpc;
+    this.contractInfo = _CosmwasmWasmV1Queryrpc.createClientImpl(rpc).contractInfo;
+    this.contractHistory = _CosmwasmWasmV1Queryrpc.createClientImpl(rpc).contractHistory;
+    this.contractsByCode = _CosmwasmWasmV1Queryrpc.createClientImpl(rpc).contractsByCode;
+    this.allContractState = _CosmwasmWasmV1Queryrpc.createClientImpl(rpc).allContractState;
+    this.rawContractState = _CosmwasmWasmV1Queryrpc.createClientImpl(rpc).rawContractState;
+    this.smartContractState = _CosmwasmWasmV1Queryrpc.createClientImpl(rpc).smartContractState;
+    this.code = _CosmwasmWasmV1Queryrpc.createClientImpl(rpc).code;
+    this.codes = _CosmwasmWasmV1Queryrpc.createClientImpl(rpc).codes;
+    this.pinnedCodes = _CosmwasmWasmV1Queryrpc.createClientImpl(rpc).pinnedCodes;
+    this.getWasmParams = _CosmwasmWasmV1Queryrpc.createClientImpl(rpc).params;
+    this.contractsByCreator = _CosmwasmWasmV1Queryrpc.createClientImpl(rpc).contractsByCreator;
     this.storeCode = _CosmwasmWasmV1Txrpc.createClientImpl(rpc).storeCode;
     this.instantiateContract = _CosmwasmWasmV1Txrpc.createClientImpl(rpc).instantiateContract;
     this.instantiateContract2 = _CosmwasmWasmV1Txrpc.createClientImpl(rpc).instantiateContract2;

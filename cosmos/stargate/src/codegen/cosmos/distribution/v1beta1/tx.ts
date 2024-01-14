@@ -20,8 +20,8 @@ export interface MsgSetWithdrawAddressProtoMsg {
  * a delegator (or validator self-delegation).
  */
 export interface MsgSetWithdrawAddressAmino {
-  delegator_address?: string;
-  withdraw_address?: string;
+  delegator_address: string;
+  withdraw_address: string;
 }
 /**
  * MsgSetWithdrawAddressResponse defines the Msg/SetWithdrawAddress response
@@ -54,8 +54,8 @@ export interface MsgWithdrawDelegatorRewardProtoMsg {
  * from a single validator.
  */
 export interface MsgWithdrawDelegatorRewardAmino {
-  delegator_address?: string;
-  validator_address?: string;
+  delegator_address: string;
+  validator_address: string;
 }
 /**
  * MsgWithdrawDelegatorRewardResponse defines the Msg/WithdrawDelegatorReward
@@ -93,7 +93,7 @@ export interface MsgWithdrawValidatorCommissionProtoMsg {
  * address.
  */
 export interface MsgWithdrawValidatorCommissionAmino {
-  validator_address?: string;
+  validator_address: string;
 }
 /**
  * MsgWithdrawValidatorCommissionResponse defines the
@@ -133,7 +133,7 @@ export interface MsgFundCommunityPoolProtoMsg {
  */
 export interface MsgFundCommunityPoolAmino {
   amount: CoinAmino[];
-  depositor?: string;
+  depositor: string;
 }
 /** MsgFundCommunityPoolResponse defines the Msg/FundCommunityPool response type. */
 export interface MsgFundCommunityPoolResponse {}
@@ -169,7 +169,7 @@ export interface MsgUpdateParamsProtoMsg {
  */
 export interface MsgUpdateParamsAmino {
   /** authority is the address that controls the module (defaults to x/gov unless overwritten). */
-  authority?: string;
+  authority: string;
   /**
    * params defines the x/distribution parameters to update.
    * 
@@ -221,8 +221,8 @@ export interface MsgCommunityPoolSpendProtoMsg {
  */
 export interface MsgCommunityPoolSpendAmino {
   /** authority is the address that controls the module (defaults to x/gov unless overwritten). */
-  authority?: string;
-  recipient?: string;
+  authority: string;
+  recipient: string;
   amount: CoinAmino[];
 }
 /**

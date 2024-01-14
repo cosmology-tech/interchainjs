@@ -109,7 +109,7 @@ export interface AccessTypeParamProtoMsg {
 }
 /** AccessTypeParam */
 export interface AccessTypeParamAmino {
-  value?: AccessType;
+  value: AccessType;
 }
 /** AccessConfig access control type. */
 export interface AccessConfig {
@@ -122,8 +122,8 @@ export interface AccessConfigProtoMsg {
 }
 /** AccessConfig access control type. */
 export interface AccessConfigAmino {
-  permission?: AccessType;
-  addresses?: string[];
+  permission: AccessType;
+  addresses: string[];
 }
 /** Params defines the set of wasm parameters. */
 export interface Params {
@@ -137,7 +137,7 @@ export interface ParamsProtoMsg {
 /** Params defines the set of wasm parameters. */
 export interface ParamsAmino {
   code_upload_access: AccessConfigAmino;
-  instantiate_default_permission?: AccessType;
+  instantiate_default_permission: AccessType;
 }
 /** CodeInfo is data for the uploaded contract WASM code */
 export interface CodeInfo {
@@ -155,9 +155,9 @@ export interface CodeInfoProtoMsg {
 /** CodeInfo is data for the uploaded contract WASM code */
 export interface CodeInfoAmino {
   /** CodeHash is the unique identifier created by wasmvm */
-  code_hash?: string;
+  code_hash: string;
   /** Creator address who initially stored the code */
-  creator?: string;
+  creator: string;
   /** InstantiateConfig access control to apply on contract creation, optional */
   instantiate_config: AccessConfigAmino;
 }
@@ -194,16 +194,16 @@ export type ContractInfoEncoded = Omit<ContractInfo, "extension"> & {
 /** ContractInfo stores a WASM contract instance */
 export interface ContractInfoAmino {
   /** CodeID is the reference to the stored Wasm code */
-  code_id?: string;
+  code_id: string;
   /** Creator address who initially instantiated the contract */
-  creator?: string;
+  creator: string;
   /** Admin is an optional address that can execute migrations */
-  admin?: string;
+  admin: string;
   /** Label is optional metadata to be stored with a contract instance. */
-  label?: string;
+  label: string;
   /** Created Tx position when the contract was instantiated. */
   created?: AbsoluteTxPositionAmino;
-  ibc_port_id?: string;
+  ibc_port_id: string;
   /**
    * Extension is an extension point to store custom metadata within the
    * persistence model.
@@ -225,12 +225,12 @@ export interface ContractCodeHistoryEntryProtoMsg {
 }
 /** ContractCodeHistoryEntry metadata to a contract. */
 export interface ContractCodeHistoryEntryAmino {
-  operation?: ContractCodeHistoryOperationType;
+  operation: ContractCodeHistoryOperationType;
   /** CodeID is the reference to the stored WASM code */
-  code_id?: string;
+  code_id: string;
   /** Updated Tx position when the operation was executed. */
   updated?: AbsoluteTxPositionAmino;
-  msg?: any;
+  msg: any;
 }
 /**
  * AbsoluteTxPosition is a unique transaction position that allows for global
@@ -255,12 +255,12 @@ export interface AbsoluteTxPositionProtoMsg {
  */
 export interface AbsoluteTxPositionAmino {
   /** BlockHeight is the block the contract was created at */
-  block_height?: string;
+  block_height: string;
   /**
    * TxIndex is a monotonic counter within the block (actual transaction index,
    * or gas consumed)
    */
-  tx_index?: string;
+  tx_index: string;
 }
 /** Model is a struct that holds a KV pair */
 export interface Model {
@@ -276,9 +276,9 @@ export interface ModelProtoMsg {
 /** Model is a struct that holds a KV pair */
 export interface ModelAmino {
   /** hex-encode key to read it better (this is often ascii) */
-  key?: string;
+  key: string;
   /** base64-encode raw value */
-  value?: string;
+  value: string;
 }
 function createBaseAccessTypeParam(): AccessTypeParam {
   return {

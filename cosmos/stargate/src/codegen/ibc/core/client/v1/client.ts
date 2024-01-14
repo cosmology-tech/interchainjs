@@ -23,7 +23,7 @@ export interface IdentifiedClientStateProtoMsg {
  */
 export interface IdentifiedClientStateAmino {
   /** client identifier */
-  client_id?: string;
+  client_id: string;
   /** client state */
   client_state?: AnyAmino;
 }
@@ -47,7 +47,7 @@ export interface ConsensusStateWithHeightProtoMsg {
  */
 export interface ConsensusStateWithHeightAmino {
   /** consensus state height */
-  height?: HeightAmino;
+  height: HeightAmino;
   /** consensus state */
   consensus_state?: AnyAmino;
 }
@@ -71,9 +71,9 @@ export interface ClientConsensusStatesProtoMsg {
  */
 export interface ClientConsensusStatesAmino {
   /** client identifier */
-  client_id?: string;
+  client_id: string;
   /** consensus states and their heights associated with the client */
-  consensus_states?: ConsensusStateWithHeightAmino[];
+  consensus_states: ConsensusStateWithHeightAmino[];
 }
 /**
  * ClientUpdateProposal is a governance proposal. If it passes, the substitute
@@ -106,16 +106,16 @@ export interface ClientUpdateProposalProtoMsg {
  */
 export interface ClientUpdateProposalAmino {
   /** the title of the update proposal */
-  title?: string;
+  title: string;
   /** the description of the proposal */
-  description?: string;
+  description: string;
   /** the client identifier for the client to be updated if the proposal passes */
-  subject_client_id?: string;
+  subject_client_id: string;
   /**
    * the substitute client identifier for the client standing in for the subject
    * client
    */
-  substitute_client_id?: string;
+  substitute_client_id: string;
 }
 /**
  * UpgradeProposal is a gov Content type for initiating an IBC breaking
@@ -144,9 +144,9 @@ export interface UpgradeProposalProtoMsg {
  * upgrade.
  */
 export interface UpgradeProposalAmino {
-  title?: string;
-  description?: string;
-  plan?: PlanAmino;
+  title: string;
+  description: string;
+  plan: PlanAmino;
   /**
    * An UpgradedClientState must be provided to perform an IBC breaking upgrade.
    * This will make the chain commit to the correct upgraded (self) client state
@@ -193,9 +193,9 @@ export interface HeightProtoMsg {
  */
 export interface HeightAmino {
   /** the revision that the client is currently on */
-  revision_number?: string;
+  revision_number: string;
   /** the height within the given revision */
-  revision_height?: string;
+  revision_height: string;
 }
 /** Params defines the set of IBC light client parameters. */
 export interface Params {
@@ -217,7 +217,7 @@ export interface ParamsAmino {
    * and interacted with. If a client type is removed from the allowed clients list, usage
    * of this client will be disabled until it is added again to the list.
    */
-  allowed_clients?: string[];
+  allowed_clients: string[];
 }
 function createBaseIdentifiedClientState(): IdentifiedClientState {
   return {

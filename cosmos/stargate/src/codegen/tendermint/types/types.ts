@@ -106,8 +106,8 @@ export interface PartSetHeaderProtoMsg {
 }
 /** PartsetHeader */
 export interface PartSetHeaderAmino {
-  total?: number;
-  hash?: string;
+  total: number;
+  hash: string;
 }
 export interface Part {
   index: number;
@@ -119,9 +119,9 @@ export interface PartProtoMsg {
   value: Uint8Array;
 }
 export interface PartAmino {
-  index?: number;
-  bytes?: string;
-  proof?: ProofAmino;
+  index: number;
+  bytes: string;
+  proof: ProofAmino;
 }
 /** BlockID */
 export interface BlockID {
@@ -134,8 +134,8 @@ export interface BlockIDProtoMsg {
 }
 /** BlockID */
 export interface BlockIDAmino {
-  hash?: string;
-  part_set_header?: PartSetHeaderAmino;
+  hash: string;
+  part_set_header: PartSetHeaderAmino;
 }
 /** Header defines the structure of a block header. */
 export interface Header {
@@ -170,28 +170,28 @@ export interface HeaderProtoMsg {
 /** Header defines the structure of a block header. */
 export interface HeaderAmino {
   /** basic block info */
-  version?: ConsensusAmino;
-  chain_id?: string;
-  height?: string;
-  time?: string;
+  version: ConsensusAmino;
+  chain_id: string;
+  height: string;
+  time: string;
   /** prev block info */
-  last_block_id?: BlockIDAmino;
+  last_block_id: BlockIDAmino;
   /** hashes of block data */
-  last_commit_hash?: string;
-  data_hash?: string;
+  last_commit_hash: string;
+  data_hash: string;
   /** hashes from the app output from the prev block */
-  validators_hash?: string;
+  validators_hash: string;
   /** validators for the next block */
-  next_validators_hash?: string;
+  next_validators_hash: string;
   /** consensus params for current block */
-  consensus_hash?: string;
+  consensus_hash: string;
   /** state after txs from the previous block */
-  app_hash?: string;
-  last_results_hash?: string;
+  app_hash: string;
+  last_results_hash: string;
   /** consensus info */
-  evidence_hash?: string;
+  evidence_hash: string;
   /** original proposer of the block */
-  proposer_address?: string;
+  proposer_address: string;
 }
 /** Data contains the set of transactions included in the block */
 export interface Data {
@@ -213,7 +213,7 @@ export interface DataAmino {
    * NOTE: not all txs here are valid.  We're just agreeing on the order first.
    * This means that block.AppHash does not include these txs.
    */
-  txs?: string[];
+  txs: string[];
 }
 /**
  * Vote represents a prevote, precommit, or commit vote from validators for
@@ -238,14 +238,14 @@ export interface VoteProtoMsg {
  * consensus.
  */
 export interface VoteAmino {
-  type?: SignedMsgType;
-  height?: string;
-  round?: number;
-  block_id?: BlockIDAmino;
-  timestamp?: string;
-  validator_address?: string;
-  validator_index?: number;
-  signature?: string;
+  type: SignedMsgType;
+  height: string;
+  round: number;
+  block_id: BlockIDAmino;
+  timestamp: string;
+  validator_address: string;
+  validator_index: number;
+  signature: string;
 }
 /** Commit contains the evidence that a block was committed by a set of validators. */
 export interface Commit {
@@ -260,10 +260,10 @@ export interface CommitProtoMsg {
 }
 /** Commit contains the evidence that a block was committed by a set of validators. */
 export interface CommitAmino {
-  height?: string;
-  round?: number;
-  block_id?: BlockIDAmino;
-  signatures?: CommitSigAmino[];
+  height: string;
+  round: number;
+  block_id: BlockIDAmino;
+  signatures: CommitSigAmino[];
 }
 /** CommitSig is a part of the Vote included in a Commit. */
 export interface CommitSig {
@@ -278,10 +278,10 @@ export interface CommitSigProtoMsg {
 }
 /** CommitSig is a part of the Vote included in a Commit. */
 export interface CommitSigAmino {
-  block_id_flag?: BlockIDFlag;
-  validator_address?: string;
-  timestamp?: string;
-  signature?: string;
+  block_id_flag: BlockIDFlag;
+  validator_address: string;
+  timestamp: string;
+  signature: string;
 }
 export interface Proposal {
   type: SignedMsgType;
@@ -297,13 +297,13 @@ export interface ProposalProtoMsg {
   value: Uint8Array;
 }
 export interface ProposalAmino {
-  type?: SignedMsgType;
-  height?: string;
-  round?: number;
-  pol_round?: number;
-  block_id?: BlockIDAmino;
-  timestamp?: string;
-  signature?: string;
+  type: SignedMsgType;
+  height: string;
+  round: number;
+  pol_round: number;
+  block_id: BlockIDAmino;
+  timestamp: string;
+  signature: string;
 }
 export interface SignedHeader {
   header?: Header;
@@ -340,10 +340,10 @@ export interface BlockMetaProtoMsg {
   value: Uint8Array;
 }
 export interface BlockMetaAmino {
-  block_id?: BlockIDAmino;
-  block_size?: string;
-  header?: HeaderAmino;
-  num_txs?: string;
+  block_id: BlockIDAmino;
+  block_size: string;
+  header: HeaderAmino;
+  num_txs: string;
 }
 /** TxProof represents a Merkle proof of the presence of a transaction in the Merkle tree. */
 export interface TxProof {
@@ -357,8 +357,8 @@ export interface TxProofProtoMsg {
 }
 /** TxProof represents a Merkle proof of the presence of a transaction in the Merkle tree. */
 export interface TxProofAmino {
-  root_hash?: string;
-  data?: string;
+  root_hash: string;
+  data: string;
   proof?: ProofAmino;
 }
 function createBasePartSetHeader(): PartSetHeader {

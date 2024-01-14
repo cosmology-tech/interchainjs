@@ -6,7 +6,7 @@ export enum HashOp {
   NO_HASH = 0,
   SHA256 = 1,
   SHA512 = 2,
-  KECCAK = 3,
+  KECCAK256 = 3,
   RIPEMD160 = 4,
   /** BITCOIN - ripemd160(sha256(x)) */
   BITCOIN = 5,
@@ -29,8 +29,8 @@ export function hashOpFromJSON(object: any): HashOp {
     case "SHA512":
       return HashOp.SHA512;
     case 3:
-    case "KECCAK":
-      return HashOp.KECCAK;
+    case "KECCAK256":
+      return HashOp.KECCAK256;
     case 4:
     case "RIPEMD160":
       return HashOp.RIPEMD160;
@@ -63,8 +63,8 @@ export function hashOpToJSON(object: HashOp): string {
       return "SHA256";
     case HashOp.SHA512:
       return "SHA512";
-    case HashOp.KECCAK:
-      return "KECCAK";
+    case HashOp.KECCAK256:
+      return "KECCAK256";
     case HashOp.RIPEMD160:
       return "RIPEMD160";
     case HashOp.BITCOIN:
@@ -223,10 +223,10 @@ export interface ExistenceProofProtoMsg {
  * length-prefix the data before hashing it.
  */
 export interface ExistenceProofAmino {
-  key?: string;
-  value?: string;
+  key: string;
+  value: string;
   leaf?: LeafOpAmino;
-  path?: InnerOpAmino[];
+  path: InnerOpAmino[];
 }
 /**
  * NonExistenceProof takes a proof of two neighbors, one left of the desired key,
@@ -250,7 +250,7 @@ export interface NonExistenceProofProtoMsg {
  */
 export interface NonExistenceProofAmino {
   /** TODO: remove this as unnecessary??? we prove a range */
-  key?: string;
+  key: string;
   left?: ExistenceProofAmino;
   right?: ExistenceProofAmino;
 }
@@ -320,15 +320,15 @@ export interface LeafOpProtoMsg {
  * output = hash(prefix || length(hkey) || hkey || length(hvalue) || hvalue)
  */
 export interface LeafOpAmino {
-  hash?: HashOp;
-  prehash_key?: HashOp;
-  prehash_value?: HashOp;
-  length?: LengthOp;
+  hash: HashOp;
+  prehash_key: HashOp;
+  prehash_value: HashOp;
+  length: LengthOp;
   /**
    * prefix is a fixed bytes that may optionally be included at the beginning to differentiate
    * a leaf node from an inner node.
    */
-  prefix?: string;
+  prefix: string;
 }
 /**
  * InnerOp represents a merkle-proof step that is not a leaf.
@@ -374,9 +374,9 @@ export interface InnerOpProtoMsg {
  * If either of prefix or suffix is empty, we just treat it as an empty string
  */
 export interface InnerOpAmino {
-  hash?: HashOp;
-  prefix?: string;
-  suffix?: string;
+  hash: HashOp;
+  prefix: string;
+  suffix: string;
 }
 /**
  * ProofSpec defines what the expected parameters are for a given proof type.
@@ -432,15 +432,15 @@ export interface ProofSpecAmino {
   leaf_spec?: LeafOpAmino;
   inner_spec?: InnerSpecAmino;
   /** max_depth (if > 0) is the maximum number of InnerOps allowed (mainly for fixed-depth tries) */
-  max_depth?: number;
+  max_depth: number;
   /** min_depth (if > 0) is the minimum number of InnerOps allowed (mainly for fixed-depth tries) */
-  min_depth?: number;
+  min_depth: number;
   /**
    * prehash_key_before_comparison is a flag that indicates whether to use the
    * prehash_key specified by LeafOp to compare lexical ordering of keys for
    * non-existence proofs.
    */
-  prehash_key_before_comparison?: boolean;
+  prehash_key_before_comparison: boolean;
 }
 /**
  * InnerSpec contains all store-specific structure info to determine if two proofs from a
@@ -487,14 +487,14 @@ export interface InnerSpecAmino {
    * iavl tree is [0, 1] (left then right)
    * merk is [0, 2, 1] (left, right, here)
    */
-  child_order?: number[];
-  child_size?: number;
-  min_prefix_length?: number;
-  max_prefix_length?: number;
+  child_order: number[];
+  child_size: number;
+  min_prefix_length: number;
+  max_prefix_length: number;
   /** empty child is the prehash image that is used when one child is nil (eg. 20 bytes of 0) */
-  empty_child?: string;
+  empty_child: string;
   /** hash is the algorithm that must be used for each InnerOp */
-  hash?: HashOp;
+  hash: HashOp;
 }
 /** BatchProof is a group of multiple proof types than can be compressed */
 export interface BatchProof {
@@ -506,7 +506,7 @@ export interface BatchProofProtoMsg {
 }
 /** BatchProof is a group of multiple proof types than can be compressed */
 export interface BatchProofAmino {
-  entries?: BatchEntryAmino[];
+  entries: BatchEntryAmino[];
 }
 /** Use BatchEntry not CommitmentProof, to avoid recursion */
 export interface BatchEntry {
@@ -531,8 +531,8 @@ export interface CompressedBatchProofProtoMsg {
   value: Uint8Array;
 }
 export interface CompressedBatchProofAmino {
-  entries?: CompressedBatchEntryAmino[];
-  lookup_inners?: InnerOpAmino[];
+  entries: CompressedBatchEntryAmino[];
+  lookup_inners: InnerOpAmino[];
 }
 /** Use BatchEntry not CommitmentProof, to avoid recursion */
 export interface CompressedBatchEntry {
@@ -560,11 +560,11 @@ export interface CompressedExistenceProofProtoMsg {
   value: Uint8Array;
 }
 export interface CompressedExistenceProofAmino {
-  key?: string;
-  value?: string;
+  key: string;
+  value: string;
   leaf?: LeafOpAmino;
   /** these are indexes into the lookup_inners table in CompressedBatchProof */
-  path?: number[];
+  path: number[];
 }
 export interface CompressedNonExistenceProof {
   /** TODO: remove this as unnecessary??? we prove a range */
@@ -578,7 +578,7 @@ export interface CompressedNonExistenceProofProtoMsg {
 }
 export interface CompressedNonExistenceProofAmino {
   /** TODO: remove this as unnecessary??? we prove a range */
-  key?: string;
+  key: string;
   left?: CompressedExistenceProofAmino;
   right?: CompressedExistenceProofAmino;
 }

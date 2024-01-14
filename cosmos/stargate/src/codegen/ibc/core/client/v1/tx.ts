@@ -28,7 +28,7 @@ export interface MsgCreateClientAmino {
    */
   consensus_state?: AnyAmino;
   /** signer address */
-  signer?: string;
+  signer: string;
 }
 /** MsgCreateClientResponse defines the Msg/CreateClient response type. */
 export interface MsgCreateClientResponse {}
@@ -60,11 +60,11 @@ export interface MsgUpdateClientProtoMsg {
  */
 export interface MsgUpdateClientAmino {
   /** client unique identifier */
-  client_id?: string;
+  client_id: string;
   /** client message to update the light client */
   client_message?: AnyAmino;
   /** signer address */
-  signer?: string;
+  signer: string;
 }
 /** MsgUpdateClientResponse defines the Msg/UpdateClient response type. */
 export interface MsgUpdateClientResponse {}
@@ -105,7 +105,7 @@ export interface MsgUpgradeClientProtoMsg {
  */
 export interface MsgUpgradeClientAmino {
   /** client unique identifier */
-  client_id?: string;
+  client_id: string;
   /** upgraded client state */
   client_state?: AnyAmino;
   /**
@@ -114,11 +114,11 @@ export interface MsgUpgradeClientAmino {
    */
   consensus_state?: AnyAmino;
   /** proof that old chain committed to new client */
-  proof_upgrade_client?: string;
+  proof_upgrade_client: string;
   /** proof that old chain committed to new consensus state */
-  proof_upgrade_consensus_state?: string;
+  proof_upgrade_consensus_state: string;
   /** signer address */
-  signer?: string;
+  signer: string;
 }
 /** MsgUpgradeClientResponse defines the Msg/UpgradeClient response type. */
 export interface MsgUpgradeClientResponse {}
@@ -156,13 +156,13 @@ export interface MsgSubmitMisbehaviourProtoMsg {
 export interface MsgSubmitMisbehaviourAmino {
   /** client unique identifier */
   /** @deprecated */
-  client_id?: string;
+  client_id: string;
   /** misbehaviour used for freezing the light client */
   /** @deprecated */
   misbehaviour?: AnyAmino;
   /** signer address */
   /** @deprecated */
-  signer?: string;
+  signer: string;
 }
 /**
  * MsgSubmitMisbehaviourResponse defines the Msg/SubmitMisbehaviour response

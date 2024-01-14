@@ -62,6 +62,31 @@ export class CosmWasmCosmjsSigner extends StargateCosmjsSigner {
     return cosmWasmSigner;
   }
 
+  get getCodes() {
+    return this.codes;
+  }
+  get getCodeDetails() {
+    return this.code;
+  }
+  get getContracts() {
+    return this.contractsByCode;
+  }
+  get getContractsByCreator() {
+    return this.contractsByCreator;
+  }
+  get getContract() {
+    return this.contractInfo;
+  }
+  get getContractCodeHistory() {
+    return this.contractHistory;
+  }
+  get queryContractRaw() {
+    return this.rawContractState;
+  }
+  get queryContractSmart() {
+    return this.smartContractState;
+  }
+
   get upload() {
     return this.storeCode;
   }

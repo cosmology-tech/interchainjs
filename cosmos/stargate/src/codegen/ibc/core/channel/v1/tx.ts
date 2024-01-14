@@ -62,9 +62,9 @@ export interface MsgChannelOpenInitProtoMsg {
  * is called by a relayer on Chain A.
  */
 export interface MsgChannelOpenInitAmino {
-  port_id?: string;
-  channel?: ChannelAmino;
-  signer?: string;
+  port_id: string;
+  channel: ChannelAmino;
+  signer: string;
 }
 /** MsgChannelOpenInitResponse defines the Msg/ChannelOpenInit response type. */
 export interface MsgChannelOpenInitResponse {
@@ -77,8 +77,8 @@ export interface MsgChannelOpenInitResponseProtoMsg {
 }
 /** MsgChannelOpenInitResponse defines the Msg/ChannelOpenInit response type. */
 export interface MsgChannelOpenInitResponseAmino {
-  channel_id?: string;
-  version?: string;
+  channel_id: string;
+  version: string;
 }
 /**
  * MsgChannelOpenInit defines a msg sent by a Relayer to try to open a channel
@@ -107,16 +107,16 @@ export interface MsgChannelOpenTryProtoMsg {
  * value will be ignored by core IBC.
  */
 export interface MsgChannelOpenTryAmino {
-  port_id?: string;
+  port_id: string;
   /** Deprecated: this field is unused. Crossing hello's are no longer supported in core IBC. */
   /** @deprecated */
-  previous_channel_id?: string;
+  previous_channel_id: string;
   /** NOTE: the version field within the channel has been deprecated. Its value will be ignored by core IBC. */
-  channel?: ChannelAmino;
-  counterparty_version?: string;
-  proof_init?: string;
-  proof_height?: HeightAmino;
-  signer?: string;
+  channel: ChannelAmino;
+  counterparty_version: string;
+  proof_init: string;
+  proof_height: HeightAmino;
+  signer: string;
 }
 /** MsgChannelOpenTryResponse defines the Msg/ChannelOpenTry response type. */
 export interface MsgChannelOpenTryResponse {
@@ -129,8 +129,8 @@ export interface MsgChannelOpenTryResponseProtoMsg {
 }
 /** MsgChannelOpenTryResponse defines the Msg/ChannelOpenTry response type. */
 export interface MsgChannelOpenTryResponseAmino {
-  version?: string;
-  channel_id?: string;
+  version: string;
+  channel_id: string;
 }
 /**
  * MsgChannelOpenAck defines a msg sent by a Relayer to Chain A to acknowledge
@@ -154,13 +154,13 @@ export interface MsgChannelOpenAckProtoMsg {
  * the change of channel state to TRYOPEN on Chain B.
  */
 export interface MsgChannelOpenAckAmino {
-  port_id?: string;
-  channel_id?: string;
-  counterparty_channel_id?: string;
-  counterparty_version?: string;
-  proof_try?: string;
-  proof_height?: HeightAmino;
-  signer?: string;
+  port_id: string;
+  channel_id: string;
+  counterparty_channel_id: string;
+  counterparty_version: string;
+  proof_try: string;
+  proof_height: HeightAmino;
+  signer: string;
 }
 /** MsgChannelOpenAckResponse defines the Msg/ChannelOpenAck response type. */
 export interface MsgChannelOpenAckResponse {}
@@ -190,11 +190,11 @@ export interface MsgChannelOpenConfirmProtoMsg {
  * acknowledge the change of channel state to OPEN on Chain A.
  */
 export interface MsgChannelOpenConfirmAmino {
-  port_id?: string;
-  channel_id?: string;
-  proof_ack?: string;
-  proof_height?: HeightAmino;
-  signer?: string;
+  port_id: string;
+  channel_id: string;
+  proof_ack: string;
+  proof_height: HeightAmino;
+  signer: string;
 }
 /**
  * MsgChannelOpenConfirmResponse defines the Msg/ChannelOpenConfirm response
@@ -228,9 +228,9 @@ export interface MsgChannelCloseInitProtoMsg {
  * to close a channel with Chain B.
  */
 export interface MsgChannelCloseInitAmino {
-  port_id?: string;
-  channel_id?: string;
-  signer?: string;
+  port_id: string;
+  channel_id: string;
+  signer: string;
 }
 /** MsgChannelCloseInitResponse defines the Msg/ChannelCloseInit response type. */
 export interface MsgChannelCloseInitResponse {}
@@ -260,11 +260,11 @@ export interface MsgChannelCloseConfirmProtoMsg {
  * to acknowledge the change of channel state to CLOSED on Chain A.
  */
 export interface MsgChannelCloseConfirmAmino {
-  port_id?: string;
-  channel_id?: string;
-  proof_init?: string;
-  proof_height?: HeightAmino;
-  signer?: string;
+  port_id: string;
+  channel_id: string;
+  proof_init: string;
+  proof_height: HeightAmino;
+  signer: string;
 }
 /**
  * MsgChannelCloseConfirmResponse defines the Msg/ChannelCloseConfirm response
@@ -293,10 +293,10 @@ export interface MsgRecvPacketProtoMsg {
 }
 /** MsgRecvPacket receives incoming IBC packet */
 export interface MsgRecvPacketAmino {
-  packet?: PacketAmino;
-  proof_commitment?: string;
-  proof_height?: HeightAmino;
-  signer?: string;
+  packet: PacketAmino;
+  proof_commitment: string;
+  proof_height: HeightAmino;
+  signer: string;
 }
 /** MsgRecvPacketResponse defines the Msg/RecvPacket response type. */
 export interface MsgRecvPacketResponse {
@@ -308,7 +308,7 @@ export interface MsgRecvPacketResponseProtoMsg {
 }
 /** MsgRecvPacketResponse defines the Msg/RecvPacket response type. */
 export interface MsgRecvPacketResponseAmino {
-  result?: ResponseResultType;
+  result: ResponseResultType;
 }
 /** MsgTimeout receives timed-out packet */
 export interface MsgTimeout {
@@ -324,11 +324,11 @@ export interface MsgTimeoutProtoMsg {
 }
 /** MsgTimeout receives timed-out packet */
 export interface MsgTimeoutAmino {
-  packet?: PacketAmino;
-  proof_unreceived?: string;
-  proof_height?: HeightAmino;
-  next_sequence_recv?: string;
-  signer?: string;
+  packet: PacketAmino;
+  proof_unreceived: string;
+  proof_height: HeightAmino;
+  next_sequence_recv: string;
+  signer: string;
 }
 /** MsgTimeoutResponse defines the Msg/Timeout response type. */
 export interface MsgTimeoutResponse {
@@ -340,7 +340,7 @@ export interface MsgTimeoutResponseProtoMsg {
 }
 /** MsgTimeoutResponse defines the Msg/Timeout response type. */
 export interface MsgTimeoutResponseAmino {
-  result?: ResponseResultType;
+  result: ResponseResultType;
 }
 /** MsgTimeoutOnClose timed-out packet upon counterparty channel closure. */
 export interface MsgTimeoutOnClose {
@@ -357,12 +357,12 @@ export interface MsgTimeoutOnCloseProtoMsg {
 }
 /** MsgTimeoutOnClose timed-out packet upon counterparty channel closure. */
 export interface MsgTimeoutOnCloseAmino {
-  packet?: PacketAmino;
-  proof_unreceived?: string;
-  proof_close?: string;
-  proof_height?: HeightAmino;
-  next_sequence_recv?: string;
-  signer?: string;
+  packet: PacketAmino;
+  proof_unreceived: string;
+  proof_close: string;
+  proof_height: HeightAmino;
+  next_sequence_recv: string;
+  signer: string;
 }
 /** MsgTimeoutOnCloseResponse defines the Msg/TimeoutOnClose response type. */
 export interface MsgTimeoutOnCloseResponse {
@@ -374,7 +374,7 @@ export interface MsgTimeoutOnCloseResponseProtoMsg {
 }
 /** MsgTimeoutOnCloseResponse defines the Msg/TimeoutOnClose response type. */
 export interface MsgTimeoutOnCloseResponseAmino {
-  result?: ResponseResultType;
+  result: ResponseResultType;
 }
 /** MsgAcknowledgement receives incoming IBC acknowledgement */
 export interface MsgAcknowledgement {
@@ -390,11 +390,11 @@ export interface MsgAcknowledgementProtoMsg {
 }
 /** MsgAcknowledgement receives incoming IBC acknowledgement */
 export interface MsgAcknowledgementAmino {
-  packet?: PacketAmino;
-  acknowledgement?: string;
-  proof_acked?: string;
-  proof_height?: HeightAmino;
-  signer?: string;
+  packet: PacketAmino;
+  acknowledgement: string;
+  proof_acked: string;
+  proof_height: HeightAmino;
+  signer: string;
 }
 /** MsgAcknowledgementResponse defines the Msg/Acknowledgement response type. */
 export interface MsgAcknowledgementResponse {
@@ -406,7 +406,7 @@ export interface MsgAcknowledgementResponseProtoMsg {
 }
 /** MsgAcknowledgementResponse defines the Msg/Acknowledgement response type. */
 export interface MsgAcknowledgementResponseAmino {
-  result?: ResponseResultType;
+  result: ResponseResultType;
 }
 function createBaseMsgChannelOpenInit(): MsgChannelOpenInit {
   return {

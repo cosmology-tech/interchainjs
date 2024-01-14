@@ -61,11 +61,11 @@ export interface MsgCreateGroupProtoMsg {
 /** MsgCreateGroup is the Msg/CreateGroup request type. */
 export interface MsgCreateGroupAmino {
   /** admin is the account address of the group admin. */
-  admin?: string;
+  admin: string;
   /** members defines the group members. */
   members: MemberRequestAmino[];
   /** metadata is any arbitrary metadata to attached to the group. */
-  metadata?: string;
+  metadata: string;
 }
 /** MsgCreateGroupResponse is the Msg/CreateGroup response type. */
 export interface MsgCreateGroupResponse {
@@ -79,7 +79,7 @@ export interface MsgCreateGroupResponseProtoMsg {
 /** MsgCreateGroupResponse is the Msg/CreateGroup response type. */
 export interface MsgCreateGroupResponseAmino {
   /** group_id is the unique ID of the newly created group. */
-  group_id?: string;
+  group_id: string;
 }
 /** MsgUpdateGroupMembers is the Msg/UpdateGroupMembers request type. */
 export interface MsgUpdateGroupMembers {
@@ -100,9 +100,9 @@ export interface MsgUpdateGroupMembersProtoMsg {
 /** MsgUpdateGroupMembers is the Msg/UpdateGroupMembers request type. */
 export interface MsgUpdateGroupMembersAmino {
   /** admin is the account address of the group admin. */
-  admin?: string;
+  admin: string;
   /** group_id is the unique ID of the group. */
-  group_id?: string;
+  group_id: string;
   /**
    * member_updates is the list of members to update,
    * set weight to 0 to remove a member.
@@ -133,11 +133,11 @@ export interface MsgUpdateGroupAdminProtoMsg {
 /** MsgUpdateGroupAdmin is the Msg/UpdateGroupAdmin request type. */
 export interface MsgUpdateGroupAdminAmino {
   /** admin is the current account address of the group admin. */
-  admin?: string;
+  admin: string;
   /** group_id is the unique ID of the group. */
-  group_id?: string;
+  group_id: string;
   /** new_admin is the group new admin account address. */
-  new_admin?: string;
+  new_admin: string;
 }
 /** MsgUpdateGroupAdminResponse is the Msg/UpdateGroupAdmin response type. */
 export interface MsgUpdateGroupAdminResponse {}
@@ -163,11 +163,11 @@ export interface MsgUpdateGroupMetadataProtoMsg {
 /** MsgUpdateGroupMetadata is the Msg/UpdateGroupMetadata request type. */
 export interface MsgUpdateGroupMetadataAmino {
   /** admin is the account address of the group admin. */
-  admin?: string;
+  admin: string;
   /** group_id is the unique ID of the group. */
-  group_id?: string;
+  group_id: string;
   /** metadata is the updated group's metadata. */
-  metadata?: string;
+  metadata: string;
 }
 /** MsgUpdateGroupMetadataResponse is the Msg/UpdateGroupMetadata response type. */
 export interface MsgUpdateGroupMetadataResponse {}
@@ -198,11 +198,11 @@ export type MsgCreateGroupPolicyEncoded = Omit<MsgCreateGroupPolicy, "decisionPo
 /** MsgCreateGroupPolicy is the Msg/CreateGroupPolicy request type. */
 export interface MsgCreateGroupPolicyAmino {
   /** admin is the account address of the group admin. */
-  admin?: string;
+  admin: string;
   /** group_id is the unique ID of the group. */
-  group_id?: string;
+  group_id: string;
   /** metadata is any arbitrary metadata attached to the group policy. */
-  metadata?: string;
+  metadata: string;
   /** decision_policy specifies the group policy's decision policy. */
   decision_policy?: AnyAmino;
 }
@@ -218,7 +218,7 @@ export interface MsgCreateGroupPolicyResponseProtoMsg {
 /** MsgCreateGroupPolicyResponse is the Msg/CreateGroupPolicy response type. */
 export interface MsgCreateGroupPolicyResponseAmino {
   /** address is the account address of the newly created group policy. */
-  address?: string;
+  address: string;
 }
 /** MsgUpdateGroupPolicyAdmin is the Msg/UpdateGroupPolicyAdmin request type. */
 export interface MsgUpdateGroupPolicyAdmin {
@@ -236,11 +236,11 @@ export interface MsgUpdateGroupPolicyAdminProtoMsg {
 /** MsgUpdateGroupPolicyAdmin is the Msg/UpdateGroupPolicyAdmin request type. */
 export interface MsgUpdateGroupPolicyAdminAmino {
   /** admin is the account address of the group admin. */
-  admin?: string;
+  admin: string;
   /** group_policy_address is the account address of the group policy. */
-  group_policy_address?: string;
+  group_policy_address: string;
   /** new_admin is the new group policy admin. */
-  new_admin?: string;
+  new_admin: string;
 }
 /** MsgUpdateGroupPolicyAdminResponse is the Msg/UpdateGroupPolicyAdmin response type. */
 export interface MsgUpdateGroupPolicyAdminResponse {}
@@ -278,18 +278,18 @@ export type MsgCreateGroupWithPolicyEncoded = Omit<MsgCreateGroupWithPolicy, "de
 /** MsgCreateGroupWithPolicy is the Msg/CreateGroupWithPolicy request type. */
 export interface MsgCreateGroupWithPolicyAmino {
   /** admin is the account address of the group and group policy admin. */
-  admin?: string;
+  admin: string;
   /** members defines the group members. */
   members: MemberRequestAmino[];
   /** group_metadata is any arbitrary metadata attached to the group. */
-  group_metadata?: string;
+  group_metadata: string;
   /** group_policy_metadata is any arbitrary metadata attached to the group policy. */
-  group_policy_metadata?: string;
+  group_policy_metadata: string;
   /**
    * group_policy_as_admin is a boolean field, if set to true, the group policy account address will be used as group
    * and group policy admin.
    */
-  group_policy_as_admin?: boolean;
+  group_policy_as_admin: boolean;
   /** decision_policy specifies the group policy's decision policy. */
   decision_policy?: AnyAmino;
 }
@@ -307,9 +307,9 @@ export interface MsgCreateGroupWithPolicyResponseProtoMsg {
 /** MsgCreateGroupWithPolicyResponse is the Msg/CreateGroupWithPolicy response type. */
 export interface MsgCreateGroupWithPolicyResponseAmino {
   /** group_id is the unique ID of the newly created group with policy. */
-  group_id?: string;
+  group_id: string;
   /** group_policy_address is the account address of the newly created group policy. */
-  group_policy_address?: string;
+  group_policy_address: string;
 }
 /** MsgUpdateGroupPolicyDecisionPolicy is the Msg/UpdateGroupPolicyDecisionPolicy request type. */
 export interface MsgUpdateGroupPolicyDecisionPolicy {
@@ -330,9 +330,9 @@ export type MsgUpdateGroupPolicyDecisionPolicyEncoded = Omit<MsgUpdateGroupPolic
 /** MsgUpdateGroupPolicyDecisionPolicy is the Msg/UpdateGroupPolicyDecisionPolicy request type. */
 export interface MsgUpdateGroupPolicyDecisionPolicyAmino {
   /** admin is the account address of the group admin. */
-  admin?: string;
+  admin: string;
   /** group_policy_address is the account address of group policy. */
-  group_policy_address?: string;
+  group_policy_address: string;
   /** decision_policy is the updated group policy's decision policy. */
   decision_policy?: AnyAmino;
 }
@@ -360,11 +360,11 @@ export interface MsgUpdateGroupPolicyMetadataProtoMsg {
 /** MsgUpdateGroupPolicyMetadata is the Msg/UpdateGroupPolicyMetadata request type. */
 export interface MsgUpdateGroupPolicyMetadataAmino {
   /** admin is the account address of the group admin. */
-  admin?: string;
+  admin: string;
   /** group_policy_address is the account address of group policy. */
-  group_policy_address?: string;
+  group_policy_address: string;
   /** metadata is the group policy metadata to be updated. */
-  metadata?: string;
+  metadata: string;
 }
 /** MsgUpdateGroupPolicyMetadataResponse is the Msg/UpdateGroupPolicyMetadata response type. */
 export interface MsgUpdateGroupPolicyMetadataResponse {}
@@ -413,34 +413,34 @@ export interface MsgSubmitProposalProtoMsg {
 /** MsgSubmitProposal is the Msg/SubmitProposal request type. */
 export interface MsgSubmitProposalAmino {
   /** group_policy_address is the account address of group policy. */
-  group_policy_address?: string;
+  group_policy_address: string;
   /**
    * proposers are the account addresses of the proposers.
    * Proposers signatures will be counted as yes votes.
    */
-  proposers?: string[];
+  proposers: string[];
   /** metadata is any arbitrary metadata attached to the proposal. */
-  metadata?: string;
+  metadata: string;
   /** messages is a list of `sdk.Msg`s that will be executed if the proposal passes. */
-  messages?: AnyAmino[];
+  messages: AnyAmino[];
   /**
    * exec defines the mode of execution of the proposal,
    * whether it should be executed immediately on creation or not.
    * If so, proposers signatures are considered as Yes votes.
    */
-  exec?: Exec;
+  exec: Exec;
   /**
    * title is the title of the proposal.
    * 
    * Since: cosmos-sdk 0.47
    */
-  title?: string;
+  title: string;
   /**
    * summary is the summary of the proposal.
    * 
    * Since: cosmos-sdk 0.47
    */
-  summary?: string;
+  summary: string;
 }
 /** MsgSubmitProposalResponse is the Msg/SubmitProposal response type. */
 export interface MsgSubmitProposalResponse {
@@ -454,7 +454,7 @@ export interface MsgSubmitProposalResponseProtoMsg {
 /** MsgSubmitProposalResponse is the Msg/SubmitProposal response type. */
 export interface MsgSubmitProposalResponseAmino {
   /** proposal is the unique ID of the proposal. */
-  proposal_id?: string;
+  proposal_id: string;
 }
 /** MsgWithdrawProposal is the Msg/WithdrawProposal request type. */
 export interface MsgWithdrawProposal {
@@ -470,9 +470,9 @@ export interface MsgWithdrawProposalProtoMsg {
 /** MsgWithdrawProposal is the Msg/WithdrawProposal request type. */
 export interface MsgWithdrawProposalAmino {
   /** proposal is the unique ID of the proposal. */
-  proposal_id?: string;
+  proposal_id: string;
   /** address is the admin of the group policy or one of the proposer of the proposal. */
-  address?: string;
+  address: string;
 }
 /** MsgWithdrawProposalResponse is the Msg/WithdrawProposal response type. */
 export interface MsgWithdrawProposalResponse {}
@@ -505,18 +505,18 @@ export interface MsgVoteProtoMsg {
 /** MsgVote is the Msg/Vote request type. */
 export interface MsgVoteAmino {
   /** proposal is the unique ID of the proposal. */
-  proposal_id?: string;
+  proposal_id: string;
   /** voter is the voter account address. */
-  voter?: string;
+  voter: string;
   /** option is the voter's choice on the proposal. */
-  option?: VoteOption;
+  option: VoteOption;
   /** metadata is any arbitrary metadata attached to the vote. */
-  metadata?: string;
+  metadata: string;
   /**
    * exec defines whether the proposal should be executed
    * immediately after voting or not.
    */
-  exec?: Exec;
+  exec: Exec;
 }
 /** MsgVoteResponse is the Msg/Vote response type. */
 export interface MsgVoteResponse {}
@@ -540,9 +540,9 @@ export interface MsgExecProtoMsg {
 /** MsgExec is the Msg/Exec request type. */
 export interface MsgExecAmino {
   /** proposal is the unique ID of the proposal. */
-  proposal_id?: string;
+  proposal_id: string;
   /** executor is the account address used to execute the proposal. */
-  executor?: string;
+  executor: string;
 }
 /** MsgExecResponse is the Msg/Exec request type. */
 export interface MsgExecResponse {
@@ -556,7 +556,7 @@ export interface MsgExecResponseProtoMsg {
 /** MsgExecResponse is the Msg/Exec request type. */
 export interface MsgExecResponseAmino {
   /** result is the final result of the proposal execution. */
-  result?: ProposalExecutorResult;
+  result: ProposalExecutorResult;
 }
 /** MsgLeaveGroup is the Msg/LeaveGroup request type. */
 export interface MsgLeaveGroup {
@@ -572,9 +572,9 @@ export interface MsgLeaveGroupProtoMsg {
 /** MsgLeaveGroup is the Msg/LeaveGroup request type. */
 export interface MsgLeaveGroupAmino {
   /** address is the account address of the group member. */
-  address?: string;
+  address: string;
   /** group_id is the unique ID of the group. */
-  group_id?: string;
+  group_id: string;
 }
 /** MsgLeaveGroupResponse is the Msg/LeaveGroup response type. */
 export interface MsgLeaveGroupResponse {}

@@ -59,6 +59,19 @@ export class StargateCosmjsSigner extends CosmjsSigner {
     return stargateSigner;
   }
 
+  get getBalance() {
+    return this.balance;
+  }
+  get getAllBalances() {
+    return this.allBalances;
+  }
+  get getBalanceStaked() {
+    return this.delegatorDelegations;
+  }
+  get getDelegation() {
+    return this.delegation;
+  }
+
   get sendTokens() {
     return this.send;
   }

@@ -12,10 +12,10 @@ export interface ProofProtoMsg {
   value: Uint8Array;
 }
 export interface ProofAmino {
-  total?: string;
-  index?: string;
-  leaf_hash?: string;
-  aunts?: string[];
+  total: string;
+  index: string;
+  leaf_hash: string;
+  aunts: string[];
 }
 export interface ValueOp {
   /** Encoded in ProofOp.Key. */
@@ -29,7 +29,7 @@ export interface ValueOpProtoMsg {
 }
 export interface ValueOpAmino {
   /** Encoded in ProofOp.Key. */
-  key?: string;
+  key: string;
   /** To encode in ProofOp.Data */
   proof?: ProofAmino;
 }
@@ -43,9 +43,9 @@ export interface DominoOpProtoMsg {
   value: Uint8Array;
 }
 export interface DominoOpAmino {
-  key?: string;
-  input?: string;
-  output?: string;
+  key: string;
+  input: string;
+  output: string;
 }
 /**
  * ProofOp defines an operation used for calculating Merkle root
@@ -67,9 +67,9 @@ export interface ProofOpProtoMsg {
  * for example neighbouring node hash
  */
 export interface ProofOpAmino {
-  type?: string;
-  key?: string;
-  data?: string;
+  type: string;
+  key: string;
+  data: string;
 }
 /** ProofOps is Merkle proof defined by the list of ProofOps */
 export interface ProofOps {
@@ -81,7 +81,7 @@ export interface ProofOpsProtoMsg {
 }
 /** ProofOps is Merkle proof defined by the list of ProofOps */
 export interface ProofOpsAmino {
-  ops?: ProofOpAmino[];
+  ops: ProofOpAmino[];
 }
 function createBaseProof(): Proof {
   return {

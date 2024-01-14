@@ -52,7 +52,7 @@ export interface PlanAmino {
    * assumed that the software is out-of-date when the upgrade Time or Height is
    * reached and the software will exit.
    */
-  name?: string;
+  name: string;
   /**
    * Deprecated: Time based upgrades have been deprecated. Time based upgrade logic
    * has been removed from the SDK.
@@ -61,12 +61,12 @@ export interface PlanAmino {
   /** @deprecated */
   time: string;
   /** The height at which the upgrade must be performed. */
-  height?: string;
+  height: string;
   /**
    * Any application specific upgrade info to be included on-chain
    * such as a git commit that validators could automatically upgrade to
    */
-  info?: string;
+  info: string;
   /**
    * Deprecated: UpgradedClientState field has been deprecated. IBC upgrade logic has been
    * moved to the IBC module in the sub module 02-client.
@@ -103,9 +103,9 @@ export interface SoftwareUpgradeProposalProtoMsg {
 /** @deprecated */
 export interface SoftwareUpgradeProposalAmino {
   /** title of the proposal */
-  title?: string;
+  title: string;
   /** description of the proposal */
-  description?: string;
+  description: string;
   /** plan of the proposal */
   plan: PlanAmino;
 }
@@ -135,9 +135,9 @@ export interface CancelSoftwareUpgradeProposalProtoMsg {
 /** @deprecated */
 export interface CancelSoftwareUpgradeProposalAmino {
   /** title of the proposal */
-  title?: string;
+  title: string;
   /** description of the proposal */
-  description?: string;
+  description: string;
 }
 /**
  * ModuleVersion specifies a module and its consensus version.
@@ -161,9 +161,9 @@ export interface ModuleVersionProtoMsg {
  */
 export interface ModuleVersionAmino {
   /** name of the app module */
-  name?: string;
+  name: string;
   /** consensus version of the app module */
-  version?: string;
+  version: string;
 }
 function createBasePlan(): Plan {
   return {

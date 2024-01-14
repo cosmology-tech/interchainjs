@@ -281,7 +281,7 @@ export interface RequestEchoProtoMsg {
   value: Uint8Array;
 }
 export interface RequestEchoAmino {
-  message?: string;
+  message: string;
 }
 export interface RequestFlush {}
 export interface RequestFlushProtoMsg {
@@ -300,10 +300,10 @@ export interface RequestInfoProtoMsg {
   value: Uint8Array;
 }
 export interface RequestInfoAmino {
-  version?: string;
-  block_version?: string;
-  p2p_version?: string;
-  abci_version?: string;
+  version: string;
+  block_version: string;
+  p2p_version: string;
+  abci_version: string;
 }
 export interface RequestInitChain {
   time: Date;
@@ -318,12 +318,12 @@ export interface RequestInitChainProtoMsg {
   value: Uint8Array;
 }
 export interface RequestInitChainAmino {
-  time?: string;
-  chain_id?: string;
+  time: string;
+  chain_id: string;
   consensus_params?: ConsensusParamsAmino;
-  validators?: ValidatorUpdateAmino[];
-  app_state_bytes?: string;
-  initial_height?: string;
+  validators: ValidatorUpdateAmino[];
+  app_state_bytes: string;
+  initial_height: string;
 }
 export interface RequestQuery {
   data: Uint8Array;
@@ -336,10 +336,10 @@ export interface RequestQueryProtoMsg {
   value: Uint8Array;
 }
 export interface RequestQueryAmino {
-  data?: string;
-  path?: string;
-  height?: string;
-  prove?: boolean;
+  data: string;
+  path: string;
+  height: string;
+  prove: boolean;
 }
 export interface RequestBeginBlock {
   hash: Uint8Array;
@@ -352,10 +352,10 @@ export interface RequestBeginBlockProtoMsg {
   value: Uint8Array;
 }
 export interface RequestBeginBlockAmino {
-  hash?: string;
-  header?: HeaderAmino;
-  last_commit_info?: CommitInfoAmino;
-  byzantine_validators?: MisbehaviorAmino[];
+  hash: string;
+  header: HeaderAmino;
+  last_commit_info: CommitInfoAmino;
+  byzantine_validators: MisbehaviorAmino[];
 }
 export interface RequestCheckTx {
   tx: Uint8Array;
@@ -366,8 +366,8 @@ export interface RequestCheckTxProtoMsg {
   value: Uint8Array;
 }
 export interface RequestCheckTxAmino {
-  tx?: string;
-  type?: CheckTxType;
+  tx: string;
+  type: CheckTxType;
 }
 export interface RequestDeliverTx {
   tx: Uint8Array;
@@ -377,7 +377,7 @@ export interface RequestDeliverTxProtoMsg {
   value: Uint8Array;
 }
 export interface RequestDeliverTxAmino {
-  tx?: string;
+  tx: string;
 }
 export interface RequestEndBlock {
   height: bigint;
@@ -387,7 +387,7 @@ export interface RequestEndBlockProtoMsg {
   value: Uint8Array;
 }
 export interface RequestEndBlockAmino {
-  height?: string;
+  height: string;
 }
 export interface RequestCommit {}
 export interface RequestCommitProtoMsg {
@@ -419,7 +419,7 @@ export interface RequestOfferSnapshotAmino {
   /** snapshot offered by peers */
   snapshot?: SnapshotAmino;
   /** light client-verified app hash for snapshot height */
-  app_hash?: string;
+  app_hash: string;
 }
 /** loads a snapshot chunk */
 export interface RequestLoadSnapshotChunk {
@@ -433,9 +433,9 @@ export interface RequestLoadSnapshotChunkProtoMsg {
 }
 /** loads a snapshot chunk */
 export interface RequestLoadSnapshotChunkAmino {
-  height?: string;
-  format?: number;
-  chunk?: number;
+  height: string;
+  format: number;
+  chunk: number;
 }
 /** Applies a snapshot chunk */
 export interface RequestApplySnapshotChunk {
@@ -449,9 +449,9 @@ export interface RequestApplySnapshotChunkProtoMsg {
 }
 /** Applies a snapshot chunk */
 export interface RequestApplySnapshotChunkAmino {
-  index?: number;
-  chunk?: string;
-  sender?: string;
+  index: number;
+  chunk: string;
+  sender: string;
 }
 export interface RequestPrepareProposal {
   /** the modified transactions cannot exceed this size. */
@@ -475,19 +475,19 @@ export interface RequestPrepareProposalProtoMsg {
 }
 export interface RequestPrepareProposalAmino {
   /** the modified transactions cannot exceed this size. */
-  max_tx_bytes?: string;
+  max_tx_bytes: string;
   /**
    * txs is an array of transactions that will be included in a block,
    * sent to the app for possible modifications.
    */
-  txs?: string[];
-  local_last_commit?: ExtendedCommitInfoAmino;
-  misbehavior?: MisbehaviorAmino[];
-  height?: string;
-  time?: string;
-  next_validators_hash?: string;
+  txs: string[];
+  local_last_commit: ExtendedCommitInfoAmino;
+  misbehavior: MisbehaviorAmino[];
+  height: string;
+  time: string;
+  next_validators_hash: string;
   /** address of the public key of the validator proposing the block. */
-  proposer_address?: string;
+  proposer_address: string;
 }
 export interface RequestProcessProposal {
   txs: Uint8Array[];
@@ -506,16 +506,16 @@ export interface RequestProcessProposalProtoMsg {
   value: Uint8Array;
 }
 export interface RequestProcessProposalAmino {
-  txs?: string[];
-  proposed_last_commit?: CommitInfoAmino;
-  misbehavior?: MisbehaviorAmino[];
+  txs: string[];
+  proposed_last_commit: CommitInfoAmino;
+  misbehavior: MisbehaviorAmino[];
   /** hash is the merkle root hash of the fields of the proposed block. */
-  hash?: string;
-  height?: string;
-  time?: string;
-  next_validators_hash?: string;
+  hash: string;
+  height: string;
+  time: string;
+  next_validators_hash: string;
   /** address of the public key of the original proposer of the block. */
-  proposer_address?: string;
+  proposer_address: string;
 }
 export interface Response {
   exception?: ResponseException;
@@ -569,7 +569,7 @@ export interface ResponseExceptionProtoMsg {
 }
 /** nondeterministic */
 export interface ResponseExceptionAmino {
-  error?: string;
+  error: string;
 }
 export interface ResponseEcho {
   message: string;
@@ -579,7 +579,7 @@ export interface ResponseEchoProtoMsg {
   value: Uint8Array;
 }
 export interface ResponseEchoAmino {
-  message?: string;
+  message: string;
 }
 export interface ResponseFlush {}
 export interface ResponseFlushProtoMsg {
@@ -599,11 +599,11 @@ export interface ResponseInfoProtoMsg {
   value: Uint8Array;
 }
 export interface ResponseInfoAmino {
-  data?: string;
-  version?: string;
-  app_version?: string;
-  last_block_height?: string;
-  last_block_app_hash?: string;
+  data: string;
+  version: string;
+  app_version: string;
+  last_block_height: string;
+  last_block_app_hash: string;
 }
 export interface ResponseInitChain {
   consensusParams?: ConsensusParams;
@@ -616,8 +616,8 @@ export interface ResponseInitChainProtoMsg {
 }
 export interface ResponseInitChainAmino {
   consensus_params?: ConsensusParamsAmino;
-  validators?: ValidatorUpdateAmino[];
-  app_hash?: string;
+  validators: ValidatorUpdateAmino[];
+  app_hash: string;
 }
 export interface ResponseQuery {
   code: number;
@@ -637,17 +637,17 @@ export interface ResponseQueryProtoMsg {
   value: Uint8Array;
 }
 export interface ResponseQueryAmino {
-  code?: number;
+  code: number;
   /** bytes data = 2; // use "value" instead. */
-  log?: string;
+  log: string;
   /** nondeterministic */
-  info?: string;
-  index?: string;
-  key?: string;
-  value?: string;
+  info: string;
+  index: string;
+  key: string;
+  value: string;
   proof_ops?: ProofOpsAmino;
-  height?: string;
-  codespace?: string;
+  height: string;
+  codespace: string;
 }
 export interface ResponseBeginBlock {
   events: Event[];
@@ -657,7 +657,7 @@ export interface ResponseBeginBlockProtoMsg {
   value: Uint8Array;
 }
 export interface ResponseBeginBlockAmino {
-  events?: EventAmino[];
+  events: EventAmino[];
 }
 export interface ResponseCheckTx {
   code: number;
@@ -683,23 +683,23 @@ export interface ResponseCheckTxProtoMsg {
   value: Uint8Array;
 }
 export interface ResponseCheckTxAmino {
-  code?: number;
-  data?: string;
+  code: number;
+  data: string;
   /** nondeterministic */
-  log?: string;
+  log: string;
   /** nondeterministic */
-  info?: string;
-  gas_wanted?: string;
-  gas_used?: string;
-  events?: EventAmino[];
-  codespace?: string;
-  sender?: string;
-  priority?: string;
+  info: string;
+  gas_wanted: string;
+  gas_used: string;
+  events: EventAmino[];
+  codespace: string;
+  sender: string;
+  priority: string;
   /**
    * mempool_error is set by CometBFT.
    * ABCI applictions creating a ResponseCheckTX should not set mempool_error.
    */
-  mempool_error?: string;
+  mempool_error: string;
 }
 export interface ResponseDeliverTx {
   code: number;
@@ -718,16 +718,16 @@ export interface ResponseDeliverTxProtoMsg {
   value: Uint8Array;
 }
 export interface ResponseDeliverTxAmino {
-  code?: number;
-  data?: string;
+  code: number;
+  data: string;
   /** nondeterministic */
-  log?: string;
+  log: string;
   /** nondeterministic */
-  info?: string;
-  gas_wanted?: string;
-  gas_used?: string;
-  events?: EventAmino[];
-  codespace?: string;
+  info: string;
+  gas_wanted: string;
+  gas_used: string;
+  events: EventAmino[];
+  codespace: string;
 }
 export interface ResponseEndBlock {
   validatorUpdates: ValidatorUpdate[];
@@ -739,9 +739,9 @@ export interface ResponseEndBlockProtoMsg {
   value: Uint8Array;
 }
 export interface ResponseEndBlockAmino {
-  validator_updates?: ValidatorUpdateAmino[];
+  validator_updates: ValidatorUpdateAmino[];
   consensus_param_updates?: ConsensusParamsAmino;
-  events?: EventAmino[];
+  events: EventAmino[];
 }
 export interface ResponseCommit {
   /** reserve 1 */
@@ -754,8 +754,8 @@ export interface ResponseCommitProtoMsg {
 }
 export interface ResponseCommitAmino {
   /** reserve 1 */
-  data?: string;
-  retain_height?: string;
+  data: string;
+  retain_height: string;
 }
 export interface ResponseListSnapshots {
   snapshots: Snapshot[];
@@ -765,7 +765,7 @@ export interface ResponseListSnapshotsProtoMsg {
   value: Uint8Array;
 }
 export interface ResponseListSnapshotsAmino {
-  snapshots?: SnapshotAmino[];
+  snapshots: SnapshotAmino[];
 }
 export interface ResponseOfferSnapshot {
   result: ResponseOfferSnapshot_Result;
@@ -775,7 +775,7 @@ export interface ResponseOfferSnapshotProtoMsg {
   value: Uint8Array;
 }
 export interface ResponseOfferSnapshotAmino {
-  result?: ResponseOfferSnapshot_Result;
+  result: ResponseOfferSnapshot_Result;
 }
 export interface ResponseLoadSnapshotChunk {
   chunk: Uint8Array;
@@ -785,7 +785,7 @@ export interface ResponseLoadSnapshotChunkProtoMsg {
   value: Uint8Array;
 }
 export interface ResponseLoadSnapshotChunkAmino {
-  chunk?: string;
+  chunk: string;
 }
 export interface ResponseApplySnapshotChunk {
   result: ResponseApplySnapshotChunk_Result;
@@ -799,11 +799,11 @@ export interface ResponseApplySnapshotChunkProtoMsg {
   value: Uint8Array;
 }
 export interface ResponseApplySnapshotChunkAmino {
-  result?: ResponseApplySnapshotChunk_Result;
+  result: ResponseApplySnapshotChunk_Result;
   /** Chunks to refetch and reapply */
-  refetch_chunks?: number[];
+  refetch_chunks: number[];
   /** Chunk senders to reject and ban */
-  reject_senders?: string[];
+  reject_senders: string[];
 }
 export interface ResponsePrepareProposal {
   txs: Uint8Array[];
@@ -813,7 +813,7 @@ export interface ResponsePrepareProposalProtoMsg {
   value: Uint8Array;
 }
 export interface ResponsePrepareProposalAmino {
-  txs?: string[];
+  txs: string[];
 }
 export interface ResponseProcessProposal {
   status: ResponseProcessProposal_ProposalStatus;
@@ -823,7 +823,7 @@ export interface ResponseProcessProposalProtoMsg {
   value: Uint8Array;
 }
 export interface ResponseProcessProposalAmino {
-  status?: ResponseProcessProposal_ProposalStatus;
+  status: ResponseProcessProposal_ProposalStatus;
 }
 export interface CommitInfo {
   round: number;
@@ -834,8 +834,8 @@ export interface CommitInfoProtoMsg {
   value: Uint8Array;
 }
 export interface CommitInfoAmino {
-  round?: number;
-  votes?: VoteInfoAmino[];
+  round: number;
+  votes: VoteInfoAmino[];
 }
 export interface ExtendedCommitInfo {
   /** The round at which the block proposer decided in the previous height. */
@@ -852,12 +852,12 @@ export interface ExtendedCommitInfoProtoMsg {
 }
 export interface ExtendedCommitInfoAmino {
   /** The round at which the block proposer decided in the previous height. */
-  round?: number;
+  round: number;
   /**
    * List of validators' addresses in the last validator set with their voting
    * information, including vote extensions.
    */
-  votes?: ExtendedVoteInfoAmino[];
+  votes: ExtendedVoteInfoAmino[];
 }
 /**
  * Event allows application developers to attach additional information to
@@ -878,8 +878,8 @@ export interface EventProtoMsg {
  * Later, transactions may be queried using these events.
  */
 export interface EventAmino {
-  type?: string;
-  attributes?: EventAttributeAmino[];
+  type: string;
+  attributes: EventAttributeAmino[];
 }
 /** EventAttribute is a single key-value pair, associated with an event. */
 export interface EventAttribute {
@@ -894,10 +894,10 @@ export interface EventAttributeProtoMsg {
 }
 /** EventAttribute is a single key-value pair, associated with an event. */
 export interface EventAttributeAmino {
-  key?: string;
-  value?: string;
+  key: string;
+  value: string;
   /** nondeterministic */
-  index?: boolean;
+  index: boolean;
 }
 /**
  * TxResult contains results of executing the transaction.
@@ -920,10 +920,10 @@ export interface TxResultProtoMsg {
  * One usage is indexing transaction results.
  */
 export interface TxResultAmino {
-  height?: string;
-  index?: number;
-  tx?: string;
-  result?: ResponseDeliverTxAmino;
+  height: string;
+  index: number;
+  tx: string;
+  result: ResponseDeliverTxAmino;
 }
 /** Validator */
 export interface Validator {
@@ -945,9 +945,9 @@ export interface ValidatorAmino {
    * The first 20 bytes of SHA256(public key)
    * PubKey pub_key = 2 [(gogoproto.nullable)=false];
    */
-  address?: string;
+  address: string;
   /** The voting power */
-  power?: string;
+  power: string;
 }
 /** ValidatorUpdate */
 export interface ValidatorUpdate {
@@ -960,8 +960,8 @@ export interface ValidatorUpdateProtoMsg {
 }
 /** ValidatorUpdate */
 export interface ValidatorUpdateAmino {
-  pub_key?: PublicKeyAmino;
-  power?: string;
+  pub_key: PublicKeyAmino;
+  power: string;
 }
 /** VoteInfo */
 export interface VoteInfo {
@@ -974,8 +974,8 @@ export interface VoteInfoProtoMsg {
 }
 /** VoteInfo */
 export interface VoteInfoAmino {
-  validator?: ValidatorAmino;
-  signed_last_block?: boolean;
+  validator: ValidatorAmino;
+  signed_last_block: boolean;
 }
 export interface ExtendedVoteInfo {
   validator: Validator;
@@ -988,10 +988,10 @@ export interface ExtendedVoteInfoProtoMsg {
   value: Uint8Array;
 }
 export interface ExtendedVoteInfoAmino {
-  validator?: ValidatorAmino;
-  signed_last_block?: boolean;
+  validator: ValidatorAmino;
+  signed_last_block: boolean;
   /** Reserved for future use */
-  vote_extension?: string;
+  vote_extension: string;
 }
 export interface Misbehavior {
   type: MisbehaviorType;
@@ -1013,19 +1013,19 @@ export interface MisbehaviorProtoMsg {
   value: Uint8Array;
 }
 export interface MisbehaviorAmino {
-  type?: MisbehaviorType;
+  type: MisbehaviorType;
   /** The offending validator */
-  validator?: ValidatorAmino;
+  validator: ValidatorAmino;
   /** The height when the offense occurred */
-  height?: string;
+  height: string;
   /** The corresponding time where the offense occurred */
-  time?: string;
+  time: string;
   /**
    * Total voting power of the validator set in case the ABCI application does
    * not store historical validators.
    * https://github.com/tendermint/tendermint/issues/4581
    */
-  total_voting_power?: string;
+  total_voting_power: string;
 }
 export interface Snapshot {
   /** The height at which the snapshot was taken */
@@ -1045,15 +1045,15 @@ export interface SnapshotProtoMsg {
 }
 export interface SnapshotAmino {
   /** The height at which the snapshot was taken */
-  height?: string;
+  height: string;
   /** The application-specific snapshot format */
-  format?: number;
+  format: number;
   /** Number of chunks in the snapshot */
-  chunks?: number;
+  chunks: number;
   /** Arbitrary snapshot hash, equal only if identical */
-  hash?: string;
+  hash: string;
   /** Arbitrary application metadata */
-  metadata?: string;
+  metadata: string;
 }
 function createBaseRequest(): Request {
   return {

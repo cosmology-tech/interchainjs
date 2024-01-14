@@ -82,55 +82,67 @@ export class MsgClientImpl implements Msg {
   private readonly rpc: TxRpc;
   constructor(rpc: TxRpc) {
     this.rpc = rpc;
-    this.setWithdrawAddress = this.setWithdrawAddress.bind(this);
-    this.withdrawDelegatorReward = this.withdrawDelegatorReward.bind(this);
-    this.withdrawValidatorCommission = this.withdrawValidatorCommission.bind(this);
-    this.fundCommunityPool = this.fundCommunityPool.bind(this);
-    this.updateParams = this.updateParams.bind(this);
-    this.communityPoolSpend = this.communityPoolSpend.bind(this);
   }
-  setWithdrawAddress(signerAddress: string, message: MsgSetWithdrawAddress, fee: number | StdFee | "auto" = "auto", memo: string = ""): Promise<DeliverTxResponse> {
+  /* SetWithdrawAddress defines a method to change the withdraw address
+   for a delegator (or validator self-delegation). */
+  setWithdrawAddress = async (signerAddress: string, message: MsgSetWithdrawAddress, fee: number | StdFee | "auto" = "auto", memo: string = ""): Promise<DeliverTxResponse> => {
     const data = [{
       typeUrl: MsgSetWithdrawAddress.typeUrl,
       value: message
     }];
     return this.rpc.signAndBroadcast!(signerAddress, data, fee, memo);
-  }
-  withdrawDelegatorReward(signerAddress: string, message: MsgWithdrawDelegatorReward, fee: number | StdFee | "auto" = "auto", memo: string = ""): Promise<DeliverTxResponse> {
+  };
+  /* WithdrawDelegatorReward defines a method to withdraw rewards of delegator
+   from a single validator. */
+  withdrawDelegatorReward = async (signerAddress: string, message: MsgWithdrawDelegatorReward, fee: number | StdFee | "auto" = "auto", memo: string = ""): Promise<DeliverTxResponse> => {
     const data = [{
       typeUrl: MsgWithdrawDelegatorReward.typeUrl,
       value: message
     }];
     return this.rpc.signAndBroadcast!(signerAddress, data, fee, memo);
-  }
-  withdrawValidatorCommission(signerAddress: string, message: MsgWithdrawValidatorCommission, fee: number | StdFee | "auto" = "auto", memo: string = ""): Promise<DeliverTxResponse> {
+  };
+  /* WithdrawValidatorCommission defines a method to withdraw the
+   full commission to the validator address. */
+  withdrawValidatorCommission = async (signerAddress: string, message: MsgWithdrawValidatorCommission, fee: number | StdFee | "auto" = "auto", memo: string = ""): Promise<DeliverTxResponse> => {
     const data = [{
       typeUrl: MsgWithdrawValidatorCommission.typeUrl,
       value: message
     }];
     return this.rpc.signAndBroadcast!(signerAddress, data, fee, memo);
-  }
-  fundCommunityPool(signerAddress: string, message: MsgFundCommunityPool, fee: number | StdFee | "auto" = "auto", memo: string = ""): Promise<DeliverTxResponse> {
+  };
+  /* FundCommunityPool defines a method to allow an account to directly
+   fund the community pool. */
+  fundCommunityPool = async (signerAddress: string, message: MsgFundCommunityPool, fee: number | StdFee | "auto" = "auto", memo: string = ""): Promise<DeliverTxResponse> => {
     const data = [{
       typeUrl: MsgFundCommunityPool.typeUrl,
       value: message
     }];
     return this.rpc.signAndBroadcast!(signerAddress, data, fee, memo);
-  }
-  updateParams(signerAddress: string, message: MsgUpdateParams, fee: number | StdFee | "auto" = "auto", memo: string = ""): Promise<DeliverTxResponse> {
+  };
+  /* UpdateParams defines a governance operation for updating the x/distribution
+   module parameters. The authority is defined in the keeper.
+  
+   Since: cosmos-sdk 0.47 */
+  updateParams = async (signerAddress: string, message: MsgUpdateParams, fee: number | StdFee | "auto" = "auto", memo: string = ""): Promise<DeliverTxResponse> => {
     const data = [{
       typeUrl: MsgUpdateParams.typeUrl,
       value: message
     }];
     return this.rpc.signAndBroadcast!(signerAddress, data, fee, memo);
-  }
-  communityPoolSpend(signerAddress: string, message: MsgCommunityPoolSpend, fee: number | StdFee | "auto" = "auto", memo: string = ""): Promise<DeliverTxResponse> {
+  };
+  /* CommunityPoolSpend defines a governance operation for sending tokens from
+   the community pool in the x/distribution module to another account, which
+   could be the governance module itself. The authority is defined in the
+   keeper.
+  
+   Since: cosmos-sdk 0.47 */
+  communityPoolSpend = async (signerAddress: string, message: MsgCommunityPoolSpend, fee: number | StdFee | "auto" = "auto", memo: string = ""): Promise<DeliverTxResponse> => {
     const data = [{
       typeUrl: MsgCommunityPoolSpend.typeUrl,
       value: message
     }];
     return this.rpc.signAndBroadcast!(signerAddress, data, fee, memo);
-  }
+  };
 }
 export const createClientImpl = (rpc: TxRpc) => {
   return new MsgClientImpl(rpc);
