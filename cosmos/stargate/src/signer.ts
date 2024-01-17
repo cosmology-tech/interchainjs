@@ -20,7 +20,7 @@ export class StargateSigner extends Signer {
 export class StargateAminoSigner extends AminoSigner {
   constructor(registry?: Registry, aminoConverters?: AminoConverters) {
     super(stargateRegistry, stargateAminoConverters);
-    this.registerWithAmino(registry, aminoConverters);
+    this.registerAmino(registry, aminoConverters);
   }
 }
 
@@ -33,10 +33,7 @@ export class StargateCosmjsSigner extends CosmjsSigner {
     options: SignerOptions = {}
   ) {
     super(aminoSigner, offlineSigner, options);
-    this.aminoSigner.registerWithAmino(
-      stargateRegistry,
-      stargateAminoConverters
-    );
+    this.aminoSigner.registerAmino(stargateRegistry, stargateAminoConverters);
     const stargateImpl = new StargateImpl();
     stargateImpl.init({
       ...this.aminoSigner.request.abciQuery,

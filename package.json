@@ -24,7 +24,8 @@
     "restart-server": "cd __test__/cosmos && ./scripts/stop-server.sh && ./scripts/start-server.sh",
     "test:cosmos": "cd __test__/cosmos && jest --testPathPattern=./src",
     "pub": "lerna publish",
-    "clear": "lerna run clear --stream"
+    "clear": "lerna run clear --stream",
+    "update:telescope": "yarn add -DW @cosmology/telescope && yarn proto:codegen"
   },
   "devDependencies": {
     "@cosmjs/amino": "^0.32.2",

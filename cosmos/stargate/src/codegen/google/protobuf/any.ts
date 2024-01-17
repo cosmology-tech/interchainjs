@@ -1,6 +1,5 @@
 import { BinaryReader, BinaryWriter } from "../../binary";
 import { DeepPartial } from "../../helpers";
-import { GlobalDecoderRegistry } from "../../registry";
 /**
  * `Any` contains an arbitrary serialized protocol buffer message along with a
  * URL that describes the type of the serialized message.
@@ -323,4 +322,3 @@ export const Any = {
     };
   }
 };
-GlobalDecoderRegistry.register(Any.typeUrl, Any);

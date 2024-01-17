@@ -1,0 +1,14 @@
+{
+  "name": "example",
+  "version": "1.0.0",
+  "description": "example code",
+  "main": "index.js",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "@cosmonauts/cosmos-proto": "*",
+    "@cosmonauts/cosmos-amino": "*",
+    "@cosmonauts/cosmos-cosmjs": "*",
+    "@cosmonauts/cosmos-stargate": "*"
+  }
+}

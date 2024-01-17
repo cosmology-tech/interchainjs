@@ -2,6 +2,7 @@ import {
   Auth,
   BaseSigner,
   Bech32Address,
+  Decimal,
   HttpEndpoint,
 } from "@cosmonauts/core";
 import {
@@ -25,16 +26,17 @@ import {
   Registry,
   Signed,
   SignerOptions,
+  VisualSignDoc,
 } from "./types";
 import { toBech32 } from "./utils/account";
 import { calculateFee, GasPrice, getAvgGasPrice } from "./utils/fee";
 import { EncodeObjectUtils, TxUtils } from "./utils/tx";
 
 export class Signer extends BaseSigner<RpcClient> {
-  protected hash = CosmosDefaultOptions.hash;
-  protected signatureConverter = CosmosDefaultOptions.signatureConverter;
-  protected encodePubKey = CosmosDefaultOptions.encodePubKey;
-  protected parsers: Generated[] = [];
+  readonly hash = CosmosDefaultOptions.hash;
+  readonly signatureConverter = CosmosDefaultOptions.signatureConverter;
+  readonly encodePubKey = CosmosDefaultOptions.encodePubKey;
+  readonly generated: Generated[] = [];
   accountData: AccountData;
 
   constructor(registry?: Registry, options?: SignerOptions) {
@@ -48,7 +50,7 @@ export class Signer extends BaseSigner<RpcClient> {
 
   register(registry?: Registry) {
     registry?.forEach(([typeUrl, type]) => {
-      this.parsers.push({ ...type, typeUrl });
+      this.generated.push({ ...type, typeUrl });
     });
   }
 
@@ -97,7 +99,7 @@ export class Signer extends BaseSigner<RpcClient> {
   }
 
   getGeneratedFromTypeUrl = (typeUrl: string): Generated => {
-    const generated = this.parsers.find((g) => g.typeUrl === typeUrl);
+    const generated = this.generated.find((g) => g.typeUrl === typeUrl);
     if (!generated) {
       throw new Error(
         `No such Generated corresponding to typeUrl ${typeUrl} registered`
@@ -137,10 +139,26 @@ export class Signer extends BaseSigner<RpcClient> {
   ) {
     const gas = await this.estimateGas(messages, memo);
     const fee = calculateFee(
-      gas.gasUsed * BigInt(Math.round(options?.multiplier || 1.6)),
+      Decimal.fromNumber(options?.multiplier || 1.6)
+        .multiply(gas.gasUsed)
+        .ceil(),
       options?.gasPrice || getAvgGasPrice(this.accountData.chainId)
     );
     return fee;
+  }
+
+  protected _signDoc(doc: SignDoc) {
+    const signDoc = SignDoc.fromPartial(doc);
+    const signature = this.signBytes(SignDoc.encode(signDoc).finish());
+    const txRaw = TxRaw.fromPartial({
+      bodyBytes: doc.bodyBytes,
+      authInfoBytes: doc.authInfoBytes,
+      signatures: [signature],
+    });
+    return {
+      signDoc,
+      execDoc: txRaw,
+    };
   }
 
   async signMessages(
@@ -151,29 +169,26 @@ export class Signer extends BaseSigner<RpcClient> {
       multiplier?: number;
       gasPrice?: GasPrice;
     }
-  ) {
+  ): Promise<Signed<SignDoc, VisualSignDoc>> {
     if (!this.accountData) {
       await this.initAccountData();
     }
 
-    let _fee: Fee;
-    if (!fee) {
-      const gas = await this.estimateGas(messages, memo);
-      _fee = calculateFee(
-        gas.gasUsed * BigInt(options?.multiplier || 1.4),
-        options?.gasPrice || getAvgGasPrice(this.accountData.chainId)
-      );
-    } else {
-      _fee = fee;
-    }
-
-    const txBody: TxBody = TxBody.fromPartial({
-      messages: EncodeObjectUtils.encode(
+    const [visualMessages, encodedMessages] =
+      EncodeObjectUtils.fromPartialAndEncode(
         messages,
         this.getGeneratedFromTypeUrl
-      ),
+      );
+
+    const txBody: TxBody = TxBody.fromPartial({
+      messages: encodedMessages,
       memo,
     });
+
+    const visualTxBody = {
+      ...txBody,
+      messages: visualMessages,
+    };
 
     const signerInfo: SignerInfo = SignerInfo.fromPartial({
       publicKey: this.encodePubKey(this.auth.key.pubkey),
@@ -181,34 +196,52 @@ export class Signer extends BaseSigner<RpcClient> {
       modeInfo: { single: { mode: SignMode.SIGN_MODE_DIRECT } },
     });
 
+    const authInfo: AuthInfo = AuthInfo.fromPartial({
+      fee: fee || (await this.estimateFee(messages, memo, options)),
+      signerInfos: [signerInfo],
+    });
+
+    const visualDoc: VisualSignDoc = {
+      txBody: visualTxBody,
+      authInfo,
+      chainId: this.accountData.chainId,
+      accountNumber: this.accountData.accountNumber,
+    };
+
     const doc: SignDoc = SignDoc.fromPartial({
       bodyBytes: TxBody.encode(txBody).finish(),
-      authInfoBytes: AuthInfo.encode(
-        AuthInfo.fromPartial({
-          fee: _fee,
-          signerInfos: [signerInfo],
-        })
-      ).finish(),
+      authInfoBytes: AuthInfo.encode(authInfo).finish(),
       chainId: this.accountData.chainId,
       accountNumber: this.accountData.accountNumber,
     });
 
-    return this.signDoc(doc);
+    const { signDoc, execDoc } = this._signDoc(doc);
+
+    return {
+      visualDoc,
+      signDoc,
+      execDoc,
+      broadcast: async (checkTx = true, deliverTx = false) => {
+        return this.broadcast(execDoc, checkTx, deliverTx);
+      },
+    };
   }
 
-  signDoc(doc: SignDoc): Signed<TxRaw> {
-    const signature = this.signBytes(
-      SignDoc.encode(SignDoc.fromPartial(doc)).finish()
-    );
-    const txRaw = TxRaw.fromPartial({
-      bodyBytes: doc.bodyBytes,
-      authInfoBytes: doc.authInfoBytes,
-      signatures: [signature],
-    });
+  signDoc(doc: SignDoc): Signed<SignDoc, VisualSignDoc> {
+    const visualDoc: VisualSignDoc = {
+      txBody: TxBody.decode(doc.bodyBytes),
+      authInfo: AuthInfo.decode(doc.authInfoBytes),
+      chainId: doc.chainId,
+      accountNumber: doc.accountNumber,
+    };
+
+    const { signDoc, execDoc } = this._signDoc(doc);
     return {
-      signed: txRaw,
+      visualDoc,
+      signDoc,
+      execDoc,
       broadcast: async (checkTx = true, deliverTx = false) => {
-        return this.broadcast(txRaw, checkTx, deliverTx);
+        return this.broadcast(execDoc, checkTx, deliverTx);
       },
     };
   }

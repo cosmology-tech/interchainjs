@@ -80,7 +80,9 @@ export class Secp256k1Wallet implements Wallet {
 
   signAmino(signerAddress: string, signDoc: StdSignDoc): AminoSignResponse {
     const auth = this.getAuthFromBech32Addr(signerAddress);
-    const sigObj = auth.sign(this.hash(StdSignDocUtils.encode(signDoc)));
+    const sigObj = auth.sign(
+      this.hash(StdSignDocUtils.encode(StdSignDocUtils.fromPartial(signDoc)))
+    );
     return {
       signed: signDoc,
       signature: {

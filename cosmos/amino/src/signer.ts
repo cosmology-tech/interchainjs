@@ -19,12 +19,12 @@ export class AminoSigner extends Signer {
     options?: SignerOptions
   ) {
     super(void 0, options);
-    this.registerWithAmino(registry, aminoConverters);
+    this.registerAmino(registry, aminoConverters);
   }
 
-  registerWithAmino(registry?: Registry, aminoConverters?: AminoConverters) {
+  registerAmino(registry?: Registry, aminoConverters?: AminoConverters) {
     registry?.forEach(([typeUrl, type]) => {
-      this.parsers.push({
+      this.generated.push({
         ...type,
         typeUrl,
         amino: aminoConverters[typeUrl],
@@ -33,7 +33,7 @@ export class AminoSigner extends Signer {
   }
 
   getGeneratedFromAminoType = (type: string): Generated => {
-    const generated = this.parsers.find((g) => g.amino?.aminoType === type);
+    const generated = this.generated.find((g) => g.amino?.aminoType === type);
     if (!generated) {
       throw new Error(
         `No such Generated corresponding to aminoType ${type} registered`
@@ -42,7 +42,7 @@ export class AminoSigner extends Signer {
     return generated;
   };
 
-  async signMessagesWithAmino(
+  async signAminoMessages(
     messages: EncodeObject[],
     fee?: Fee,
     memo: string = "",
@@ -50,7 +50,7 @@ export class AminoSigner extends Signer {
       multiplier?: number;
       gasPrice?: GasPrice;
     }
-  ) {
+  ): Promise<Signed<StdSignDoc, StdSignDoc>> {
     if (!this.accountData) {
       await this.initAccountData();
     }
@@ -76,11 +76,12 @@ export class AminoSigner extends Signer {
       memo,
     };
 
-    return this.signDocWithAmino(doc);
+    return this.signAminoDoc(doc);
   }
 
-  signDocWithAmino(doc: StdSignDoc): Signed<TxRaw> {
-    const signature = this.signBytes(StdSignDocUtils.encode(doc));
+  signAminoDoc(doc: StdSignDoc): Signed<StdSignDoc, StdSignDoc> {
+    const signDoc = StdSignDocUtils.fromPartial(doc);
+    const signature = this.signBytes(StdSignDocUtils.encode(signDoc));
     const { bodyBytes, authInfoBytes } = StdSignDocUtils.toSignDoc(
       doc,
       this.encodePubKey(this.auth.key.pubkey),
@@ -92,7 +93,9 @@ export class AminoSigner extends Signer {
       signatures: [signature],
     });
     return {
-      signed: txRaw,
+      visualDoc: signDoc,
+      signDoc,
+      execDoc: txRaw,
       broadcast: async (checkTx = true, deliverTx = false) => {
         return this.broadcast(txRaw, checkTx, deliverTx);
       },

@@ -21,7 +21,7 @@ export class CosmWasmSigner extends StargateSigner {
 export class CosmWasmAminoSigner extends StargateAminoSigner {
   constructor(registry?: Registry, aminoConverters?: AminoConverters) {
     super(cosmwasmRegistry, cosmwasmAminoConverters);
-    this.registerWithAmino(registry, aminoConverters);
+    this.registerAmino(registry, aminoConverters);
   }
 }
 
@@ -36,10 +36,7 @@ export class CosmWasmCosmjsSigner extends StargateCosmjsSigner {
     options: SignerOptions = {}
   ) {
     super(aminoSigner, offlineSigner, options);
-    this.aminoSigner.registerWithAmino(
-      cosmwasmRegistry,
-      cosmwasmAminoConverters
-    );
+    this.aminoSigner.registerAmino(cosmwasmRegistry, cosmwasmAminoConverters);
     const stargateImpl = new CosmWasmImpl();
     stargateImpl.init({
       ...this.aminoSigner.request.abciQuery,

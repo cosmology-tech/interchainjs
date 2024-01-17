@@ -76,10 +76,11 @@ export const StdFeeUtils = {
 };
 
 export const StdSignDocUtils = {
+  fromPartial(obj: StdSignDoc): StdSignDoc {
+    return sortedObject(obj);
+  },
   encode(doc: StdSignDoc): Uint8Array {
-    const serialized: string = escapeCharacters(
-      JSON.stringify(sortedObject(doc))
-    );
+    const serialized: string = escapeCharacters(JSON.stringify(doc));
     return fromUtf8(serialized);
   },
   toSignDoc(

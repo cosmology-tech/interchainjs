@@ -20,7 +20,7 @@
     "dist",
     "README.md"
   ],
-  "exports": {
+  "imports": {
     ".": {
       "types": "./cjs/index.d.ts",
       "import": "./esm/index.js",
@@ -30,6 +30,11 @@
       "types": "./cjs/codegen/cosmos/gov/v1beta1/gov.d.ts",
       "import": "./esm/codegen/cosmos/gov/v1beta1/gov.js",
       "require": "./cjs/codegen/cosmos/gov/v1beta1/gov.js"
+    },
+    "./cosmos/bank/v1beta1/tx": {
+      "types": "./cjs/codegen/cosmos/bank/v1beta1/tx.d.ts",
+      "import": "./esm/codegen/cosmos/bank/v1beta1/tx.js",
+      "require": "./cjs/codegen/cosmos/bank/v1beta1/tx.js"
     }
   },
   "publishConfig": {

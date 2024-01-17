@@ -11,6 +11,26 @@ import { Any } from "@cosmonauts/cosmos-rpc";
 import { EncodeObject, Generated } from "../types";
 
 export const EncodeObjectUtils = {
+  fromPartialAndEncode(
+    msgs: EncodeObject[],
+    getParserFromTypeUrl: (typeUrl: string) => Generated
+  ): [Any[], Any[]] {
+    const fromPartialResult: any[] = [];
+    const encodeResult: any[] = [];
+    msgs.forEach((msg) => {
+      const generated = getParserFromTypeUrl(msg.typeUrl);
+      const stdMsg = generated.fromPartial(msg.value);
+      fromPartialResult.push({
+        typeUrl: generated.typeUrl,
+        value: stdMsg,
+      });
+      encodeResult.push({
+        typeUrl: generated.typeUrl,
+        value: generated.encode(stdMsg).finish(),
+      });
+    });
+    return [fromPartialResult, encodeResult];
+  },
   encode(
     msgs: EncodeObject[],
     getParserFromTypeUrl: (typeUrl: string) => Generated

@@ -6,6 +6,8 @@ import {
   TelescopeGeneratedType,
 } from "@cosmonauts/cosmos-rpc";
 
+import { AuthInfo, TxBody, TxRaw } from "./codegen/cosmos/tx/v1beta1/tx";
+
 export interface AccountData {
   accountNumber: bigint;
   sequence: bigint;
@@ -19,7 +21,8 @@ export interface SignerData {
   chainId: string;
 }
 
-export interface Signed<T> extends GeneralSigned<T> {
+export interface Signed<SignDoc, VisualDoc>
+  extends GeneralSigned<SignDoc, TxRaw, VisualDoc> {
   broadcast: (
     checkTx?: boolean,
     deliverTx?: boolean
@@ -33,7 +36,7 @@ export interface AminoConverter {
 }
 
 export type TypeUrl = string;
-export type Registry = Array<[TypeUrl, TelescopeGeneratedType]>;
+export type Registry = Array<[TypeUrl, TelescopeGeneratedType<any, any, any>]>;
 
 export interface Generated extends TelescopeGeneratedType {
   amino?: AminoConverter;
@@ -53,4 +56,11 @@ export interface SignerOptions {
     fromSignature: (signature: Uint8Array) => SigObj;
   };
   encodePubKey?: (pubkey: Uint8Array) => Any;
+}
+
+export interface VisualSignDoc {
+  txBody: TxBody;
+  authInfo: AuthInfo;
+  chainId: string;
+  accountNumber: bigint;
 }

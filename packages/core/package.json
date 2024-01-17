@@ -2,9 +2,6 @@
   "name": "@cosmonauts/core",
   "version": "1.0.4",
   "description": "sign client for cosmos network",
-  "main": "dist/index.js",
-  "module": "dist/index.js",
-  "types": "dist/index.d.ts",
   "author": "liujun93 <ljun8575@gmail.com>",
   "license": "MIT",
   "scripts": {
@@ -13,6 +10,13 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "imports": {
+    ".": {
+      "types": "./cjs/index.d.ts",
+      "import": "./esm/index.js",
+      "require": "./cjs/index.js"
+    }
   },
   "files": [
     "dist",

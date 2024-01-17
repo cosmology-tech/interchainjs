@@ -60,7 +60,7 @@ export class CosmjsSigner {
     offlineSigner: OfflineSigner,
     options: SignerOptions = {}
   ) {
-    aminoSigner.registerWithAmino(options.registry, options.aminoConverters);
+    aminoSigner.registerAmino(options.registry, options.aminoConverters);
     this.aminoSigner = aminoSigner;
     this.offlineSigner = offlineSigner;
     this._getAccounts = offlineSigner.getAccounts;
@@ -171,7 +171,7 @@ export class CosmjsSigner {
     if (fee == "auto" || typeof fee === "number") {
       await this.initAuth(signerAddress);
       const feeEstimation = await this.aminoSigner.estimateFee(messages, memo, {
-        multiplier: typeof fee === "number" ? fee : 1.4,
+        multiplier: typeof fee === "number" ? fee : void 0,
         gasPrice: this.gasPrice,
       });
       usedFee = StdFeeUtils.fromFee(feeEstimation);

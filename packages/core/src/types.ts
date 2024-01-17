@@ -52,9 +52,11 @@ export interface AuthOptions {
   hdPath?: HdPath;
 }
 
-export interface GeneralSigned<T> {
-  signed: T;
-  broadcast: Function;
+export interface GeneralSigned<SignDoc, ExecDoc, VisualDoc> {
+  visualDoc: VisualDoc; // doc for human readability
+  signDoc: SignDoc; // doc to sign
+  execDoc: ExecDoc; // doc to broadcast and rescord on chain
+  broadcast: Function; // broadcast `execDoc`
 }
 
 export interface SignatureConverter {
