@@ -28,7 +28,8 @@
   "dependencies": {
     "@cosmonauts/core": "^1.0.4",
     "@cosmonauts/cosmos-rpc": "^1.0.0",
-    "bech32": "^2.0.0"
+    "bech32": "^2.0.0",
+    "decimal.js": "^10.4.3"
   },
   "peerDependencies": {
     "@noble/hashes": "^1.3.1"

@@ -1,5 +1,5 @@
-import { Decimal } from "@cosmonauts/core";
 import { Fee } from "@cosmonauts/cosmos-proto";
+import Decimal from "decimal.js";
 
 import feeTokensJson from "../config/fee-tokens.json";
 
@@ -39,7 +39,7 @@ export class GasPrice {
     }
     const [, amount, denom] = matchResult;
     checkDenom(denom);
-    const decimalAmount = Decimal.fromString(amount);
+    const decimalAmount = new Decimal(amount);
     return new GasPrice(decimalAmount, denom);
   }
 
@@ -59,7 +59,10 @@ export function calculateFee(
   const processedGasPrice =
     typeof gasPrice === "string" ? GasPrice.fromString(gasPrice) : gasPrice;
   const { denom, amount: gasPriceAmount } = processedGasPrice;
-  const amount = gasPriceAmount.multiply(gasLimit).ceil().toString();
+  const amount = gasPriceAmount
+    .mul(new Decimal(gasLimit.toString()))
+    .ceil()
+    .toString();
   return Fee.fromPartial({
     amount: [{ amount, denom }],
     gasLimit,

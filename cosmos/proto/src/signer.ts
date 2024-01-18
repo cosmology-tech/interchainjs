@@ -2,7 +2,6 @@ import {
   Auth,
   BaseSigner,
   Bech32Address,
-  Decimal,
   HttpEndpoint,
 } from "@cosmonauts/core";
 import {
@@ -16,6 +15,7 @@ import {
   TxRaw,
 } from "@cosmonauts/cosmos-proto";
 import { RpcClient } from "@cosmonauts/cosmos-rpc";
+import Decimal from "decimal.js";
 
 import prefixJson from "./config/prefix.json";
 import { CosmosDefaultOptions } from "./defaults";
@@ -139,9 +139,12 @@ export class Signer extends BaseSigner<RpcClient> {
   ) {
     const gas = await this.estimateGas(messages, memo);
     const fee = calculateFee(
-      Decimal.fromNumber(options?.multiplier || 1.6)
-        .multiply(gas.gasUsed)
-        .ceil(),
+      BigInt(
+        new Decimal(options?.multiplier || 1.6)
+          .mul(new Decimal(gas.gasUsed.toString()))
+          .ceil()
+          .toString()
+      ),
       options?.gasPrice || getAvgGasPrice(this.accountData.chainId)
     );
     return fee;
