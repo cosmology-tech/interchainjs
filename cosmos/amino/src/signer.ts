@@ -1,6 +1,6 @@
+import { Price } from "@cosmonauts/core";
 import {
   EncodeObject,
-  GasPrice,
   Generated,
   Registry,
   Signed,
@@ -48,7 +48,7 @@ export class AminoSigner extends Signer {
     memo: string = "",
     options?: {
       multiplier?: number;
-      gasPrice?: GasPrice;
+      gasPrice?: Price | string;
     }
   ): Promise<Signed<StdSignDoc, StdSignDoc>> {
     if (!this.accountData) {
@@ -81,7 +81,7 @@ export class AminoSigner extends Signer {
 
   signAminoDoc(doc: StdSignDoc): Signed<StdSignDoc, StdSignDoc> {
     const signDoc = StdSignDocUtils.fromPartial(doc);
-    const signature = this.signBytes(StdSignDocUtils.encode(signDoc));
+    const signature = this.signRawBytes(StdSignDocUtils.encode(signDoc));
     const { bodyBytes, authInfoBytes } = StdSignDocUtils.toSignDoc(
       doc,
       this.encodePubKey(this.auth.key.pubkey),

@@ -24,6 +24,14 @@ export function toHex(bytes: Uint8Array): string {
   return Buffer.from(bytes).toString("hex");
 }
 
+export function toBigInt(bytes: Uint8Array): bigint {
+  return BigInt(`0x${toHex(bytes)}`);
+}
+
+export function fromBigInt(i: bigint): Uint8Array {
+  return fromHex(i.toString(8));
+}
+
 export function fromAscii(str: string): Uint8Array {
   return Uint8Array.from(Buffer.from(str, "ascii"));
 }

@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Bech32Address, GeneralSigned, SigObj } from "@cosmonauts/core";
+import { Bech32Address, GeneralSigned, Price } from "@cosmonauts/core";
 import {
-  Any,
   BroadcastResponse,
   TelescopeGeneratedType,
 } from "@cosmonauts/cosmos-rpc";
@@ -50,12 +49,7 @@ export interface Message<T> {
 }
 
 export interface SignerOptions {
-  hash?: (msg: Uint8Array) => Uint8Array;
-  signatureConverter?: {
-    toSignature: (sigObj: SigObj) => Uint8Array;
-    fromSignature: (signature: Uint8Array) => SigObj;
-  };
-  encodePubKey?: (pubkey: Uint8Array) => Any;
+  gasPrice?: Price | string;
 }
 
 export interface VisualSignDoc {

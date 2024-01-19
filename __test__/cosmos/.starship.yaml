@@ -14,6 +14,9 @@ chains:
         gov:
           voting_params:
             voting_period: 90s
+        staking:
+          params:
+            unbonding_time: 9000s
   - name: cosmoshub-1
     type: cosmos
     image: ghcr.io/cosmology-tech/starship/gaia:v13.0.0
@@ -24,6 +27,14 @@ chains:
     resources:
       cpu: "0.5"
       memory: "500M"
+    genesis:
+      app_state:
+        gov:
+          voting_params:
+            voting_period: 90s
+        staking:
+          params:
+            unbonding_time: 9000s
 
 relayers:
   - name: osmos-cosmos
@@ -33,11 +44,17 @@ relayers:
       - osmosis-1
       - cosmoshub-1
     resources:
-      cpu: "0.3"
-      memory: "300M"
+      cpu: "0.5"
+      memory: "500M"
+    config:
+      chains:
+        - id: osmosis-1
+          trusting_period: 8000s
+        - id: cosmoshub-1
+          trusting_period: 8000s
 
 registry:
-  enabled: true
+  enabled: false
   ports:
     rest: 8081
   resources:

@@ -3,6 +3,8 @@ import {
   BaseSigner,
   Bech32Address,
   HttpEndpoint,
+  parsePrice,
+  Price,
 } from "@cosmonauts/core";
 import {
   AuthInfo,
@@ -17,8 +19,8 @@ import {
 import { RpcClient } from "@cosmonauts/cosmos-rpc";
 import Decimal from "decimal.js";
 
+import { PubKey as PubKeySecp256k1 } from "./codegen/cosmos/crypto/secp256k1/keys";
 import prefixJson from "./config/prefix.json";
-import { CosmosDefaultOptions } from "./defaults";
 import {
   AccountData,
   EncodeObject,
@@ -29,22 +31,17 @@ import {
   VisualSignDoc,
 } from "./types";
 import { toBech32 } from "./utils/account";
-import { calculateFee, GasPrice, getAvgGasPrice } from "./utils/fee";
+import { getAvgGasPrice } from "./utils/price";
 import { EncodeObjectUtils, TxUtils } from "./utils/tx";
 
 export class Signer extends BaseSigner<RpcClient> {
-  readonly hash = CosmosDefaultOptions.hash;
-  readonly signatureConverter = CosmosDefaultOptions.signatureConverter;
-  readonly encodePubKey = CosmosDefaultOptions.encodePubKey;
   readonly generated: Generated[] = [];
+  gasPrice?: Price | string;
   accountData: AccountData;
 
   constructor(registry?: Registry, options?: SignerOptions) {
     super(RpcClient);
-    if (options?.hash) this.hash = options?.hash;
-    if (options?.signatureConverter)
-      this.signatureConverter = options?.signatureConverter;
-    if (options?.encodePubKey) this.encodePubKey = options?.encodePubKey;
+    this.gasPrice = options?.gasPrice;
     if (registry) this.register(registry);
   }
 
@@ -66,25 +63,29 @@ export class Signer extends BaseSigner<RpcClient> {
     return this;
   }
 
-  async initAccountData() {
-    const chainId = await this.getChainId();
-    let address: Bech32Address;
-    if (!this.auth.key.bech32address) {
-      const _prefix = (prefixJson as any)[chainId];
-      if (!_prefix) {
-        throw new Error(`Cannot find bech32_prefix for chain ${chainId}.`);
-      }
-      address = toBech32(_prefix, this.auth.key.address);
-    } else {
-      address = this.auth.key.bech32address;
-    }
+  protected encodePubKey(pubkey: Uint8Array) {
+    return {
+      typeUrl: PubKeySecp256k1.typeUrl,
+      value: PubKeySecp256k1.encode(
+        PubKeySecp256k1.fromPartial({ key: pubkey })
+      ).finish(),
+    };
+  }
 
-    const { sequence, accountNumber } = await this.getSequence(address);
+  protected async initAccountData() {
+    const chainId = await this.getChainId();
+    const _prefix = (prefixJson as any)[chainId];
+    if (!_prefix) {
+      throw new Error(`Cannot find bech32_prefix for chain ${chainId}.`);
+    }
+    const bech32address = toBech32(_prefix, this.auth.key.address);
+
+    const { sequence, accountNumber } = await this.getSequence(bech32address);
     this.accountData = {
       chainId,
       sequence,
       accountNumber,
-      address,
+      address: bech32address,
     };
   }
 
@@ -134,25 +135,39 @@ export class Signer extends BaseSigner<RpcClient> {
     memo: string = "",
     options?: {
       multiplier?: number;
-      gasPrice?: GasPrice;
+      gasPrice?: Price | string;
     }
   ) {
     const gas = await this.estimateGas(messages, memo);
-    const fee = calculateFee(
-      BigInt(
-        new Decimal(options?.multiplier || 1.6)
-          .mul(new Decimal(gas.gasUsed.toString()))
-          .ceil()
-          .toString()
-      ),
-      options?.gasPrice || getAvgGasPrice(this.accountData.chainId)
-    );
-    return fee;
+    const gasLimit = new Decimal(gas.gasUsed.toString())
+      .mul(options?.multiplier || 1.6)
+      .ceil();
+
+    let price =
+      options.gasPrice ||
+      this.gasPrice ||
+      getAvgGasPrice(this.accountData.chainId);
+
+    if (typeof price === "string") {
+      price = parsePrice(price);
+      if (price.denom.length < 3 || price.denom.length > 128) {
+        throw new Error("Denom must be between 3 and 128 characters");
+      }
+    }
+    return Fee.fromPartial({
+      amount: [
+        {
+          amount: gasLimit.mul(price.amount).ceil().toString(),
+          denom: price.denom,
+        },
+      ],
+      gasLimit: BigInt(gasLimit.toString()),
+    });
   }
 
   protected _signDoc(doc: SignDoc) {
     const signDoc = SignDoc.fromPartial(doc);
-    const signature = this.signBytes(SignDoc.encode(signDoc).finish());
+    const signature = this.signRawBytes(SignDoc.encode(signDoc).finish());
     const txRaw = TxRaw.fromPartial({
       bodyBytes: doc.bodyBytes,
       authInfoBytes: doc.authInfoBytes,
@@ -170,7 +185,7 @@ export class Signer extends BaseSigner<RpcClient> {
     memo: string = "",
     options?: {
       multiplier?: number;
-      gasPrice?: GasPrice;
+      gasPrice?: Price | string;
     }
   ): Promise<Signed<SignDoc, VisualSignDoc>> {
     if (!this.accountData) {
@@ -251,10 +266,10 @@ export class Signer extends BaseSigner<RpcClient> {
 
   async broadcast(txRaw: TxRaw, checkTx = true, deliverTx = false) {
     const txBytes = TxRaw.encode(txRaw).finish();
-    return this.broadcastBytes(txBytes, checkTx, deliverTx);
+    return this.broadcastRawBytes(txBytes, checkTx, deliverTx);
   }
 
-  async broadcastBytes(raw: Uint8Array, checkTx = true, deliverTx = false) {
+  async broadcastRawBytes(raw: Uint8Array, checkTx = true, deliverTx = false) {
     const mode =
       checkTx && deliverTx
         ? "broadcast_tx_commit"

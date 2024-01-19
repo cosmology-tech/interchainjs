@@ -1,6 +1,11 @@
-import { Auth, defaultHdPath, Secp256k1Auth, toBase64 } from "@cosmonauts/core";
+import { Auth, toBase64 } from "@cosmonauts/core";
 import { StdSignDoc, StdSignDocUtils } from "@cosmonauts/cosmos-amino";
-import { CosmosDefaults, SignDoc, toBech32 } from "@cosmonauts/cosmos-proto";
+import {
+  defaultHdPath,
+  Secp256k1Auth,
+  SignDoc,
+  toBech32,
+} from "@cosmonauts/cosmos-proto";
 
 import {
   AccountData,
@@ -15,9 +20,6 @@ import {
 export class Secp256k1Wallet implements Wallet {
   readonly auths: Auth[] = [];
   readonly bech32addrs: string[] = [];
-
-  protected hash = CosmosDefaults.hash;
-  protected signatureConverter = CosmosDefaults.signatureConverter;
 
   constructor(auths: Auth[], prefix: string = "cosmos") {
     this.auths = auths;
@@ -63,7 +65,7 @@ export class Secp256k1Wallet implements Wallet {
   signDirect(signerAddress: string, signDoc: SignDoc): DirectSignResponse {
     const auth = this.getAuthFromBech32Addr(signerAddress);
     const doc = SignDoc.fromPartial(signDoc);
-    const sigObj = auth.sign(this.hash(SignDoc.encode(doc).finish()));
+    const signature = auth.sign(SignDoc.encode(doc).finish());
     return {
       signed: doc,
       signature: {
@@ -73,15 +75,15 @@ export class Secp256k1Wallet implements Wallet {
             key: auth.key.pubkey,
           },
         },
-        signature: toBase64(this.signatureConverter.toSignature(sigObj)),
+        signature: toBase64(signature),
       },
     };
   }
 
   signAmino(signerAddress: string, signDoc: StdSignDoc): AminoSignResponse {
     const auth = this.getAuthFromBech32Addr(signerAddress);
-    const sigObj = auth.sign(
-      this.hash(StdSignDocUtils.encode(StdSignDocUtils.fromPartial(signDoc)))
+    const signature = auth.sign(
+      StdSignDocUtils.encode(StdSignDocUtils.fromPartial(signDoc))
     );
     return {
       signed: signDoc,
@@ -92,7 +94,7 @@ export class Secp256k1Wallet implements Wallet {
             key: auth.key.pubkey,
           },
         },
-        signature: toBase64(this.signatureConverter.toSignature(sigObj)),
+        signature: toBase64(signature),
       },
     };
   }

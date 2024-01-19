@@ -1,4 +1,4 @@
-import { Secp256k1Auth } from "@cosmonauts/core";
+import { Secp256k1Auth } from "@cosmonauts/cosmos-proto";
 import { toBech32 } from "@cosmonauts/cosmos-proto";
 
 export interface ChainData {

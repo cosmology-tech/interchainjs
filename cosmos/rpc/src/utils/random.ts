@@ -1,20 +1,4 @@
-const numbersWithoutZero = "123456789";
-
-/** generates a random numeric character  */
-function randomNumericChar(): string {
-  return numbersWithoutZero[
-    Math.floor(Math.random() * numbersWithoutZero.length)
-  ];
-}
-
-/**
- * An (absolutely not cryptographically secure) random integer > 0.
- */
+// random number with 12 digits
 export function randomId(): number {
-  return parseInt(
-    Array.from({ length: 12 })
-      .map(() => randomNumericChar())
-      .join(""),
-    10
-  );
+  return Math.floor(Math.random() * (10 ** 12 - 10 ** 11) + 10 ** 11);
 }

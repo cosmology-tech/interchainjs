@@ -44,10 +44,11 @@ describe("Send IBC tokens", () => {
           denom: chain.osmosis.denom,
         },
         timeoutHeight: {
-          revisionHeight: 0n,
-          revisionNumber: 0n,
+          revisionHeight: 13417750n,
+          revisionNumber: 1n,
         },
-        timeoutTimestamp: BigInt(Math.floor(Date.now() / 1000) + 120),
+        // timeoutTimestamp: BigInt(Math.floor(Date.now() / 1000) + 12000000000),
+        timeoutTimestamp: 0n,
         memo: "",
       },
     },
@@ -70,7 +71,7 @@ describe("Send IBC tokens", () => {
     });
 
     // this test may fail because wrong setting of starship. we're handling it.
-    it.skip("should successfully broadcast", async () => {
+    it("should successfully broadcast", async () => {
       const { resp, before, after } = await signAndBroadcast({
         ...signParams,
         signer: directSigner,

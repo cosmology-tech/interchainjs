@@ -1,4 +1,4 @@
-import { Auth, fromBase64, HttpEndpoint, SigObj } from "@cosmonauts/core";
+import { Auth, fromBase64, HttpEndpoint, Price } from "@cosmonauts/core";
 import {
   AminoSigner,
   EncodeObjectUtils,
@@ -9,7 +9,6 @@ import {
 } from "@cosmonauts/cosmos-amino";
 import {
   EncodeObject,
-  GasPrice,
   Secp256k1PubKey,
   SignerData,
 } from "@cosmonauts/cosmos-proto";
@@ -53,7 +52,7 @@ export class CosmjsSigner {
   private readonly _getAccounts: OfflineSigner["getAccounts"];
   private readonly _signAmino?: OfflineAminoSigner["signAmino"];
   private readonly _signDirect?: OfflineDirectSigner["signDirect"];
-  private readonly gasPrice: GasPrice | undefined;
+  private readonly gasPrice?: Price | string;
 
   constructor(
     aminoSigner: AminoSigner,
@@ -88,12 +87,11 @@ export class CosmjsSigner {
     const auth: Auth = {
       key: {
         pubkey,
-        bech32address: address,
       },
       sign: (_data: Uint8Array) => {
         throw new Error("Not implemented.");
       },
-      verify: (_data: Uint8Array, _sigObj: SigObj) => {
+      verify: (_data: Uint8Array, _signature: Uint8Array) => {
         throw new Error("Not implemented.");
       },
     };
@@ -193,7 +191,11 @@ export class CosmjsSigner {
   }
 
   async broadcastTxSync(tx: Uint8Array): Promise<string> {
-    const broadcasted = await this.aminoSigner.broadcastBytes(tx, true, false);
+    const broadcasted = await this.aminoSigner.broadcastRawBytes(
+      tx,
+      true,
+      false
+    );
     if (broadcasted.check_tx?.code) {
       return Promise.reject(
         new BroadcastTxError(

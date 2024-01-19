@@ -1,6 +1,6 @@
-import { Bech32Address, HdPath } from "@cosmonauts/core";
+import { Bech32Address, Price } from "@cosmonauts/core";
 import { AminoConverters, StdSignDoc } from "@cosmonauts/cosmos-amino";
-import { GasPrice, Registry, SignDoc } from "@cosmonauts/cosmos-proto";
+import { Registry, SignDoc } from "@cosmonauts/cosmos-proto";
 import { Event } from "@cosmonauts/cosmos-rpc";
 
 export interface SequenceResponse {
@@ -59,7 +59,7 @@ export interface SignerOptions {
   aminoConverters?: AminoConverters;
   broadcastTimeoutMs?: number;
   broadcastPollIntervalMs?: number;
-  gasPrice?: GasPrice;
+  gasPrice?: Price | string;
 }
 
 export interface MsgData {
@@ -156,7 +156,7 @@ export interface Wallet {
 
 export interface WalletOptions {
   bip39Password?: string;
-  hdPaths?: HdPath[];
+  hdPaths?: string[];
   prefix?: string;
 }
 

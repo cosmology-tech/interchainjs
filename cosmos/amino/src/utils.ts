@@ -16,44 +16,20 @@ import { Any, Coin } from "@cosmonauts/cosmos-rpc";
 
 import { AminoMsg, StdFee, StdSignDoc } from "./types";
 
-function sortedObject(obj: any): any {
-  if (typeof obj !== "object" || obj === null) {
-    return obj;
+function sortKey<T>(target: T): T {
+  if (target === null || typeof target !== "object") {
+    return target;
   }
-  if (Array.isArray(obj)) {
-    return obj.map(sortedObject);
+  if (Array.isArray(target)) {
+    return target.map(sortKey) as T;
   }
-  const sortedKeys = Object.keys(obj).sort();
-  const result: Record<string, any> = {};
-  // NOTE: Use forEach instead of reduce for performance with large objects eg Wasm code
-  sortedKeys.forEach((key) => {
-    result[key] = sortedObject(obj[key]);
-  });
-  return result;
-}
-
-/**
- * Takes a valid JSON document and performs the following escapings in string values:
- *
- * `&` -> `\u0026`
- * `<` -> `\u003c`
- * `>` -> `\u003e`
- *
- * Since those characters do not occur in other places of the JSON document, only
- * string values are affected.
- *
- * If the input is invalid JSON, the behaviour is undefined.
- */
-export function escapeCharacters(input: string): string {
-  // When we migrate to target es2021 or above, we can use replaceAll instead of global patterns.
-  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replaceAll
-  const amp = /&/g;
-  const lt = /</g;
-  const gt = />/g;
-  return input
-    .replace(amp, "\\u0026")
-    .replace(lt, "\\u003c")
-    .replace(gt, "\\u003e");
+  const sortedObj: Record<string, any> = {};
+  Object.keys(target)
+    .sort()
+    .forEach((key) => {
+      sortedObj[key] = sortKey((target as Record<string, any>)[key]);
+    });
+  return sortedObj as T;
 }
 
 export const StdFeeUtils = {
@@ -77,10 +53,14 @@ export const StdFeeUtils = {
 
 export const StdSignDocUtils = {
   fromPartial(obj: StdSignDoc): StdSignDoc {
-    return sortedObject(obj);
+    return sortKey(obj);
   },
   encode(doc: StdSignDoc): Uint8Array {
-    const serialized: string = escapeCharacters(JSON.stringify(doc));
+    const str = JSON.stringify(doc);
+    const serialized = str
+      .replaceAll("&", "\\u0026")
+      .replaceAll("<", "\\u003c")
+      .replaceAll(">", "\\u003e");
     return fromUtf8(serialized);
   },
   toSignDoc(
