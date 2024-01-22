@@ -87,6 +87,10 @@ export interface PageRequestAmino {
    */
   reverse: boolean;
 }
+export interface PageRequestAminoMsg {
+  type: "cosmos-sdk/PageRequest";
+  value: PageRequestAmino;
+}
 /**
  * PageResponse is to be embedded in gRPC response messages where the
  * corresponding request message has used PageRequest.
@@ -134,6 +138,10 @@ export interface PageResponseAmino {
    * was set, its value is undefined otherwise
    */
   total: string;
+}
+export interface PageResponseAminoMsg {
+  type: "cosmos-sdk/PageResponse";
+  value: PageResponseAmino;
 }
 function createBasePageRequest(): PageRequest {
   return {
@@ -237,6 +245,15 @@ export const PageRequest = {
     obj.reverse = message.reverse;
     return obj;
   },
+  fromAminoMsg(object: PageRequestAminoMsg): PageRequest {
+    return PageRequest.fromAmino(object.value);
+  },
+  toAminoMsg(message: PageRequest): PageRequestAminoMsg {
+    return {
+      type: "cosmos-sdk/PageRequest",
+      value: PageRequest.toAmino(message)
+    };
+  },
   fromProtoMsg(message: PageRequestProtoMsg): PageRequest {
     return PageRequest.decode(message.value);
   },
@@ -317,6 +334,15 @@ export const PageResponse = {
     obj.next_key = message.nextKey ? base64FromBytes(message.nextKey) : undefined;
     obj.total = message.total ? message.total.toString() : undefined;
     return obj;
+  },
+  fromAminoMsg(object: PageResponseAminoMsg): PageResponse {
+    return PageResponse.fromAmino(object.value);
+  },
+  toAminoMsg(message: PageResponse): PageResponseAminoMsg {
+    return {
+      type: "cosmos-sdk/PageResponse",
+      value: PageResponse.toAmino(message)
+    };
   },
   fromProtoMsg(message: PageResponseProtoMsg): PageResponse {
     return PageResponse.decode(message.value);

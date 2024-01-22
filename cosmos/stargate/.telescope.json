@@ -25,7 +25,11 @@
         "toAmino": true,
         "fromAmino": true,
         "fromProto": false,
-        "toProto": false
+        "toProto": false,
+        "fromProtoMsg": false,
+        "toProtoMsg": false,
+        "toAminoMsg": true,
+        "fromAminoMsg": true
       },
       "addTypeUrlToDecoders": false,
       "addTypeUrlToObjects": true,
@@ -108,7 +112,7 @@
     "aminoEncoding": {
       "enabled": true,
       "useLegacyInlineEncoding": false,
-      "disableMsgTypes": true,
+      "disableMsgTypes": false,
       "useProtoOptionality": true
     }
   }

@@ -35,7 +35,7 @@ export const seed: Record<string, string> = {
 
 function getAddress(prefix: string, seed: string) {
   const auth = Secp256k1Auth.fromMnemonic(seed);
-  return toBech32(prefix, auth.key.address);
+  return toBech32(prefix, auth.pubKeyHash);
 }
 
 export const address = {

@@ -44,7 +44,8 @@ export async function signAndBroadcast<T>({
   const resp = await signer.signAndBroadcast(
     signerAddress,
     messages.v2 ?? messages,
-    mockFee(chainData)
+    "auto"
+    // mockFee(chainData)
   );
   console.log("resp:", resp);
 

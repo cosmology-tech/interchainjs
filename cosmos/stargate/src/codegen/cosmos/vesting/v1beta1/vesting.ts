@@ -31,6 +31,10 @@ export interface BaseVestingAccountAmino {
   /** Vesting end time, as unix timestamp (in seconds). */
   end_time: string;
 }
+export interface BaseVestingAccountAminoMsg {
+  type: "cosmos-sdk/BaseVestingAccount";
+  value: BaseVestingAccountAmino;
+}
 /**
  * ContinuousVestingAccount implements the VestingAccount interface. It
  * continuously vests by unlocking coins linearly with respect to time.
@@ -53,6 +57,10 @@ export interface ContinuousVestingAccountAmino {
   /** Vesting start time, as unix timestamp (in seconds). */
   start_time: string;
 }
+export interface ContinuousVestingAccountAminoMsg {
+  type: "cosmos-sdk/ContinuousVestingAccount";
+  value: ContinuousVestingAccountAmino;
+}
 /**
  * DelayedVestingAccount implements the VestingAccount interface. It vests all
  * coins after a specific time, but non prior. In other words, it keeps them
@@ -73,6 +81,10 @@ export interface DelayedVestingAccountProtoMsg {
 export interface DelayedVestingAccountAmino {
   base_vesting_account?: BaseVestingAccountAmino;
 }
+export interface DelayedVestingAccountAminoMsg {
+  type: "cosmos-sdk/DelayedVestingAccount";
+  value: DelayedVestingAccountAmino;
+}
 /** Period defines a length of time and amount of coins that will vest. */
 export interface Period {
   /** Period duration in seconds. */
@@ -88,6 +100,10 @@ export interface PeriodAmino {
   /** Period duration in seconds. */
   length: string;
   amount: CoinAmino[];
+}
+export interface PeriodAminoMsg {
+  type: "cosmos-sdk/Period";
+  value: PeriodAmino;
 }
 /**
  * PeriodicVestingAccount implements the VestingAccount interface. It
@@ -110,6 +126,10 @@ export interface PeriodicVestingAccountAmino {
   base_vesting_account?: BaseVestingAccountAmino;
   start_time: string;
   vesting_periods: PeriodAmino[];
+}
+export interface PeriodicVestingAccountAminoMsg {
+  type: "cosmos-sdk/PeriodicVestingAccount";
+  value: PeriodicVestingAccountAmino;
 }
 /**
  * PermanentLockedAccount implements the VestingAccount interface. It does
@@ -134,6 +154,10 @@ export interface PermanentLockedAccountProtoMsg {
  */
 export interface PermanentLockedAccountAmino {
   base_vesting_account?: BaseVestingAccountAmino;
+}
+export interface PermanentLockedAccountAminoMsg {
+  type: "cosmos-sdk/PermanentLockedAccount";
+  value: PermanentLockedAccountAmino;
 }
 function createBaseBaseVestingAccount(): BaseVestingAccount {
   return {
@@ -243,6 +267,15 @@ export const BaseVestingAccount = {
     obj.end_time = message.endTime ? message.endTime.toString() : undefined;
     return obj;
   },
+  fromAminoMsg(object: BaseVestingAccountAminoMsg): BaseVestingAccount {
+    return BaseVestingAccount.fromAmino(object.value);
+  },
+  toAminoMsg(message: BaseVestingAccount): BaseVestingAccountAminoMsg {
+    return {
+      type: "cosmos-sdk/BaseVestingAccount",
+      value: BaseVestingAccount.toAmino(message)
+    };
+  },
   fromProtoMsg(message: BaseVestingAccountProtoMsg): BaseVestingAccount {
     return BaseVestingAccount.decode(message.value);
   },
@@ -324,6 +357,15 @@ export const ContinuousVestingAccount = {
     obj.start_time = message.startTime ? message.startTime.toString() : undefined;
     return obj;
   },
+  fromAminoMsg(object: ContinuousVestingAccountAminoMsg): ContinuousVestingAccount {
+    return ContinuousVestingAccount.fromAmino(object.value);
+  },
+  toAminoMsg(message: ContinuousVestingAccount): ContinuousVestingAccountAminoMsg {
+    return {
+      type: "cosmos-sdk/ContinuousVestingAccount",
+      value: ContinuousVestingAccount.toAmino(message)
+    };
+  },
   fromProtoMsg(message: ContinuousVestingAccountProtoMsg): ContinuousVestingAccount {
     return ContinuousVestingAccount.decode(message.value);
   },
@@ -392,6 +434,15 @@ export const DelayedVestingAccount = {
     const obj: any = {};
     obj.base_vesting_account = message.baseVestingAccount ? BaseVestingAccount.toAmino(message.baseVestingAccount) : undefined;
     return obj;
+  },
+  fromAminoMsg(object: DelayedVestingAccountAminoMsg): DelayedVestingAccount {
+    return DelayedVestingAccount.fromAmino(object.value);
+  },
+  toAminoMsg(message: DelayedVestingAccount): DelayedVestingAccountAminoMsg {
+    return {
+      type: "cosmos-sdk/DelayedVestingAccount",
+      value: DelayedVestingAccount.toAmino(message)
+    };
   },
   fromProtoMsg(message: DelayedVestingAccountProtoMsg): DelayedVestingAccount {
     return DelayedVestingAccount.decode(message.value);
@@ -475,6 +526,15 @@ export const Period = {
       obj.amount = [];
     }
     return obj;
+  },
+  fromAminoMsg(object: PeriodAminoMsg): Period {
+    return Period.fromAmino(object.value);
+  },
+  toAminoMsg(message: Period): PeriodAminoMsg {
+    return {
+      type: "cosmos-sdk/Period",
+      value: Period.toAmino(message)
+    };
   },
   fromProtoMsg(message: PeriodProtoMsg): Period {
     return Period.decode(message.value);
@@ -571,6 +631,15 @@ export const PeriodicVestingAccount = {
     }
     return obj;
   },
+  fromAminoMsg(object: PeriodicVestingAccountAminoMsg): PeriodicVestingAccount {
+    return PeriodicVestingAccount.fromAmino(object.value);
+  },
+  toAminoMsg(message: PeriodicVestingAccount): PeriodicVestingAccountAminoMsg {
+    return {
+      type: "cosmos-sdk/PeriodicVestingAccount",
+      value: PeriodicVestingAccount.toAmino(message)
+    };
+  },
   fromProtoMsg(message: PeriodicVestingAccountProtoMsg): PeriodicVestingAccount {
     return PeriodicVestingAccount.decode(message.value);
   },
@@ -639,6 +708,15 @@ export const PermanentLockedAccount = {
     const obj: any = {};
     obj.base_vesting_account = message.baseVestingAccount ? BaseVestingAccount.toAmino(message.baseVestingAccount) : undefined;
     return obj;
+  },
+  fromAminoMsg(object: PermanentLockedAccountAminoMsg): PermanentLockedAccount {
+    return PermanentLockedAccount.fromAmino(object.value);
+  },
+  toAminoMsg(message: PermanentLockedAccount): PermanentLockedAccountAminoMsg {
+    return {
+      type: "cosmos-sdk/PermanentLockedAccount",
+      value: PermanentLockedAccount.toAmino(message)
+    };
   },
   fromProtoMsg(message: PermanentLockedAccountProtoMsg): PermanentLockedAccount {
     return PermanentLockedAccount.decode(message.value);

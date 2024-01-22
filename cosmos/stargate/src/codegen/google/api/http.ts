@@ -49,6 +49,10 @@ export interface HttpAmino {
    */
   fully_decode_reserved_expansion: boolean;
 }
+export interface HttpAminoMsg {
+  type: "/google.api.Http";
+  value: HttpAmino;
+}
 /**
  * # gRPC Transcoding
  * 
@@ -707,6 +711,10 @@ export interface HttpRuleAmino {
    */
   additional_bindings: HttpRuleAmino[];
 }
+export interface HttpRuleAminoMsg {
+  type: "/google.api.HttpRule";
+  value: HttpRuleAmino;
+}
 /** A custom pattern is used for defining custom HTTP verb. */
 export interface CustomHttpPattern {
   /** The name of this custom HTTP verb. */
@@ -724,6 +732,10 @@ export interface CustomHttpPatternAmino {
   kind: string;
   /** The path matched by this custom verb. */
   path: string;
+}
+export interface CustomHttpPatternAminoMsg {
+  type: "/google.api.CustomHttpPattern";
+  value: CustomHttpPatternAmino;
 }
 function createBaseHttp(): Http {
   return {
@@ -791,6 +803,9 @@ export const Http = {
     }
     obj.fully_decode_reserved_expansion = message.fullyDecodeReservedExpansion;
     return obj;
+  },
+  fromAminoMsg(object: HttpAminoMsg): Http {
+    return Http.fromAmino(object.value);
   },
   fromProtoMsg(message: HttpProtoMsg): Http {
     return Http.decode(message.value);
@@ -969,6 +984,9 @@ export const HttpRule = {
     }
     return obj;
   },
+  fromAminoMsg(object: HttpRuleAminoMsg): HttpRule {
+    return HttpRule.fromAmino(object.value);
+  },
   fromProtoMsg(message: HttpRuleProtoMsg): HttpRule {
     return HttpRule.decode(message.value);
   },
@@ -1047,6 +1065,9 @@ export const CustomHttpPattern = {
     obj.kind = message.kind;
     obj.path = message.path;
     return obj;
+  },
+  fromAminoMsg(object: CustomHttpPatternAminoMsg): CustomHttpPattern {
+    return CustomHttpPattern.fromAmino(object.value);
   },
   fromProtoMsg(message: CustomHttpPatternProtoMsg): CustomHttpPattern {
     return CustomHttpPattern.decode(message.value);

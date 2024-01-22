@@ -78,6 +78,10 @@ export interface InterfaceDescriptorAmino {
    */
   description: string;
 }
+export interface InterfaceDescriptorAminoMsg {
+  type: "/cosmos_proto.InterfaceDescriptor";
+  value: InterfaceDescriptorAmino;
+}
 /**
  * ScalarDescriptor describes an scalar type to be used with
  * the scalar field option and declared by declare_scalar.
@@ -144,6 +148,10 @@ export interface ScalarDescriptorAmino {
    */
   field_type: ScalarType[];
 }
+export interface ScalarDescriptorAminoMsg {
+  type: "/cosmos_proto.ScalarDescriptor";
+  value: ScalarDescriptorAmino;
+}
 function createBaseInterfaceDescriptor(): InterfaceDescriptor {
   return {
     name: "",
@@ -208,6 +216,9 @@ export const InterfaceDescriptor = {
     obj.name = message.name;
     obj.description = message.description;
     return obj;
+  },
+  fromAminoMsg(object: InterfaceDescriptorAminoMsg): InterfaceDescriptor {
+    return InterfaceDescriptor.fromAmino(object.value);
   },
   fromProtoMsg(message: InterfaceDescriptorProtoMsg): InterfaceDescriptor {
     return InterfaceDescriptor.decode(message.value);
@@ -310,6 +321,9 @@ export const ScalarDescriptor = {
       obj.field_type = [];
     }
     return obj;
+  },
+  fromAminoMsg(object: ScalarDescriptorAminoMsg): ScalarDescriptor {
+    return ScalarDescriptor.fromAmino(object.value);
   },
   fromProtoMsg(message: ScalarDescriptorProtoMsg): ScalarDescriptor {
     return ScalarDescriptor.decode(message.value);

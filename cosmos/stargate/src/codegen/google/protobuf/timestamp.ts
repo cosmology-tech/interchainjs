@@ -203,6 +203,10 @@ export interface TimestampProtoMsg {
  * ) to obtain a formatter capable of generating timestamps in this format.
  */
 export type TimestampAmino = string;
+export interface TimestampAminoMsg {
+  type: "/google.protobuf.Timestamp";
+  value: TimestampAmino;
+}
 function createBaseTimestamp(): Timestamp {
   return {
     seconds: BigInt(0),
@@ -257,6 +261,9 @@ export const Timestamp = {
   },
   toAmino(message: Timestamp): TimestampAmino {
     return fromTimestamp(message).toISOString().replace(/\.\d+Z$/, "Z");
+  },
+  fromAminoMsg(object: TimestampAminoMsg): Timestamp {
+    return Timestamp.fromAmino(object.value);
   },
   fromProtoMsg(message: TimestampProtoMsg): Timestamp {
     return Timestamp.decode(message.value);

@@ -37,6 +37,10 @@ async function getRecord(signer: CosmjsSigner) {
 let proposalId: bigint;
 
 describe("Submit a proposal", () => {
+  const content: TextProposal = {
+    title: "Test Proposal",
+    description: "Test text proposal for the @sign testing",
+  };
   const messages: Message<MsgSubmitProposal>[] = [
     {
       typeUrl: "/cosmos.gov.v1beta1.MsgSubmitProposal",
@@ -51,24 +55,38 @@ describe("Submit a proposal", () => {
         content: {
           typeUrl: "/cosmos.gov.v1beta1.TextProposal",
           value: TextProposal.encode(
-            TextProposal.fromPartial({
-              title: "Test Proposal",
-              description: "Test text proposal for the @sign testing",
-            })
+            TextProposal.fromPartial(content)
           ).finish(),
         },
       },
     },
   ];
 
+  const messages2: Message<MsgSubmitProposal>[] = [
+    {
+      typeUrl: "/cosmos.gov.v1beta1.MsgSubmitProposal",
+      value: {
+        proposer: signerAddress,
+        initialDeposit: [
+          {
+            amount: "1000000",
+            denom: chainData.denom,
+          },
+        ],
+        content: content,
+      },
+    },
+  ];
+
   function getProposalId(resp: DeliverTxResponse) {
-    const proposalIdEvent = resp.events.find(
-      (event) => event.type === "submit_proposal"
+    const proposalIdEvent = JSON.parse(resp.rawLog)[0].events.find(
+      (event: any) => event.type === "submit_proposal"
     );
     const proposalId = BigInt(
-      proposalIdEvent.attributes.find((attr) => attr.key === "proposal_id")
+      proposalIdEvent.attributes.find((attr: any) => attr.key === "proposal_id")
         .value
     );
+    console.log("Submitted proposal id:", proposalId);
     return proposalId;
   }
 
@@ -97,6 +115,17 @@ describe("Submit a proposal", () => {
       proposalId = getProposalId(resp);
       expectSuccessfulBroadcast(resp, before, after);
     });
+
+    it("should successfully broadcast with TextProposal object rather than Any", async () => {
+      const { resp, before, after } = await signAndBroadcast({
+        ...signParams,
+        messages: messages2,
+        signer: directSigner,
+        getRecord,
+      });
+      proposalId = getProposalId(resp);
+      expectSuccessfulBroadcast(resp, before, after);
+    });
   });
 
   describe("AMINO signing", () => {
@@ -118,6 +147,17 @@ describe("Submit a proposal", () => {
       proposalId = getProposalId(resp);
       expectSuccessfulBroadcast(resp, before, after);
     });
+
+    it("should successfully broadcast with TextProposal object rather than Any", async () => {
+      const { resp, before, after } = await signAndBroadcast({
+        ...signParams,
+        messages: messages2,
+        signer: aminoSigner,
+        getRecord,
+      });
+      proposalId = getProposalId(resp);
+      expectSuccessfulBroadcast(resp, before, after);
+    });
   });
 });
 
@@ -127,7 +167,7 @@ describe("Vote a proposal", () => {
       {
         typeUrl: "/cosmos.gov.v1beta1.MsgVote",
         value: {
-          proposalId,
+          proposalId: 4n,
           voter: signerAddress,
           option: VoteOption.VOTE_OPTION_YES,
         },

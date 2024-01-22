@@ -19,7 +19,7 @@ const expected = Slip10.derivePath(
 );
 
 describe("Test Key", () => {
-  const privkey = toBase64(auth.key.privkey);
+  const privkey = toBase64(auth.privkey);
 
   it("should match private key", () => {
     expect(privkey).toEqual(toBase64(expected.privkey));

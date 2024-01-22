@@ -37,8 +37,8 @@ export const StdFeeUtils = {
     return {
       amount: fee.amount,
       gas: fee.gasLimit.toString(),
-      granter: fee.granter,
-      payer: fee.payer,
+      granter: fee.granter === "" ? void 0 : fee.granter,
+      payer: fee.payer === "" ? void 0 : fee.payer,
     };
   },
   toFee(fee: StdFee): Fee {
@@ -61,6 +61,7 @@ export const StdSignDocUtils = {
       .replaceAll("&", "\\u0026")
       .replaceAll("<", "\\u003c")
       .replaceAll(">", "\\u003e");
+    console.log("%cutils.ts line:64 serialized", "color: #007acc;", serialized);
     return fromUtf8(serialized);
   },
   toSignDoc(

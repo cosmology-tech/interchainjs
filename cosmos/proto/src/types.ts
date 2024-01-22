@@ -1,5 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Bech32Address, GeneralSigned, Price } from "@cosmonauts/core";
+import {
+  AuthOptions,
+  Bech32Address,
+  GeneralSigned,
+  Price,
+} from "@cosmonauts/core";
 import {
   BroadcastResponse,
   TelescopeGeneratedType,
@@ -7,11 +12,15 @@ import {
 
 import { AuthInfo, TxBody, TxRaw } from "./codegen/cosmos/tx/v1beta1/tx";
 
+export interface CosmosAuthOptions extends AuthOptions {
+  getPrefix?: (chainId: string) => string;
+}
+
 export interface AccountData {
-  accountNumber: bigint;
-  sequence: bigint;
-  chainId: string;
-  address: Bech32Address;
+  accountNumber?: bigint;
+  sequence?: bigint;
+  chainId?: string;
+  address?: Bech32Address;
 }
 
 export interface SignerData {

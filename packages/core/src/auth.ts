@@ -9,8 +9,6 @@ import { AuthOptions } from "./types";
 import { toBigInt } from "./utils/encoding";
 import { getSeedFromMnemonic } from "./utils/mnemonic";
 
-const derTagInteger = 0x02;
-
 export class Secp256k1AuthBase {
   protected root: HDKey;
   protected hdkey: HDKey;

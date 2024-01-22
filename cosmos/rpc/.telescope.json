@@ -25,7 +25,9 @@
         "toAmino": false,
         "fromAmino": false,
         "fromProto": false,
-        "toProto": false
+        "toProto": false,
+        "fromProtoMsg": false,
+        "toProtoMsg": false
       },
       "addTypeUrlToDecoders": false,
       "addTypeUrlToObjects": true,

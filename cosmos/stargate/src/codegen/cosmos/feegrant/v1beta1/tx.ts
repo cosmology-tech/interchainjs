@@ -33,6 +33,10 @@ export interface MsgGrantAllowanceAmino {
   /** allowance can be any of basic, periodic, allowed fee allowance. */
   allowance?: AnyAmino;
 }
+export interface MsgGrantAllowanceAminoMsg {
+  type: "cosmos-sdk/MsgGrantAllowance";
+  value: MsgGrantAllowanceAmino;
+}
 /** MsgGrantAllowanceResponse defines the Msg/GrantAllowanceResponse response type. */
 export interface MsgGrantAllowanceResponse {}
 export interface MsgGrantAllowanceResponseProtoMsg {
@@ -41,6 +45,10 @@ export interface MsgGrantAllowanceResponseProtoMsg {
 }
 /** MsgGrantAllowanceResponse defines the Msg/GrantAllowanceResponse response type. */
 export interface MsgGrantAllowanceResponseAmino {}
+export interface MsgGrantAllowanceResponseAminoMsg {
+  type: "cosmos-sdk/MsgGrantAllowanceResponse";
+  value: MsgGrantAllowanceResponseAmino;
+}
 /** MsgRevokeAllowance removes any existing Allowance from Granter to Grantee. */
 export interface MsgRevokeAllowance {
   /** granter is the address of the user granting an allowance of their funds. */
@@ -59,6 +67,10 @@ export interface MsgRevokeAllowanceAmino {
   /** grantee is the address of the user being granted an allowance of another user's funds. */
   grantee: string;
 }
+export interface MsgRevokeAllowanceAminoMsg {
+  type: "cosmos-sdk/MsgRevokeAllowance";
+  value: MsgRevokeAllowanceAmino;
+}
 /** MsgRevokeAllowanceResponse defines the Msg/RevokeAllowanceResponse response type. */
 export interface MsgRevokeAllowanceResponse {}
 export interface MsgRevokeAllowanceResponseProtoMsg {
@@ -67,6 +79,10 @@ export interface MsgRevokeAllowanceResponseProtoMsg {
 }
 /** MsgRevokeAllowanceResponse defines the Msg/RevokeAllowanceResponse response type. */
 export interface MsgRevokeAllowanceResponseAmino {}
+export interface MsgRevokeAllowanceResponseAminoMsg {
+  type: "cosmos-sdk/MsgRevokeAllowanceResponse";
+  value: MsgRevokeAllowanceResponseAmino;
+}
 function createBaseMsgGrantAllowance(): MsgGrantAllowance {
   return {
     granter: "",
@@ -145,6 +161,15 @@ export const MsgGrantAllowance = {
     obj.allowance = message.allowance ? GlobalDecoderRegistry.toAminoMsg(message.allowance) : undefined;
     return obj;
   },
+  fromAminoMsg(object: MsgGrantAllowanceAminoMsg): MsgGrantAllowance {
+    return MsgGrantAllowance.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgGrantAllowance): MsgGrantAllowanceAminoMsg {
+    return {
+      type: "cosmos-sdk/MsgGrantAllowance",
+      value: MsgGrantAllowance.toAmino(message)
+    };
+  },
   fromProtoMsg(message: MsgGrantAllowanceProtoMsg): MsgGrantAllowance {
     return MsgGrantAllowance.decode(message.value);
   },
@@ -200,6 +225,15 @@ export const MsgGrantAllowanceResponse = {
   toAmino(_: MsgGrantAllowanceResponse): MsgGrantAllowanceResponseAmino {
     const obj: any = {};
     return obj;
+  },
+  fromAminoMsg(object: MsgGrantAllowanceResponseAminoMsg): MsgGrantAllowanceResponse {
+    return MsgGrantAllowanceResponse.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgGrantAllowanceResponse): MsgGrantAllowanceResponseAminoMsg {
+    return {
+      type: "cosmos-sdk/MsgGrantAllowanceResponse",
+      value: MsgGrantAllowanceResponse.toAmino(message)
+    };
   },
   fromProtoMsg(message: MsgGrantAllowanceResponseProtoMsg): MsgGrantAllowanceResponse {
     return MsgGrantAllowanceResponse.decode(message.value);
@@ -282,6 +316,15 @@ export const MsgRevokeAllowance = {
     obj.grantee = message.grantee;
     return obj;
   },
+  fromAminoMsg(object: MsgRevokeAllowanceAminoMsg): MsgRevokeAllowance {
+    return MsgRevokeAllowance.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgRevokeAllowance): MsgRevokeAllowanceAminoMsg {
+    return {
+      type: "cosmos-sdk/MsgRevokeAllowance",
+      value: MsgRevokeAllowance.toAmino(message)
+    };
+  },
   fromProtoMsg(message: MsgRevokeAllowanceProtoMsg): MsgRevokeAllowance {
     return MsgRevokeAllowance.decode(message.value);
   },
@@ -337,6 +380,15 @@ export const MsgRevokeAllowanceResponse = {
   toAmino(_: MsgRevokeAllowanceResponse): MsgRevokeAllowanceResponseAmino {
     const obj: any = {};
     return obj;
+  },
+  fromAminoMsg(object: MsgRevokeAllowanceResponseAminoMsg): MsgRevokeAllowanceResponse {
+    return MsgRevokeAllowanceResponse.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgRevokeAllowanceResponse): MsgRevokeAllowanceResponseAminoMsg {
+    return {
+      type: "cosmos-sdk/MsgRevokeAllowanceResponse",
+      value: MsgRevokeAllowanceResponse.toAmino(message)
+    };
   },
   fromProtoMsg(message: MsgRevokeAllowanceResponseProtoMsg): MsgRevokeAllowanceResponse {
     return MsgRevokeAllowanceResponse.decode(message.value);

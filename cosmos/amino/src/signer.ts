@@ -51,8 +51,8 @@ export class AminoSigner extends Signer {
       gasPrice?: Price | string;
     }
   ): Promise<Signed<StdSignDoc, StdSignDoc>> {
-    if (!this.accountData) {
-      await this.initAccountData();
+    if (!this._accountData) {
+      await this.prepareAccountData();
     }
 
     let _fee: StdFee;
@@ -65,9 +65,9 @@ export class AminoSigner extends Signer {
     }
 
     const doc: StdSignDoc = {
-      chain_id: this.accountData.chainId,
-      account_number: this.accountData.accountNumber.toString(),
-      sequence: this.accountData.sequence.toString(),
+      chain_id: this._accountData.chainId,
+      account_number: this._accountData.accountNumber.toString(),
+      sequence: this._accountData.sequence.toString(),
       fee: _fee,
       msgs: EncodeObjectUtils.toAminoMsg(
         messages,

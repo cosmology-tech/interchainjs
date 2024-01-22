@@ -924,6 +924,10 @@ export interface FileDescriptorSetProtoMsg {
 export interface FileDescriptorSetAmino {
   file: FileDescriptorProtoAmino[];
 }
+export interface FileDescriptorSetAminoMsg {
+  type: "/google.protobuf.FileDescriptorSet";
+  value: FileDescriptorSetAmino;
+}
 /** Describes a complete .proto file. */
 export interface FileDescriptorProto {
   /** file name, relative to root of source tree */
@@ -1002,6 +1006,10 @@ export interface FileDescriptorProtoAmino {
   /** The edition of the proto file. */
   edition: Edition;
 }
+export interface FileDescriptorProtoAminoMsg {
+  type: "/google.protobuf.FileDescriptorProto";
+  value: FileDescriptorProtoAmino;
+}
 /** Describes a message type. */
 export interface DescriptorProto {
   name: string;
@@ -1040,6 +1048,10 @@ export interface DescriptorProtoAmino {
    */
   reserved_name: string[];
 }
+export interface DescriptorProtoAminoMsg {
+  type: "/google.protobuf.DescriptorProto";
+  value: DescriptorProtoAmino;
+}
 export interface DescriptorProto_ExtensionRange {
   /** Inclusive. */
   start: number;
@@ -1057,6 +1069,10 @@ export interface DescriptorProto_ExtensionRangeAmino {
   /** Exclusive. */
   end: number;
   options?: ExtensionRangeOptionsAmino;
+}
+export interface DescriptorProto_ExtensionRangeAminoMsg {
+  type: "/google.protobuf.ExtensionRange";
+  value: DescriptorProto_ExtensionRangeAmino;
 }
 /**
  * Range of reserved tag numbers. Reserved tag numbers may not be used by
@@ -1083,6 +1099,10 @@ export interface DescriptorProto_ReservedRangeAmino {
   start: number;
   /** Exclusive. */
   end: number;
+}
+export interface DescriptorProto_ReservedRangeAminoMsg {
+  type: "/google.protobuf.ReservedRange";
+  value: DescriptorProto_ReservedRangeAmino;
 }
 export interface ExtensionRangeOptions {
   /** The parser stores options it doesn't recognize here. See above. */
@@ -1123,6 +1143,10 @@ export interface ExtensionRangeOptionsAmino {
    * are marked as UNVERIFIED.
    */
   verification: ExtensionRangeOptions_VerificationState;
+}
+export interface ExtensionRangeOptionsAminoMsg {
+  type: "/google.protobuf.ExtensionRangeOptions";
+  value: ExtensionRangeOptionsAmino;
 }
 export interface ExtensionRangeOptions_Declaration {
   /** The extension number declared within the extension range. */
@@ -1179,6 +1203,10 @@ export interface ExtensionRangeOptions_DeclarationAmino {
    * Otherwise the extension must be defined as optional.
    */
   repeated: boolean;
+}
+export interface ExtensionRangeOptions_DeclarationAminoMsg {
+  type: "/google.protobuf.Declaration";
+  value: ExtensionRangeOptions_DeclarationAmino;
 }
 /** Describes a field within a message. */
 export interface FieldDescriptorProto {
@@ -1320,6 +1348,10 @@ export interface FieldDescriptorProtoAmino {
    */
   proto3_optional: boolean;
 }
+export interface FieldDescriptorProtoAminoMsg {
+  type: "/google.protobuf.FieldDescriptorProto";
+  value: FieldDescriptorProtoAmino;
+}
 /** Describes a oneof. */
 export interface OneofDescriptorProto {
   name: string;
@@ -1333,6 +1365,10 @@ export interface OneofDescriptorProtoProtoMsg {
 export interface OneofDescriptorProtoAmino {
   name: string;
   options?: OneofOptionsAmino;
+}
+export interface OneofDescriptorProtoAminoMsg {
+  type: "/google.protobuf.OneofDescriptorProto";
+  value: OneofDescriptorProtoAmino;
 }
 /** Describes an enum type. */
 export interface EnumDescriptorProto {
@@ -1372,6 +1408,10 @@ export interface EnumDescriptorProtoAmino {
    */
   reserved_name: string[];
 }
+export interface EnumDescriptorProtoAminoMsg {
+  type: "/google.protobuf.EnumDescriptorProto";
+  value: EnumDescriptorProtoAmino;
+}
 /**
  * Range of reserved numeric values. Reserved values may not be used by
  * entries in the same enum. Reserved ranges may not overlap.
@@ -1404,6 +1444,10 @@ export interface EnumDescriptorProto_EnumReservedRangeAmino {
   /** Inclusive. */
   end: number;
 }
+export interface EnumDescriptorProto_EnumReservedRangeAminoMsg {
+  type: "/google.protobuf.EnumReservedRange";
+  value: EnumDescriptorProto_EnumReservedRangeAmino;
+}
 /** Describes a value within an enum. */
 export interface EnumValueDescriptorProto {
   name: string;
@@ -1420,6 +1464,10 @@ export interface EnumValueDescriptorProtoAmino {
   number: number;
   options?: EnumValueOptionsAmino;
 }
+export interface EnumValueDescriptorProtoAminoMsg {
+  type: "/google.protobuf.EnumValueDescriptorProto";
+  value: EnumValueDescriptorProtoAmino;
+}
 /** Describes a service. */
 export interface ServiceDescriptorProto {
   name: string;
@@ -1435,6 +1483,10 @@ export interface ServiceDescriptorProtoAmino {
   name: string;
   method: MethodDescriptorProtoAmino[];
   options?: ServiceOptionsAmino;
+}
+export interface ServiceDescriptorProtoAminoMsg {
+  type: "/google.protobuf.ServiceDescriptorProto";
+  value: ServiceDescriptorProtoAmino;
 }
 /** Describes a method of a service. */
 export interface MethodDescriptorProto {
@@ -1469,6 +1521,10 @@ export interface MethodDescriptorProtoAmino {
   client_streaming: boolean;
   /** Identifies if server streams multiple server messages */
   server_streaming: boolean;
+}
+export interface MethodDescriptorProtoAminoMsg {
+  type: "/google.protobuf.MethodDescriptorProto";
+  value: MethodDescriptorProtoAmino;
 }
 export interface FileOptions {
   /**
@@ -1710,6 +1766,10 @@ export interface FileOptionsAmino {
    */
   uninterpreted_option: UninterpretedOptionAmino[];
 }
+export interface FileOptionsAminoMsg {
+  type: "/google.protobuf.FileOptions";
+  value: FileOptionsAmino;
+}
 export interface MessageOptions {
   /**
    * Set true to use the old proto1 MessageSet wire format for extensions.
@@ -1869,6 +1929,10 @@ export interface MessageOptionsAmino {
   features?: FeatureSetAmino;
   /** The parser stores options it doesn't recognize here. See above. */
   uninterpreted_option: UninterpretedOptionAmino[];
+}
+export interface MessageOptionsAminoMsg {
+  type: "/google.protobuf.MessageOptions";
+  value: MessageOptionsAmino;
 }
 export interface FieldOptions {
   /**
@@ -2048,6 +2112,10 @@ export interface FieldOptionsAmino {
   /** The parser stores options it doesn't recognize here. See above. */
   uninterpreted_option: UninterpretedOptionAmino[];
 }
+export interface FieldOptionsAminoMsg {
+  type: "/google.protobuf.FieldOptions";
+  value: FieldOptionsAmino;
+}
 export interface FieldOptions_EditionDefault {
   edition: Edition;
   /** Textproto value. */
@@ -2061,6 +2129,10 @@ export interface FieldOptions_EditionDefaultAmino {
   edition: Edition;
   /** Textproto value. */
   value: string;
+}
+export interface FieldOptions_EditionDefaultAminoMsg {
+  type: "/google.protobuf.EditionDefault";
+  value: FieldOptions_EditionDefaultAmino;
 }
 export interface OneofOptions {
   /** Any features defined in the specific edition. */
@@ -2077,6 +2149,10 @@ export interface OneofOptionsAmino {
   features?: FeatureSetAmino;
   /** The parser stores options it doesn't recognize here. See above. */
   uninterpreted_option: UninterpretedOptionAmino[];
+}
+export interface OneofOptionsAminoMsg {
+  type: "/google.protobuf.OneofOptions";
+  value: OneofOptionsAmino;
 }
 export interface EnumOptions {
   /**
@@ -2138,6 +2214,10 @@ export interface EnumOptionsAmino {
   /** The parser stores options it doesn't recognize here. See above. */
   uninterpreted_option: UninterpretedOptionAmino[];
 }
+export interface EnumOptionsAminoMsg {
+  type: "/google.protobuf.EnumOptions";
+  value: EnumOptionsAmino;
+}
 export interface EnumValueOptions {
   /**
    * Is this enum value deprecated?
@@ -2180,6 +2260,10 @@ export interface EnumValueOptionsAmino {
   /** The parser stores options it doesn't recognize here. See above. */
   uninterpreted_option: UninterpretedOptionAmino[];
 }
+export interface EnumValueOptionsAminoMsg {
+  type: "/google.protobuf.EnumValueOptions";
+  value: EnumValueOptionsAmino;
+}
 export interface ServiceOptions {
   /** Any features defined in the specific edition. */
   features?: FeatureSet;
@@ -2209,6 +2293,10 @@ export interface ServiceOptionsAmino {
   deprecated: boolean;
   /** The parser stores options it doesn't recognize here. See above. */
   uninterpreted_option: UninterpretedOptionAmino[];
+}
+export interface ServiceOptionsAminoMsg {
+  type: "/google.protobuf.ServiceOptions";
+  value: ServiceOptionsAmino;
 }
 export interface MethodOptions {
   /**
@@ -2241,6 +2329,10 @@ export interface MethodOptionsAmino {
   features?: FeatureSetAmino;
   /** The parser stores options it doesn't recognize here. See above. */
   uninterpreted_option: UninterpretedOptionAmino[];
+}
+export interface MethodOptionsAminoMsg {
+  type: "/google.protobuf.MethodOptions";
+  value: MethodOptionsAmino;
 }
 /**
  * A message representing a option the parser does not recognize. This only
@@ -2288,6 +2380,10 @@ export interface UninterpretedOptionAmino {
   string_value: string;
   aggregate_value: string;
 }
+export interface UninterpretedOptionAminoMsg {
+  type: "/google.protobuf.UninterpretedOption";
+  value: UninterpretedOptionAmino;
+}
 /**
  * The name of the uninterpreted option.  Each string represents a segment in
  * a dot-separated name.  is_extension is true iff a segment represents an
@@ -2313,6 +2409,10 @@ export interface UninterpretedOption_NamePartProtoMsg {
 export interface UninterpretedOption_NamePartAmino {
   name_part: string;
   is_extension: boolean;
+}
+export interface UninterpretedOption_NamePartAminoMsg {
+  type: "/google.protobuf.NamePart";
+  value: UninterpretedOption_NamePartAmino;
 }
 /**
  * TODO Enums in C++ gencode (and potentially other languages) are
@@ -2349,6 +2449,10 @@ export interface FeatureSetAmino {
   utf8_validation: FeatureSet_Utf8Validation;
   message_encoding: FeatureSet_MessageEncoding;
   json_format: FeatureSet_JsonFormat;
+}
+export interface FeatureSetAminoMsg {
+  type: "/google.protobuf.FeatureSet";
+  value: FeatureSetAmino;
 }
 /**
  * A compiled specification for the defaults of a set of features.  These
@@ -2392,6 +2496,10 @@ export interface FeatureSetDefaultsAmino {
    */
   maximum_edition: Edition;
 }
+export interface FeatureSetDefaultsAminoMsg {
+  type: "/google.protobuf.FeatureSetDefaults";
+  value: FeatureSetDefaultsAmino;
+}
 /**
  * A map from every known edition with a unique set of defaults to its
  * defaults. Not all editions may be contained here.  For a given edition,
@@ -2415,6 +2523,10 @@ export interface FeatureSetDefaults_FeatureSetEditionDefaultProtoMsg {
 export interface FeatureSetDefaults_FeatureSetEditionDefaultAmino {
   edition: Edition;
   features?: FeatureSetAmino;
+}
+export interface FeatureSetDefaults_FeatureSetEditionDefaultAminoMsg {
+  type: "/google.protobuf.FeatureSetEditionDefault";
+  value: FeatureSetDefaults_FeatureSetEditionDefaultAmino;
 }
 /**
  * Encapsulates information about the original source file from which a
@@ -2523,6 +2635,10 @@ export interface SourceCodeInfoAmino {
    *   be recorded in the future.
    */
   location: SourceCodeInfo_LocationAmino[];
+}
+export interface SourceCodeInfoAminoMsg {
+  type: "/google.protobuf.SourceCodeInfo";
+  value: SourceCodeInfoAmino;
 }
 export interface SourceCodeInfo_Location {
   /**
@@ -2704,6 +2820,10 @@ export interface SourceCodeInfo_LocationAmino {
   trailing_comments: string;
   leading_detached_comments: string[];
 }
+export interface SourceCodeInfo_LocationAminoMsg {
+  type: "/google.protobuf.Location";
+  value: SourceCodeInfo_LocationAmino;
+}
 /**
  * Describes the relationship between generated code and its original source
  * file. A GeneratedCodeInfo message is associated with only one generated
@@ -2731,6 +2851,10 @@ export interface GeneratedCodeInfoAmino {
    * of its generating .proto file.
    */
   annotation: GeneratedCodeInfo_AnnotationAmino[];
+}
+export interface GeneratedCodeInfoAminoMsg {
+  type: "/google.protobuf.GeneratedCodeInfo";
+  value: GeneratedCodeInfoAmino;
 }
 export interface GeneratedCodeInfo_Annotation {
   /**
@@ -2777,6 +2901,10 @@ export interface GeneratedCodeInfo_AnnotationAmino {
    */
   end: number;
   semantic: GeneratedCodeInfo_Annotation_Semantic;
+}
+export interface GeneratedCodeInfo_AnnotationAminoMsg {
+  type: "/google.protobuf.Annotation";
+  value: GeneratedCodeInfo_AnnotationAmino;
 }
 function createBaseFileDescriptorSet(): FileDescriptorSet {
   return {
@@ -2832,6 +2960,9 @@ export const FileDescriptorSet = {
       obj.file = [];
     }
     return obj;
+  },
+  fromAminoMsg(object: FileDescriptorSetAminoMsg): FileDescriptorSet {
+    return FileDescriptorSet.fromAmino(object.value);
   },
   fromProtoMsg(message: FileDescriptorSetProtoMsg): FileDescriptorSet {
     return FileDescriptorSet.decode(message.value);
@@ -3076,6 +3207,9 @@ export const FileDescriptorProto = {
     obj.edition = editionToJSON(message.edition);
     return obj;
   },
+  fromAminoMsg(object: FileDescriptorProtoAminoMsg): FileDescriptorProto {
+    return FileDescriptorProto.fromAmino(object.value);
+  },
   fromProtoMsg(message: FileDescriptorProtoProtoMsg): FileDescriptorProto {
     return FileDescriptorProto.decode(message.value);
   },
@@ -3267,6 +3401,9 @@ export const DescriptorProto = {
     }
     return obj;
   },
+  fromAminoMsg(object: DescriptorProtoAminoMsg): DescriptorProto {
+    return DescriptorProto.fromAmino(object.value);
+  },
   fromProtoMsg(message: DescriptorProtoProtoMsg): DescriptorProto {
     return DescriptorProto.decode(message.value);
   },
@@ -3358,6 +3495,9 @@ export const DescriptorProto_ExtensionRange = {
     obj.options = message.options ? ExtensionRangeOptions.toAmino(message.options) : undefined;
     return obj;
   },
+  fromAminoMsg(object: DescriptorProto_ExtensionRangeAminoMsg): DescriptorProto_ExtensionRange {
+    return DescriptorProto_ExtensionRange.fromAmino(object.value);
+  },
   fromProtoMsg(message: DescriptorProto_ExtensionRangeProtoMsg): DescriptorProto_ExtensionRange {
     return DescriptorProto_ExtensionRange.decode(message.value);
   },
@@ -3436,6 +3576,9 @@ export const DescriptorProto_ReservedRange = {
     obj.start = message.start;
     obj.end = message.end;
     return obj;
+  },
+  fromAminoMsg(object: DescriptorProto_ReservedRangeAminoMsg): DescriptorProto_ReservedRange {
+    return DescriptorProto_ReservedRange.fromAmino(object.value);
   },
   fromProtoMsg(message: DescriptorProto_ReservedRangeProtoMsg): DescriptorProto_ReservedRange {
     return DescriptorProto_ReservedRange.decode(message.value);
@@ -3543,6 +3686,9 @@ export const ExtensionRangeOptions = {
     obj.features = message.features ? FeatureSet.toAmino(message.features) : undefined;
     obj.verification = extensionRangeOptions_VerificationStateToJSON(message.verification);
     return obj;
+  },
+  fromAminoMsg(object: ExtensionRangeOptionsAminoMsg): ExtensionRangeOptions {
+    return ExtensionRangeOptions.fromAmino(object.value);
   },
   fromProtoMsg(message: ExtensionRangeOptionsProtoMsg): ExtensionRangeOptions {
     return ExtensionRangeOptions.decode(message.value);
@@ -3658,6 +3804,9 @@ export const ExtensionRangeOptions_Declaration = {
     obj.reserved = message.reserved;
     obj.repeated = message.repeated;
     return obj;
+  },
+  fromAminoMsg(object: ExtensionRangeOptions_DeclarationAminoMsg): ExtensionRangeOptions_Declaration {
+    return ExtensionRangeOptions_Declaration.fromAmino(object.value);
   },
   fromProtoMsg(message: ExtensionRangeOptions_DeclarationProtoMsg): ExtensionRangeOptions_Declaration {
     return ExtensionRangeOptions_Declaration.decode(message.value);
@@ -3846,6 +3995,9 @@ export const FieldDescriptorProto = {
     obj.proto3_optional = message.proto3Optional;
     return obj;
   },
+  fromAminoMsg(object: FieldDescriptorProtoAminoMsg): FieldDescriptorProto {
+    return FieldDescriptorProto.fromAmino(object.value);
+  },
   fromProtoMsg(message: FieldDescriptorProtoProtoMsg): FieldDescriptorProto {
     return FieldDescriptorProto.decode(message.value);
   },
@@ -3924,6 +4076,9 @@ export const OneofDescriptorProto = {
     obj.name = message.name;
     obj.options = message.options ? OneofOptions.toAmino(message.options) : undefined;
     return obj;
+  },
+  fromAminoMsg(object: OneofDescriptorProtoAminoMsg): OneofDescriptorProto {
+    return OneofDescriptorProto.fromAmino(object.value);
   },
   fromProtoMsg(message: OneofDescriptorProtoProtoMsg): OneofDescriptorProto {
     return OneofDescriptorProto.decode(message.value);
@@ -4046,6 +4201,9 @@ export const EnumDescriptorProto = {
     }
     return obj;
   },
+  fromAminoMsg(object: EnumDescriptorProtoAminoMsg): EnumDescriptorProto {
+    return EnumDescriptorProto.fromAmino(object.value);
+  },
   fromProtoMsg(message: EnumDescriptorProtoProtoMsg): EnumDescriptorProto {
     return EnumDescriptorProto.decode(message.value);
   },
@@ -4124,6 +4282,9 @@ export const EnumDescriptorProto_EnumReservedRange = {
     obj.start = message.start;
     obj.end = message.end;
     return obj;
+  },
+  fromAminoMsg(object: EnumDescriptorProto_EnumReservedRangeAminoMsg): EnumDescriptorProto_EnumReservedRange {
+    return EnumDescriptorProto_EnumReservedRange.fromAmino(object.value);
   },
   fromProtoMsg(message: EnumDescriptorProto_EnumReservedRangeProtoMsg): EnumDescriptorProto_EnumReservedRange {
     return EnumDescriptorProto_EnumReservedRange.decode(message.value);
@@ -4215,6 +4376,9 @@ export const EnumValueDescriptorProto = {
     obj.number = message.number;
     obj.options = message.options ? EnumValueOptions.toAmino(message.options) : undefined;
     return obj;
+  },
+  fromAminoMsg(object: EnumValueDescriptorProtoAminoMsg): EnumValueDescriptorProto {
+    return EnumValueDescriptorProto.fromAmino(object.value);
   },
   fromProtoMsg(message: EnumValueDescriptorProtoProtoMsg): EnumValueDescriptorProto {
     return EnumValueDescriptorProto.decode(message.value);
@@ -4308,6 +4472,9 @@ export const ServiceDescriptorProto = {
     }
     obj.options = message.options ? ServiceOptions.toAmino(message.options) : undefined;
     return obj;
+  },
+  fromAminoMsg(object: ServiceDescriptorProtoAminoMsg): ServiceDescriptorProto {
+    return ServiceDescriptorProto.fromAmino(object.value);
   },
   fromProtoMsg(message: ServiceDescriptorProtoProtoMsg): ServiceDescriptorProto {
     return ServiceDescriptorProto.decode(message.value);
@@ -4435,6 +4602,9 @@ export const MethodDescriptorProto = {
     obj.client_streaming = message.clientStreaming;
     obj.server_streaming = message.serverStreaming;
     return obj;
+  },
+  fromAminoMsg(object: MethodDescriptorProtoAminoMsg): MethodDescriptorProto {
+    return MethodDescriptorProto.fromAmino(object.value);
   },
   fromProtoMsg(message: MethodDescriptorProtoProtoMsg): MethodDescriptorProto {
     return MethodDescriptorProto.decode(message.value);
@@ -4745,6 +4915,9 @@ export const FileOptions = {
     }
     return obj;
   },
+  fromAminoMsg(object: FileOptionsAminoMsg): FileOptions {
+    return FileOptions.fromAmino(object.value);
+  },
   fromProtoMsg(message: FileOptionsProtoMsg): FileOptions {
     return FileOptions.decode(message.value);
   },
@@ -4885,6 +5058,9 @@ export const MessageOptions = {
       obj.uninterpreted_option = [];
     }
     return obj;
+  },
+  fromAminoMsg(object: MessageOptionsAminoMsg): MessageOptions {
+    return MessageOptions.fromAmino(object.value);
   },
   fromProtoMsg(message: MessageOptionsProtoMsg): MessageOptions {
     return MessageOptions.decode(message.value);
@@ -5112,6 +5288,9 @@ export const FieldOptions = {
     }
     return obj;
   },
+  fromAminoMsg(object: FieldOptionsAminoMsg): FieldOptions {
+    return FieldOptions.fromAmino(object.value);
+  },
   fromProtoMsg(message: FieldOptionsProtoMsg): FieldOptions {
     return FieldOptions.decode(message.value);
   },
@@ -5190,6 +5369,9 @@ export const FieldOptions_EditionDefault = {
     obj.edition = editionToJSON(message.edition);
     obj.value = message.value;
     return obj;
+  },
+  fromAminoMsg(object: FieldOptions_EditionDefaultAminoMsg): FieldOptions_EditionDefault {
+    return FieldOptions_EditionDefault.fromAmino(object.value);
   },
   fromProtoMsg(message: FieldOptions_EditionDefaultProtoMsg): FieldOptions_EditionDefault {
     return FieldOptions_EditionDefault.decode(message.value);
@@ -5271,6 +5453,9 @@ export const OneofOptions = {
       obj.uninterpreted_option = [];
     }
     return obj;
+  },
+  fromAminoMsg(object: OneofOptionsAminoMsg): OneofOptions {
+    return OneofOptions.fromAmino(object.value);
   },
   fromProtoMsg(message: OneofOptionsProtoMsg): OneofOptions {
     return OneofOptions.decode(message.value);
@@ -5389,6 +5574,9 @@ export const EnumOptions = {
     }
     return obj;
   },
+  fromAminoMsg(object: EnumOptionsAminoMsg): EnumOptions {
+    return EnumOptions.fromAmino(object.value);
+  },
   fromProtoMsg(message: EnumOptionsProtoMsg): EnumOptions {
     return EnumOptions.decode(message.value);
   },
@@ -5494,6 +5682,9 @@ export const EnumValueOptions = {
     }
     return obj;
   },
+  fromAminoMsg(object: EnumValueOptionsAminoMsg): EnumValueOptions {
+    return EnumValueOptions.fromAmino(object.value);
+  },
   fromProtoMsg(message: EnumValueOptionsProtoMsg): EnumValueOptions {
     return EnumValueOptions.decode(message.value);
   },
@@ -5586,6 +5777,9 @@ export const ServiceOptions = {
       obj.uninterpreted_option = [];
     }
     return obj;
+  },
+  fromAminoMsg(object: ServiceOptionsAminoMsg): ServiceOptions {
+    return ServiceOptions.fromAmino(object.value);
   },
   fromProtoMsg(message: ServiceOptionsProtoMsg): ServiceOptions {
     return ServiceOptions.decode(message.value);
@@ -5691,6 +5885,9 @@ export const MethodOptions = {
       obj.uninterpreted_option = [];
     }
     return obj;
+  },
+  fromAminoMsg(object: MethodOptionsAminoMsg): MethodOptions {
+    return MethodOptions.fromAmino(object.value);
   },
   fromProtoMsg(message: MethodOptionsProtoMsg): MethodOptions {
     return MethodOptions.decode(message.value);
@@ -5833,6 +6030,9 @@ export const UninterpretedOption = {
     obj.aggregate_value = message.aggregateValue;
     return obj;
   },
+  fromAminoMsg(object: UninterpretedOptionAminoMsg): UninterpretedOption {
+    return UninterpretedOption.fromAmino(object.value);
+  },
   fromProtoMsg(message: UninterpretedOptionProtoMsg): UninterpretedOption {
     return UninterpretedOption.decode(message.value);
   },
@@ -5911,6 +6111,9 @@ export const UninterpretedOption_NamePart = {
     obj.name_part = message.namePart;
     obj.is_extension = message.isExtension;
     return obj;
+  },
+  fromAminoMsg(object: UninterpretedOption_NamePartAminoMsg): UninterpretedOption_NamePart {
+    return UninterpretedOption_NamePart.fromAmino(object.value);
   },
   fromProtoMsg(message: UninterpretedOption_NamePartProtoMsg): UninterpretedOption_NamePart {
     return UninterpretedOption_NamePart.decode(message.value);
@@ -6039,6 +6242,9 @@ export const FeatureSet = {
     obj.json_format = featureSet_JsonFormatToJSON(message.jsonFormat);
     return obj;
   },
+  fromAminoMsg(object: FeatureSetAminoMsg): FeatureSet {
+    return FeatureSet.fromAmino(object.value);
+  },
   fromProtoMsg(message: FeatureSetProtoMsg): FeatureSet {
     return FeatureSet.decode(message.value);
   },
@@ -6132,6 +6338,9 @@ export const FeatureSetDefaults = {
     obj.maximum_edition = editionToJSON(message.maximumEdition);
     return obj;
   },
+  fromAminoMsg(object: FeatureSetDefaultsAminoMsg): FeatureSetDefaults {
+    return FeatureSetDefaults.fromAmino(object.value);
+  },
   fromProtoMsg(message: FeatureSetDefaultsProtoMsg): FeatureSetDefaults {
     return FeatureSetDefaults.decode(message.value);
   },
@@ -6211,6 +6420,9 @@ export const FeatureSetDefaults_FeatureSetEditionDefault = {
     obj.features = message.features ? FeatureSet.toAmino(message.features) : undefined;
     return obj;
   },
+  fromAminoMsg(object: FeatureSetDefaults_FeatureSetEditionDefaultAminoMsg): FeatureSetDefaults_FeatureSetEditionDefault {
+    return FeatureSetDefaults_FeatureSetEditionDefault.fromAmino(object.value);
+  },
   fromProtoMsg(message: FeatureSetDefaults_FeatureSetEditionDefaultProtoMsg): FeatureSetDefaults_FeatureSetEditionDefault {
     return FeatureSetDefaults_FeatureSetEditionDefault.decode(message.value);
   },
@@ -6279,6 +6491,9 @@ export const SourceCodeInfo = {
       obj.location = [];
     }
     return obj;
+  },
+  fromAminoMsg(object: SourceCodeInfoAminoMsg): SourceCodeInfo {
+    return SourceCodeInfo.fromAmino(object.value);
   },
   fromProtoMsg(message: SourceCodeInfoProtoMsg): SourceCodeInfo {
     return SourceCodeInfo.decode(message.value);
@@ -6419,6 +6634,9 @@ export const SourceCodeInfo_Location = {
     }
     return obj;
   },
+  fromAminoMsg(object: SourceCodeInfo_LocationAminoMsg): SourceCodeInfo_Location {
+    return SourceCodeInfo_Location.fromAmino(object.value);
+  },
   fromProtoMsg(message: SourceCodeInfo_LocationProtoMsg): SourceCodeInfo_Location {
     return SourceCodeInfo_Location.decode(message.value);
   },
@@ -6487,6 +6705,9 @@ export const GeneratedCodeInfo = {
       obj.annotation = [];
     }
     return obj;
+  },
+  fromAminoMsg(object: GeneratedCodeInfoAminoMsg): GeneratedCodeInfo {
+    return GeneratedCodeInfo.fromAmino(object.value);
   },
   fromProtoMsg(message: GeneratedCodeInfoProtoMsg): GeneratedCodeInfo {
     return GeneratedCodeInfo.decode(message.value);
@@ -6613,6 +6834,9 @@ export const GeneratedCodeInfo_Annotation = {
     obj.end = message.end;
     obj.semantic = generatedCodeInfo_Annotation_SemanticToJSON(message.semantic);
     return obj;
+  },
+  fromAminoMsg(object: GeneratedCodeInfo_AnnotationAminoMsg): GeneratedCodeInfo_Annotation {
+    return GeneratedCodeInfo_Annotation.fromAmino(object.value);
   },
   fromProtoMsg(message: GeneratedCodeInfo_AnnotationProtoMsg): GeneratedCodeInfo_Annotation {
     return GeneratedCodeInfo_Annotation.decode(message.value);

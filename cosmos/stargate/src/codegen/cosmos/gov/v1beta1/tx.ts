@@ -38,6 +38,10 @@ export interface MsgSubmitProposalAmino {
   /** proposer is the account address of the proposer. */
   proposer: string;
 }
+export interface MsgSubmitProposalAminoMsg {
+  type: "cosmos-sdk/MsgSubmitProposal";
+  value: MsgSubmitProposalAmino;
+}
 /** MsgSubmitProposalResponse defines the Msg/SubmitProposal response type. */
 export interface MsgSubmitProposalResponse {
   /** proposal_id defines the unique id of the proposal. */
@@ -51,6 +55,10 @@ export interface MsgSubmitProposalResponseProtoMsg {
 export interface MsgSubmitProposalResponseAmino {
   /** proposal_id defines the unique id of the proposal. */
   proposal_id: string;
+}
+export interface MsgSubmitProposalResponseAminoMsg {
+  type: "cosmos-sdk/MsgSubmitProposalResponse";
+  value: MsgSubmitProposalResponseAmino;
 }
 /** MsgVote defines a message to cast a vote. */
 export interface MsgVote {
@@ -74,6 +82,10 @@ export interface MsgVoteAmino {
   /** option defines the vote option. */
   option: VoteOption;
 }
+export interface MsgVoteAminoMsg {
+  type: "cosmos-sdk/MsgVote";
+  value: MsgVoteAmino;
+}
 /** MsgVoteResponse defines the Msg/Vote response type. */
 export interface MsgVoteResponse {}
 export interface MsgVoteResponseProtoMsg {
@@ -82,6 +94,10 @@ export interface MsgVoteResponseProtoMsg {
 }
 /** MsgVoteResponse defines the Msg/Vote response type. */
 export interface MsgVoteResponseAmino {}
+export interface MsgVoteResponseAminoMsg {
+  type: "cosmos-sdk/MsgVoteResponse";
+  value: MsgVoteResponseAmino;
+}
 /**
  * MsgVoteWeighted defines a message to cast a vote.
  * 
@@ -112,6 +128,10 @@ export interface MsgVoteWeightedAmino {
   /** options defines the weighted vote options. */
   options: WeightedVoteOptionAmino[];
 }
+export interface MsgVoteWeightedAminoMsg {
+  type: "cosmos-sdk/MsgVoteWeighted";
+  value: MsgVoteWeightedAmino;
+}
 /**
  * MsgVoteWeightedResponse defines the Msg/VoteWeighted response type.
  * 
@@ -128,6 +148,10 @@ export interface MsgVoteWeightedResponseProtoMsg {
  * Since: cosmos-sdk 0.43
  */
 export interface MsgVoteWeightedResponseAmino {}
+export interface MsgVoteWeightedResponseAminoMsg {
+  type: "cosmos-sdk/MsgVoteWeightedResponse";
+  value: MsgVoteWeightedResponseAmino;
+}
 /** MsgDeposit defines a message to submit a deposit to an existing proposal. */
 export interface MsgDeposit {
   /** proposal_id defines the unique id of the proposal. */
@@ -150,6 +174,10 @@ export interface MsgDepositAmino {
   /** amount to be deposited by depositor. */
   amount: CoinAmino[];
 }
+export interface MsgDepositAminoMsg {
+  type: "cosmos-sdk/MsgDeposit";
+  value: MsgDepositAmino;
+}
 /** MsgDepositResponse defines the Msg/Deposit response type. */
 export interface MsgDepositResponse {}
 export interface MsgDepositResponseProtoMsg {
@@ -158,6 +186,10 @@ export interface MsgDepositResponseProtoMsg {
 }
 /** MsgDepositResponse defines the Msg/Deposit response type. */
 export interface MsgDepositResponseAmino {}
+export interface MsgDepositResponseAminoMsg {
+  type: "cosmos-sdk/MsgDepositResponse";
+  value: MsgDepositResponseAmino;
+}
 function createBaseMsgSubmitProposal(): MsgSubmitProposal {
   return {
     content: undefined,
@@ -238,6 +270,15 @@ export const MsgSubmitProposal = {
     obj.proposer = message.proposer;
     return obj;
   },
+  fromAminoMsg(object: MsgSubmitProposalAminoMsg): MsgSubmitProposal {
+    return MsgSubmitProposal.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgSubmitProposal): MsgSubmitProposalAminoMsg {
+    return {
+      type: "cosmos-sdk/MsgSubmitProposal",
+      value: MsgSubmitProposal.toAmino(message)
+    };
+  },
   fromProtoMsg(message: MsgSubmitProposalProtoMsg): MsgSubmitProposal {
     return MsgSubmitProposal.decode(message.value);
   },
@@ -306,6 +347,15 @@ export const MsgSubmitProposalResponse = {
     const obj: any = {};
     obj.proposal_id = message.proposalId ? message.proposalId.toString() : "0";
     return obj;
+  },
+  fromAminoMsg(object: MsgSubmitProposalResponseAminoMsg): MsgSubmitProposalResponse {
+    return MsgSubmitProposalResponse.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgSubmitProposalResponse): MsgSubmitProposalResponseAminoMsg {
+    return {
+      type: "cosmos-sdk/MsgSubmitProposalResponse",
+      value: MsgSubmitProposalResponse.toAmino(message)
+    };
   },
   fromProtoMsg(message: MsgSubmitProposalResponseProtoMsg): MsgSubmitProposalResponse {
     return MsgSubmitProposalResponse.decode(message.value);
@@ -400,6 +450,15 @@ export const MsgVote = {
     obj.option = voteOptionToJSON(message.option);
     return obj;
   },
+  fromAminoMsg(object: MsgVoteAminoMsg): MsgVote {
+    return MsgVote.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgVote): MsgVoteAminoMsg {
+    return {
+      type: "cosmos-sdk/MsgVote",
+      value: MsgVote.toAmino(message)
+    };
+  },
   fromProtoMsg(message: MsgVoteProtoMsg): MsgVote {
     return MsgVote.decode(message.value);
   },
@@ -455,6 +514,15 @@ export const MsgVoteResponse = {
   toAmino(_: MsgVoteResponse): MsgVoteResponseAmino {
     const obj: any = {};
     return obj;
+  },
+  fromAminoMsg(object: MsgVoteResponseAminoMsg): MsgVoteResponse {
+    return MsgVoteResponse.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgVoteResponse): MsgVoteResponseAminoMsg {
+    return {
+      type: "cosmos-sdk/MsgVoteResponse",
+      value: MsgVoteResponse.toAmino(message)
+    };
   },
   fromProtoMsg(message: MsgVoteResponseProtoMsg): MsgVoteResponse {
     return MsgVoteResponse.decode(message.value);
@@ -551,6 +619,15 @@ export const MsgVoteWeighted = {
     }
     return obj;
   },
+  fromAminoMsg(object: MsgVoteWeightedAminoMsg): MsgVoteWeighted {
+    return MsgVoteWeighted.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgVoteWeighted): MsgVoteWeightedAminoMsg {
+    return {
+      type: "cosmos-sdk/MsgVoteWeighted",
+      value: MsgVoteWeighted.toAmino(message)
+    };
+  },
   fromProtoMsg(message: MsgVoteWeightedProtoMsg): MsgVoteWeighted {
     return MsgVoteWeighted.decode(message.value);
   },
@@ -606,6 +683,15 @@ export const MsgVoteWeightedResponse = {
   toAmino(_: MsgVoteWeightedResponse): MsgVoteWeightedResponseAmino {
     const obj: any = {};
     return obj;
+  },
+  fromAminoMsg(object: MsgVoteWeightedResponseAminoMsg): MsgVoteWeightedResponse {
+    return MsgVoteWeightedResponse.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgVoteWeightedResponse): MsgVoteWeightedResponseAminoMsg {
+    return {
+      type: "cosmos-sdk/MsgVoteWeightedResponse",
+      value: MsgVoteWeightedResponse.toAmino(message)
+    };
   },
   fromProtoMsg(message: MsgVoteWeightedResponseProtoMsg): MsgVoteWeightedResponse {
     return MsgVoteWeightedResponse.decode(message.value);
@@ -702,6 +788,15 @@ export const MsgDeposit = {
     }
     return obj;
   },
+  fromAminoMsg(object: MsgDepositAminoMsg): MsgDeposit {
+    return MsgDeposit.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgDeposit): MsgDepositAminoMsg {
+    return {
+      type: "cosmos-sdk/MsgDeposit",
+      value: MsgDeposit.toAmino(message)
+    };
+  },
   fromProtoMsg(message: MsgDepositProtoMsg): MsgDeposit {
     return MsgDeposit.decode(message.value);
   },
@@ -757,6 +852,15 @@ export const MsgDepositResponse = {
   toAmino(_: MsgDepositResponse): MsgDepositResponseAmino {
     const obj: any = {};
     return obj;
+  },
+  fromAminoMsg(object: MsgDepositResponseAminoMsg): MsgDepositResponse {
+    return MsgDepositResponse.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgDepositResponse): MsgDepositResponseAminoMsg {
+    return {
+      type: "cosmos-sdk/MsgDepositResponse",
+      value: MsgDepositResponse.toAmino(message)
+    };
   },
   fromProtoMsg(message: MsgDepositResponseProtoMsg): MsgDepositResponse {
     return MsgDepositResponse.decode(message.value);

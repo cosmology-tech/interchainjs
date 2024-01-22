@@ -1219,6 +1219,18 @@
     case "1.6.3"
     dotty "0.1.2"
 
+"@cosmology/ast@^1.4.5":
+  version "1.4.5"
+  resolved "https://registry.npmjs.org/@cosmology/ast/-/ast-1.4.5.tgz#9ba6230a8179a12c008afca2952d5b5c3c46de8c"
+  integrity sha512-ZD1CjZXOGFH1I8+c+g9ec90vtVdL3ZLgVnr3sMILBP5hPx5rr0NBXzqE8ReYQHWWvE30EsC03NstTsjbHs0FmQ==
+  dependencies:
+    "@babel/parser" "^7.23.6"
+    "@babel/types" "7.23.6"
+    "@cosmology/types" "^1.4.2"
+    "@cosmology/utils" "^1.4.2"
+    case "1.6.3"
+    dotty "0.1.2"
+
 "@cosmology/proto-parser@^1.4.1":
   version "1.4.1"
   resolved "https://registry.npmjs.org/@cosmology/proto-parser/-/proto-parser-1.4.1.tgz#04442a52515ff28e014aad08baaf76a96b6dc248"
@@ -1227,6 +1239,19 @@
     "@cosmology/protobufjs" "6.11.6"
     "@cosmology/types" "^1.4.0"
     "@cosmology/utils" "^1.4.0"
+    dotty "0.1.2"
+    glob "8.0.3"
+    minimatch "5.1.0"
+    mkdirp "3.0.0"
+
+"@cosmology/proto-parser@^1.4.4":
+  version "1.4.4"
+  resolved "https://registry.npmjs.org/@cosmology/proto-parser/-/proto-parser-1.4.4.tgz#bb5c9515513cf9a1e70298c3861e049b70d15ee3"
+  integrity sha512-VFDHrg6mQj0dKLcQOtU1icYoLN28BAxjwig7fpJ8ud2fZleLeOm09rlrcT9ZwwBBmL6Gsv+bhB1gK8q2EfDcTw==
+  dependencies:
+    "@cosmology/protobufjs" "6.11.6"
+    "@cosmology/types" "^1.4.2"
+    "@cosmology/utils" "^1.4.2"
     dotty "0.1.2"
     glob "8.0.3"
     minimatch "5.1.0"
@@ -1281,10 +1306,47 @@
     rimraf "5.0.0"
     shelljs "0.8.5"
 
+"@cosmology/telescope@^1.4.9":
+  version "1.4.9"
+  resolved "https://registry.npmjs.org/@cosmology/telescope/-/telescope-1.4.9.tgz#db4a91c4463dea2bcd440cf579feb4374e19e533"
+  integrity sha512-TITORH3Gkk1tXOcY2w4KQs3JgAmb18QycTN8mQnyZ23x0seR/ZMzmp+bm6Wu0ku8t9SZhwnHNtYC4aqfhuccqw==
+  dependencies:
+    "@babel/generator" "^7.23.6"
+    "@babel/parser" "^7.23.6"
+    "@babel/traverse" "7.23.6"
+    "@babel/types" "7.23.6"
+    "@cosmology/ast" "^1.4.5"
+    "@cosmology/proto-parser" "^1.4.4"
+    "@cosmology/types" "^1.4.2"
+    "@cosmology/utils" "^1.4.2"
+    "@cosmwasm/ts-codegen" "0.34.0"
+    "@types/parse-package-name" "0.1.0"
+    case "1.6.3"
+    dargs "7.0.0"
+    deepmerge "4.3.1"
+    dotty "0.1.2"
+    fuzzy "0.1.3"
+    glob "8.0.3"
+    inquirerer "0.1.3"
+    long "^5.2.1"
+    minimatch "5.1.0"
+    minimist "1.2.8"
+    mkdirp "3.0.0"
+    parse-package-name "1.0.0"
+    rimraf "5.0.0"
+    shelljs "0.8.5"
+
 "@cosmology/types@^1.4.0":
   version "1.4.0"
   resolved "https://registry.npmjs.org/@cosmology/types/-/types-1.4.0.tgz#fbc46b39f11c2cf0fc110d161d40b6c9e02bc69b"
   integrity sha512-DQx63AKl7EX11IFlDUfMX5XmRnz7yqytLXzx3udaQnZln3GpowsAMZEj5f1IoHwfDpOyI5XLPkDAX3dYirjgSQ==
+  dependencies:
+    case "1.6.3"
+
+"@cosmology/types@^1.4.2":
+  version "1.4.2"
+  resolved "https://registry.npmjs.org/@cosmology/types/-/types-1.4.2.tgz#e5771f139c8e44735968ed87583e832e410696b9"
+  integrity sha512-GkzC1eJFJWnQmS4Vkje53qBFledKNB3YYEQnV/sJ28sS9Ud020AvLuXkG8eqRsmdpDNxGI7F+hzWQaaahDk1Ng==
   dependencies:
     case "1.6.3"
 
@@ -1294,6 +1356,14 @@
   integrity sha512-Wh8TSAhJ8u+v4JVK//4T9pTE9bpv6gOyNpwPXS81CV571+sBCUbDyQPLOgovHxy/EqO5NIlC9CNfU5ip54sZ1Q==
   dependencies:
     "@cosmology/types" "^1.4.0"
+    dotty "0.1.2"
+
+"@cosmology/utils@^1.4.2":
+  version "1.4.2"
+  resolved "https://registry.npmjs.org/@cosmology/utils/-/utils-1.4.2.tgz#a66a9a9a0c1bc3ddd8b21be6beae864bd4603610"
+  integrity sha512-GWACbn2EjHvqmAOxm9MMFdfoweznB6b3kN6Agoj+bu/3EF35roIhEqUF7ku0LhyQuoFU4euxe0YwkkXgWUvCDA==
+  dependencies:
+    "@cosmology/types" "^1.4.2"
     dotty "0.1.2"
 
 "@cosmwasm/ts-codegen@0.34.0":
@@ -2698,13 +2768,6 @@
   dependencies:
     "@babel/types" "^7.20.7"
 
-"@types/bn.js@*", "@types/bn.js@^5.1.0":
-  version "5.1.5"
-  resolved "https://registry.npmjs.org/@types/bn.js/-/bn.js-5.1.5.tgz#2e0dacdcce2c0f16b905d20ff87aedbc6f7b4bf0"
-  integrity sha512-V46N0zwKRF5Q00AZ6hWtN0T8gGmDUaUzLWQvHFo5yThtVwK/VCenFY3wXVbOvNfajEpsTfQM4IN9k/d6gUVX3A==
-  dependencies:
-    "@types/node" "*"
-
 "@types/bn.js@5.1.1":
   version "5.1.1"
   resolved "https://registry.npmjs.org/@types/bn.js/-/bn.js-5.1.1.tgz#b51e1b55920a4ca26e9285ff79936bbdec910682"
@@ -2712,12 +2775,12 @@
   dependencies:
     "@types/node" "*"
 
-"@types/elliptic@^6.4.14":
-  version "6.4.18"
-  resolved "https://registry.npmjs.org/@types/elliptic/-/elliptic-6.4.18.tgz#bc96e26e1ccccbabe8b6f0e409c85898635482e1"
-  integrity sha512-UseG6H5vjRiNpQvrhy4VF/JXdA3V/Fp5amvveaL+fs28BZ6xIKJBPnUPRlEaZpysD9MbpfaLi8lbl7PGUAkpWw==
+"@types/bn.js@^5.1.0":
+  version "5.1.5"
+  resolved "https://registry.npmjs.org/@types/bn.js/-/bn.js-5.1.5.tgz#2e0dacdcce2c0f16b905d20ff87aedbc6f7b4bf0"
+  integrity sha512-V46N0zwKRF5Q00AZ6hWtN0T8gGmDUaUzLWQvHFo5yThtVwK/VCenFY3wXVbOvNfajEpsTfQM4IN9k/d6gUVX3A==
   dependencies:
-    "@types/bn.js" "*"
+    "@types/node" "*"
 
 "@types/glob@^7.1.3":
   version "7.2.0"

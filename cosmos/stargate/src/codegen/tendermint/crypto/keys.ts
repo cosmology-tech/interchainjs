@@ -15,6 +15,10 @@ export interface PublicKeyAmino {
   ed25519?: string;
   secp256k1?: string;
 }
+export interface PublicKeyAminoMsg {
+  type: "/tendermint.crypto.PublicKey";
+  value: PublicKeyAmino;
+}
 function createBasePublicKey(): PublicKey {
   return {
     ed25519: undefined,
@@ -79,6 +83,9 @@ export const PublicKey = {
     obj.ed25519 = message.ed25519 ? base64FromBytes(message.ed25519) : undefined;
     obj.secp256k1 = message.secp256k1 ? base64FromBytes(message.secp256k1) : undefined;
     return obj;
+  },
+  fromAminoMsg(object: PublicKeyAminoMsg): PublicKey {
+    return PublicKey.fromAmino(object.value);
   },
   fromProtoMsg(message: PublicKeyProtoMsg): PublicKey {
     return PublicKey.decode(message.value);

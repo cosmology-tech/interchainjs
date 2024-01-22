@@ -94,6 +94,7 @@ export class CosmjsSigner {
       verify: (_data: Uint8Array, _signature: Uint8Array) => {
         throw new Error("Not implemented.");
       },
+      getAddress: (_chainId: string) => address,
     };
     this.aminoSigner.by(auth);
   }

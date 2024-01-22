@@ -23,6 +23,10 @@ export interface AppAmino {
   protocol: string;
   software: string;
 }
+export interface AppAminoMsg {
+  type: "/tendermint.version.App";
+  value: AppAmino;
+}
 /**
  * Consensus captures the consensus rules for processing a block in the blockchain,
  * including all blockchain data structures and the rules of the application's
@@ -44,6 +48,10 @@ export interface ConsensusProtoMsg {
 export interface ConsensusAmino {
   block: string;
   app: string;
+}
+export interface ConsensusAminoMsg {
+  type: "/tendermint.version.Consensus";
+  value: ConsensusAmino;
 }
 function createBaseApp(): App {
   return {
@@ -109,6 +117,9 @@ export const App = {
     obj.protocol = message.protocol ? message.protocol.toString() : undefined;
     obj.software = message.software;
     return obj;
+  },
+  fromAminoMsg(object: AppAminoMsg): App {
+    return App.fromAmino(object.value);
   },
   fromProtoMsg(message: AppProtoMsg): App {
     return App.decode(message.value);
@@ -188,6 +199,9 @@ export const Consensus = {
     obj.block = message.block ? message.block.toString() : undefined;
     obj.app = message.app ? message.app.toString() : undefined;
     return obj;
+  },
+  fromAminoMsg(object: ConsensusAminoMsg): Consensus {
+    return Consensus.fromAmino(object.value);
   },
   fromProtoMsg(message: ConsensusProtoMsg): Consensus {
     return Consensus.decode(message.value);

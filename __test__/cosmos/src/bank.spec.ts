@@ -24,7 +24,7 @@ const directSigner = getStargateCosmjsSigner(params);
 const aminoSigner = getStargateCosmjsSigner(params, "amino");
 
 describe("Send tokens", () => {
-  const amount = "1000000";
+  const amount = "100000";
   const messages: Message<MsgSend>[] = [
     {
       typeUrl: "/cosmos.bank.v1beta1.MsgSend",

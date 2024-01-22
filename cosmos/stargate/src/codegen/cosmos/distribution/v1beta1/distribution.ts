@@ -40,6 +40,10 @@ export interface ParamsAmino {
   bonus_proposer_reward: string;
   withdraw_addr_enabled: boolean;
 }
+export interface ParamsAminoMsg {
+  type: "cosmos-sdk/x/distribution/Params";
+  value: ParamsAmino;
+}
 /**
  * ValidatorHistoricalRewards represents historical rewards for a validator.
  * Height is implicit within the store key.
@@ -80,6 +84,10 @@ export interface ValidatorHistoricalRewardsAmino {
   cumulative_reward_ratio: DecCoinAmino[];
   reference_count: number;
 }
+export interface ValidatorHistoricalRewardsAminoMsg {
+  type: "cosmos-sdk/ValidatorHistoricalRewards";
+  value: ValidatorHistoricalRewardsAmino;
+}
 /**
  * ValidatorCurrentRewards represents current rewards and current
  * period for a validator kept as a running counter and incremented
@@ -102,6 +110,10 @@ export interface ValidatorCurrentRewardsAmino {
   rewards: DecCoinAmino[];
   period: string;
 }
+export interface ValidatorCurrentRewardsAminoMsg {
+  type: "cosmos-sdk/ValidatorCurrentRewards";
+  value: ValidatorCurrentRewardsAmino;
+}
 /**
  * ValidatorAccumulatedCommission represents accumulated commission
  * for a validator kept as a running counter, can be withdrawn at any time.
@@ -120,6 +132,10 @@ export interface ValidatorAccumulatedCommissionProtoMsg {
 export interface ValidatorAccumulatedCommissionAmino {
   commission: DecCoinAmino[];
 }
+export interface ValidatorAccumulatedCommissionAminoMsg {
+  type: "cosmos-sdk/ValidatorAccumulatedCommission";
+  value: ValidatorAccumulatedCommissionAmino;
+}
 /**
  * ValidatorOutstandingRewards represents outstanding (un-withdrawn) rewards
  * for a validator inexpensive to track, allows simple sanity checks.
@@ -137,6 +153,10 @@ export interface ValidatorOutstandingRewardsProtoMsg {
  */
 export interface ValidatorOutstandingRewardsAmino {
   rewards: DecCoinAmino[];
+}
+export interface ValidatorOutstandingRewardsAminoMsg {
+  type: "cosmos-sdk/ValidatorOutstandingRewards";
+  value: ValidatorOutstandingRewardsAmino;
 }
 /**
  * ValidatorSlashEvent represents a validator slash event.
@@ -162,6 +182,10 @@ export interface ValidatorSlashEventAmino {
   validator_period: string;
   fraction: string;
 }
+export interface ValidatorSlashEventAminoMsg {
+  type: "cosmos-sdk/ValidatorSlashEvent";
+  value: ValidatorSlashEventAmino;
+}
 /** ValidatorSlashEvents is a collection of ValidatorSlashEvent messages. */
 export interface ValidatorSlashEvents {
   validatorSlashEvents: ValidatorSlashEvent[];
@@ -174,6 +198,10 @@ export interface ValidatorSlashEventsProtoMsg {
 export interface ValidatorSlashEventsAmino {
   validator_slash_events: ValidatorSlashEventAmino[];
 }
+export interface ValidatorSlashEventsAminoMsg {
+  type: "cosmos-sdk/ValidatorSlashEvents";
+  value: ValidatorSlashEventsAmino;
+}
 /** FeePool is the global fee pool for distribution. */
 export interface FeePool {
   communityPool: DecCoin[];
@@ -185,6 +213,10 @@ export interface FeePoolProtoMsg {
 /** FeePool is the global fee pool for distribution. */
 export interface FeePoolAmino {
   community_pool: DecCoinAmino[];
+}
+export interface FeePoolAminoMsg {
+  type: "cosmos-sdk/FeePool";
+  value: FeePoolAmino;
 }
 /**
  * CommunityPoolSpendProposal details a proposal for use of community funds,
@@ -224,6 +256,10 @@ export interface CommunityPoolSpendProposalAmino {
   recipient: string;
   amount: CoinAmino[];
 }
+export interface CommunityPoolSpendProposalAminoMsg {
+  type: "cosmos-sdk/CommunityPoolSpendProposal";
+  value: CommunityPoolSpendProposalAmino;
+}
 /**
  * DelegatorStartingInfo represents the starting info for a delegator reward
  * period. It tracks the previous validator period, the delegation's amount of
@@ -254,6 +290,10 @@ export interface DelegatorStartingInfoAmino {
   stake: string;
   height: string;
 }
+export interface DelegatorStartingInfoAminoMsg {
+  type: "cosmos-sdk/DelegatorStartingInfo";
+  value: DelegatorStartingInfoAmino;
+}
 /**
  * DelegationDelegatorReward represents the properties
  * of a delegator's delegation reward.
@@ -273,6 +313,10 @@ export interface DelegationDelegatorRewardProtoMsg {
 export interface DelegationDelegatorRewardAmino {
   validator_address: string;
   reward: DecCoinAmino[];
+}
+export interface DelegationDelegatorRewardAminoMsg {
+  type: "cosmos-sdk/DelegationDelegatorReward";
+  value: DelegationDelegatorRewardAmino;
 }
 /**
  * CommunityPoolSpendProposalWithDeposit defines a CommunityPoolSpendProposal
@@ -299,6 +343,10 @@ export interface CommunityPoolSpendProposalWithDepositAmino {
   recipient: string;
   amount: string;
   deposit: string;
+}
+export interface CommunityPoolSpendProposalWithDepositAminoMsg {
+  type: "cosmos-sdk/CommunityPoolSpendProposalWithDeposit";
+  value: CommunityPoolSpendProposalWithDepositAmino;
 }
 function createBaseParams(): Params {
   return {
@@ -390,6 +438,15 @@ export const Params = {
     obj.withdraw_addr_enabled = message.withdrawAddrEnabled;
     return obj;
   },
+  fromAminoMsg(object: ParamsAminoMsg): Params {
+    return Params.fromAmino(object.value);
+  },
+  toAminoMsg(message: Params): ParamsAminoMsg {
+    return {
+      type: "cosmos-sdk/x/distribution/Params",
+      value: Params.toAmino(message)
+    };
+  },
   fromProtoMsg(message: ParamsProtoMsg): Params {
     return Params.decode(message.value);
   },
@@ -472,6 +529,15 @@ export const ValidatorHistoricalRewards = {
     }
     obj.reference_count = message.referenceCount;
     return obj;
+  },
+  fromAminoMsg(object: ValidatorHistoricalRewardsAminoMsg): ValidatorHistoricalRewards {
+    return ValidatorHistoricalRewards.fromAmino(object.value);
+  },
+  toAminoMsg(message: ValidatorHistoricalRewards): ValidatorHistoricalRewardsAminoMsg {
+    return {
+      type: "cosmos-sdk/ValidatorHistoricalRewards",
+      value: ValidatorHistoricalRewards.toAmino(message)
+    };
   },
   fromProtoMsg(message: ValidatorHistoricalRewardsProtoMsg): ValidatorHistoricalRewards {
     return ValidatorHistoricalRewards.decode(message.value);
@@ -556,6 +622,15 @@ export const ValidatorCurrentRewards = {
     obj.period = message.period ? message.period.toString() : undefined;
     return obj;
   },
+  fromAminoMsg(object: ValidatorCurrentRewardsAminoMsg): ValidatorCurrentRewards {
+    return ValidatorCurrentRewards.fromAmino(object.value);
+  },
+  toAminoMsg(message: ValidatorCurrentRewards): ValidatorCurrentRewardsAminoMsg {
+    return {
+      type: "cosmos-sdk/ValidatorCurrentRewards",
+      value: ValidatorCurrentRewards.toAmino(message)
+    };
+  },
   fromProtoMsg(message: ValidatorCurrentRewardsProtoMsg): ValidatorCurrentRewards {
     return ValidatorCurrentRewards.decode(message.value);
   },
@@ -627,6 +702,15 @@ export const ValidatorAccumulatedCommission = {
     }
     return obj;
   },
+  fromAminoMsg(object: ValidatorAccumulatedCommissionAminoMsg): ValidatorAccumulatedCommission {
+    return ValidatorAccumulatedCommission.fromAmino(object.value);
+  },
+  toAminoMsg(message: ValidatorAccumulatedCommission): ValidatorAccumulatedCommissionAminoMsg {
+    return {
+      type: "cosmos-sdk/ValidatorAccumulatedCommission",
+      value: ValidatorAccumulatedCommission.toAmino(message)
+    };
+  },
   fromProtoMsg(message: ValidatorAccumulatedCommissionProtoMsg): ValidatorAccumulatedCommission {
     return ValidatorAccumulatedCommission.decode(message.value);
   },
@@ -697,6 +781,15 @@ export const ValidatorOutstandingRewards = {
       obj.rewards = [];
     }
     return obj;
+  },
+  fromAminoMsg(object: ValidatorOutstandingRewardsAminoMsg): ValidatorOutstandingRewards {
+    return ValidatorOutstandingRewards.fromAmino(object.value);
+  },
+  toAminoMsg(message: ValidatorOutstandingRewards): ValidatorOutstandingRewardsAminoMsg {
+    return {
+      type: "cosmos-sdk/ValidatorOutstandingRewards",
+      value: ValidatorOutstandingRewards.toAmino(message)
+    };
   },
   fromProtoMsg(message: ValidatorOutstandingRewardsProtoMsg): ValidatorOutstandingRewards {
     return ValidatorOutstandingRewards.decode(message.value);
@@ -779,6 +872,15 @@ export const ValidatorSlashEvent = {
     obj.fraction = message.fraction;
     return obj;
   },
+  fromAminoMsg(object: ValidatorSlashEventAminoMsg): ValidatorSlashEvent {
+    return ValidatorSlashEvent.fromAmino(object.value);
+  },
+  toAminoMsg(message: ValidatorSlashEvent): ValidatorSlashEventAminoMsg {
+    return {
+      type: "cosmos-sdk/ValidatorSlashEvent",
+      value: ValidatorSlashEvent.toAmino(message)
+    };
+  },
   fromProtoMsg(message: ValidatorSlashEventProtoMsg): ValidatorSlashEvent {
     return ValidatorSlashEvent.decode(message.value);
   },
@@ -850,6 +952,15 @@ export const ValidatorSlashEvents = {
     }
     return obj;
   },
+  fromAminoMsg(object: ValidatorSlashEventsAminoMsg): ValidatorSlashEvents {
+    return ValidatorSlashEvents.fromAmino(object.value);
+  },
+  toAminoMsg(message: ValidatorSlashEvents): ValidatorSlashEventsAminoMsg {
+    return {
+      type: "cosmos-sdk/ValidatorSlashEvents",
+      value: ValidatorSlashEvents.toAmino(message)
+    };
+  },
   fromProtoMsg(message: ValidatorSlashEventsProtoMsg): ValidatorSlashEvents {
     return ValidatorSlashEvents.decode(message.value);
   },
@@ -920,6 +1031,15 @@ export const FeePool = {
       obj.community_pool = [];
     }
     return obj;
+  },
+  fromAminoMsg(object: FeePoolAminoMsg): FeePool {
+    return FeePool.fromAmino(object.value);
+  },
+  toAminoMsg(message: FeePool): FeePoolAminoMsg {
+    return {
+      type: "cosmos-sdk/FeePool",
+      value: FeePool.toAmino(message)
+    };
   },
   fromProtoMsg(message: FeePoolProtoMsg): FeePool {
     return FeePool.decode(message.value);
@@ -1028,6 +1148,15 @@ export const CommunityPoolSpendProposal = {
     }
     return obj;
   },
+  fromAminoMsg(object: CommunityPoolSpendProposalAminoMsg): CommunityPoolSpendProposal {
+    return CommunityPoolSpendProposal.fromAmino(object.value);
+  },
+  toAminoMsg(message: CommunityPoolSpendProposal): CommunityPoolSpendProposalAminoMsg {
+    return {
+      type: "cosmos-sdk/CommunityPoolSpendProposal",
+      value: CommunityPoolSpendProposal.toAmino(message)
+    };
+  },
   fromProtoMsg(message: CommunityPoolSpendProposalProtoMsg): CommunityPoolSpendProposal {
     return CommunityPoolSpendProposal.decode(message.value);
   },
@@ -1121,6 +1250,15 @@ export const DelegatorStartingInfo = {
     obj.height = message.height ? message.height.toString() : "0";
     return obj;
   },
+  fromAminoMsg(object: DelegatorStartingInfoAminoMsg): DelegatorStartingInfo {
+    return DelegatorStartingInfo.fromAmino(object.value);
+  },
+  toAminoMsg(message: DelegatorStartingInfo): DelegatorStartingInfoAminoMsg {
+    return {
+      type: "cosmos-sdk/DelegatorStartingInfo",
+      value: DelegatorStartingInfo.toAmino(message)
+    };
+  },
   fromProtoMsg(message: DelegatorStartingInfoProtoMsg): DelegatorStartingInfo {
     return DelegatorStartingInfo.decode(message.value);
   },
@@ -1203,6 +1341,15 @@ export const DelegationDelegatorReward = {
       obj.reward = [];
     }
     return obj;
+  },
+  fromAminoMsg(object: DelegationDelegatorRewardAminoMsg): DelegationDelegatorReward {
+    return DelegationDelegatorReward.fromAmino(object.value);
+  },
+  toAminoMsg(message: DelegationDelegatorReward): DelegationDelegatorRewardAminoMsg {
+    return {
+      type: "cosmos-sdk/DelegationDelegatorReward",
+      value: DelegationDelegatorReward.toAmino(message)
+    };
   },
   fromProtoMsg(message: DelegationDelegatorRewardProtoMsg): DelegationDelegatorReward {
     return DelegationDelegatorReward.decode(message.value);
@@ -1320,6 +1467,15 @@ export const CommunityPoolSpendProposalWithDeposit = {
     obj.amount = message.amount;
     obj.deposit = message.deposit;
     return obj;
+  },
+  fromAminoMsg(object: CommunityPoolSpendProposalWithDepositAminoMsg): CommunityPoolSpendProposalWithDeposit {
+    return CommunityPoolSpendProposalWithDeposit.fromAmino(object.value);
+  },
+  toAminoMsg(message: CommunityPoolSpendProposalWithDeposit): CommunityPoolSpendProposalWithDepositAminoMsg {
+    return {
+      type: "cosmos-sdk/CommunityPoolSpendProposalWithDeposit",
+      value: CommunityPoolSpendProposalWithDeposit.toAmino(message)
+    };
   },
   fromProtoMsg(message: CommunityPoolSpendProposalWithDepositProtoMsg): CommunityPoolSpendProposalWithDeposit {
     return CommunityPoolSpendProposalWithDeposit.decode(message.value);

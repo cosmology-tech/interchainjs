@@ -19,6 +19,10 @@ export interface MsgSendAmino {
   to_address: string;
   amount: CoinAmino[];
 }
+export interface MsgSendAminoMsg {
+  type: "cosmos-sdk/MsgSend";
+  value: MsgSendAmino;
+}
 /** MsgSendResponse defines the Msg/Send response type. */
 export interface MsgSendResponse {}
 export interface MsgSendResponseProtoMsg {
@@ -27,6 +31,10 @@ export interface MsgSendResponseProtoMsg {
 }
 /** MsgSendResponse defines the Msg/Send response type. */
 export interface MsgSendResponseAmino {}
+export interface MsgSendResponseAminoMsg {
+  type: "cosmos-sdk/MsgSendResponse";
+  value: MsgSendResponseAmino;
+}
 /** MsgMultiSend represents an arbitrary multi-in, multi-out send message. */
 export interface MsgMultiSend {
   /**
@@ -49,6 +57,10 @@ export interface MsgMultiSendAmino {
   inputs: InputAmino[];
   outputs: OutputAmino[];
 }
+export interface MsgMultiSendAminoMsg {
+  type: "cosmos-sdk/MsgMultiSend";
+  value: MsgMultiSendAmino;
+}
 /** MsgMultiSendResponse defines the Msg/MultiSend response type. */
 export interface MsgMultiSendResponse {}
 export interface MsgMultiSendResponseProtoMsg {
@@ -57,6 +69,10 @@ export interface MsgMultiSendResponseProtoMsg {
 }
 /** MsgMultiSendResponse defines the Msg/MultiSend response type. */
 export interface MsgMultiSendResponseAmino {}
+export interface MsgMultiSendResponseAminoMsg {
+  type: "cosmos-sdk/MsgMultiSendResponse";
+  value: MsgMultiSendResponseAmino;
+}
 /**
  * MsgUpdateParams is the Msg/UpdateParams request type.
  * 
@@ -91,6 +107,10 @@ export interface MsgUpdateParamsAmino {
    */
   params: ParamsAmino;
 }
+export interface MsgUpdateParamsAminoMsg {
+  type: "cosmos-sdk/x/bank/MsgUpdateParams";
+  value: MsgUpdateParamsAmino;
+}
 /**
  * MsgUpdateParamsResponse defines the response structure for executing a
  * MsgUpdateParams message.
@@ -109,6 +129,10 @@ export interface MsgUpdateParamsResponseProtoMsg {
  * Since: cosmos-sdk 0.47
  */
 export interface MsgUpdateParamsResponseAmino {}
+export interface MsgUpdateParamsResponseAminoMsg {
+  type: "cosmos-sdk/MsgUpdateParamsResponse";
+  value: MsgUpdateParamsResponseAmino;
+}
 /**
  * MsgSetSendEnabled is the Msg/SetSendEnabled request type.
  * 
@@ -155,6 +179,10 @@ export interface MsgSetSendEnabledAmino {
    */
   use_default_for: string[];
 }
+export interface MsgSetSendEnabledAminoMsg {
+  type: "cosmos-sdk/MsgSetSendEnabled";
+  value: MsgSetSendEnabledAmino;
+}
 /**
  * MsgSetSendEnabledResponse defines the Msg/SetSendEnabled response type.
  * 
@@ -171,6 +199,10 @@ export interface MsgSetSendEnabledResponseProtoMsg {
  * Since: cosmos-sdk 0.47
  */
 export interface MsgSetSendEnabledResponseAmino {}
+export interface MsgSetSendEnabledResponseAminoMsg {
+  type: "cosmos-sdk/MsgSetSendEnabledResponse";
+  value: MsgSetSendEnabledResponseAmino;
+}
 function createBaseMsgSend(): MsgSend {
   return {
     fromAddress: "",
@@ -251,6 +283,15 @@ export const MsgSend = {
     }
     return obj;
   },
+  fromAminoMsg(object: MsgSendAminoMsg): MsgSend {
+    return MsgSend.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgSend): MsgSendAminoMsg {
+    return {
+      type: "cosmos-sdk/MsgSend",
+      value: MsgSend.toAmino(message)
+    };
+  },
   fromProtoMsg(message: MsgSendProtoMsg): MsgSend {
     return MsgSend.decode(message.value);
   },
@@ -306,6 +347,15 @@ export const MsgSendResponse = {
   toAmino(_: MsgSendResponse): MsgSendResponseAmino {
     const obj: any = {};
     return obj;
+  },
+  fromAminoMsg(object: MsgSendResponseAminoMsg): MsgSendResponse {
+    return MsgSendResponse.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgSendResponse): MsgSendResponseAminoMsg {
+    return {
+      type: "cosmos-sdk/MsgSendResponse",
+      value: MsgSendResponse.toAmino(message)
+    };
   },
   fromProtoMsg(message: MsgSendResponseProtoMsg): MsgSendResponse {
     return MsgSendResponse.decode(message.value);
@@ -392,6 +442,15 @@ export const MsgMultiSend = {
     }
     return obj;
   },
+  fromAminoMsg(object: MsgMultiSendAminoMsg): MsgMultiSend {
+    return MsgMultiSend.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgMultiSend): MsgMultiSendAminoMsg {
+    return {
+      type: "cosmos-sdk/MsgMultiSend",
+      value: MsgMultiSend.toAmino(message)
+    };
+  },
   fromProtoMsg(message: MsgMultiSendProtoMsg): MsgMultiSend {
     return MsgMultiSend.decode(message.value);
   },
@@ -447,6 +506,15 @@ export const MsgMultiSendResponse = {
   toAmino(_: MsgMultiSendResponse): MsgMultiSendResponseAmino {
     const obj: any = {};
     return obj;
+  },
+  fromAminoMsg(object: MsgMultiSendResponseAminoMsg): MsgMultiSendResponse {
+    return MsgMultiSendResponse.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgMultiSendResponse): MsgMultiSendResponseAminoMsg {
+    return {
+      type: "cosmos-sdk/MsgMultiSendResponse",
+      value: MsgMultiSendResponse.toAmino(message)
+    };
   },
   fromProtoMsg(message: MsgMultiSendResponseProtoMsg): MsgMultiSendResponse {
     return MsgMultiSendResponse.decode(message.value);
@@ -529,6 +597,15 @@ export const MsgUpdateParams = {
     obj.params = message.params ? Params.toAmino(message.params) : Params.fromPartial({});
     return obj;
   },
+  fromAminoMsg(object: MsgUpdateParamsAminoMsg): MsgUpdateParams {
+    return MsgUpdateParams.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgUpdateParams): MsgUpdateParamsAminoMsg {
+    return {
+      type: "cosmos-sdk/x/bank/MsgUpdateParams",
+      value: MsgUpdateParams.toAmino(message)
+    };
+  },
   fromProtoMsg(message: MsgUpdateParamsProtoMsg): MsgUpdateParams {
     return MsgUpdateParams.decode(message.value);
   },
@@ -584,6 +661,15 @@ export const MsgUpdateParamsResponse = {
   toAmino(_: MsgUpdateParamsResponse): MsgUpdateParamsResponseAmino {
     const obj: any = {};
     return obj;
+  },
+  fromAminoMsg(object: MsgUpdateParamsResponseAminoMsg): MsgUpdateParamsResponse {
+    return MsgUpdateParamsResponse.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgUpdateParamsResponse): MsgUpdateParamsResponseAminoMsg {
+    return {
+      type: "cosmos-sdk/MsgUpdateParamsResponse",
+      value: MsgUpdateParamsResponse.toAmino(message)
+    };
   },
   fromProtoMsg(message: MsgUpdateParamsResponseProtoMsg): MsgUpdateParamsResponse {
     return MsgUpdateParamsResponse.decode(message.value);
@@ -682,6 +768,15 @@ export const MsgSetSendEnabled = {
     }
     return obj;
   },
+  fromAminoMsg(object: MsgSetSendEnabledAminoMsg): MsgSetSendEnabled {
+    return MsgSetSendEnabled.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgSetSendEnabled): MsgSetSendEnabledAminoMsg {
+    return {
+      type: "cosmos-sdk/MsgSetSendEnabled",
+      value: MsgSetSendEnabled.toAmino(message)
+    };
+  },
   fromProtoMsg(message: MsgSetSendEnabledProtoMsg): MsgSetSendEnabled {
     return MsgSetSendEnabled.decode(message.value);
   },
@@ -737,6 +832,15 @@ export const MsgSetSendEnabledResponse = {
   toAmino(_: MsgSetSendEnabledResponse): MsgSetSendEnabledResponseAmino {
     const obj: any = {};
     return obj;
+  },
+  fromAminoMsg(object: MsgSetSendEnabledResponseAminoMsg): MsgSetSendEnabledResponse {
+    return MsgSetSendEnabledResponse.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgSetSendEnabledResponse): MsgSetSendEnabledResponseAminoMsg {
+    return {
+      type: "cosmos-sdk/MsgSetSendEnabledResponse",
+      value: MsgSetSendEnabledResponse.toAmino(message)
+    };
   },
   fromProtoMsg(message: MsgSetSendEnabledResponseProtoMsg): MsgSetSendEnabledResponse {
     return MsgSetSendEnabledResponse.decode(message.value);

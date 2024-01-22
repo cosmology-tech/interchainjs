@@ -5,14 +5,13 @@ export type Bech32Address = string;
 
 export interface Key {
   pubkey: Uint8Array;
-  privkey?: Uint8Array;
-  address?: Uint8Array;
 }
 
 export interface Auth {
   key: Key;
   sign: (data: Uint8Array) => Uint8Array;
   verify: (data: Uint8Array, signature: Uint8Array) => boolean;
+  getAddress: (chainId: string) => string;
 }
 
 export interface AuthOptions {

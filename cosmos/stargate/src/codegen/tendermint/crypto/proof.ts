@@ -17,6 +17,10 @@ export interface ProofAmino {
   leaf_hash: string;
   aunts: string[];
 }
+export interface ProofAminoMsg {
+  type: "/tendermint.crypto.Proof";
+  value: ProofAmino;
+}
 export interface ValueOp {
   /** Encoded in ProofOp.Key. */
   key: Uint8Array;
@@ -33,6 +37,10 @@ export interface ValueOpAmino {
   /** To encode in ProofOp.Data */
   proof?: ProofAmino;
 }
+export interface ValueOpAminoMsg {
+  type: "/tendermint.crypto.ValueOp";
+  value: ValueOpAmino;
+}
 export interface DominoOp {
   key: string;
   input: string;
@@ -46,6 +54,10 @@ export interface DominoOpAmino {
   key: string;
   input: string;
   output: string;
+}
+export interface DominoOpAminoMsg {
+  type: "/tendermint.crypto.DominoOp";
+  value: DominoOpAmino;
 }
 /**
  * ProofOp defines an operation used for calculating Merkle root
@@ -71,6 +83,10 @@ export interface ProofOpAmino {
   key: string;
   data: string;
 }
+export interface ProofOpAminoMsg {
+  type: "/tendermint.crypto.ProofOp";
+  value: ProofOpAmino;
+}
 /** ProofOps is Merkle proof defined by the list of ProofOps */
 export interface ProofOps {
   ops: ProofOp[];
@@ -82,6 +98,10 @@ export interface ProofOpsProtoMsg {
 /** ProofOps is Merkle proof defined by the list of ProofOps */
 export interface ProofOpsAmino {
   ops: ProofOpAmino[];
+}
+export interface ProofOpsAminoMsg {
+  type: "/tendermint.crypto.ProofOps";
+  value: ProofOpsAmino;
 }
 function createBaseProof(): Proof {
   return {
@@ -174,6 +194,9 @@ export const Proof = {
     }
     return obj;
   },
+  fromAminoMsg(object: ProofAminoMsg): Proof {
+    return Proof.fromAmino(object.value);
+  },
   fromProtoMsg(message: ProofProtoMsg): Proof {
     return Proof.decode(message.value);
   },
@@ -252,6 +275,9 @@ export const ValueOp = {
     obj.key = message.key ? base64FromBytes(message.key) : undefined;
     obj.proof = message.proof ? Proof.toAmino(message.proof) : undefined;
     return obj;
+  },
+  fromAminoMsg(object: ValueOpAminoMsg): ValueOp {
+    return ValueOp.fromAmino(object.value);
   },
   fromProtoMsg(message: ValueOpProtoMsg): ValueOp {
     return ValueOp.decode(message.value);
@@ -344,6 +370,9 @@ export const DominoOp = {
     obj.output = message.output;
     return obj;
   },
+  fromAminoMsg(object: DominoOpAminoMsg): DominoOp {
+    return DominoOp.fromAmino(object.value);
+  },
   fromProtoMsg(message: DominoOpProtoMsg): DominoOp {
     return DominoOp.decode(message.value);
   },
@@ -435,6 +464,9 @@ export const ProofOp = {
     obj.data = message.data ? base64FromBytes(message.data) : undefined;
     return obj;
   },
+  fromAminoMsg(object: ProofOpAminoMsg): ProofOp {
+    return ProofOp.fromAmino(object.value);
+  },
   fromProtoMsg(message: ProofOpProtoMsg): ProofOp {
     return ProofOp.decode(message.value);
   },
@@ -503,6 +535,9 @@ export const ProofOps = {
       obj.ops = [];
     }
     return obj;
+  },
+  fromAminoMsg(object: ProofOpsAminoMsg): ProofOps {
+    return ProofOps.fromAmino(object.value);
   },
   fromProtoMsg(message: ProofOpsProtoMsg): ProofOps {
     return ProofOps.decode(message.value);

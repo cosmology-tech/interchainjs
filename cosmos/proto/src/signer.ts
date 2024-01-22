@@ -20,7 +20,6 @@ import { RpcClient } from "@cosmonauts/cosmos-rpc";
 import Decimal from "decimal.js";
 
 import { PubKey as PubKeySecp256k1 } from "./codegen/cosmos/crypto/secp256k1/keys";
-import prefixJson from "./config/prefix.json";
 import {
   AccountData,
   EncodeObject,
@@ -30,14 +29,14 @@ import {
   SignerOptions,
   VisualSignDoc,
 } from "./types";
-import { toBech32 } from "./utils/account";
 import { getAvgGasPrice } from "./utils/price";
 import { EncodeObjectUtils, TxUtils } from "./utils/tx";
 
 export class Signer extends BaseSigner<RpcClient> {
   readonly generated: Generated[] = [];
   gasPrice?: Price | string;
-  accountData: AccountData;
+  protected _accountData: AccountData = {};
+  protected addressHash?: Uint8Array;
 
   constructor(registry?: Registry, options?: SignerOptions) {
     super(RpcClient);
@@ -53,14 +52,20 @@ export class Signer extends BaseSigner<RpcClient> {
 
   on(endpoint: string | HttpEndpoint) {
     this._request = new this._RequestClient(endpoint);
-    this.accountData = void 0;
+    this._accountData = {};
     return this;
   }
 
   by(auth: Auth) {
     this._auth = auth;
-    this.accountData = void 0;
+    this._accountData.address = void 0;
+    this._accountData.accountNumber = void 0;
+    this._accountData.sequence = void 0;
     return this;
+  }
+
+  get accountData() {
+    return this._accountData;
   }
 
   protected encodePubKey(pubkey: Uint8Array) {
@@ -72,21 +77,22 @@ export class Signer extends BaseSigner<RpcClient> {
     };
   }
 
-  protected async initAccountData() {
-    const chainId = await this.getChainId();
-    const _prefix = (prefixJson as any)[chainId];
-    if (!_prefix) {
-      throw new Error(`Cannot find bech32_prefix for chain ${chainId}.`);
+  protected async prepareAccountData() {
+    if (!this._accountData.chainId) {
+      this._accountData.chainId = await this.getChainId();
     }
-    const bech32address = toBech32(_prefix, this.auth.key.address);
-
-    const { sequence, accountNumber } = await this.getSequence(bech32address);
-    this.accountData = {
-      chainId,
-      sequence,
-      accountNumber,
-      address: bech32address,
-    };
+    if (!this._accountData.address) {
+      this._accountData.address = this.auth.getAddress(
+        this._accountData.chainId
+      );
+    }
+    if (!this._accountData.sequence || !this._accountData.accountNumber) {
+      const { sequence, accountNumber } = await this.getSequence(
+        this._accountData.address
+      );
+      this._accountData.sequence = sequence;
+      this._accountData.accountNumber = accountNumber;
+    }
   }
 
   async getChainId(): Promise<string> {
@@ -110,14 +116,12 @@ export class Signer extends BaseSigner<RpcClient> {
   };
 
   async estimateGas(messages: EncodeObject[], memo: string = "") {
-    if (!this.accountData) {
-      await this.initAccountData();
-    }
+    await this.prepareAccountData();
     const tx = TxUtils.toTxForGasEstimation(
       messages,
       this.encodePubKey(this.auth.key.pubkey),
       this.getGeneratedFromTypeUrl,
-      this.accountData.sequence,
+      this._accountData.sequence,
       memo
     );
     const { gasInfo } = await this.request.simulate({
@@ -144,9 +148,9 @@ export class Signer extends BaseSigner<RpcClient> {
       .ceil();
 
     let price =
-      options.gasPrice ||
+      options?.gasPrice ||
       this.gasPrice ||
-      getAvgGasPrice(this.accountData.chainId);
+      getAvgGasPrice(this._accountData.chainId);
 
     if (typeof price === "string") {
       price = parsePrice(price);
@@ -188,9 +192,8 @@ export class Signer extends BaseSigner<RpcClient> {
       gasPrice?: Price | string;
     }
   ): Promise<Signed<SignDoc, VisualSignDoc>> {
-    if (!this.accountData) {
-      await this.initAccountData();
-    }
+    this._accountData.sequence = void 0;
+    await this.prepareAccountData();
 
     const [visualMessages, encodedMessages] =
       EncodeObjectUtils.fromPartialAndEncode(
@@ -210,7 +213,7 @@ export class Signer extends BaseSigner<RpcClient> {
 
     const signerInfo: SignerInfo = SignerInfo.fromPartial({
       publicKey: this.encodePubKey(this.auth.key.pubkey),
-      sequence: this.accountData.sequence,
+      sequence: this._accountData.sequence,
       modeInfo: { single: { mode: SignMode.SIGN_MODE_DIRECT } },
     });
 
@@ -222,15 +225,15 @@ export class Signer extends BaseSigner<RpcClient> {
     const visualDoc: VisualSignDoc = {
       txBody: visualTxBody,
       authInfo,
-      chainId: this.accountData.chainId,
-      accountNumber: this.accountData.accountNumber,
+      chainId: this._accountData.chainId,
+      accountNumber: this._accountData.accountNumber,
     };
 
     const doc: SignDoc = SignDoc.fromPartial({
       bodyBytes: TxBody.encode(txBody).finish(),
       authInfoBytes: AuthInfo.encode(authInfo).finish(),
-      chainId: this.accountData.chainId,
-      accountNumber: this.accountData.accountNumber,
+      chainId: this._accountData.chainId,
+      accountNumber: this._accountData.accountNumber,
     });
 
     const { signDoc, execDoc } = this._signDoc(doc);

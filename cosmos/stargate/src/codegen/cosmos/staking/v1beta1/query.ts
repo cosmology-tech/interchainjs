@@ -21,6 +21,10 @@ export interface QueryValidatorsRequestAmino {
   /** pagination defines an optional pagination for the request. */
   pagination?: PageRequestAmino;
 }
+export interface QueryValidatorsRequestAminoMsg {
+  type: "cosmos-sdk/QueryValidatorsRequest";
+  value: QueryValidatorsRequestAmino;
+}
 /** QueryValidatorsResponse is response type for the Query/Validators RPC method */
 export interface QueryValidatorsResponse {
   /** validators contains all the queried validators. */
@@ -39,6 +43,10 @@ export interface QueryValidatorsResponseAmino {
   /** pagination defines the pagination in the response. */
   pagination?: PageResponseAmino;
 }
+export interface QueryValidatorsResponseAminoMsg {
+  type: "cosmos-sdk/QueryValidatorsResponse";
+  value: QueryValidatorsResponseAmino;
+}
 /** QueryValidatorRequest is response type for the Query/Validator RPC method */
 export interface QueryValidatorRequest {
   /** validator_addr defines the validator address to query for. */
@@ -53,6 +61,10 @@ export interface QueryValidatorRequestAmino {
   /** validator_addr defines the validator address to query for. */
   validator_addr: string;
 }
+export interface QueryValidatorRequestAminoMsg {
+  type: "cosmos-sdk/QueryValidatorRequest";
+  value: QueryValidatorRequestAmino;
+}
 /** QueryValidatorResponse is response type for the Query/Validator RPC method */
 export interface QueryValidatorResponse {
   /** validator defines the validator info. */
@@ -66,6 +78,10 @@ export interface QueryValidatorResponseProtoMsg {
 export interface QueryValidatorResponseAmino {
   /** validator defines the validator info. */
   validator: ValidatorAmino;
+}
+export interface QueryValidatorResponseAminoMsg {
+  type: "cosmos-sdk/QueryValidatorResponse";
+  value: QueryValidatorResponseAmino;
 }
 /**
  * QueryValidatorDelegationsRequest is request type for the
@@ -91,6 +107,10 @@ export interface QueryValidatorDelegationsRequestAmino {
   /** pagination defines an optional pagination for the request. */
   pagination?: PageRequestAmino;
 }
+export interface QueryValidatorDelegationsRequestAminoMsg {
+  type: "cosmos-sdk/QueryValidatorDelegationsRequest";
+  value: QueryValidatorDelegationsRequestAmino;
+}
 /**
  * QueryValidatorDelegationsResponse is response type for the
  * Query/ValidatorDelegations RPC method
@@ -112,6 +132,10 @@ export interface QueryValidatorDelegationsResponseAmino {
   delegation_responses: DelegationResponseAmino[];
   /** pagination defines the pagination in the response. */
   pagination?: PageResponseAmino;
+}
+export interface QueryValidatorDelegationsResponseAminoMsg {
+  type: "cosmos-sdk/QueryValidatorDelegationsResponse";
+  value: QueryValidatorDelegationsResponseAmino;
 }
 /**
  * QueryValidatorUnbondingDelegationsRequest is required type for the
@@ -137,6 +161,10 @@ export interface QueryValidatorUnbondingDelegationsRequestAmino {
   /** pagination defines an optional pagination for the request. */
   pagination?: PageRequestAmino;
 }
+export interface QueryValidatorUnbondingDelegationsRequestAminoMsg {
+  type: "cosmos-sdk/QueryValidatorUnbondingDelegationsRequest";
+  value: QueryValidatorUnbondingDelegationsRequestAmino;
+}
 /**
  * QueryValidatorUnbondingDelegationsResponse is response type for the
  * Query/ValidatorUnbondingDelegations RPC method.
@@ -159,6 +187,10 @@ export interface QueryValidatorUnbondingDelegationsResponseAmino {
   /** pagination defines the pagination in the response. */
   pagination?: PageResponseAmino;
 }
+export interface QueryValidatorUnbondingDelegationsResponseAminoMsg {
+  type: "cosmos-sdk/QueryValidatorUnbondingDelegationsResponse";
+  value: QueryValidatorUnbondingDelegationsResponseAmino;
+}
 /** QueryDelegationRequest is request type for the Query/Delegation RPC method. */
 export interface QueryDelegationRequest {
   /** delegator_addr defines the delegator address to query for. */
@@ -177,6 +209,10 @@ export interface QueryDelegationRequestAmino {
   /** validator_addr defines the validator address to query for. */
   validator_addr: string;
 }
+export interface QueryDelegationRequestAminoMsg {
+  type: "cosmos-sdk/QueryDelegationRequest";
+  value: QueryDelegationRequestAmino;
+}
 /** QueryDelegationResponse is response type for the Query/Delegation RPC method. */
 export interface QueryDelegationResponse {
   /** delegation_responses defines the delegation info of a delegation. */
@@ -190,6 +226,10 @@ export interface QueryDelegationResponseProtoMsg {
 export interface QueryDelegationResponseAmino {
   /** delegation_responses defines the delegation info of a delegation. */
   delegation_response?: DelegationResponseAmino;
+}
+export interface QueryDelegationResponseAminoMsg {
+  type: "cosmos-sdk/QueryDelegationResponse";
+  value: QueryDelegationResponseAmino;
 }
 /**
  * QueryUnbondingDelegationRequest is request type for the
@@ -215,6 +255,10 @@ export interface QueryUnbondingDelegationRequestAmino {
   /** validator_addr defines the validator address to query for. */
   validator_addr: string;
 }
+export interface QueryUnbondingDelegationRequestAminoMsg {
+  type: "cosmos-sdk/QueryUnbondingDelegationRequest";
+  value: QueryUnbondingDelegationRequestAmino;
+}
 /**
  * QueryDelegationResponse is response type for the Query/UnbondingDelegation
  * RPC method.
@@ -234,6 +278,10 @@ export interface QueryUnbondingDelegationResponseProtoMsg {
 export interface QueryUnbondingDelegationResponseAmino {
   /** unbond defines the unbonding information of a delegation. */
   unbond: UnbondingDelegationAmino;
+}
+export interface QueryUnbondingDelegationResponseAminoMsg {
+  type: "cosmos-sdk/QueryUnbondingDelegationResponse";
+  value: QueryUnbondingDelegationResponseAmino;
 }
 /**
  * QueryDelegatorDelegationsRequest is request type for the
@@ -259,6 +307,10 @@ export interface QueryDelegatorDelegationsRequestAmino {
   /** pagination defines an optional pagination for the request. */
   pagination?: PageRequestAmino;
 }
+export interface QueryDelegatorDelegationsRequestAminoMsg {
+  type: "cosmos-sdk/QueryDelegatorDelegationsRequest";
+  value: QueryDelegatorDelegationsRequestAmino;
+}
 /**
  * QueryDelegatorDelegationsResponse is response type for the
  * Query/DelegatorDelegations RPC method.
@@ -282,6 +334,10 @@ export interface QueryDelegatorDelegationsResponseAmino {
   delegation_responses: DelegationResponseAmino[];
   /** pagination defines the pagination in the response. */
   pagination?: PageResponseAmino;
+}
+export interface QueryDelegatorDelegationsResponseAminoMsg {
+  type: "cosmos-sdk/QueryDelegatorDelegationsResponse";
+  value: QueryDelegatorDelegationsResponseAmino;
 }
 /**
  * QueryDelegatorUnbondingDelegationsRequest is request type for the
@@ -307,6 +363,10 @@ export interface QueryDelegatorUnbondingDelegationsRequestAmino {
   /** pagination defines an optional pagination for the request. */
   pagination?: PageRequestAmino;
 }
+export interface QueryDelegatorUnbondingDelegationsRequestAminoMsg {
+  type: "cosmos-sdk/QueryDelegatorUnbondingDelegationsRequest";
+  value: QueryDelegatorUnbondingDelegationsRequestAmino;
+}
 /**
  * QueryUnbondingDelegatorDelegationsResponse is response type for the
  * Query/UnbondingDelegatorDelegations RPC method.
@@ -328,6 +388,10 @@ export interface QueryDelegatorUnbondingDelegationsResponseAmino {
   unbonding_responses: UnbondingDelegationAmino[];
   /** pagination defines the pagination in the response. */
   pagination?: PageResponseAmino;
+}
+export interface QueryDelegatorUnbondingDelegationsResponseAminoMsg {
+  type: "cosmos-sdk/QueryDelegatorUnbondingDelegationsResponse";
+  value: QueryDelegatorUnbondingDelegationsResponseAmino;
 }
 /**
  * QueryRedelegationsRequest is request type for the Query/Redelegations RPC
@@ -361,6 +425,10 @@ export interface QueryRedelegationsRequestAmino {
   /** pagination defines an optional pagination for the request. */
   pagination?: PageRequestAmino;
 }
+export interface QueryRedelegationsRequestAminoMsg {
+  type: "cosmos-sdk/QueryRedelegationsRequest";
+  value: QueryRedelegationsRequestAmino;
+}
 /**
  * QueryRedelegationsResponse is response type for the Query/Redelegations RPC
  * method.
@@ -382,6 +450,10 @@ export interface QueryRedelegationsResponseAmino {
   redelegation_responses: RedelegationResponseAmino[];
   /** pagination defines the pagination in the response. */
   pagination?: PageResponseAmino;
+}
+export interface QueryRedelegationsResponseAminoMsg {
+  type: "cosmos-sdk/QueryRedelegationsResponse";
+  value: QueryRedelegationsResponseAmino;
 }
 /**
  * QueryDelegatorValidatorsRequest is request type for the
@@ -407,6 +479,10 @@ export interface QueryDelegatorValidatorsRequestAmino {
   /** pagination defines an optional pagination for the request. */
   pagination?: PageRequestAmino;
 }
+export interface QueryDelegatorValidatorsRequestAminoMsg {
+  type: "cosmos-sdk/QueryDelegatorValidatorsRequest";
+  value: QueryDelegatorValidatorsRequestAmino;
+}
 /**
  * QueryDelegatorValidatorsResponse is response type for the
  * Query/DelegatorValidators RPC method.
@@ -430,6 +506,10 @@ export interface QueryDelegatorValidatorsResponseAmino {
   validators: ValidatorAmino[];
   /** pagination defines the pagination in the response. */
   pagination?: PageResponseAmino;
+}
+export interface QueryDelegatorValidatorsResponseAminoMsg {
+  type: "cosmos-sdk/QueryDelegatorValidatorsResponse";
+  value: QueryDelegatorValidatorsResponseAmino;
 }
 /**
  * QueryDelegatorValidatorRequest is request type for the
@@ -455,6 +535,10 @@ export interface QueryDelegatorValidatorRequestAmino {
   /** validator_addr defines the validator address to query for. */
   validator_addr: string;
 }
+export interface QueryDelegatorValidatorRequestAminoMsg {
+  type: "cosmos-sdk/QueryDelegatorValidatorRequest";
+  value: QueryDelegatorValidatorRequestAmino;
+}
 /**
  * QueryDelegatorValidatorResponse response type for the
  * Query/DelegatorValidator RPC method.
@@ -474,6 +558,10 @@ export interface QueryDelegatorValidatorResponseProtoMsg {
 export interface QueryDelegatorValidatorResponseAmino {
   /** validator defines the validator info. */
   validator: ValidatorAmino;
+}
+export interface QueryDelegatorValidatorResponseAminoMsg {
+  type: "cosmos-sdk/QueryDelegatorValidatorResponse";
+  value: QueryDelegatorValidatorResponseAmino;
 }
 /**
  * QueryHistoricalInfoRequest is request type for the Query/HistoricalInfo RPC
@@ -495,6 +583,10 @@ export interface QueryHistoricalInfoRequestAmino {
   /** height defines at which height to query the historical info. */
   height: string;
 }
+export interface QueryHistoricalInfoRequestAminoMsg {
+  type: "cosmos-sdk/QueryHistoricalInfoRequest";
+  value: QueryHistoricalInfoRequestAmino;
+}
 /**
  * QueryHistoricalInfoResponse is response type for the Query/HistoricalInfo RPC
  * method.
@@ -515,6 +607,10 @@ export interface QueryHistoricalInfoResponseAmino {
   /** hist defines the historical info at the given height. */
   hist?: HistoricalInfoAmino;
 }
+export interface QueryHistoricalInfoResponseAminoMsg {
+  type: "cosmos-sdk/QueryHistoricalInfoResponse";
+  value: QueryHistoricalInfoResponseAmino;
+}
 /** QueryPoolRequest is request type for the Query/Pool RPC method. */
 export interface QueryPoolRequest {}
 export interface QueryPoolRequestProtoMsg {
@@ -523,6 +619,10 @@ export interface QueryPoolRequestProtoMsg {
 }
 /** QueryPoolRequest is request type for the Query/Pool RPC method. */
 export interface QueryPoolRequestAmino {}
+export interface QueryPoolRequestAminoMsg {
+  type: "cosmos-sdk/QueryPoolRequest";
+  value: QueryPoolRequestAmino;
+}
 /** QueryPoolResponse is response type for the Query/Pool RPC method. */
 export interface QueryPoolResponse {
   /** pool defines the pool info. */
@@ -537,6 +637,10 @@ export interface QueryPoolResponseAmino {
   /** pool defines the pool info. */
   pool: PoolAmino;
 }
+export interface QueryPoolResponseAminoMsg {
+  type: "cosmos-sdk/QueryPoolResponse";
+  value: QueryPoolResponseAmino;
+}
 /** QueryParamsRequest is request type for the Query/Params RPC method. */
 export interface QueryParamsRequest {}
 export interface QueryParamsRequestProtoMsg {
@@ -545,6 +649,10 @@ export interface QueryParamsRequestProtoMsg {
 }
 /** QueryParamsRequest is request type for the Query/Params RPC method. */
 export interface QueryParamsRequestAmino {}
+export interface QueryParamsRequestAminoMsg {
+  type: "cosmos-sdk/QueryParamsRequest";
+  value: QueryParamsRequestAmino;
+}
 /** QueryParamsResponse is response type for the Query/Params RPC method. */
 export interface QueryParamsResponse {
   /** params holds all the parameters of this module. */
@@ -558,6 +666,10 @@ export interface QueryParamsResponseProtoMsg {
 export interface QueryParamsResponseAmino {
   /** params holds all the parameters of this module. */
   params: ParamsAmino;
+}
+export interface QueryParamsResponseAminoMsg {
+  type: "cosmos-sdk/QueryParamsResponse";
+  value: QueryParamsResponseAmino;
 }
 function createBaseQueryValidatorsRequest(): QueryValidatorsRequest {
   return {
@@ -624,6 +736,15 @@ export const QueryValidatorsRequest = {
     obj.status = message.status;
     obj.pagination = message.pagination ? PageRequest.toAmino(message.pagination) : undefined;
     return obj;
+  },
+  fromAminoMsg(object: QueryValidatorsRequestAminoMsg): QueryValidatorsRequest {
+    return QueryValidatorsRequest.fromAmino(object.value);
+  },
+  toAminoMsg(message: QueryValidatorsRequest): QueryValidatorsRequestAminoMsg {
+    return {
+      type: "cosmos-sdk/QueryValidatorsRequest",
+      value: QueryValidatorsRequest.toAmino(message)
+    };
   },
   fromProtoMsg(message: QueryValidatorsRequestProtoMsg): QueryValidatorsRequest {
     return QueryValidatorsRequest.decode(message.value);
@@ -708,6 +829,15 @@ export const QueryValidatorsResponse = {
     obj.pagination = message.pagination ? PageResponse.toAmino(message.pagination) : undefined;
     return obj;
   },
+  fromAminoMsg(object: QueryValidatorsResponseAminoMsg): QueryValidatorsResponse {
+    return QueryValidatorsResponse.fromAmino(object.value);
+  },
+  toAminoMsg(message: QueryValidatorsResponse): QueryValidatorsResponseAminoMsg {
+    return {
+      type: "cosmos-sdk/QueryValidatorsResponse",
+      value: QueryValidatorsResponse.toAmino(message)
+    };
+  },
   fromProtoMsg(message: QueryValidatorsResponseProtoMsg): QueryValidatorsResponse {
     return QueryValidatorsResponse.decode(message.value);
   },
@@ -777,6 +907,15 @@ export const QueryValidatorRequest = {
     obj.validator_addr = message.validatorAddr;
     return obj;
   },
+  fromAminoMsg(object: QueryValidatorRequestAminoMsg): QueryValidatorRequest {
+    return QueryValidatorRequest.fromAmino(object.value);
+  },
+  toAminoMsg(message: QueryValidatorRequest): QueryValidatorRequestAminoMsg {
+    return {
+      type: "cosmos-sdk/QueryValidatorRequest",
+      value: QueryValidatorRequest.toAmino(message)
+    };
+  },
   fromProtoMsg(message: QueryValidatorRequestProtoMsg): QueryValidatorRequest {
     return QueryValidatorRequest.decode(message.value);
   },
@@ -845,6 +984,15 @@ export const QueryValidatorResponse = {
     const obj: any = {};
     obj.validator = message.validator ? Validator.toAmino(message.validator) : Validator.fromPartial({});
     return obj;
+  },
+  fromAminoMsg(object: QueryValidatorResponseAminoMsg): QueryValidatorResponse {
+    return QueryValidatorResponse.fromAmino(object.value);
+  },
+  toAminoMsg(message: QueryValidatorResponse): QueryValidatorResponseAminoMsg {
+    return {
+      type: "cosmos-sdk/QueryValidatorResponse",
+      value: QueryValidatorResponse.toAmino(message)
+    };
   },
   fromProtoMsg(message: QueryValidatorResponseProtoMsg): QueryValidatorResponse {
     return QueryValidatorResponse.decode(message.value);
@@ -926,6 +1074,15 @@ export const QueryValidatorDelegationsRequest = {
     obj.validator_addr = message.validatorAddr;
     obj.pagination = message.pagination ? PageRequest.toAmino(message.pagination) : undefined;
     return obj;
+  },
+  fromAminoMsg(object: QueryValidatorDelegationsRequestAminoMsg): QueryValidatorDelegationsRequest {
+    return QueryValidatorDelegationsRequest.fromAmino(object.value);
+  },
+  toAminoMsg(message: QueryValidatorDelegationsRequest): QueryValidatorDelegationsRequestAminoMsg {
+    return {
+      type: "cosmos-sdk/QueryValidatorDelegationsRequest",
+      value: QueryValidatorDelegationsRequest.toAmino(message)
+    };
   },
   fromProtoMsg(message: QueryValidatorDelegationsRequestProtoMsg): QueryValidatorDelegationsRequest {
     return QueryValidatorDelegationsRequest.decode(message.value);
@@ -1010,6 +1167,15 @@ export const QueryValidatorDelegationsResponse = {
     obj.pagination = message.pagination ? PageResponse.toAmino(message.pagination) : undefined;
     return obj;
   },
+  fromAminoMsg(object: QueryValidatorDelegationsResponseAminoMsg): QueryValidatorDelegationsResponse {
+    return QueryValidatorDelegationsResponse.fromAmino(object.value);
+  },
+  toAminoMsg(message: QueryValidatorDelegationsResponse): QueryValidatorDelegationsResponseAminoMsg {
+    return {
+      type: "cosmos-sdk/QueryValidatorDelegationsResponse",
+      value: QueryValidatorDelegationsResponse.toAmino(message)
+    };
+  },
   fromProtoMsg(message: QueryValidatorDelegationsResponseProtoMsg): QueryValidatorDelegationsResponse {
     return QueryValidatorDelegationsResponse.decode(message.value);
   },
@@ -1090,6 +1256,15 @@ export const QueryValidatorUnbondingDelegationsRequest = {
     obj.validator_addr = message.validatorAddr;
     obj.pagination = message.pagination ? PageRequest.toAmino(message.pagination) : undefined;
     return obj;
+  },
+  fromAminoMsg(object: QueryValidatorUnbondingDelegationsRequestAminoMsg): QueryValidatorUnbondingDelegationsRequest {
+    return QueryValidatorUnbondingDelegationsRequest.fromAmino(object.value);
+  },
+  toAminoMsg(message: QueryValidatorUnbondingDelegationsRequest): QueryValidatorUnbondingDelegationsRequestAminoMsg {
+    return {
+      type: "cosmos-sdk/QueryValidatorUnbondingDelegationsRequest",
+      value: QueryValidatorUnbondingDelegationsRequest.toAmino(message)
+    };
   },
   fromProtoMsg(message: QueryValidatorUnbondingDelegationsRequestProtoMsg): QueryValidatorUnbondingDelegationsRequest {
     return QueryValidatorUnbondingDelegationsRequest.decode(message.value);
@@ -1174,6 +1349,15 @@ export const QueryValidatorUnbondingDelegationsResponse = {
     obj.pagination = message.pagination ? PageResponse.toAmino(message.pagination) : undefined;
     return obj;
   },
+  fromAminoMsg(object: QueryValidatorUnbondingDelegationsResponseAminoMsg): QueryValidatorUnbondingDelegationsResponse {
+    return QueryValidatorUnbondingDelegationsResponse.fromAmino(object.value);
+  },
+  toAminoMsg(message: QueryValidatorUnbondingDelegationsResponse): QueryValidatorUnbondingDelegationsResponseAminoMsg {
+    return {
+      type: "cosmos-sdk/QueryValidatorUnbondingDelegationsResponse",
+      value: QueryValidatorUnbondingDelegationsResponse.toAmino(message)
+    };
+  },
   fromProtoMsg(message: QueryValidatorUnbondingDelegationsResponseProtoMsg): QueryValidatorUnbondingDelegationsResponse {
     return QueryValidatorUnbondingDelegationsResponse.decode(message.value);
   },
@@ -1255,6 +1439,15 @@ export const QueryDelegationRequest = {
     obj.validator_addr = message.validatorAddr;
     return obj;
   },
+  fromAminoMsg(object: QueryDelegationRequestAminoMsg): QueryDelegationRequest {
+    return QueryDelegationRequest.fromAmino(object.value);
+  },
+  toAminoMsg(message: QueryDelegationRequest): QueryDelegationRequestAminoMsg {
+    return {
+      type: "cosmos-sdk/QueryDelegationRequest",
+      value: QueryDelegationRequest.toAmino(message)
+    };
+  },
   fromProtoMsg(message: QueryDelegationRequestProtoMsg): QueryDelegationRequest {
     return QueryDelegationRequest.decode(message.value);
   },
@@ -1323,6 +1516,15 @@ export const QueryDelegationResponse = {
     const obj: any = {};
     obj.delegation_response = message.delegationResponse ? DelegationResponse.toAmino(message.delegationResponse) : undefined;
     return obj;
+  },
+  fromAminoMsg(object: QueryDelegationResponseAminoMsg): QueryDelegationResponse {
+    return QueryDelegationResponse.fromAmino(object.value);
+  },
+  toAminoMsg(message: QueryDelegationResponse): QueryDelegationResponseAminoMsg {
+    return {
+      type: "cosmos-sdk/QueryDelegationResponse",
+      value: QueryDelegationResponse.toAmino(message)
+    };
   },
   fromProtoMsg(message: QueryDelegationResponseProtoMsg): QueryDelegationResponse {
     return QueryDelegationResponse.decode(message.value);
@@ -1405,6 +1607,15 @@ export const QueryUnbondingDelegationRequest = {
     obj.validator_addr = message.validatorAddr;
     return obj;
   },
+  fromAminoMsg(object: QueryUnbondingDelegationRequestAminoMsg): QueryUnbondingDelegationRequest {
+    return QueryUnbondingDelegationRequest.fromAmino(object.value);
+  },
+  toAminoMsg(message: QueryUnbondingDelegationRequest): QueryUnbondingDelegationRequestAminoMsg {
+    return {
+      type: "cosmos-sdk/QueryUnbondingDelegationRequest",
+      value: QueryUnbondingDelegationRequest.toAmino(message)
+    };
+  },
   fromProtoMsg(message: QueryUnbondingDelegationRequestProtoMsg): QueryUnbondingDelegationRequest {
     return QueryUnbondingDelegationRequest.decode(message.value);
   },
@@ -1473,6 +1684,15 @@ export const QueryUnbondingDelegationResponse = {
     const obj: any = {};
     obj.unbond = message.unbond ? UnbondingDelegation.toAmino(message.unbond) : UnbondingDelegation.fromPartial({});
     return obj;
+  },
+  fromAminoMsg(object: QueryUnbondingDelegationResponseAminoMsg): QueryUnbondingDelegationResponse {
+    return QueryUnbondingDelegationResponse.fromAmino(object.value);
+  },
+  toAminoMsg(message: QueryUnbondingDelegationResponse): QueryUnbondingDelegationResponseAminoMsg {
+    return {
+      type: "cosmos-sdk/QueryUnbondingDelegationResponse",
+      value: QueryUnbondingDelegationResponse.toAmino(message)
+    };
   },
   fromProtoMsg(message: QueryUnbondingDelegationResponseProtoMsg): QueryUnbondingDelegationResponse {
     return QueryUnbondingDelegationResponse.decode(message.value);
@@ -1554,6 +1774,15 @@ export const QueryDelegatorDelegationsRequest = {
     obj.delegator_addr = message.delegatorAddr;
     obj.pagination = message.pagination ? PageRequest.toAmino(message.pagination) : undefined;
     return obj;
+  },
+  fromAminoMsg(object: QueryDelegatorDelegationsRequestAminoMsg): QueryDelegatorDelegationsRequest {
+    return QueryDelegatorDelegationsRequest.fromAmino(object.value);
+  },
+  toAminoMsg(message: QueryDelegatorDelegationsRequest): QueryDelegatorDelegationsRequestAminoMsg {
+    return {
+      type: "cosmos-sdk/QueryDelegatorDelegationsRequest",
+      value: QueryDelegatorDelegationsRequest.toAmino(message)
+    };
   },
   fromProtoMsg(message: QueryDelegatorDelegationsRequestProtoMsg): QueryDelegatorDelegationsRequest {
     return QueryDelegatorDelegationsRequest.decode(message.value);
@@ -1638,6 +1867,15 @@ export const QueryDelegatorDelegationsResponse = {
     obj.pagination = message.pagination ? PageResponse.toAmino(message.pagination) : undefined;
     return obj;
   },
+  fromAminoMsg(object: QueryDelegatorDelegationsResponseAminoMsg): QueryDelegatorDelegationsResponse {
+    return QueryDelegatorDelegationsResponse.fromAmino(object.value);
+  },
+  toAminoMsg(message: QueryDelegatorDelegationsResponse): QueryDelegatorDelegationsResponseAminoMsg {
+    return {
+      type: "cosmos-sdk/QueryDelegatorDelegationsResponse",
+      value: QueryDelegatorDelegationsResponse.toAmino(message)
+    };
+  },
   fromProtoMsg(message: QueryDelegatorDelegationsResponseProtoMsg): QueryDelegatorDelegationsResponse {
     return QueryDelegatorDelegationsResponse.decode(message.value);
   },
@@ -1718,6 +1956,15 @@ export const QueryDelegatorUnbondingDelegationsRequest = {
     obj.delegator_addr = message.delegatorAddr;
     obj.pagination = message.pagination ? PageRequest.toAmino(message.pagination) : undefined;
     return obj;
+  },
+  fromAminoMsg(object: QueryDelegatorUnbondingDelegationsRequestAminoMsg): QueryDelegatorUnbondingDelegationsRequest {
+    return QueryDelegatorUnbondingDelegationsRequest.fromAmino(object.value);
+  },
+  toAminoMsg(message: QueryDelegatorUnbondingDelegationsRequest): QueryDelegatorUnbondingDelegationsRequestAminoMsg {
+    return {
+      type: "cosmos-sdk/QueryDelegatorUnbondingDelegationsRequest",
+      value: QueryDelegatorUnbondingDelegationsRequest.toAmino(message)
+    };
   },
   fromProtoMsg(message: QueryDelegatorUnbondingDelegationsRequestProtoMsg): QueryDelegatorUnbondingDelegationsRequest {
     return QueryDelegatorUnbondingDelegationsRequest.decode(message.value);
@@ -1801,6 +2048,15 @@ export const QueryDelegatorUnbondingDelegationsResponse = {
     }
     obj.pagination = message.pagination ? PageResponse.toAmino(message.pagination) : undefined;
     return obj;
+  },
+  fromAminoMsg(object: QueryDelegatorUnbondingDelegationsResponseAminoMsg): QueryDelegatorUnbondingDelegationsResponse {
+    return QueryDelegatorUnbondingDelegationsResponse.fromAmino(object.value);
+  },
+  toAminoMsg(message: QueryDelegatorUnbondingDelegationsResponse): QueryDelegatorUnbondingDelegationsResponseAminoMsg {
+    return {
+      type: "cosmos-sdk/QueryDelegatorUnbondingDelegationsResponse",
+      value: QueryDelegatorUnbondingDelegationsResponse.toAmino(message)
+    };
   },
   fromProtoMsg(message: QueryDelegatorUnbondingDelegationsResponseProtoMsg): QueryDelegatorUnbondingDelegationsResponse {
     return QueryDelegatorUnbondingDelegationsResponse.decode(message.value);
@@ -1907,6 +2163,15 @@ export const QueryRedelegationsRequest = {
     obj.pagination = message.pagination ? PageRequest.toAmino(message.pagination) : undefined;
     return obj;
   },
+  fromAminoMsg(object: QueryRedelegationsRequestAminoMsg): QueryRedelegationsRequest {
+    return QueryRedelegationsRequest.fromAmino(object.value);
+  },
+  toAminoMsg(message: QueryRedelegationsRequest): QueryRedelegationsRequestAminoMsg {
+    return {
+      type: "cosmos-sdk/QueryRedelegationsRequest",
+      value: QueryRedelegationsRequest.toAmino(message)
+    };
+  },
   fromProtoMsg(message: QueryRedelegationsRequestProtoMsg): QueryRedelegationsRequest {
     return QueryRedelegationsRequest.decode(message.value);
   },
@@ -1990,6 +2255,15 @@ export const QueryRedelegationsResponse = {
     obj.pagination = message.pagination ? PageResponse.toAmino(message.pagination) : undefined;
     return obj;
   },
+  fromAminoMsg(object: QueryRedelegationsResponseAminoMsg): QueryRedelegationsResponse {
+    return QueryRedelegationsResponse.fromAmino(object.value);
+  },
+  toAminoMsg(message: QueryRedelegationsResponse): QueryRedelegationsResponseAminoMsg {
+    return {
+      type: "cosmos-sdk/QueryRedelegationsResponse",
+      value: QueryRedelegationsResponse.toAmino(message)
+    };
+  },
   fromProtoMsg(message: QueryRedelegationsResponseProtoMsg): QueryRedelegationsResponse {
     return QueryRedelegationsResponse.decode(message.value);
   },
@@ -2070,6 +2344,15 @@ export const QueryDelegatorValidatorsRequest = {
     obj.delegator_addr = message.delegatorAddr;
     obj.pagination = message.pagination ? PageRequest.toAmino(message.pagination) : undefined;
     return obj;
+  },
+  fromAminoMsg(object: QueryDelegatorValidatorsRequestAminoMsg): QueryDelegatorValidatorsRequest {
+    return QueryDelegatorValidatorsRequest.fromAmino(object.value);
+  },
+  toAminoMsg(message: QueryDelegatorValidatorsRequest): QueryDelegatorValidatorsRequestAminoMsg {
+    return {
+      type: "cosmos-sdk/QueryDelegatorValidatorsRequest",
+      value: QueryDelegatorValidatorsRequest.toAmino(message)
+    };
   },
   fromProtoMsg(message: QueryDelegatorValidatorsRequestProtoMsg): QueryDelegatorValidatorsRequest {
     return QueryDelegatorValidatorsRequest.decode(message.value);
@@ -2154,6 +2437,15 @@ export const QueryDelegatorValidatorsResponse = {
     obj.pagination = message.pagination ? PageResponse.toAmino(message.pagination) : undefined;
     return obj;
   },
+  fromAminoMsg(object: QueryDelegatorValidatorsResponseAminoMsg): QueryDelegatorValidatorsResponse {
+    return QueryDelegatorValidatorsResponse.fromAmino(object.value);
+  },
+  toAminoMsg(message: QueryDelegatorValidatorsResponse): QueryDelegatorValidatorsResponseAminoMsg {
+    return {
+      type: "cosmos-sdk/QueryDelegatorValidatorsResponse",
+      value: QueryDelegatorValidatorsResponse.toAmino(message)
+    };
+  },
   fromProtoMsg(message: QueryDelegatorValidatorsResponseProtoMsg): QueryDelegatorValidatorsResponse {
     return QueryDelegatorValidatorsResponse.decode(message.value);
   },
@@ -2235,6 +2527,15 @@ export const QueryDelegatorValidatorRequest = {
     obj.validator_addr = message.validatorAddr;
     return obj;
   },
+  fromAminoMsg(object: QueryDelegatorValidatorRequestAminoMsg): QueryDelegatorValidatorRequest {
+    return QueryDelegatorValidatorRequest.fromAmino(object.value);
+  },
+  toAminoMsg(message: QueryDelegatorValidatorRequest): QueryDelegatorValidatorRequestAminoMsg {
+    return {
+      type: "cosmos-sdk/QueryDelegatorValidatorRequest",
+      value: QueryDelegatorValidatorRequest.toAmino(message)
+    };
+  },
   fromProtoMsg(message: QueryDelegatorValidatorRequestProtoMsg): QueryDelegatorValidatorRequest {
     return QueryDelegatorValidatorRequest.decode(message.value);
   },
@@ -2303,6 +2604,15 @@ export const QueryDelegatorValidatorResponse = {
     const obj: any = {};
     obj.validator = message.validator ? Validator.toAmino(message.validator) : Validator.fromPartial({});
     return obj;
+  },
+  fromAminoMsg(object: QueryDelegatorValidatorResponseAminoMsg): QueryDelegatorValidatorResponse {
+    return QueryDelegatorValidatorResponse.fromAmino(object.value);
+  },
+  toAminoMsg(message: QueryDelegatorValidatorResponse): QueryDelegatorValidatorResponseAminoMsg {
+    return {
+      type: "cosmos-sdk/QueryDelegatorValidatorResponse",
+      value: QueryDelegatorValidatorResponse.toAmino(message)
+    };
   },
   fromProtoMsg(message: QueryDelegatorValidatorResponseProtoMsg): QueryDelegatorValidatorResponse {
     return QueryDelegatorValidatorResponse.decode(message.value);
@@ -2373,6 +2683,15 @@ export const QueryHistoricalInfoRequest = {
     obj.height = message.height ? message.height.toString() : undefined;
     return obj;
   },
+  fromAminoMsg(object: QueryHistoricalInfoRequestAminoMsg): QueryHistoricalInfoRequest {
+    return QueryHistoricalInfoRequest.fromAmino(object.value);
+  },
+  toAminoMsg(message: QueryHistoricalInfoRequest): QueryHistoricalInfoRequestAminoMsg {
+    return {
+      type: "cosmos-sdk/QueryHistoricalInfoRequest",
+      value: QueryHistoricalInfoRequest.toAmino(message)
+    };
+  },
   fromProtoMsg(message: QueryHistoricalInfoRequestProtoMsg): QueryHistoricalInfoRequest {
     return QueryHistoricalInfoRequest.decode(message.value);
   },
@@ -2442,6 +2761,15 @@ export const QueryHistoricalInfoResponse = {
     obj.hist = message.hist ? HistoricalInfo.toAmino(message.hist) : undefined;
     return obj;
   },
+  fromAminoMsg(object: QueryHistoricalInfoResponseAminoMsg): QueryHistoricalInfoResponse {
+    return QueryHistoricalInfoResponse.fromAmino(object.value);
+  },
+  toAminoMsg(message: QueryHistoricalInfoResponse): QueryHistoricalInfoResponseAminoMsg {
+    return {
+      type: "cosmos-sdk/QueryHistoricalInfoResponse",
+      value: QueryHistoricalInfoResponse.toAmino(message)
+    };
+  },
   fromProtoMsg(message: QueryHistoricalInfoResponseProtoMsg): QueryHistoricalInfoResponse {
     return QueryHistoricalInfoResponse.decode(message.value);
   },
@@ -2497,6 +2825,15 @@ export const QueryPoolRequest = {
   toAmino(_: QueryPoolRequest): QueryPoolRequestAmino {
     const obj: any = {};
     return obj;
+  },
+  fromAminoMsg(object: QueryPoolRequestAminoMsg): QueryPoolRequest {
+    return QueryPoolRequest.fromAmino(object.value);
+  },
+  toAminoMsg(message: QueryPoolRequest): QueryPoolRequestAminoMsg {
+    return {
+      type: "cosmos-sdk/QueryPoolRequest",
+      value: QueryPoolRequest.toAmino(message)
+    };
   },
   fromProtoMsg(message: QueryPoolRequestProtoMsg): QueryPoolRequest {
     return QueryPoolRequest.decode(message.value);
@@ -2567,6 +2904,15 @@ export const QueryPoolResponse = {
     obj.pool = message.pool ? Pool.toAmino(message.pool) : Pool.fromPartial({});
     return obj;
   },
+  fromAminoMsg(object: QueryPoolResponseAminoMsg): QueryPoolResponse {
+    return QueryPoolResponse.fromAmino(object.value);
+  },
+  toAminoMsg(message: QueryPoolResponse): QueryPoolResponseAminoMsg {
+    return {
+      type: "cosmos-sdk/QueryPoolResponse",
+      value: QueryPoolResponse.toAmino(message)
+    };
+  },
   fromProtoMsg(message: QueryPoolResponseProtoMsg): QueryPoolResponse {
     return QueryPoolResponse.decode(message.value);
   },
@@ -2622,6 +2968,15 @@ export const QueryParamsRequest = {
   toAmino(_: QueryParamsRequest): QueryParamsRequestAmino {
     const obj: any = {};
     return obj;
+  },
+  fromAminoMsg(object: QueryParamsRequestAminoMsg): QueryParamsRequest {
+    return QueryParamsRequest.fromAmino(object.value);
+  },
+  toAminoMsg(message: QueryParamsRequest): QueryParamsRequestAminoMsg {
+    return {
+      type: "cosmos-sdk/QueryParamsRequest",
+      value: QueryParamsRequest.toAmino(message)
+    };
   },
   fromProtoMsg(message: QueryParamsRequestProtoMsg): QueryParamsRequest {
     return QueryParamsRequest.decode(message.value);
@@ -2691,6 +3046,15 @@ export const QueryParamsResponse = {
     const obj: any = {};
     obj.params = message.params ? Params.toAmino(message.params) : Params.fromPartial({});
     return obj;
+  },
+  fromAminoMsg(object: QueryParamsResponseAminoMsg): QueryParamsResponse {
+    return QueryParamsResponse.fromAmino(object.value);
+  },
+  toAminoMsg(message: QueryParamsResponse): QueryParamsResponseAminoMsg {
+    return {
+      type: "cosmos-sdk/QueryParamsResponse",
+      value: QueryParamsResponse.toAmino(message)
+    };
   },
   fromProtoMsg(message: QueryParamsResponseProtoMsg): QueryParamsResponse {
     return QueryParamsResponse.decode(message.value);

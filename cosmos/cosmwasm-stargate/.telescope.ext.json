@@ -10,13 +10,15 @@
     "prototypes": {
       "methods": {
         "toAmino": true,
-        "fromAmino": true
+        "fromAmino": true,
+        "toAminoMsg": true,
+        "fromAminoMsg": true
       }
     },
     "aminoEncoding": {
       "enabled": true,
       "useLegacyInlineEncoding": false,
-      "disableMsgTypes": true,
+      "disableMsgTypes": false,
       "useProtoOptionality": true
     },
     "rpcClients": {

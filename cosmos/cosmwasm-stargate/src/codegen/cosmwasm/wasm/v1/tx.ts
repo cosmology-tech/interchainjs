@@ -32,6 +32,10 @@ export interface MsgStoreCodeAmino {
    */
   instantiate_permission?: AccessConfigAmino;
 }
+export interface MsgStoreCodeAminoMsg {
+  type: "wasm/MsgStoreCode";
+  value: MsgStoreCodeAmino;
+}
 /** MsgStoreCodeResponse returns store result data. */
 export interface MsgStoreCodeResponse {
   /** CodeID is the reference to the stored WASM code */
@@ -49,6 +53,10 @@ export interface MsgStoreCodeResponseAmino {
   code_id: string;
   /** Checksum is the sha256 hash of the stored code */
   checksum: string;
+}
+export interface MsgStoreCodeResponseAminoMsg {
+  type: "wasm/MsgStoreCodeResponse";
+  value: MsgStoreCodeResponseAmino;
 }
 /**
  * MsgInstantiateContract create a new smart contract instance for the given
@@ -90,6 +98,10 @@ export interface MsgInstantiateContractAmino {
   /** Funds coins that are transferred to the contract on instantiation */
   funds: CoinAmino[];
 }
+export interface MsgInstantiateContractAminoMsg {
+  type: "wasm/MsgInstantiateContract";
+  value: MsgInstantiateContractAmino;
+}
 /** MsgInstantiateContractResponse return instantiation result data */
 export interface MsgInstantiateContractResponse {
   /** Address is the bech32 address of the new contract instance. */
@@ -107,6 +119,10 @@ export interface MsgInstantiateContractResponseAmino {
   address: string;
   /** Data contains bytes to returned from the contract */
   data: string;
+}
+export interface MsgInstantiateContractResponseAminoMsg {
+  type: "wasm/MsgInstantiateContractResponse";
+  value: MsgInstantiateContractResponseAmino;
 }
 /**
  * MsgInstantiateContract2 create a new smart contract instance for the given
@@ -162,6 +178,10 @@ export interface MsgInstantiateContract2Amino {
    */
   fix_msg: boolean;
 }
+export interface MsgInstantiateContract2AminoMsg {
+  type: "wasm/MsgInstantiateContract2";
+  value: MsgInstantiateContract2Amino;
+}
 /** MsgInstantiateContract2Response return instantiation result data */
 export interface MsgInstantiateContract2Response {
   /** Address is the bech32 address of the new contract instance. */
@@ -179,6 +199,10 @@ export interface MsgInstantiateContract2ResponseAmino {
   address: string;
   /** Data contains bytes to returned from the contract */
   data: string;
+}
+export interface MsgInstantiateContract2ResponseAminoMsg {
+  type: "wasm/MsgInstantiateContract2Response";
+  value: MsgInstantiateContract2ResponseAmino;
 }
 /** MsgExecuteContract submits the given message data to a smart contract */
 export interface MsgExecuteContract {
@@ -206,6 +230,10 @@ export interface MsgExecuteContractAmino {
   /** Funds coins that are transferred to the contract on execution */
   funds: CoinAmino[];
 }
+export interface MsgExecuteContractAminoMsg {
+  type: "wasm/MsgExecuteContract";
+  value: MsgExecuteContractAmino;
+}
 /** MsgExecuteContractResponse returns execution result data. */
 export interface MsgExecuteContractResponse {
   /** Data contains bytes to returned from the contract */
@@ -219,6 +247,10 @@ export interface MsgExecuteContractResponseProtoMsg {
 export interface MsgExecuteContractResponseAmino {
   /** Data contains bytes to returned from the contract */
   data: string;
+}
+export interface MsgExecuteContractResponseAminoMsg {
+  type: "wasm/MsgExecuteContractResponse";
+  value: MsgExecuteContractResponseAmino;
 }
 /** MsgMigrateContract runs a code upgrade/ downgrade for a smart contract */
 export interface MsgMigrateContract {
@@ -246,6 +278,10 @@ export interface MsgMigrateContractAmino {
   /** Msg json encoded message to be passed to the contract on migration */
   msg: any;
 }
+export interface MsgMigrateContractAminoMsg {
+  type: "wasm/MsgMigrateContract";
+  value: MsgMigrateContractAmino;
+}
 /** MsgMigrateContractResponse returns contract migration result data. */
 export interface MsgMigrateContractResponse {
   /**
@@ -265,6 +301,10 @@ export interface MsgMigrateContractResponseAmino {
    * (May be empty)
    */
   data: string;
+}
+export interface MsgMigrateContractResponseAminoMsg {
+  type: "wasm/MsgMigrateContractResponse";
+  value: MsgMigrateContractResponseAmino;
 }
 /** MsgUpdateAdmin sets a new admin for a smart contract */
 export interface MsgUpdateAdmin {
@@ -288,6 +328,10 @@ export interface MsgUpdateAdminAmino {
   /** Contract is the address of the smart contract */
   contract: string;
 }
+export interface MsgUpdateAdminAminoMsg {
+  type: "wasm/MsgUpdateAdmin";
+  value: MsgUpdateAdminAmino;
+}
 /** MsgUpdateAdminResponse returns empty data */
 export interface MsgUpdateAdminResponse {}
 export interface MsgUpdateAdminResponseProtoMsg {
@@ -296,6 +340,10 @@ export interface MsgUpdateAdminResponseProtoMsg {
 }
 /** MsgUpdateAdminResponse returns empty data */
 export interface MsgUpdateAdminResponseAmino {}
+export interface MsgUpdateAdminResponseAminoMsg {
+  type: "wasm/MsgUpdateAdminResponse";
+  value: MsgUpdateAdminResponseAmino;
+}
 /** MsgClearAdmin removes any admin stored for a smart contract */
 export interface MsgClearAdmin {
   /** Sender is the actor that signed the messages */
@@ -314,6 +362,10 @@ export interface MsgClearAdminAmino {
   /** Contract is the address of the smart contract */
   contract: string;
 }
+export interface MsgClearAdminAminoMsg {
+  type: "wasm/MsgClearAdmin";
+  value: MsgClearAdminAmino;
+}
 /** MsgClearAdminResponse returns empty data */
 export interface MsgClearAdminResponse {}
 export interface MsgClearAdminResponseProtoMsg {
@@ -322,6 +374,10 @@ export interface MsgClearAdminResponseProtoMsg {
 }
 /** MsgClearAdminResponse returns empty data */
 export interface MsgClearAdminResponseAmino {}
+export interface MsgClearAdminResponseAminoMsg {
+  type: "wasm/MsgClearAdminResponse";
+  value: MsgClearAdminResponseAmino;
+}
 /**
  * AccessConfigUpdate contains the code id and the access config to be
  * applied.
@@ -346,6 +402,10 @@ export interface AccessConfigUpdateAmino {
   /** InstantiatePermission to apply to the set of code ids */
   instantiate_permission: AccessConfigAmino;
 }
+export interface AccessConfigUpdateAminoMsg {
+  type: "wasm/AccessConfigUpdate";
+  value: AccessConfigUpdateAmino;
+}
 /** MsgUpdateInstantiateConfig updates instantiate config for a smart contract */
 export interface MsgUpdateInstantiateConfig {
   /** Sender is the that actor that signed the messages */
@@ -368,6 +428,10 @@ export interface MsgUpdateInstantiateConfigAmino {
   /** NewInstantiatePermission is the new access control */
   new_instantiate_permission?: AccessConfigAmino;
 }
+export interface MsgUpdateInstantiateConfigAminoMsg {
+  type: "wasm/MsgUpdateInstantiateConfig";
+  value: MsgUpdateInstantiateConfigAmino;
+}
 /** MsgUpdateInstantiateConfigResponse returns empty data */
 export interface MsgUpdateInstantiateConfigResponse {}
 export interface MsgUpdateInstantiateConfigResponseProtoMsg {
@@ -376,6 +440,10 @@ export interface MsgUpdateInstantiateConfigResponseProtoMsg {
 }
 /** MsgUpdateInstantiateConfigResponse returns empty data */
 export interface MsgUpdateInstantiateConfigResponseAmino {}
+export interface MsgUpdateInstantiateConfigResponseAminoMsg {
+  type: "wasm/MsgUpdateInstantiateConfigResponse";
+  value: MsgUpdateInstantiateConfigResponseAmino;
+}
 /**
  * MsgUpdateParams is the MsgUpdateParams request type.
  * 
@@ -410,6 +478,10 @@ export interface MsgUpdateParamsAmino {
    */
   params: ParamsAmino;
 }
+export interface MsgUpdateParamsAminoMsg {
+  type: "wasm/MsgUpdateParams";
+  value: MsgUpdateParamsAmino;
+}
 /**
  * MsgUpdateParamsResponse defines the response structure for executing a
  * MsgUpdateParams message.
@@ -428,6 +500,10 @@ export interface MsgUpdateParamsResponseProtoMsg {
  * Since: 0.40
  */
 export interface MsgUpdateParamsResponseAmino {}
+export interface MsgUpdateParamsResponseAminoMsg {
+  type: "wasm/MsgUpdateParamsResponse";
+  value: MsgUpdateParamsResponseAmino;
+}
 /**
  * MsgSudoContract is the MsgSudoContract request type.
  * 
@@ -458,6 +534,10 @@ export interface MsgSudoContractAmino {
   /** Msg json encoded message to be passed to the contract as sudo */
   msg: any;
 }
+export interface MsgSudoContractAminoMsg {
+  type: "wasm/MsgSudoContract";
+  value: MsgSudoContractAmino;
+}
 /**
  * MsgSudoContractResponse defines the response structure for executing a
  * MsgSudoContract message.
@@ -481,6 +561,10 @@ export interface MsgSudoContractResponseProtoMsg {
 export interface MsgSudoContractResponseAmino {
   /** Data contains bytes to returned from the contract */
   data: string;
+}
+export interface MsgSudoContractResponseAminoMsg {
+  type: "wasm/MsgSudoContractResponse";
+  value: MsgSudoContractResponseAmino;
 }
 /**
  * MsgPinCodes is the MsgPinCodes request type.
@@ -508,6 +592,10 @@ export interface MsgPinCodesAmino {
   /** CodeIDs references the new WASM codes */
   code_ids: string[];
 }
+export interface MsgPinCodesAminoMsg {
+  type: "wasm/MsgPinCodes";
+  value: MsgPinCodesAmino;
+}
 /**
  * MsgPinCodesResponse defines the response structure for executing a
  * MsgPinCodes message.
@@ -526,6 +614,10 @@ export interface MsgPinCodesResponseProtoMsg {
  * Since: 0.40
  */
 export interface MsgPinCodesResponseAmino {}
+export interface MsgPinCodesResponseAminoMsg {
+  type: "wasm/MsgPinCodesResponse";
+  value: MsgPinCodesResponseAmino;
+}
 /**
  * MsgUnpinCodes is the MsgUnpinCodes request type.
  * 
@@ -552,6 +644,10 @@ export interface MsgUnpinCodesAmino {
   /** CodeIDs references the WASM codes */
   code_ids: string[];
 }
+export interface MsgUnpinCodesAminoMsg {
+  type: "wasm/MsgUnpinCodes";
+  value: MsgUnpinCodesAmino;
+}
 /**
  * MsgUnpinCodesResponse defines the response structure for executing a
  * MsgUnpinCodes message.
@@ -570,6 +666,10 @@ export interface MsgUnpinCodesResponseProtoMsg {
  * Since: 0.40
  */
 export interface MsgUnpinCodesResponseAmino {}
+export interface MsgUnpinCodesResponseAminoMsg {
+  type: "wasm/MsgUnpinCodesResponse";
+  value: MsgUnpinCodesResponseAmino;
+}
 /**
  * MsgStoreAndInstantiateContract is the MsgStoreAndInstantiateContract
  * request type.
@@ -658,6 +758,10 @@ export interface MsgStoreAndInstantiateContractAmino {
    */
   code_hash: string;
 }
+export interface MsgStoreAndInstantiateContractAminoMsg {
+  type: "wasm/MsgStoreAndInstantiateContract";
+  value: MsgStoreAndInstantiateContractAmino;
+}
 /**
  * MsgStoreAndInstantiateContractResponse defines the response structure
  * for executing a MsgStoreAndInstantiateContract message.
@@ -686,6 +790,10 @@ export interface MsgStoreAndInstantiateContractResponseAmino {
   /** Data contains bytes to returned from the contract */
   data: string;
 }
+export interface MsgStoreAndInstantiateContractResponseAminoMsg {
+  type: "wasm/MsgStoreAndInstantiateContractResponse";
+  value: MsgStoreAndInstantiateContractResponseAmino;
+}
 /**
  * MsgAddCodeUploadParamsAddresses is the
  * MsgAddCodeUploadParamsAddresses request type.
@@ -708,6 +816,10 @@ export interface MsgAddCodeUploadParamsAddressesAmino {
   authority: string;
   addresses: string[];
 }
+export interface MsgAddCodeUploadParamsAddressesAminoMsg {
+  type: "wasm/MsgAddCodeUploadParamsAddresses";
+  value: MsgAddCodeUploadParamsAddressesAmino;
+}
 /**
  * MsgAddCodeUploadParamsAddressesResponse defines the response
  * structure for executing a MsgAddCodeUploadParamsAddresses message.
@@ -722,6 +834,10 @@ export interface MsgAddCodeUploadParamsAddressesResponseProtoMsg {
  * structure for executing a MsgAddCodeUploadParamsAddresses message.
  */
 export interface MsgAddCodeUploadParamsAddressesResponseAmino {}
+export interface MsgAddCodeUploadParamsAddressesResponseAminoMsg {
+  type: "wasm/MsgAddCodeUploadParamsAddressesResponse";
+  value: MsgAddCodeUploadParamsAddressesResponseAmino;
+}
 /**
  * MsgRemoveCodeUploadParamsAddresses is the
  * MsgRemoveCodeUploadParamsAddresses request type.
@@ -744,6 +860,10 @@ export interface MsgRemoveCodeUploadParamsAddressesAmino {
   authority: string;
   addresses: string[];
 }
+export interface MsgRemoveCodeUploadParamsAddressesAminoMsg {
+  type: "wasm/MsgRemoveCodeUploadParamsAddresses";
+  value: MsgRemoveCodeUploadParamsAddressesAmino;
+}
 /**
  * MsgRemoveCodeUploadParamsAddressesResponse defines the response
  * structure for executing a MsgRemoveCodeUploadParamsAddresses message.
@@ -758,6 +878,10 @@ export interface MsgRemoveCodeUploadParamsAddressesResponseProtoMsg {
  * structure for executing a MsgRemoveCodeUploadParamsAddresses message.
  */
 export interface MsgRemoveCodeUploadParamsAddressesResponseAmino {}
+export interface MsgRemoveCodeUploadParamsAddressesResponseAminoMsg {
+  type: "wasm/MsgRemoveCodeUploadParamsAddressesResponse";
+  value: MsgRemoveCodeUploadParamsAddressesResponseAmino;
+}
 /**
  * MsgStoreAndMigrateContract is the MsgStoreAndMigrateContract
  * request type.
@@ -798,6 +922,10 @@ export interface MsgStoreAndMigrateContractAmino {
   /** Msg json encoded message to be passed to the contract on migration */
   msg: any;
 }
+export interface MsgStoreAndMigrateContractAminoMsg {
+  type: "wasm/MsgStoreAndMigrateContract";
+  value: MsgStoreAndMigrateContractAmino;
+}
 /**
  * MsgStoreAndMigrateContractResponse defines the response structure
  * for executing a MsgStoreAndMigrateContract message.
@@ -830,6 +958,10 @@ export interface MsgStoreAndMigrateContractResponseAmino {
   /** Data contains bytes to returned from the contract */
   data: string;
 }
+export interface MsgStoreAndMigrateContractResponseAminoMsg {
+  type: "wasm/MsgStoreAndMigrateContractResponse";
+  value: MsgStoreAndMigrateContractResponseAmino;
+}
 /** MsgUpdateContractLabel sets a new label for a smart contract */
 export interface MsgUpdateContractLabel {
   /** Sender is the that actor that signed the messages */
@@ -852,6 +984,10 @@ export interface MsgUpdateContractLabelAmino {
   /** Contract is the address of the smart contract */
   contract: string;
 }
+export interface MsgUpdateContractLabelAminoMsg {
+  type: "wasm/MsgUpdateContractLabel";
+  value: MsgUpdateContractLabelAmino;
+}
 /** MsgUpdateContractLabelResponse returns empty data */
 export interface MsgUpdateContractLabelResponse {}
 export interface MsgUpdateContractLabelResponseProtoMsg {
@@ -860,6 +996,10 @@ export interface MsgUpdateContractLabelResponseProtoMsg {
 }
 /** MsgUpdateContractLabelResponse returns empty data */
 export interface MsgUpdateContractLabelResponseAmino {}
+export interface MsgUpdateContractLabelResponseAminoMsg {
+  type: "wasm/MsgUpdateContractLabelResponse";
+  value: MsgUpdateContractLabelResponseAmino;
+}
 function createBaseMsgStoreCode(): MsgStoreCode {
   return {
     sender: "",
@@ -937,6 +1077,15 @@ export const MsgStoreCode = {
     obj.wasm_byte_code = message.wasmByteCode ? toBase64(message.wasmByteCode) : undefined;
     obj.instantiate_permission = message.instantiatePermission ? AccessConfig.toAmino(message.instantiatePermission) : undefined;
     return obj;
+  },
+  fromAminoMsg(object: MsgStoreCodeAminoMsg): MsgStoreCode {
+    return MsgStoreCode.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgStoreCode): MsgStoreCodeAminoMsg {
+    return {
+      type: "wasm/MsgStoreCode",
+      value: MsgStoreCode.toAmino(message)
+    };
   },
   fromProtoMsg(message: MsgStoreCodeProtoMsg): MsgStoreCode {
     return MsgStoreCode.decode(message.value);
@@ -1018,6 +1167,15 @@ export const MsgStoreCodeResponse = {
     obj.code_id = message.codeId ? message.codeId.toString() : undefined;
     obj.checksum = message.checksum ? base64FromBytes(message.checksum) : undefined;
     return obj;
+  },
+  fromAminoMsg(object: MsgStoreCodeResponseAminoMsg): MsgStoreCodeResponse {
+    return MsgStoreCodeResponse.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgStoreCodeResponse): MsgStoreCodeResponseAminoMsg {
+    return {
+      type: "wasm/MsgStoreCodeResponse",
+      value: MsgStoreCodeResponse.toAmino(message)
+    };
   },
   fromProtoMsg(message: MsgStoreCodeResponseProtoMsg): MsgStoreCodeResponse {
     return MsgStoreCodeResponse.decode(message.value);
@@ -1150,6 +1308,15 @@ export const MsgInstantiateContract = {
     }
     return obj;
   },
+  fromAminoMsg(object: MsgInstantiateContractAminoMsg): MsgInstantiateContract {
+    return MsgInstantiateContract.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgInstantiateContract): MsgInstantiateContractAminoMsg {
+    return {
+      type: "wasm/MsgInstantiateContract",
+      value: MsgInstantiateContract.toAmino(message)
+    };
+  },
   fromProtoMsg(message: MsgInstantiateContractProtoMsg): MsgInstantiateContract {
     return MsgInstantiateContract.decode(message.value);
   },
@@ -1230,6 +1397,15 @@ export const MsgInstantiateContractResponse = {
     obj.address = message.address;
     obj.data = message.data ? base64FromBytes(message.data) : undefined;
     return obj;
+  },
+  fromAminoMsg(object: MsgInstantiateContractResponseAminoMsg): MsgInstantiateContractResponse {
+    return MsgInstantiateContractResponse.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgInstantiateContractResponse): MsgInstantiateContractResponseAminoMsg {
+    return {
+      type: "wasm/MsgInstantiateContractResponse",
+      value: MsgInstantiateContractResponse.toAmino(message)
+    };
   },
   fromProtoMsg(message: MsgInstantiateContractResponseProtoMsg): MsgInstantiateContractResponse {
     return MsgInstantiateContractResponse.decode(message.value);
@@ -1386,6 +1562,15 @@ export const MsgInstantiateContract2 = {
     obj.fix_msg = message.fixMsg;
     return obj;
   },
+  fromAminoMsg(object: MsgInstantiateContract2AminoMsg): MsgInstantiateContract2 {
+    return MsgInstantiateContract2.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgInstantiateContract2): MsgInstantiateContract2AminoMsg {
+    return {
+      type: "wasm/MsgInstantiateContract2",
+      value: MsgInstantiateContract2.toAmino(message)
+    };
+  },
   fromProtoMsg(message: MsgInstantiateContract2ProtoMsg): MsgInstantiateContract2 {
     return MsgInstantiateContract2.decode(message.value);
   },
@@ -1466,6 +1651,15 @@ export const MsgInstantiateContract2Response = {
     obj.address = message.address;
     obj.data = message.data ? base64FromBytes(message.data) : undefined;
     return obj;
+  },
+  fromAminoMsg(object: MsgInstantiateContract2ResponseAminoMsg): MsgInstantiateContract2Response {
+    return MsgInstantiateContract2Response.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgInstantiateContract2Response): MsgInstantiateContract2ResponseAminoMsg {
+    return {
+      type: "wasm/MsgInstantiateContract2Response",
+      value: MsgInstantiateContract2Response.toAmino(message)
+    };
   },
   fromProtoMsg(message: MsgInstantiateContract2ResponseProtoMsg): MsgInstantiateContract2Response {
     return MsgInstantiateContract2Response.decode(message.value);
@@ -1574,6 +1768,15 @@ export const MsgExecuteContract = {
     }
     return obj;
   },
+  fromAminoMsg(object: MsgExecuteContractAminoMsg): MsgExecuteContract {
+    return MsgExecuteContract.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgExecuteContract): MsgExecuteContractAminoMsg {
+    return {
+      type: "wasm/MsgExecuteContract",
+      value: MsgExecuteContract.toAmino(message)
+    };
+  },
   fromProtoMsg(message: MsgExecuteContractProtoMsg): MsgExecuteContract {
     return MsgExecuteContract.decode(message.value);
   },
@@ -1642,6 +1845,15 @@ export const MsgExecuteContractResponse = {
     const obj: any = {};
     obj.data = message.data ? base64FromBytes(message.data) : undefined;
     return obj;
+  },
+  fromAminoMsg(object: MsgExecuteContractResponseAminoMsg): MsgExecuteContractResponse {
+    return MsgExecuteContractResponse.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgExecuteContractResponse): MsgExecuteContractResponseAminoMsg {
+    return {
+      type: "wasm/MsgExecuteContractResponse",
+      value: MsgExecuteContractResponse.toAmino(message)
+    };
   },
   fromProtoMsg(message: MsgExecuteContractResponseProtoMsg): MsgExecuteContractResponse {
     return MsgExecuteContractResponse.decode(message.value);
@@ -1748,6 +1960,15 @@ export const MsgMigrateContract = {
     obj.msg = message.msg ? JSON.parse(fromUtf8(message.msg)) : undefined;
     return obj;
   },
+  fromAminoMsg(object: MsgMigrateContractAminoMsg): MsgMigrateContract {
+    return MsgMigrateContract.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgMigrateContract): MsgMigrateContractAminoMsg {
+    return {
+      type: "wasm/MsgMigrateContract",
+      value: MsgMigrateContract.toAmino(message)
+    };
+  },
   fromProtoMsg(message: MsgMigrateContractProtoMsg): MsgMigrateContract {
     return MsgMigrateContract.decode(message.value);
   },
@@ -1816,6 +2037,15 @@ export const MsgMigrateContractResponse = {
     const obj: any = {};
     obj.data = message.data ? base64FromBytes(message.data) : undefined;
     return obj;
+  },
+  fromAminoMsg(object: MsgMigrateContractResponseAminoMsg): MsgMigrateContractResponse {
+    return MsgMigrateContractResponse.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgMigrateContractResponse): MsgMigrateContractResponseAminoMsg {
+    return {
+      type: "wasm/MsgMigrateContractResponse",
+      value: MsgMigrateContractResponse.toAmino(message)
+    };
   },
   fromProtoMsg(message: MsgMigrateContractResponseProtoMsg): MsgMigrateContractResponse {
     return MsgMigrateContractResponse.decode(message.value);
@@ -1910,6 +2140,15 @@ export const MsgUpdateAdmin = {
     obj.contract = message.contract;
     return obj;
   },
+  fromAminoMsg(object: MsgUpdateAdminAminoMsg): MsgUpdateAdmin {
+    return MsgUpdateAdmin.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgUpdateAdmin): MsgUpdateAdminAminoMsg {
+    return {
+      type: "wasm/MsgUpdateAdmin",
+      value: MsgUpdateAdmin.toAmino(message)
+    };
+  },
   fromProtoMsg(message: MsgUpdateAdminProtoMsg): MsgUpdateAdmin {
     return MsgUpdateAdmin.decode(message.value);
   },
@@ -1965,6 +2204,15 @@ export const MsgUpdateAdminResponse = {
   toAmino(_: MsgUpdateAdminResponse): MsgUpdateAdminResponseAmino {
     const obj: any = {};
     return obj;
+  },
+  fromAminoMsg(object: MsgUpdateAdminResponseAminoMsg): MsgUpdateAdminResponse {
+    return MsgUpdateAdminResponse.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgUpdateAdminResponse): MsgUpdateAdminResponseAminoMsg {
+    return {
+      type: "wasm/MsgUpdateAdminResponse",
+      value: MsgUpdateAdminResponse.toAmino(message)
+    };
   },
   fromProtoMsg(message: MsgUpdateAdminResponseProtoMsg): MsgUpdateAdminResponse {
     return MsgUpdateAdminResponse.decode(message.value);
@@ -2047,6 +2295,15 @@ export const MsgClearAdmin = {
     obj.contract = message.contract;
     return obj;
   },
+  fromAminoMsg(object: MsgClearAdminAminoMsg): MsgClearAdmin {
+    return MsgClearAdmin.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgClearAdmin): MsgClearAdminAminoMsg {
+    return {
+      type: "wasm/MsgClearAdmin",
+      value: MsgClearAdmin.toAmino(message)
+    };
+  },
   fromProtoMsg(message: MsgClearAdminProtoMsg): MsgClearAdmin {
     return MsgClearAdmin.decode(message.value);
   },
@@ -2102,6 +2359,15 @@ export const MsgClearAdminResponse = {
   toAmino(_: MsgClearAdminResponse): MsgClearAdminResponseAmino {
     const obj: any = {};
     return obj;
+  },
+  fromAminoMsg(object: MsgClearAdminResponseAminoMsg): MsgClearAdminResponse {
+    return MsgClearAdminResponse.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgClearAdminResponse): MsgClearAdminResponseAminoMsg {
+    return {
+      type: "wasm/MsgClearAdminResponse",
+      value: MsgClearAdminResponse.toAmino(message)
+    };
   },
   fromProtoMsg(message: MsgClearAdminResponseProtoMsg): MsgClearAdminResponse {
     return MsgClearAdminResponse.decode(message.value);
@@ -2183,6 +2449,15 @@ export const AccessConfigUpdate = {
     obj.code_id = message.codeId ? message.codeId.toString() : undefined;
     obj.instantiate_permission = message.instantiatePermission ? AccessConfig.toAmino(message.instantiatePermission) : AccessConfig.fromPartial({});
     return obj;
+  },
+  fromAminoMsg(object: AccessConfigUpdateAminoMsg): AccessConfigUpdate {
+    return AccessConfigUpdate.fromAmino(object.value);
+  },
+  toAminoMsg(message: AccessConfigUpdate): AccessConfigUpdateAminoMsg {
+    return {
+      type: "wasm/AccessConfigUpdate",
+      value: AccessConfigUpdate.toAmino(message)
+    };
   },
   fromProtoMsg(message: AccessConfigUpdateProtoMsg): AccessConfigUpdate {
     return AccessConfigUpdate.decode(message.value);
@@ -2277,6 +2552,15 @@ export const MsgUpdateInstantiateConfig = {
     obj.new_instantiate_permission = message.newInstantiatePermission ? AccessConfig.toAmino(message.newInstantiatePermission) : undefined;
     return obj;
   },
+  fromAminoMsg(object: MsgUpdateInstantiateConfigAminoMsg): MsgUpdateInstantiateConfig {
+    return MsgUpdateInstantiateConfig.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgUpdateInstantiateConfig): MsgUpdateInstantiateConfigAminoMsg {
+    return {
+      type: "wasm/MsgUpdateInstantiateConfig",
+      value: MsgUpdateInstantiateConfig.toAmino(message)
+    };
+  },
   fromProtoMsg(message: MsgUpdateInstantiateConfigProtoMsg): MsgUpdateInstantiateConfig {
     return MsgUpdateInstantiateConfig.decode(message.value);
   },
@@ -2332,6 +2616,15 @@ export const MsgUpdateInstantiateConfigResponse = {
   toAmino(_: MsgUpdateInstantiateConfigResponse): MsgUpdateInstantiateConfigResponseAmino {
     const obj: any = {};
     return obj;
+  },
+  fromAminoMsg(object: MsgUpdateInstantiateConfigResponseAminoMsg): MsgUpdateInstantiateConfigResponse {
+    return MsgUpdateInstantiateConfigResponse.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgUpdateInstantiateConfigResponse): MsgUpdateInstantiateConfigResponseAminoMsg {
+    return {
+      type: "wasm/MsgUpdateInstantiateConfigResponse",
+      value: MsgUpdateInstantiateConfigResponse.toAmino(message)
+    };
   },
   fromProtoMsg(message: MsgUpdateInstantiateConfigResponseProtoMsg): MsgUpdateInstantiateConfigResponse {
     return MsgUpdateInstantiateConfigResponse.decode(message.value);
@@ -2414,6 +2707,15 @@ export const MsgUpdateParams = {
     obj.params = message.params ? Params.toAmino(message.params) : Params.fromPartial({});
     return obj;
   },
+  fromAminoMsg(object: MsgUpdateParamsAminoMsg): MsgUpdateParams {
+    return MsgUpdateParams.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgUpdateParams): MsgUpdateParamsAminoMsg {
+    return {
+      type: "wasm/MsgUpdateParams",
+      value: MsgUpdateParams.toAmino(message)
+    };
+  },
   fromProtoMsg(message: MsgUpdateParamsProtoMsg): MsgUpdateParams {
     return MsgUpdateParams.decode(message.value);
   },
@@ -2469,6 +2771,15 @@ export const MsgUpdateParamsResponse = {
   toAmino(_: MsgUpdateParamsResponse): MsgUpdateParamsResponseAmino {
     const obj: any = {};
     return obj;
+  },
+  fromAminoMsg(object: MsgUpdateParamsResponseAminoMsg): MsgUpdateParamsResponse {
+    return MsgUpdateParamsResponse.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgUpdateParamsResponse): MsgUpdateParamsResponseAminoMsg {
+    return {
+      type: "wasm/MsgUpdateParamsResponse",
+      value: MsgUpdateParamsResponse.toAmino(message)
+    };
   },
   fromProtoMsg(message: MsgUpdateParamsResponseProtoMsg): MsgUpdateParamsResponse {
     return MsgUpdateParamsResponse.decode(message.value);
@@ -2563,6 +2874,15 @@ export const MsgSudoContract = {
     obj.msg = message.msg ? JSON.parse(fromUtf8(message.msg)) : undefined;
     return obj;
   },
+  fromAminoMsg(object: MsgSudoContractAminoMsg): MsgSudoContract {
+    return MsgSudoContract.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgSudoContract): MsgSudoContractAminoMsg {
+    return {
+      type: "wasm/MsgSudoContract",
+      value: MsgSudoContract.toAmino(message)
+    };
+  },
   fromProtoMsg(message: MsgSudoContractProtoMsg): MsgSudoContract {
     return MsgSudoContract.decode(message.value);
   },
@@ -2631,6 +2951,15 @@ export const MsgSudoContractResponse = {
     const obj: any = {};
     obj.data = message.data ? base64FromBytes(message.data) : undefined;
     return obj;
+  },
+  fromAminoMsg(object: MsgSudoContractResponseAminoMsg): MsgSudoContractResponse {
+    return MsgSudoContractResponse.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgSudoContractResponse): MsgSudoContractResponseAminoMsg {
+    return {
+      type: "wasm/MsgSudoContractResponse",
+      value: MsgSudoContractResponse.toAmino(message)
+    };
   },
   fromProtoMsg(message: MsgSudoContractResponseProtoMsg): MsgSudoContractResponse {
     return MsgSudoContractResponse.decode(message.value);
@@ -2724,6 +3053,15 @@ export const MsgPinCodes = {
     }
     return obj;
   },
+  fromAminoMsg(object: MsgPinCodesAminoMsg): MsgPinCodes {
+    return MsgPinCodes.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgPinCodes): MsgPinCodesAminoMsg {
+    return {
+      type: "wasm/MsgPinCodes",
+      value: MsgPinCodes.toAmino(message)
+    };
+  },
   fromProtoMsg(message: MsgPinCodesProtoMsg): MsgPinCodes {
     return MsgPinCodes.decode(message.value);
   },
@@ -2779,6 +3117,15 @@ export const MsgPinCodesResponse = {
   toAmino(_: MsgPinCodesResponse): MsgPinCodesResponseAmino {
     const obj: any = {};
     return obj;
+  },
+  fromAminoMsg(object: MsgPinCodesResponseAminoMsg): MsgPinCodesResponse {
+    return MsgPinCodesResponse.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgPinCodesResponse): MsgPinCodesResponseAminoMsg {
+    return {
+      type: "wasm/MsgPinCodesResponse",
+      value: MsgPinCodesResponse.toAmino(message)
+    };
   },
   fromProtoMsg(message: MsgPinCodesResponseProtoMsg): MsgPinCodesResponse {
     return MsgPinCodesResponse.decode(message.value);
@@ -2872,6 +3219,15 @@ export const MsgUnpinCodes = {
     }
     return obj;
   },
+  fromAminoMsg(object: MsgUnpinCodesAminoMsg): MsgUnpinCodes {
+    return MsgUnpinCodes.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgUnpinCodes): MsgUnpinCodesAminoMsg {
+    return {
+      type: "wasm/MsgUnpinCodes",
+      value: MsgUnpinCodes.toAmino(message)
+    };
+  },
   fromProtoMsg(message: MsgUnpinCodesProtoMsg): MsgUnpinCodes {
     return MsgUnpinCodes.decode(message.value);
   },
@@ -2927,6 +3283,15 @@ export const MsgUnpinCodesResponse = {
   toAmino(_: MsgUnpinCodesResponse): MsgUnpinCodesResponseAmino {
     const obj: any = {};
     return obj;
+  },
+  fromAminoMsg(object: MsgUnpinCodesResponseAminoMsg): MsgUnpinCodesResponse {
+    return MsgUnpinCodesResponse.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgUnpinCodesResponse): MsgUnpinCodesResponseAminoMsg {
+    return {
+      type: "wasm/MsgUnpinCodesResponse",
+      value: MsgUnpinCodesResponse.toAmino(message)
+    };
   },
   fromProtoMsg(message: MsgUnpinCodesResponseProtoMsg): MsgUnpinCodesResponse {
     return MsgUnpinCodesResponse.decode(message.value);
@@ -3119,6 +3484,15 @@ export const MsgStoreAndInstantiateContract = {
     obj.code_hash = message.codeHash ? base64FromBytes(message.codeHash) : undefined;
     return obj;
   },
+  fromAminoMsg(object: MsgStoreAndInstantiateContractAminoMsg): MsgStoreAndInstantiateContract {
+    return MsgStoreAndInstantiateContract.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgStoreAndInstantiateContract): MsgStoreAndInstantiateContractAminoMsg {
+    return {
+      type: "wasm/MsgStoreAndInstantiateContract",
+      value: MsgStoreAndInstantiateContract.toAmino(message)
+    };
+  },
   fromProtoMsg(message: MsgStoreAndInstantiateContractProtoMsg): MsgStoreAndInstantiateContract {
     return MsgStoreAndInstantiateContract.decode(message.value);
   },
@@ -3199,6 +3573,15 @@ export const MsgStoreAndInstantiateContractResponse = {
     obj.address = message.address;
     obj.data = message.data ? base64FromBytes(message.data) : undefined;
     return obj;
+  },
+  fromAminoMsg(object: MsgStoreAndInstantiateContractResponseAminoMsg): MsgStoreAndInstantiateContractResponse {
+    return MsgStoreAndInstantiateContractResponse.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgStoreAndInstantiateContractResponse): MsgStoreAndInstantiateContractResponseAminoMsg {
+    return {
+      type: "wasm/MsgStoreAndInstantiateContractResponse",
+      value: MsgStoreAndInstantiateContractResponse.toAmino(message)
+    };
   },
   fromProtoMsg(message: MsgStoreAndInstantiateContractResponseProtoMsg): MsgStoreAndInstantiateContractResponse {
     return MsgStoreAndInstantiateContractResponse.decode(message.value);
@@ -3283,6 +3666,15 @@ export const MsgAddCodeUploadParamsAddresses = {
     }
     return obj;
   },
+  fromAminoMsg(object: MsgAddCodeUploadParamsAddressesAminoMsg): MsgAddCodeUploadParamsAddresses {
+    return MsgAddCodeUploadParamsAddresses.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgAddCodeUploadParamsAddresses): MsgAddCodeUploadParamsAddressesAminoMsg {
+    return {
+      type: "wasm/MsgAddCodeUploadParamsAddresses",
+      value: MsgAddCodeUploadParamsAddresses.toAmino(message)
+    };
+  },
   fromProtoMsg(message: MsgAddCodeUploadParamsAddressesProtoMsg): MsgAddCodeUploadParamsAddresses {
     return MsgAddCodeUploadParamsAddresses.decode(message.value);
   },
@@ -3338,6 +3730,15 @@ export const MsgAddCodeUploadParamsAddressesResponse = {
   toAmino(_: MsgAddCodeUploadParamsAddressesResponse): MsgAddCodeUploadParamsAddressesResponseAmino {
     const obj: any = {};
     return obj;
+  },
+  fromAminoMsg(object: MsgAddCodeUploadParamsAddressesResponseAminoMsg): MsgAddCodeUploadParamsAddressesResponse {
+    return MsgAddCodeUploadParamsAddressesResponse.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgAddCodeUploadParamsAddressesResponse): MsgAddCodeUploadParamsAddressesResponseAminoMsg {
+    return {
+      type: "wasm/MsgAddCodeUploadParamsAddressesResponse",
+      value: MsgAddCodeUploadParamsAddressesResponse.toAmino(message)
+    };
   },
   fromProtoMsg(message: MsgAddCodeUploadParamsAddressesResponseProtoMsg): MsgAddCodeUploadParamsAddressesResponse {
     return MsgAddCodeUploadParamsAddressesResponse.decode(message.value);
@@ -3422,6 +3823,15 @@ export const MsgRemoveCodeUploadParamsAddresses = {
     }
     return obj;
   },
+  fromAminoMsg(object: MsgRemoveCodeUploadParamsAddressesAminoMsg): MsgRemoveCodeUploadParamsAddresses {
+    return MsgRemoveCodeUploadParamsAddresses.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgRemoveCodeUploadParamsAddresses): MsgRemoveCodeUploadParamsAddressesAminoMsg {
+    return {
+      type: "wasm/MsgRemoveCodeUploadParamsAddresses",
+      value: MsgRemoveCodeUploadParamsAddresses.toAmino(message)
+    };
+  },
   fromProtoMsg(message: MsgRemoveCodeUploadParamsAddressesProtoMsg): MsgRemoveCodeUploadParamsAddresses {
     return MsgRemoveCodeUploadParamsAddresses.decode(message.value);
   },
@@ -3477,6 +3887,15 @@ export const MsgRemoveCodeUploadParamsAddressesResponse = {
   toAmino(_: MsgRemoveCodeUploadParamsAddressesResponse): MsgRemoveCodeUploadParamsAddressesResponseAmino {
     const obj: any = {};
     return obj;
+  },
+  fromAminoMsg(object: MsgRemoveCodeUploadParamsAddressesResponseAminoMsg): MsgRemoveCodeUploadParamsAddressesResponse {
+    return MsgRemoveCodeUploadParamsAddressesResponse.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgRemoveCodeUploadParamsAddressesResponse): MsgRemoveCodeUploadParamsAddressesResponseAminoMsg {
+    return {
+      type: "wasm/MsgRemoveCodeUploadParamsAddressesResponse",
+      value: MsgRemoveCodeUploadParamsAddressesResponse.toAmino(message)
+    };
   },
   fromProtoMsg(message: MsgRemoveCodeUploadParamsAddressesResponseProtoMsg): MsgRemoveCodeUploadParamsAddressesResponse {
     return MsgRemoveCodeUploadParamsAddressesResponse.decode(message.value);
@@ -3595,6 +4014,15 @@ export const MsgStoreAndMigrateContract = {
     obj.msg = message.msg ? JSON.parse(fromUtf8(message.msg)) : undefined;
     return obj;
   },
+  fromAminoMsg(object: MsgStoreAndMigrateContractAminoMsg): MsgStoreAndMigrateContract {
+    return MsgStoreAndMigrateContract.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgStoreAndMigrateContract): MsgStoreAndMigrateContractAminoMsg {
+    return {
+      type: "wasm/MsgStoreAndMigrateContract",
+      value: MsgStoreAndMigrateContract.toAmino(message)
+    };
+  },
   fromProtoMsg(message: MsgStoreAndMigrateContractProtoMsg): MsgStoreAndMigrateContract {
     return MsgStoreAndMigrateContract.decode(message.value);
   },
@@ -3687,6 +4115,15 @@ export const MsgStoreAndMigrateContractResponse = {
     obj.checksum = message.checksum ? base64FromBytes(message.checksum) : undefined;
     obj.data = message.data ? base64FromBytes(message.data) : undefined;
     return obj;
+  },
+  fromAminoMsg(object: MsgStoreAndMigrateContractResponseAminoMsg): MsgStoreAndMigrateContractResponse {
+    return MsgStoreAndMigrateContractResponse.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgStoreAndMigrateContractResponse): MsgStoreAndMigrateContractResponseAminoMsg {
+    return {
+      type: "wasm/MsgStoreAndMigrateContractResponse",
+      value: MsgStoreAndMigrateContractResponse.toAmino(message)
+    };
   },
   fromProtoMsg(message: MsgStoreAndMigrateContractResponseProtoMsg): MsgStoreAndMigrateContractResponse {
     return MsgStoreAndMigrateContractResponse.decode(message.value);
@@ -3781,6 +4218,15 @@ export const MsgUpdateContractLabel = {
     obj.contract = message.contract;
     return obj;
   },
+  fromAminoMsg(object: MsgUpdateContractLabelAminoMsg): MsgUpdateContractLabel {
+    return MsgUpdateContractLabel.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgUpdateContractLabel): MsgUpdateContractLabelAminoMsg {
+    return {
+      type: "wasm/MsgUpdateContractLabel",
+      value: MsgUpdateContractLabel.toAmino(message)
+    };
+  },
   fromProtoMsg(message: MsgUpdateContractLabelProtoMsg): MsgUpdateContractLabel {
     return MsgUpdateContractLabel.decode(message.value);
   },
@@ -3836,6 +4282,15 @@ export const MsgUpdateContractLabelResponse = {
   toAmino(_: MsgUpdateContractLabelResponse): MsgUpdateContractLabelResponseAmino {
     const obj: any = {};
     return obj;
+  },
+  fromAminoMsg(object: MsgUpdateContractLabelResponseAminoMsg): MsgUpdateContractLabelResponse {
+    return MsgUpdateContractLabelResponse.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgUpdateContractLabelResponse): MsgUpdateContractLabelResponseAminoMsg {
+    return {
+      type: "wasm/MsgUpdateContractLabelResponse",
+      value: MsgUpdateContractLabelResponse.toAmino(message)
+    };
   },
   fromProtoMsg(message: MsgUpdateContractLabelResponseProtoMsg): MsgUpdateContractLabelResponse {
     return MsgUpdateContractLabelResponse.decode(message.value);

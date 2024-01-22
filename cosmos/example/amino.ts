@@ -1,6 +1,11 @@
-import { Secp256k1Auth, toHex } from "@cosmonauts/core";
+import { toHex } from "@cosmonauts/core";
 import { AminoSigner } from "@cosmonauts/cosmos-amino";
-import { Message, TxRaw } from "@cosmonauts/cosmos-proto";
+import {
+  defaultHash,
+  Message,
+  Secp256k1Auth,
+  TxRaw,
+} from "@cosmonauts/cosmos-proto";
 import { MsgSend } from "@cosmonauts/cosmos-stargate/src/codegen/cosmos/bank/v1beta1/tx";
 
 import { address, chain, seed } from "../../__test__/cosmos/src/setup/data";
@@ -41,7 +46,7 @@ async function run() {
   console.log("## execDoc ##\n\n", printJSON(execDoc));
   console.log(
     "## execDoc hash ##\n\n",
-    toHex(signer.hash!(TxRaw.encode(execDoc).finish())).toUpperCase(),
+    toHex(defaultHash(TxRaw.encode(execDoc).finish())).toUpperCase(),
     "\n"
   );
 

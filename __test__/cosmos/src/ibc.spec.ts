@@ -70,7 +70,6 @@ describe("Send IBC tokens", () => {
       expectTxRawMatch(v1Result, v2Result);
     });
 
-    // this test may fail because wrong setting of starship. we're handling it.
     it("should successfully broadcast", async () => {
       const { resp, before, after } = await signAndBroadcast({
         ...signParams,
@@ -80,8 +79,7 @@ describe("Send IBC tokens", () => {
       expectSuccessfulBroadcast(resp, before, after);
     });
 
-    // this test may fail because wrong setting of starship. we're handling it.
-    it.skip("should success with helper method", async () => {
+    it("should success with helper method", async () => {
       const { resp, before, after } = await helperBroadcast({
         ...signParams,
         signer: directSigner,
@@ -102,8 +100,7 @@ describe("Send IBC tokens", () => {
       expectTxRawMatch(v1Result, v2Result);
     });
 
-    // this test may fail because wrong setting of starship. we're handling it.
-    it.skip("should successfully broadcast", async () => {
+    it("should successfully broadcast", async () => {
       const { resp, before, after } = await signAndBroadcast({
         ...signParams,
         signer: aminoSigner,

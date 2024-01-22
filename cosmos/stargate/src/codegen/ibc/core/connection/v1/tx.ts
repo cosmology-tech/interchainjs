@@ -30,6 +30,10 @@ export interface MsgConnectionOpenInitAmino {
   delay_period: string;
   signer: string;
 }
+export interface MsgConnectionOpenInitAminoMsg {
+  type: "cosmos-sdk/MsgConnectionOpenInit";
+  value: MsgConnectionOpenInitAmino;
+}
 /**
  * MsgConnectionOpenInitResponse defines the Msg/ConnectionOpenInit response
  * type.
@@ -44,6 +48,10 @@ export interface MsgConnectionOpenInitResponseProtoMsg {
  * type.
  */
 export interface MsgConnectionOpenInitResponseAmino {}
+export interface MsgConnectionOpenInitResponseAminoMsg {
+  type: "cosmos-sdk/MsgConnectionOpenInitResponse";
+  value: MsgConnectionOpenInitResponseAmino;
+}
 /**
  * MsgConnectionOpenTry defines a msg sent by a Relayer to try to open a
  * connection on Chain B.
@@ -104,6 +112,10 @@ export interface MsgConnectionOpenTryAmino {
   /** optional proof data for host state machines that are unable to introspect their own consensus state */
   host_consensus_state_proof: string;
 }
+export interface MsgConnectionOpenTryAminoMsg {
+  type: "cosmos-sdk/MsgConnectionOpenTry";
+  value: MsgConnectionOpenTryAmino;
+}
 /** MsgConnectionOpenTryResponse defines the Msg/ConnectionOpenTry response type. */
 export interface MsgConnectionOpenTryResponse {}
 export interface MsgConnectionOpenTryResponseProtoMsg {
@@ -112,6 +124,10 @@ export interface MsgConnectionOpenTryResponseProtoMsg {
 }
 /** MsgConnectionOpenTryResponse defines the Msg/ConnectionOpenTry response type. */
 export interface MsgConnectionOpenTryResponseAmino {}
+export interface MsgConnectionOpenTryResponseAminoMsg {
+  type: "cosmos-sdk/MsgConnectionOpenTryResponse";
+  value: MsgConnectionOpenTryResponseAmino;
+}
 /**
  * MsgConnectionOpenAck defines a msg sent by a Relayer to Chain A to
  * acknowledge the change of connection state to TRYOPEN on Chain B.
@@ -164,6 +180,10 @@ export interface MsgConnectionOpenAckAmino {
   /** optional proof data for host state machines that are unable to introspect their own consensus state */
   host_consensus_state_proof: string;
 }
+export interface MsgConnectionOpenAckAminoMsg {
+  type: "cosmos-sdk/MsgConnectionOpenAck";
+  value: MsgConnectionOpenAckAmino;
+}
 /** MsgConnectionOpenAckResponse defines the Msg/ConnectionOpenAck response type. */
 export interface MsgConnectionOpenAckResponse {}
 export interface MsgConnectionOpenAckResponseProtoMsg {
@@ -172,6 +192,10 @@ export interface MsgConnectionOpenAckResponseProtoMsg {
 }
 /** MsgConnectionOpenAckResponse defines the Msg/ConnectionOpenAck response type. */
 export interface MsgConnectionOpenAckResponseAmino {}
+export interface MsgConnectionOpenAckResponseAminoMsg {
+  type: "cosmos-sdk/MsgConnectionOpenAckResponse";
+  value: MsgConnectionOpenAckResponseAmino;
+}
 /**
  * MsgConnectionOpenConfirm defines a msg sent by a Relayer to Chain B to
  * acknowledge the change of connection state to OPEN on Chain A.
@@ -198,6 +222,10 @@ export interface MsgConnectionOpenConfirmAmino {
   proof_height: HeightAmino;
   signer: string;
 }
+export interface MsgConnectionOpenConfirmAminoMsg {
+  type: "cosmos-sdk/MsgConnectionOpenConfirm";
+  value: MsgConnectionOpenConfirmAmino;
+}
 /**
  * MsgConnectionOpenConfirmResponse defines the Msg/ConnectionOpenConfirm
  * response type.
@@ -212,6 +240,10 @@ export interface MsgConnectionOpenConfirmResponseProtoMsg {
  * response type.
  */
 export interface MsgConnectionOpenConfirmResponseAmino {}
+export interface MsgConnectionOpenConfirmResponseAminoMsg {
+  type: "cosmos-sdk/MsgConnectionOpenConfirmResponse";
+  value: MsgConnectionOpenConfirmResponseAmino;
+}
 function createBaseMsgConnectionOpenInit(): MsgConnectionOpenInit {
   return {
     clientId: "",
@@ -314,6 +346,15 @@ export const MsgConnectionOpenInit = {
     obj.signer = message.signer;
     return obj;
   },
+  fromAminoMsg(object: MsgConnectionOpenInitAminoMsg): MsgConnectionOpenInit {
+    return MsgConnectionOpenInit.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgConnectionOpenInit): MsgConnectionOpenInitAminoMsg {
+    return {
+      type: "cosmos-sdk/MsgConnectionOpenInit",
+      value: MsgConnectionOpenInit.toAmino(message)
+    };
+  },
   fromProtoMsg(message: MsgConnectionOpenInitProtoMsg): MsgConnectionOpenInit {
     return MsgConnectionOpenInit.decode(message.value);
   },
@@ -369,6 +410,15 @@ export const MsgConnectionOpenInitResponse = {
   toAmino(_: MsgConnectionOpenInitResponse): MsgConnectionOpenInitResponseAmino {
     const obj: any = {};
     return obj;
+  },
+  fromAminoMsg(object: MsgConnectionOpenInitResponseAminoMsg): MsgConnectionOpenInitResponse {
+    return MsgConnectionOpenInitResponse.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgConnectionOpenInitResponse): MsgConnectionOpenInitResponseAminoMsg {
+    return {
+      type: "cosmos-sdk/MsgConnectionOpenInitResponse",
+      value: MsgConnectionOpenInitResponse.toAmino(message)
+    };
   },
   fromProtoMsg(message: MsgConnectionOpenInitResponseProtoMsg): MsgConnectionOpenInitResponse {
     return MsgConnectionOpenInitResponse.decode(message.value);
@@ -585,6 +635,15 @@ export const MsgConnectionOpenTry = {
     obj.host_consensus_state_proof = message.hostConsensusStateProof ? base64FromBytes(message.hostConsensusStateProof) : undefined;
     return obj;
   },
+  fromAminoMsg(object: MsgConnectionOpenTryAminoMsg): MsgConnectionOpenTry {
+    return MsgConnectionOpenTry.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgConnectionOpenTry): MsgConnectionOpenTryAminoMsg {
+    return {
+      type: "cosmos-sdk/MsgConnectionOpenTry",
+      value: MsgConnectionOpenTry.toAmino(message)
+    };
+  },
   fromProtoMsg(message: MsgConnectionOpenTryProtoMsg): MsgConnectionOpenTry {
     return MsgConnectionOpenTry.decode(message.value);
   },
@@ -640,6 +699,15 @@ export const MsgConnectionOpenTryResponse = {
   toAmino(_: MsgConnectionOpenTryResponse): MsgConnectionOpenTryResponseAmino {
     const obj: any = {};
     return obj;
+  },
+  fromAminoMsg(object: MsgConnectionOpenTryResponseAminoMsg): MsgConnectionOpenTryResponse {
+    return MsgConnectionOpenTryResponse.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgConnectionOpenTryResponse): MsgConnectionOpenTryResponseAminoMsg {
+    return {
+      type: "cosmos-sdk/MsgConnectionOpenTryResponse",
+      value: MsgConnectionOpenTryResponse.toAmino(message)
+    };
   },
   fromProtoMsg(message: MsgConnectionOpenTryResponseProtoMsg): MsgConnectionOpenTryResponse {
     return MsgConnectionOpenTryResponse.decode(message.value);
@@ -830,6 +898,15 @@ export const MsgConnectionOpenAck = {
     obj.host_consensus_state_proof = message.hostConsensusStateProof ? base64FromBytes(message.hostConsensusStateProof) : undefined;
     return obj;
   },
+  fromAminoMsg(object: MsgConnectionOpenAckAminoMsg): MsgConnectionOpenAck {
+    return MsgConnectionOpenAck.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgConnectionOpenAck): MsgConnectionOpenAckAminoMsg {
+    return {
+      type: "cosmos-sdk/MsgConnectionOpenAck",
+      value: MsgConnectionOpenAck.toAmino(message)
+    };
+  },
   fromProtoMsg(message: MsgConnectionOpenAckProtoMsg): MsgConnectionOpenAck {
     return MsgConnectionOpenAck.decode(message.value);
   },
@@ -885,6 +962,15 @@ export const MsgConnectionOpenAckResponse = {
   toAmino(_: MsgConnectionOpenAckResponse): MsgConnectionOpenAckResponseAmino {
     const obj: any = {};
     return obj;
+  },
+  fromAminoMsg(object: MsgConnectionOpenAckResponseAminoMsg): MsgConnectionOpenAckResponse {
+    return MsgConnectionOpenAckResponse.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgConnectionOpenAckResponse): MsgConnectionOpenAckResponseAminoMsg {
+    return {
+      type: "cosmos-sdk/MsgConnectionOpenAckResponse",
+      value: MsgConnectionOpenAckResponse.toAmino(message)
+    };
   },
   fromProtoMsg(message: MsgConnectionOpenAckResponseProtoMsg): MsgConnectionOpenAckResponse {
     return MsgConnectionOpenAckResponse.decode(message.value);
@@ -991,6 +1077,15 @@ export const MsgConnectionOpenConfirm = {
     obj.signer = message.signer;
     return obj;
   },
+  fromAminoMsg(object: MsgConnectionOpenConfirmAminoMsg): MsgConnectionOpenConfirm {
+    return MsgConnectionOpenConfirm.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgConnectionOpenConfirm): MsgConnectionOpenConfirmAminoMsg {
+    return {
+      type: "cosmos-sdk/MsgConnectionOpenConfirm",
+      value: MsgConnectionOpenConfirm.toAmino(message)
+    };
+  },
   fromProtoMsg(message: MsgConnectionOpenConfirmProtoMsg): MsgConnectionOpenConfirm {
     return MsgConnectionOpenConfirm.decode(message.value);
   },
@@ -1046,6 +1141,15 @@ export const MsgConnectionOpenConfirmResponse = {
   toAmino(_: MsgConnectionOpenConfirmResponse): MsgConnectionOpenConfirmResponseAmino {
     const obj: any = {};
     return obj;
+  },
+  fromAminoMsg(object: MsgConnectionOpenConfirmResponseAminoMsg): MsgConnectionOpenConfirmResponse {
+    return MsgConnectionOpenConfirmResponse.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgConnectionOpenConfirmResponse): MsgConnectionOpenConfirmResponseAminoMsg {
+    return {
+      type: "cosmos-sdk/MsgConnectionOpenConfirmResponse",
+      value: MsgConnectionOpenConfirmResponse.toAmino(message)
+    };
   },
   fromProtoMsg(message: MsgConnectionOpenConfirmResponseProtoMsg): MsgConnectionOpenConfirmResponse {
     return MsgConnectionOpenConfirmResponse.decode(message.value);

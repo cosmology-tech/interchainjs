@@ -66,6 +66,10 @@ export interface MsgChannelOpenInitAmino {
   channel: ChannelAmino;
   signer: string;
 }
+export interface MsgChannelOpenInitAminoMsg {
+  type: "cosmos-sdk/MsgChannelOpenInit";
+  value: MsgChannelOpenInitAmino;
+}
 /** MsgChannelOpenInitResponse defines the Msg/ChannelOpenInit response type. */
 export interface MsgChannelOpenInitResponse {
   channelId: string;
@@ -79,6 +83,10 @@ export interface MsgChannelOpenInitResponseProtoMsg {
 export interface MsgChannelOpenInitResponseAmino {
   channel_id: string;
   version: string;
+}
+export interface MsgChannelOpenInitResponseAminoMsg {
+  type: "cosmos-sdk/MsgChannelOpenInitResponse";
+  value: MsgChannelOpenInitResponseAmino;
 }
 /**
  * MsgChannelOpenInit defines a msg sent by a Relayer to try to open a channel
@@ -118,6 +126,10 @@ export interface MsgChannelOpenTryAmino {
   proof_height: HeightAmino;
   signer: string;
 }
+export interface MsgChannelOpenTryAminoMsg {
+  type: "cosmos-sdk/MsgChannelOpenTry";
+  value: MsgChannelOpenTryAmino;
+}
 /** MsgChannelOpenTryResponse defines the Msg/ChannelOpenTry response type. */
 export interface MsgChannelOpenTryResponse {
   version: string;
@@ -131,6 +143,10 @@ export interface MsgChannelOpenTryResponseProtoMsg {
 export interface MsgChannelOpenTryResponseAmino {
   version: string;
   channel_id: string;
+}
+export interface MsgChannelOpenTryResponseAminoMsg {
+  type: "cosmos-sdk/MsgChannelOpenTryResponse";
+  value: MsgChannelOpenTryResponseAmino;
 }
 /**
  * MsgChannelOpenAck defines a msg sent by a Relayer to Chain A to acknowledge
@@ -162,6 +178,10 @@ export interface MsgChannelOpenAckAmino {
   proof_height: HeightAmino;
   signer: string;
 }
+export interface MsgChannelOpenAckAminoMsg {
+  type: "cosmos-sdk/MsgChannelOpenAck";
+  value: MsgChannelOpenAckAmino;
+}
 /** MsgChannelOpenAckResponse defines the Msg/ChannelOpenAck response type. */
 export interface MsgChannelOpenAckResponse {}
 export interface MsgChannelOpenAckResponseProtoMsg {
@@ -170,6 +190,10 @@ export interface MsgChannelOpenAckResponseProtoMsg {
 }
 /** MsgChannelOpenAckResponse defines the Msg/ChannelOpenAck response type. */
 export interface MsgChannelOpenAckResponseAmino {}
+export interface MsgChannelOpenAckResponseAminoMsg {
+  type: "cosmos-sdk/MsgChannelOpenAckResponse";
+  value: MsgChannelOpenAckResponseAmino;
+}
 /**
  * MsgChannelOpenConfirm defines a msg sent by a Relayer to Chain B to
  * acknowledge the change of channel state to OPEN on Chain A.
@@ -196,6 +220,10 @@ export interface MsgChannelOpenConfirmAmino {
   proof_height: HeightAmino;
   signer: string;
 }
+export interface MsgChannelOpenConfirmAminoMsg {
+  type: "cosmos-sdk/MsgChannelOpenConfirm";
+  value: MsgChannelOpenConfirmAmino;
+}
 /**
  * MsgChannelOpenConfirmResponse defines the Msg/ChannelOpenConfirm response
  * type.
@@ -210,6 +238,10 @@ export interface MsgChannelOpenConfirmResponseProtoMsg {
  * type.
  */
 export interface MsgChannelOpenConfirmResponseAmino {}
+export interface MsgChannelOpenConfirmResponseAminoMsg {
+  type: "cosmos-sdk/MsgChannelOpenConfirmResponse";
+  value: MsgChannelOpenConfirmResponseAmino;
+}
 /**
  * MsgChannelCloseInit defines a msg sent by a Relayer to Chain A
  * to close a channel with Chain B.
@@ -232,6 +264,10 @@ export interface MsgChannelCloseInitAmino {
   channel_id: string;
   signer: string;
 }
+export interface MsgChannelCloseInitAminoMsg {
+  type: "cosmos-sdk/MsgChannelCloseInit";
+  value: MsgChannelCloseInitAmino;
+}
 /** MsgChannelCloseInitResponse defines the Msg/ChannelCloseInit response type. */
 export interface MsgChannelCloseInitResponse {}
 export interface MsgChannelCloseInitResponseProtoMsg {
@@ -240,6 +276,10 @@ export interface MsgChannelCloseInitResponseProtoMsg {
 }
 /** MsgChannelCloseInitResponse defines the Msg/ChannelCloseInit response type. */
 export interface MsgChannelCloseInitResponseAmino {}
+export interface MsgChannelCloseInitResponseAminoMsg {
+  type: "cosmos-sdk/MsgChannelCloseInitResponse";
+  value: MsgChannelCloseInitResponseAmino;
+}
 /**
  * MsgChannelCloseConfirm defines a msg sent by a Relayer to Chain B
  * to acknowledge the change of channel state to CLOSED on Chain A.
@@ -266,6 +306,10 @@ export interface MsgChannelCloseConfirmAmino {
   proof_height: HeightAmino;
   signer: string;
 }
+export interface MsgChannelCloseConfirmAminoMsg {
+  type: "cosmos-sdk/MsgChannelCloseConfirm";
+  value: MsgChannelCloseConfirmAmino;
+}
 /**
  * MsgChannelCloseConfirmResponse defines the Msg/ChannelCloseConfirm response
  * type.
@@ -280,6 +324,10 @@ export interface MsgChannelCloseConfirmResponseProtoMsg {
  * type.
  */
 export interface MsgChannelCloseConfirmResponseAmino {}
+export interface MsgChannelCloseConfirmResponseAminoMsg {
+  type: "cosmos-sdk/MsgChannelCloseConfirmResponse";
+  value: MsgChannelCloseConfirmResponseAmino;
+}
 /** MsgRecvPacket receives incoming IBC packet */
 export interface MsgRecvPacket {
   packet: Packet;
@@ -298,6 +346,10 @@ export interface MsgRecvPacketAmino {
   proof_height: HeightAmino;
   signer: string;
 }
+export interface MsgRecvPacketAminoMsg {
+  type: "cosmos-sdk/MsgRecvPacket";
+  value: MsgRecvPacketAmino;
+}
 /** MsgRecvPacketResponse defines the Msg/RecvPacket response type. */
 export interface MsgRecvPacketResponse {
   result: ResponseResultType;
@@ -309,6 +361,10 @@ export interface MsgRecvPacketResponseProtoMsg {
 /** MsgRecvPacketResponse defines the Msg/RecvPacket response type. */
 export interface MsgRecvPacketResponseAmino {
   result: ResponseResultType;
+}
+export interface MsgRecvPacketResponseAminoMsg {
+  type: "cosmos-sdk/MsgRecvPacketResponse";
+  value: MsgRecvPacketResponseAmino;
 }
 /** MsgTimeout receives timed-out packet */
 export interface MsgTimeout {
@@ -330,6 +386,10 @@ export interface MsgTimeoutAmino {
   next_sequence_recv: string;
   signer: string;
 }
+export interface MsgTimeoutAminoMsg {
+  type: "cosmos-sdk/MsgTimeout";
+  value: MsgTimeoutAmino;
+}
 /** MsgTimeoutResponse defines the Msg/Timeout response type. */
 export interface MsgTimeoutResponse {
   result: ResponseResultType;
@@ -341,6 +401,10 @@ export interface MsgTimeoutResponseProtoMsg {
 /** MsgTimeoutResponse defines the Msg/Timeout response type. */
 export interface MsgTimeoutResponseAmino {
   result: ResponseResultType;
+}
+export interface MsgTimeoutResponseAminoMsg {
+  type: "cosmos-sdk/MsgTimeoutResponse";
+  value: MsgTimeoutResponseAmino;
 }
 /** MsgTimeoutOnClose timed-out packet upon counterparty channel closure. */
 export interface MsgTimeoutOnClose {
@@ -364,6 +428,10 @@ export interface MsgTimeoutOnCloseAmino {
   next_sequence_recv: string;
   signer: string;
 }
+export interface MsgTimeoutOnCloseAminoMsg {
+  type: "cosmos-sdk/MsgTimeoutOnClose";
+  value: MsgTimeoutOnCloseAmino;
+}
 /** MsgTimeoutOnCloseResponse defines the Msg/TimeoutOnClose response type. */
 export interface MsgTimeoutOnCloseResponse {
   result: ResponseResultType;
@@ -375,6 +443,10 @@ export interface MsgTimeoutOnCloseResponseProtoMsg {
 /** MsgTimeoutOnCloseResponse defines the Msg/TimeoutOnClose response type. */
 export interface MsgTimeoutOnCloseResponseAmino {
   result: ResponseResultType;
+}
+export interface MsgTimeoutOnCloseResponseAminoMsg {
+  type: "cosmos-sdk/MsgTimeoutOnCloseResponse";
+  value: MsgTimeoutOnCloseResponseAmino;
 }
 /** MsgAcknowledgement receives incoming IBC acknowledgement */
 export interface MsgAcknowledgement {
@@ -396,6 +468,10 @@ export interface MsgAcknowledgementAmino {
   proof_height: HeightAmino;
   signer: string;
 }
+export interface MsgAcknowledgementAminoMsg {
+  type: "cosmos-sdk/MsgAcknowledgement";
+  value: MsgAcknowledgementAmino;
+}
 /** MsgAcknowledgementResponse defines the Msg/Acknowledgement response type. */
 export interface MsgAcknowledgementResponse {
   result: ResponseResultType;
@@ -407,6 +483,10 @@ export interface MsgAcknowledgementResponseProtoMsg {
 /** MsgAcknowledgementResponse defines the Msg/Acknowledgement response type. */
 export interface MsgAcknowledgementResponseAmino {
   result: ResponseResultType;
+}
+export interface MsgAcknowledgementResponseAminoMsg {
+  type: "cosmos-sdk/MsgAcknowledgementResponse";
+  value: MsgAcknowledgementResponseAmino;
 }
 function createBaseMsgChannelOpenInit(): MsgChannelOpenInit {
   return {
@@ -485,6 +565,15 @@ export const MsgChannelOpenInit = {
     obj.channel = message.channel ? Channel.toAmino(message.channel) : undefined;
     obj.signer = message.signer;
     return obj;
+  },
+  fromAminoMsg(object: MsgChannelOpenInitAminoMsg): MsgChannelOpenInit {
+    return MsgChannelOpenInit.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgChannelOpenInit): MsgChannelOpenInitAminoMsg {
+    return {
+      type: "cosmos-sdk/MsgChannelOpenInit",
+      value: MsgChannelOpenInit.toAmino(message)
+    };
   },
   fromProtoMsg(message: MsgChannelOpenInitProtoMsg): MsgChannelOpenInit {
     return MsgChannelOpenInit.decode(message.value);
@@ -566,6 +655,15 @@ export const MsgChannelOpenInitResponse = {
     obj.channel_id = message.channelId;
     obj.version = message.version;
     return obj;
+  },
+  fromAminoMsg(object: MsgChannelOpenInitResponseAminoMsg): MsgChannelOpenInitResponse {
+    return MsgChannelOpenInitResponse.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgChannelOpenInitResponse): MsgChannelOpenInitResponseAminoMsg {
+    return {
+      type: "cosmos-sdk/MsgChannelOpenInitResponse",
+      value: MsgChannelOpenInitResponse.toAmino(message)
+    };
   },
   fromProtoMsg(message: MsgChannelOpenInitResponseProtoMsg): MsgChannelOpenInitResponse {
     return MsgChannelOpenInitResponse.decode(message.value);
@@ -708,6 +806,15 @@ export const MsgChannelOpenTry = {
     obj.signer = message.signer;
     return obj;
   },
+  fromAminoMsg(object: MsgChannelOpenTryAminoMsg): MsgChannelOpenTry {
+    return MsgChannelOpenTry.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgChannelOpenTry): MsgChannelOpenTryAminoMsg {
+    return {
+      type: "cosmos-sdk/MsgChannelOpenTry",
+      value: MsgChannelOpenTry.toAmino(message)
+    };
+  },
   fromProtoMsg(message: MsgChannelOpenTryProtoMsg): MsgChannelOpenTry {
     return MsgChannelOpenTry.decode(message.value);
   },
@@ -788,6 +895,15 @@ export const MsgChannelOpenTryResponse = {
     obj.version = message.version;
     obj.channel_id = message.channelId;
     return obj;
+  },
+  fromAminoMsg(object: MsgChannelOpenTryResponseAminoMsg): MsgChannelOpenTryResponse {
+    return MsgChannelOpenTryResponse.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgChannelOpenTryResponse): MsgChannelOpenTryResponseAminoMsg {
+    return {
+      type: "cosmos-sdk/MsgChannelOpenTryResponse",
+      value: MsgChannelOpenTryResponse.toAmino(message)
+    };
   },
   fromProtoMsg(message: MsgChannelOpenTryResponseProtoMsg): MsgChannelOpenTryResponse {
     return MsgChannelOpenTryResponse.decode(message.value);
@@ -930,6 +1046,15 @@ export const MsgChannelOpenAck = {
     obj.signer = message.signer;
     return obj;
   },
+  fromAminoMsg(object: MsgChannelOpenAckAminoMsg): MsgChannelOpenAck {
+    return MsgChannelOpenAck.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgChannelOpenAck): MsgChannelOpenAckAminoMsg {
+    return {
+      type: "cosmos-sdk/MsgChannelOpenAck",
+      value: MsgChannelOpenAck.toAmino(message)
+    };
+  },
   fromProtoMsg(message: MsgChannelOpenAckProtoMsg): MsgChannelOpenAck {
     return MsgChannelOpenAck.decode(message.value);
   },
@@ -985,6 +1110,15 @@ export const MsgChannelOpenAckResponse = {
   toAmino(_: MsgChannelOpenAckResponse): MsgChannelOpenAckResponseAmino {
     const obj: any = {};
     return obj;
+  },
+  fromAminoMsg(object: MsgChannelOpenAckResponseAminoMsg): MsgChannelOpenAckResponse {
+    return MsgChannelOpenAckResponse.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgChannelOpenAckResponse): MsgChannelOpenAckResponseAminoMsg {
+    return {
+      type: "cosmos-sdk/MsgChannelOpenAckResponse",
+      value: MsgChannelOpenAckResponse.toAmino(message)
+    };
   },
   fromProtoMsg(message: MsgChannelOpenAckResponseProtoMsg): MsgChannelOpenAckResponse {
     return MsgChannelOpenAckResponse.decode(message.value);
@@ -1103,6 +1237,15 @@ export const MsgChannelOpenConfirm = {
     obj.signer = message.signer;
     return obj;
   },
+  fromAminoMsg(object: MsgChannelOpenConfirmAminoMsg): MsgChannelOpenConfirm {
+    return MsgChannelOpenConfirm.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgChannelOpenConfirm): MsgChannelOpenConfirmAminoMsg {
+    return {
+      type: "cosmos-sdk/MsgChannelOpenConfirm",
+      value: MsgChannelOpenConfirm.toAmino(message)
+    };
+  },
   fromProtoMsg(message: MsgChannelOpenConfirmProtoMsg): MsgChannelOpenConfirm {
     return MsgChannelOpenConfirm.decode(message.value);
   },
@@ -1158,6 +1301,15 @@ export const MsgChannelOpenConfirmResponse = {
   toAmino(_: MsgChannelOpenConfirmResponse): MsgChannelOpenConfirmResponseAmino {
     const obj: any = {};
     return obj;
+  },
+  fromAminoMsg(object: MsgChannelOpenConfirmResponseAminoMsg): MsgChannelOpenConfirmResponse {
+    return MsgChannelOpenConfirmResponse.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgChannelOpenConfirmResponse): MsgChannelOpenConfirmResponseAminoMsg {
+    return {
+      type: "cosmos-sdk/MsgChannelOpenConfirmResponse",
+      value: MsgChannelOpenConfirmResponse.toAmino(message)
+    };
   },
   fromProtoMsg(message: MsgChannelOpenConfirmResponseProtoMsg): MsgChannelOpenConfirmResponse {
     return MsgChannelOpenConfirmResponse.decode(message.value);
@@ -1252,6 +1404,15 @@ export const MsgChannelCloseInit = {
     obj.signer = message.signer;
     return obj;
   },
+  fromAminoMsg(object: MsgChannelCloseInitAminoMsg): MsgChannelCloseInit {
+    return MsgChannelCloseInit.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgChannelCloseInit): MsgChannelCloseInitAminoMsg {
+    return {
+      type: "cosmos-sdk/MsgChannelCloseInit",
+      value: MsgChannelCloseInit.toAmino(message)
+    };
+  },
   fromProtoMsg(message: MsgChannelCloseInitProtoMsg): MsgChannelCloseInit {
     return MsgChannelCloseInit.decode(message.value);
   },
@@ -1307,6 +1468,15 @@ export const MsgChannelCloseInitResponse = {
   toAmino(_: MsgChannelCloseInitResponse): MsgChannelCloseInitResponseAmino {
     const obj: any = {};
     return obj;
+  },
+  fromAminoMsg(object: MsgChannelCloseInitResponseAminoMsg): MsgChannelCloseInitResponse {
+    return MsgChannelCloseInitResponse.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgChannelCloseInitResponse): MsgChannelCloseInitResponseAminoMsg {
+    return {
+      type: "cosmos-sdk/MsgChannelCloseInitResponse",
+      value: MsgChannelCloseInitResponse.toAmino(message)
+    };
   },
   fromProtoMsg(message: MsgChannelCloseInitResponseProtoMsg): MsgChannelCloseInitResponse {
     return MsgChannelCloseInitResponse.decode(message.value);
@@ -1425,6 +1595,15 @@ export const MsgChannelCloseConfirm = {
     obj.signer = message.signer;
     return obj;
   },
+  fromAminoMsg(object: MsgChannelCloseConfirmAminoMsg): MsgChannelCloseConfirm {
+    return MsgChannelCloseConfirm.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgChannelCloseConfirm): MsgChannelCloseConfirmAminoMsg {
+    return {
+      type: "cosmos-sdk/MsgChannelCloseConfirm",
+      value: MsgChannelCloseConfirm.toAmino(message)
+    };
+  },
   fromProtoMsg(message: MsgChannelCloseConfirmProtoMsg): MsgChannelCloseConfirm {
     return MsgChannelCloseConfirm.decode(message.value);
   },
@@ -1480,6 +1659,15 @@ export const MsgChannelCloseConfirmResponse = {
   toAmino(_: MsgChannelCloseConfirmResponse): MsgChannelCloseConfirmResponseAmino {
     const obj: any = {};
     return obj;
+  },
+  fromAminoMsg(object: MsgChannelCloseConfirmResponseAminoMsg): MsgChannelCloseConfirmResponse {
+    return MsgChannelCloseConfirmResponse.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgChannelCloseConfirmResponse): MsgChannelCloseConfirmResponseAminoMsg {
+    return {
+      type: "cosmos-sdk/MsgChannelCloseConfirmResponse",
+      value: MsgChannelCloseConfirmResponse.toAmino(message)
+    };
   },
   fromProtoMsg(message: MsgChannelCloseConfirmResponseProtoMsg): MsgChannelCloseConfirmResponse {
     return MsgChannelCloseConfirmResponse.decode(message.value);
@@ -1586,6 +1774,15 @@ export const MsgRecvPacket = {
     obj.signer = message.signer;
     return obj;
   },
+  fromAminoMsg(object: MsgRecvPacketAminoMsg): MsgRecvPacket {
+    return MsgRecvPacket.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgRecvPacket): MsgRecvPacketAminoMsg {
+    return {
+      type: "cosmos-sdk/MsgRecvPacket",
+      value: MsgRecvPacket.toAmino(message)
+    };
+  },
   fromProtoMsg(message: MsgRecvPacketProtoMsg): MsgRecvPacket {
     return MsgRecvPacket.decode(message.value);
   },
@@ -1654,6 +1851,15 @@ export const MsgRecvPacketResponse = {
     const obj: any = {};
     obj.result = responseResultTypeToJSON(message.result);
     return obj;
+  },
+  fromAminoMsg(object: MsgRecvPacketResponseAminoMsg): MsgRecvPacketResponse {
+    return MsgRecvPacketResponse.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgRecvPacketResponse): MsgRecvPacketResponseAminoMsg {
+    return {
+      type: "cosmos-sdk/MsgRecvPacketResponse",
+      value: MsgRecvPacketResponse.toAmino(message)
+    };
   },
   fromProtoMsg(message: MsgRecvPacketResponseProtoMsg): MsgRecvPacketResponse {
     return MsgRecvPacketResponse.decode(message.value);
@@ -1772,6 +1978,15 @@ export const MsgTimeout = {
     obj.signer = message.signer;
     return obj;
   },
+  fromAminoMsg(object: MsgTimeoutAminoMsg): MsgTimeout {
+    return MsgTimeout.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgTimeout): MsgTimeoutAminoMsg {
+    return {
+      type: "cosmos-sdk/MsgTimeout",
+      value: MsgTimeout.toAmino(message)
+    };
+  },
   fromProtoMsg(message: MsgTimeoutProtoMsg): MsgTimeout {
     return MsgTimeout.decode(message.value);
   },
@@ -1840,6 +2055,15 @@ export const MsgTimeoutResponse = {
     const obj: any = {};
     obj.result = responseResultTypeToJSON(message.result);
     return obj;
+  },
+  fromAminoMsg(object: MsgTimeoutResponseAminoMsg): MsgTimeoutResponse {
+    return MsgTimeoutResponse.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgTimeoutResponse): MsgTimeoutResponseAminoMsg {
+    return {
+      type: "cosmos-sdk/MsgTimeoutResponse",
+      value: MsgTimeoutResponse.toAmino(message)
+    };
   },
   fromProtoMsg(message: MsgTimeoutResponseProtoMsg): MsgTimeoutResponse {
     return MsgTimeoutResponse.decode(message.value);
@@ -1970,6 +2194,15 @@ export const MsgTimeoutOnClose = {
     obj.signer = message.signer;
     return obj;
   },
+  fromAminoMsg(object: MsgTimeoutOnCloseAminoMsg): MsgTimeoutOnClose {
+    return MsgTimeoutOnClose.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgTimeoutOnClose): MsgTimeoutOnCloseAminoMsg {
+    return {
+      type: "cosmos-sdk/MsgTimeoutOnClose",
+      value: MsgTimeoutOnClose.toAmino(message)
+    };
+  },
   fromProtoMsg(message: MsgTimeoutOnCloseProtoMsg): MsgTimeoutOnClose {
     return MsgTimeoutOnClose.decode(message.value);
   },
@@ -2038,6 +2271,15 @@ export const MsgTimeoutOnCloseResponse = {
     const obj: any = {};
     obj.result = responseResultTypeToJSON(message.result);
     return obj;
+  },
+  fromAminoMsg(object: MsgTimeoutOnCloseResponseAminoMsg): MsgTimeoutOnCloseResponse {
+    return MsgTimeoutOnCloseResponse.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgTimeoutOnCloseResponse): MsgTimeoutOnCloseResponseAminoMsg {
+    return {
+      type: "cosmos-sdk/MsgTimeoutOnCloseResponse",
+      value: MsgTimeoutOnCloseResponse.toAmino(message)
+    };
   },
   fromProtoMsg(message: MsgTimeoutOnCloseResponseProtoMsg): MsgTimeoutOnCloseResponse {
     return MsgTimeoutOnCloseResponse.decode(message.value);
@@ -2156,6 +2398,15 @@ export const MsgAcknowledgement = {
     obj.signer = message.signer;
     return obj;
   },
+  fromAminoMsg(object: MsgAcknowledgementAminoMsg): MsgAcknowledgement {
+    return MsgAcknowledgement.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgAcknowledgement): MsgAcknowledgementAminoMsg {
+    return {
+      type: "cosmos-sdk/MsgAcknowledgement",
+      value: MsgAcknowledgement.toAmino(message)
+    };
+  },
   fromProtoMsg(message: MsgAcknowledgementProtoMsg): MsgAcknowledgement {
     return MsgAcknowledgement.decode(message.value);
   },
@@ -2224,6 +2475,15 @@ export const MsgAcknowledgementResponse = {
     const obj: any = {};
     obj.result = responseResultTypeToJSON(message.result);
     return obj;
+  },
+  fromAminoMsg(object: MsgAcknowledgementResponseAminoMsg): MsgAcknowledgementResponse {
+    return MsgAcknowledgementResponse.fromAmino(object.value);
+  },
+  toAminoMsg(message: MsgAcknowledgementResponse): MsgAcknowledgementResponseAminoMsg {
+    return {
+      type: "cosmos-sdk/MsgAcknowledgementResponse",
+      value: MsgAcknowledgementResponse.toAmino(message)
+    };
   },
   fromProtoMsg(message: MsgAcknowledgementResponseProtoMsg): MsgAcknowledgementResponse {
     return MsgAcknowledgementResponse.decode(message.value);

@@ -1,4 +1,4 @@
-import { Auth, toBase64 } from "@cosmonauts/core";
+import { Auth, Bech32Address, toBase64 } from "@cosmonauts/core";
 import { StdSignDoc, StdSignDocUtils } from "@cosmonauts/cosmos-amino";
 import {
   defaultHdPath,
@@ -6,6 +6,8 @@ import {
   SignDoc,
   toBech32,
 } from "@cosmonauts/cosmos-proto";
+import { ripemd160 } from "@noble/hashes/ripemd160";
+import { sha256 } from "@noble/hashes/sha256";
 
 import {
   AccountData,
@@ -19,12 +21,12 @@ import {
 
 export class Secp256k1Wallet implements Wallet {
   readonly auths: Auth[] = [];
-  readonly bech32addrs: string[] = [];
+  readonly addrs: Bech32Address[] = [];
 
   constructor(auths: Auth[], prefix: string = "cosmos") {
     this.auths = auths;
     this.auths.forEach((auth) => {
-      this.bech32addrs.push(toBech32(prefix, auth.key.address));
+      this.addrs.push(toBech32(prefix, ripemd160(sha256(auth.key.pubkey))));
     });
   }
 
@@ -46,7 +48,7 @@ export class Secp256k1Wallet implements Wallet {
     const accounts: AccountData[] = [];
     this.auths.forEach((auth, i) => {
       accounts.push({
-        address: this.bech32addrs[i],
+        address: this.addrs[i],
         algo: "secp256k1",
         pubkey: auth.key.pubkey,
       });
@@ -55,7 +57,7 @@ export class Secp256k1Wallet implements Wallet {
   }
 
   private getAuthFromBech32Addr(address: string) {
-    const id = this.bech32addrs.findIndex((addr) => addr === address);
+    const id = this.addrs.findIndex((addr) => addr === address);
     if (id === -1) {
       throw new Error("No such signerAddress been authed.");
     }
