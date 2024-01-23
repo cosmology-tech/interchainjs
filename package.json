@@ -31,7 +31,7 @@
     "@cosmjs/amino": "^0.32.2",
     "@cosmjs/proto-signing": "^0.32.2",
     "@cosmjs/stargate": "^0.32.2",
-    "@cosmology/telescope": "^1.4.10",
+    "@cosmology/telescope": "^1.4.11",
     "@types/jest": "^29.5.11",
     "@typescript-eslint/eslint-plugin": "^6.18.1",
     "@typescript-eslint/parser": "^6.18.1",

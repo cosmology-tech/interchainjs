@@ -606,7 +606,7 @@ export const QueryAccountsResponse = {
   },
   fromPartial(object: DeepPartial<QueryAccountsResponse>): QueryAccountsResponse {
     const message = createBaseQueryAccountsResponse();
-    message.accounts = object.accounts?.map(e => (Any.fromPartial(e) as any)) || [];
+    message.accounts = object.accounts?.map(e => (GlobalDecoderRegistry.fromPartial(e) as any)) || [];
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageResponse.fromPartial(object.pagination) : undefined;
     return message;
   },
@@ -1055,7 +1055,7 @@ export const QueryModuleAccountsResponse = {
   },
   fromPartial(object: DeepPartial<QueryModuleAccountsResponse>): QueryModuleAccountsResponse {
     const message = createBaseQueryModuleAccountsResponse();
-    message.accounts = object.accounts?.map(e => (Any.fromPartial(e) as any)) || [];
+    message.accounts = object.accounts?.map(e => (GlobalDecoderRegistry.fromPartial(e) as any)) || [];
     return message;
   },
   fromAmino(object: QueryModuleAccountsResponseAmino): QueryModuleAccountsResponse {

@@ -1219,10 +1219,10 @@
     case "1.6.3"
     dotty "0.1.2"
 
-"@cosmology/ast@^1.4.6":
-  version "1.4.6"
-  resolved "https://registry.npmjs.org/@cosmology/ast/-/ast-1.4.6.tgz#e920e3ae0163852fabc970ac7540e2cf44ee1122"
-  integrity sha512-NENqkPFqNT1IwnAxm7IVPtcp2LQkU09GWnTfk9jezeNQYw9qizYvGg4zo6ba32Jf0NNauhUf/a5G1WFugqH4xA==
+"@cosmology/ast@^1.4.7":
+  version "1.4.7"
+  resolved "https://registry.npmjs.org/@cosmology/ast/-/ast-1.4.7.tgz#24d40e77e526f0c91664fe14d9049192c61873fb"
+  integrity sha512-e9QTb7zzBb+WUt9BZONKkCwQuvtNQ8PmjO438Oy+aVN3MhcPyQK0KGbZBw6w7bY80qMHyfRh0aHQFYR7wFWBvA==
   dependencies:
     "@babel/parser" "^7.23.6"
     "@babel/types" "7.23.6"
@@ -1276,16 +1276,16 @@
     "@types/node" ">=13.7.0"
     long "^4.0.0"
 
-"@cosmology/telescope@^1.4.10":
-  version "1.4.10"
-  resolved "https://registry.npmjs.org/@cosmology/telescope/-/telescope-1.4.10.tgz#fe5b8785cc30640a4054a08a88a0a7d3f64f8452"
-  integrity sha512-0BuyJZPBoSA0lJXxzmU6VjzZ/L1vsuF7hqYFzEVRlCF01oAZMrWvlUDW8WPVrx2VlBIbc99ge1XunVCNON3VrA==
+"@cosmology/telescope@^1.4.11":
+  version "1.4.11"
+  resolved "https://registry.npmjs.org/@cosmology/telescope/-/telescope-1.4.11.tgz#81b5c3138cad6b46108679d1dfadd9fa7f9cba33"
+  integrity sha512-qe7XFIAxExN0uZdsmk4DYbmVF7SICqPrN1RW/b9ML6Vcr/ujHqXc4aOlydzkpHGUMGlVxnstYW//521IWuFq9A==
   dependencies:
     "@babel/generator" "^7.23.6"
     "@babel/parser" "^7.23.6"
     "@babel/traverse" "7.23.6"
     "@babel/types" "7.23.6"
-    "@cosmology/ast" "^1.4.6"
+    "@cosmology/ast" "^1.4.7"
     "@cosmology/proto-parser" "^1.4.4"
     "@cosmology/types" "^1.4.2"
     "@cosmology/utils" "^1.4.2"
