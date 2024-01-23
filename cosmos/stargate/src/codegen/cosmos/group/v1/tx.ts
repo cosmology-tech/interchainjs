@@ -1,4 +1,4 @@
-import { MemberRequest, MemberRequestAmino, VoteOption, ProposalExecutorResult, ThresholdDecisionPolicy, ThresholdDecisionPolicyProtoMsg, PercentageDecisionPolicy, PercentageDecisionPolicyProtoMsg, voteOptionFromJSON, voteOptionToJSON, proposalExecutorResultFromJSON, proposalExecutorResultToJSON } from "./types";
+import { MemberRequest, MemberRequestAmino, VoteOption, ProposalExecutorResult, ThresholdDecisionPolicy, ThresholdDecisionPolicyProtoMsg, PercentageDecisionPolicy, PercentageDecisionPolicyProtoMsg, voteOptionFromJSON, proposalExecutorResultFromJSON } from "./types";
 import { Any, AnyProtoMsg, AnyAmino } from "../../../google/protobuf/any";
 import { BinaryReader, BinaryWriter } from "../../../binary";
 import { DeepPartial, isSet } from "../../../helpers";
@@ -2429,7 +2429,7 @@ export const MsgSubmitProposal = {
     } else {
       obj.messages = [];
     }
-    obj.exec = execToJSON(message.exec);
+    obj.exec = message.exec;
     obj.title = message.title;
     obj.summary = message.summary;
     return obj;
@@ -2788,9 +2788,9 @@ export const MsgVote = {
     const obj: any = {};
     obj.proposal_id = message.proposalId ? message.proposalId.toString() : undefined;
     obj.voter = message.voter;
-    obj.option = voteOptionToJSON(message.option);
+    obj.option = message.option;
     obj.metadata = message.metadata;
-    obj.exec = execToJSON(message.exec);
+    obj.exec = message.exec;
     return obj;
   },
   fromAminoMsg(object: MsgVoteAminoMsg): MsgVote {
@@ -3023,7 +3023,7 @@ export const MsgExecResponse = {
   },
   toAmino(message: MsgExecResponse): MsgExecResponseAmino {
     const obj: any = {};
-    obj.result = proposalExecutorResultToJSON(message.result);
+    obj.result = message.result;
     return obj;
   },
   fromAminoMsg(object: MsgExecResponseAminoMsg): MsgExecResponse {

@@ -1,4 +1,4 @@
-import { ProposalStatus, Proposal, ProposalAmino, Vote, VoteAmino, VotingParams, VotingParamsAmino, DepositParams, DepositParamsAmino, TallyParams, TallyParamsAmino, Deposit, DepositAmino, TallyResult, TallyResultAmino, proposalStatusFromJSON, proposalStatusToJSON } from "./gov";
+import { ProposalStatus, Proposal, ProposalAmino, Vote, VoteAmino, VotingParams, VotingParamsAmino, DepositParams, DepositParamsAmino, TallyParams, TallyParamsAmino, Deposit, DepositAmino, TallyResult, TallyResultAmino, proposalStatusFromJSON } from "./gov";
 import { PageRequest, PageRequestAmino, PageResponse, PageResponseAmino } from "../../base/query/v1beta1/pagination";
 import { BinaryReader, BinaryWriter } from "../../../binary";
 import { DeepPartial, isSet } from "../../../helpers";
@@ -589,7 +589,7 @@ export const QueryProposalsRequest = {
   },
   toAmino(message: QueryProposalsRequest): QueryProposalsRequestAmino {
     const obj: any = {};
-    obj.proposal_status = proposalStatusToJSON(message.proposalStatus);
+    obj.proposal_status = message.proposalStatus;
     obj.voter = message.voter;
     obj.depositor = message.depositor;
     obj.pagination = message.pagination ? PageRequest.toAmino(message.pagination) : undefined;

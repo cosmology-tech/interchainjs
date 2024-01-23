@@ -1849,7 +1849,7 @@ export const MsgRecvPacketResponse = {
   },
   toAmino(message: MsgRecvPacketResponse): MsgRecvPacketResponseAmino {
     const obj: any = {};
-    obj.result = responseResultTypeToJSON(message.result);
+    obj.result = message.result;
     return obj;
   },
   fromAminoMsg(object: MsgRecvPacketResponseAminoMsg): MsgRecvPacketResponse {
@@ -2053,7 +2053,7 @@ export const MsgTimeoutResponse = {
   },
   toAmino(message: MsgTimeoutResponse): MsgTimeoutResponseAmino {
     const obj: any = {};
-    obj.result = responseResultTypeToJSON(message.result);
+    obj.result = message.result;
     return obj;
   },
   fromAminoMsg(object: MsgTimeoutResponseAminoMsg): MsgTimeoutResponse {
@@ -2269,7 +2269,7 @@ export const MsgTimeoutOnCloseResponse = {
   },
   toAmino(message: MsgTimeoutOnCloseResponse): MsgTimeoutOnCloseResponseAmino {
     const obj: any = {};
-    obj.result = responseResultTypeToJSON(message.result);
+    obj.result = message.result;
     return obj;
   },
   fromAminoMsg(object: MsgTimeoutOnCloseResponseAminoMsg): MsgTimeoutOnCloseResponse {
@@ -2473,7 +2473,7 @@ export const MsgAcknowledgementResponse = {
   },
   toAmino(message: MsgAcknowledgementResponse): MsgAcknowledgementResponseAmino {
     const obj: any = {};
-    obj.result = responseResultTypeToJSON(message.result);
+    obj.result = message.result;
     return obj;
   },
   fromAminoMsg(object: MsgAcknowledgementResponseAminoMsg): MsgAcknowledgementResponse {

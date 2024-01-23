@@ -1,6 +1,6 @@
 import { Any, AnyProtoMsg, AnyAmino } from "../../../google/protobuf/any";
 import { Coin, CoinAmino } from "../../base/v1beta1/coin";
-import { VoteOption, WeightedVoteOption, WeightedVoteOptionAmino, Params, ParamsAmino, voteOptionFromJSON, voteOptionToJSON } from "./gov";
+import { VoteOption, WeightedVoteOption, WeightedVoteOptionAmino, Params, ParamsAmino, voteOptionFromJSON } from "./gov";
 import { CommunityPoolSpendProposal, CommunityPoolSpendProposalProtoMsg, CommunityPoolSpendProposalWithDeposit, CommunityPoolSpendProposalWithDepositProtoMsg } from "../../distribution/v1beta1/distribution";
 import { TextProposal, TextProposalProtoMsg } from "../v1beta1/gov";
 import { SoftwareUpgradeProposal, SoftwareUpgradeProposalProtoMsg, CancelSoftwareUpgradeProposal, CancelSoftwareUpgradeProposalProtoMsg } from "../../upgrade/v1beta1/upgrade";
@@ -772,7 +772,7 @@ export const MsgVote = {
     const obj: any = {};
     obj.proposal_id = message.proposalId ? message.proposalId.toString() : "0";
     obj.voter = message.voter;
-    obj.option = voteOptionToJSON(message.option);
+    obj.option = message.option;
     obj.metadata = message.metadata;
     return obj;
   },
