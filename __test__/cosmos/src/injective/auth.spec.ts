@@ -13,16 +13,16 @@ describe("Ethers", () => {
       authConfig["injective"].hdPath
     );
     expect(myAuth.privateKey.toHex()).toEqual(hisAuth.privateKey);
-    expect(myAuth.publicKey.toHex()).toEqual(hisAuth.publicKey);
+    expect(myAuth.getPublicKey().toHex()).toEqual(hisAuth.publicKey);
   });
 });
 
-describe("Injective", () => {
+describe("Injective Auth", () => {
   const hisAuth = PrivateKey.fromMnemonic(mnemonic);
 
   it("should get identical key results", () => {
     expect(myAuth.privateKey.toHex()).toEqual(hisAuth.toPrivateKeyHex());
-    expect(myAuth.publicKeyCompressed.toHex()).toEqual(
+    expect(myAuth.getPublicKey(true).toHex()).toEqual(
       `0x${hisAuth.toPublicKey().toHex()}`
     );
   });

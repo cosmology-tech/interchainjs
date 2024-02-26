@@ -3,6 +3,7 @@ import {
   BaseSigner,
   Bech32Address,
   HttpEndpoint,
+  Key,
   parsePrice,
   Price,
 } from "@cosmonauts/core";
@@ -31,6 +32,7 @@ import {
 } from "./types";
 import { getAvgGasPrice } from "./utils/price";
 import { EncodeObjectUtils, TxUtils } from "./utils/tx";
+import { getPrefix } from "./utils/prefix";
 
 export class Signer extends BaseSigner<RpcClient> {
   readonly generated: Generated[] = [];
@@ -68,11 +70,11 @@ export class Signer extends BaseSigner<RpcClient> {
     return this._accountData;
   }
 
-  protected encodePubKey(pubkey: Uint8Array) {
+  protected encodePubKey(pubkey: Key) {
     return {
       typeUrl: PubKeySecp256k1.typeUrl,
       value: PubKeySecp256k1.encode(
-        PubKeySecp256k1.fromPartial({ key: pubkey })
+        PubKeySecp256k1.fromPartial({ key: pubkey.value })
       ).finish(),
     };
   }
@@ -82,9 +84,9 @@ export class Signer extends BaseSigner<RpcClient> {
       this._accountData.chainId = await this.getChainId();
     }
     if (!this._accountData.address) {
-      this._accountData.address = this.auth.getBech32Address(
-        this._accountData.chainId
-      );
+      this._accountData.address =
+        this.auth.address?.toBech32(getPrefix(this._accountData.chainId)) ||
+        this.auth.bech32Address;
     }
     if (!this._accountData.sequence || !this._accountData.accountNumber) {
       const { sequence, accountNumber } = await this.getSequence(
@@ -120,7 +122,7 @@ export class Signer extends BaseSigner<RpcClient> {
     await this.prepareAccountData();
     const tx = TxUtils.toTxForGasEstimation(
       messages,
-      this.encodePubKey(this.auth.keys.pubkey.value),
+      this.encodePubKey(this.auth.getPublicKey()),
       this.getGeneratedFromTypeUrl,
       this._accountData.sequence,
       memo
@@ -215,7 +217,7 @@ export class Signer extends BaseSigner<RpcClient> {
     };
 
     const signerInfo: SignerInfo = SignerInfo.fromPartial({
-      publicKey: this.encodePubKey(this.auth.keys.pubkey.value),
+      publicKey: this.encodePubKey(this.auth.getPublicKey()),
       sequence: this._accountData.sequence,
       modeInfo: { single: { mode: SignMode.SIGN_MODE_DIRECT } },
     });

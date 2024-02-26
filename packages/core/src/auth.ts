@@ -5,13 +5,13 @@ import { secp256k1 } from "@noble/curves/secp256k1";
 import { bytes as assertBytes } from "@noble/hashes/_assert";
 import { HDKey } from "@scure/bip32";
 
-import { AuthConfig, AuthOptions } from "./types";
+import { Auth, AuthConfig, AuthOptions } from "./types";
 import { getSeedFromMnemonic } from "./utils/mnemonic";
 import { Key } from "./key";
 import { authConfig } from "./config";
 
-export class Secp256k1Auth {
-  protected root: HDKey;
+export class Secp256k1Auth implements Auth {
+  protected seed: HDKey;
   protected hdkey: HDKey;
   protected config: AuthConfig;
 
@@ -19,7 +19,7 @@ export class Secp256k1Auth {
 
   constructor(seed: Uint8Array, config: AuthConfig) {
     this.config = config;
-    this.root = HDKey.fromMasterSeed(seed);
+    this.seed = HDKey.fromMasterSeed(seed);
     this.updateHdPath(this.config.hdPath);
   }
 
@@ -45,7 +45,7 @@ export class Secp256k1Auth {
   }
 
   updateHdPath(hdPath?: string) {
-    this.hdkey = hdPath ? this.root.derive(hdPath) : this.root;
+    this.hdkey = hdPath ? this.seed.derive(hdPath) : this.seed;
   }
 
   get privateKey() {
@@ -55,19 +55,14 @@ export class Secp256k1Auth {
     return Key.from(this.hdkey?.privateKey);
   }
 
-  /**
-   * Uncompressed public key
-   */
-  get publicKey() {
-    return Key.from(secp256k1.getPublicKey(this.privateKey!.value, false));
-  }
-
-  get publicKeyCompressed() {
-    return Key.from(secp256k1.getPublicKey(this.privateKey!.value, true));
+  getPublicKey(isCompressed: boolean = false) {
+    return Key.from(
+      secp256k1.getPublicKey(this.privateKey!.value, isCompressed)
+    );
   }
 
   get address(): Key {
-    return this.config.computeAddress(this.publicKey);
+    return this.config.computeAddress(this.getPublicKey);
   }
 
   /**

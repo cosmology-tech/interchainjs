@@ -4,15 +4,12 @@ import { Key } from "./key";
 /* eslint-disable @typescript-eslint/ban-types */
 export type Bech32Address = string;
 
-export interface Keys {
-  pubkey: Key;
-}
-
 export interface Auth {
-  keys: Keys;
+  getPublicKey: (isCompressed?: boolean) => Key; // `isCompressed` defaults to be `false`
   signMessage: (data: Uint8Array) => Uint8Array;
   verifyMessage: (data: Uint8Array, signature: Uint8Array) => boolean;
-  getBech32Address: (chainId: string) => string;
+  address?: Key;
+  bech32Address?: Bech32Address;
 }
 
 export interface AuthOptions extends Partial<AuthConfig> {
@@ -38,6 +35,6 @@ export interface Price {
 
 export interface AuthConfig {
   hdPath: string;
-  computeAddress: (pubkey: Key) => Key; // `pubkey` is uncompressed
+  computeAddress: (getPublickey: (isCompressed?: boolean) => Key) => Key; // `isCompressed` defaults to be `false`
   hashMessage: (message: Uint8Array) => Uint8Array;
 }

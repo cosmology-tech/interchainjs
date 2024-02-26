@@ -1,4 +1,11 @@
-import { Auth, fromBase64, HttpEndpoint, Price } from "@cosmonauts/core";
+import {
+  Auth,
+  authConfig,
+  fromBase64,
+  HttpEndpoint,
+  Key,
+  Price,
+} from "@cosmonauts/core";
 import {
   AminoSigner,
   EncodeObjectUtils,
@@ -85,8 +92,12 @@ export class CosmjsSigner {
   private async initAuth(address: string) {
     const { pubkey } = await this.getAccountData(address);
     const auth: Auth = {
-      keys: {
-        pubkey,
+      bech32Address: address,
+      getPublicKey: (isCompressed?: boolean) => {
+        if (!isCompressed) {
+          return Key.from(pubkey);
+        }
+        throw new Error("Getting uncompressed public key is not implemented");
       },
       signMessage: (_data: Uint8Array) => {
         throw new Error("Not implemented.");
@@ -94,7 +105,6 @@ export class CosmjsSigner {
       verifyMessage: (_data: Uint8Array, _signature: Uint8Array) => {
         throw new Error("Not implemented.");
       },
-      getBech32Address: (_chainId: string) => address,
     };
     this.aminoSigner.by(auth);
   }

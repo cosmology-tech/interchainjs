@@ -45,14 +45,3 @@ export class Key {
     return bech32.encode(prefix, bech32.toWords(this.value), limit);
   }
 }
-
-export function compressPubKey(key: Key) {
-  return Key.fromHex(
-    `02${toHex(
-      key.value.slice(
-        1,
-        Number.parseInt(((key.value.length - 1) / 2 + 1).toString())
-      )
-    )}`
-  );
-}
