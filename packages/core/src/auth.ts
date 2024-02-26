@@ -34,6 +34,16 @@ export class Secp256k1Auth {
     return new Secp256k1Auth(seed, config);
   }
 
+  static fromSeed(seed: Key, options?: AuthConfig) {
+    const config: AuthConfig = {
+      hdPath: options?.hdPath || authConfig["cosmos"].hdPath,
+      computeAddress:
+        options?.computeAddress || authConfig["cosmos"].computeAddress,
+      hashMessage: options?.hashMessage || authConfig["cosmos"].hashMessage,
+    };
+    return new Secp256k1Auth(seed.value, config);
+  }
+
   updateHdPath(hdPath?: string) {
     this.hdkey = hdPath ? this.root.derive(hdPath) : this.root;
   }
