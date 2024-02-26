@@ -19,7 +19,7 @@ const expected = Slip10.derivePath(
 );
 
 describe("Test Key", () => {
-  const privkey = toBase64(auth.privkey);
+  const privkey = toBase64(auth.privateKey);
 
   it("should match private key", () => {
     expect(privkey).toEqual(toBase64(expected.privkey));
@@ -31,8 +31,8 @@ describe("Verify", () => {
   const msg2 = fromUtf8("foolalaa");
 
   test("derive private key", () => {
-    const signature = auth.sign(msg);
-    expect(auth.verify(msg, signature)).toBe(true);
-    expect(auth.verify(msg, auth.sign(msg2))).toBe(false);
+    const signature = auth.signMessage(msg);
+    expect(auth.verifyMessage(msg, signature)).toBe(true);
+    expect(auth.verifyMessage(msg, auth.signMessage(msg2))).toBe(false);
   });
 });

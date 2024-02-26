@@ -1,22 +1,22 @@
 import Decimal from "decimal.js";
+import { Key } from "./key";
 
 /* eslint-disable @typescript-eslint/ban-types */
 export type Bech32Address = string;
 
-export interface Key {
-  pubkey: Uint8Array;
+export interface Keys {
+  pubkey: Key;
 }
 
 export interface Auth {
-  key: Key;
-  sign: (data: Uint8Array) => Uint8Array;
-  verify: (data: Uint8Array, signature: Uint8Array) => boolean;
-  getAddress: (chainId: string) => string;
+  keys: Keys;
+  signMessage: (data: Uint8Array) => Uint8Array;
+  verifyMessage: (data: Uint8Array, signature: Uint8Array) => boolean;
+  getBech32Address: (chainId: string) => string;
 }
 
-export interface AuthOptions {
+export interface AuthOptions extends Partial<AuthConfig> {
   bip39Password?: string;
-  hdPath?: string;
 }
 
 export interface GeneralSigned<SignDoc, ExecDoc, VisualDoc> {
@@ -34,4 +34,10 @@ export interface HttpEndpoint {
 export interface Price {
   amount: Decimal;
   denom: string;
+}
+
+export interface AuthConfig {
+  hdPath: string;
+  computeAddress: (pubkey: Key) => Key; // `pubkey` is uncompressed
+  hashMessage: (message: Uint8Array) => Uint8Array;
 }

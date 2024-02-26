@@ -4,3 +4,5 @@ export * from "./types";
 export * from "./utils/encoding";
 export * from "./utils/mnemonic";
 export * from "./utils/price";
+export * from "./key";
+export * from "./config";

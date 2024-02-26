@@ -84,7 +84,7 @@ export class AminoSigner extends Signer {
     const signature = this.signRawBytes(StdSignDocUtils.encode(signDoc));
     const { bodyBytes, authInfoBytes } = StdSignDocUtils.toSignDoc(
       doc,
-      this.encodePubKey(this.auth.key.pubkey),
+      this.encodePubKey(this.auth.keys.pubkey),
       this.getGeneratedFromAminoType
     );
     const txRaw = TxRaw.fromPartial({

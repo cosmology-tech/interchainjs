@@ -51,10 +51,10 @@ export abstract class BaseSigner<RequestClient> {
   }
 
   signRawBytes(raw: Uint8Array): Uint8Array {
-    return this.auth.sign(raw);
+    return this.auth.signMessage(raw);
   }
 
   verifyRawBytes(raw: Uint8Array, signature: Uint8Array): boolean {
-    return this.auth.verify(raw, signature);
+    return this.auth.verifyMessage(raw, signature);
   }
 }

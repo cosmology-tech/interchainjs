@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "proto:download": "rm -rf ./proto && ./scripts/download-proto.sh",
-    "proto:codegen": "rm -rf ./src/codegen ./.telescope && npx telescope transpile --config ../../.telescope.json --config ./.telescope.ext.json",
+    "proto:codegen": "rm -rf ./src/codegen ./.telescope.json && npx telescope transpile --config ../../.telescope.json --config ./.telescope.ext.json",
     "proto:update": "yarn proto:download && yarn proto:codegen",
     "build:cjs": "yarn tsc -p tsconfig.json --outDir cjs --module commonjs || true",
     "build:esm": "yarn tsc -p tsconfig.json --outDir esm --module es2022 --declaration false || true",

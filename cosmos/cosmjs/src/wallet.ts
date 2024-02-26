@@ -26,7 +26,7 @@ export class Secp256k1Wallet implements Wallet {
   constructor(auths: Auth[], prefix: string = "cosmos") {
     this.auths = auths;
     this.auths.forEach((auth) => {
-      this.addrs.push(toBech32(prefix, ripemd160(sha256(auth.key.pubkey))));
+      this.addrs.push(toBech32(prefix, ripemd160(sha256(auth.keys.pubkey))));
     });
   }
 
@@ -50,7 +50,7 @@ export class Secp256k1Wallet implements Wallet {
       accounts.push({
         address: this.addrs[i],
         algo: "secp256k1",
-        pubkey: auth.key.pubkey,
+        pubkey: auth.keys.pubkey,
       });
     });
     return accounts;
@@ -67,14 +67,14 @@ export class Secp256k1Wallet implements Wallet {
   signDirect(signerAddress: string, signDoc: SignDoc): DirectSignResponse {
     const auth = this.getAuthFromBech32Addr(signerAddress);
     const doc = SignDoc.fromPartial(signDoc);
-    const signature = auth.sign(SignDoc.encode(doc).finish());
+    const signature = auth.signMessage(SignDoc.encode(doc).finish());
     return {
       signed: doc,
       signature: {
         pub_key: {
           type: "tendermint/PubKeySecp256k1",
           value: {
-            key: auth.key.pubkey,
+            key: auth.keys.pubkey,
           },
         },
         signature: toBase64(signature),
@@ -84,7 +84,7 @@ export class Secp256k1Wallet implements Wallet {
 
   signAmino(signerAddress: string, signDoc: StdSignDoc): AminoSignResponse {
     const auth = this.getAuthFromBech32Addr(signerAddress);
-    const signature = auth.sign(
+    const signature = auth.signMessage(
       StdSignDocUtils.encode(StdSignDocUtils.fromPartial(signDoc))
     );
     return {
@@ -93,7 +93,7 @@ export class Secp256k1Wallet implements Wallet {
         pub_key: {
           type: "tendermint/PubKeySecp256k1",
           value: {
-            key: auth.key.pubkey,
+            key: auth.keys.pubkey,
           },
         },
         signature: toBase64(signature),

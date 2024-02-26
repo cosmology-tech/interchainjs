@@ -82,7 +82,7 @@ export class Signer extends BaseSigner<RpcClient> {
       this._accountData.chainId = await this.getChainId();
     }
     if (!this._accountData.address) {
-      this._accountData.address = this.auth.getAddress(
+      this._accountData.address = this.auth.getBech32Address(
         this._accountData.chainId
       );
     }
@@ -100,8 +100,9 @@ export class Signer extends BaseSigner<RpcClient> {
   }
 
   async getSequence(address: Bech32Address) {
-    const { sequence, accountNumber } =
-      await this.request.getBaseAccount(address);
+    const { sequence, accountNumber } = await this.request.getBaseAccount(
+      address
+    );
     return { sequence, accountNumber };
   }
 
@@ -119,7 +120,7 @@ export class Signer extends BaseSigner<RpcClient> {
     await this.prepareAccountData();
     const tx = TxUtils.toTxForGasEstimation(
       messages,
-      this.encodePubKey(this.auth.key.pubkey),
+      this.encodePubKey(this.auth.keys.pubkey.value),
       this.getGeneratedFromTypeUrl,
       this._accountData.sequence,
       memo
@@ -195,11 +196,13 @@ export class Signer extends BaseSigner<RpcClient> {
     this._accountData.sequence = void 0;
     await this.prepareAccountData();
 
-    const [visualMessages, encodedMessages] =
-      EncodeObjectUtils.fromPartialAndEncode(
-        messages,
-        this.getGeneratedFromTypeUrl
-      );
+    const [
+      visualMessages,
+      encodedMessages,
+    ] = EncodeObjectUtils.fromPartialAndEncode(
+      messages,
+      this.getGeneratedFromTypeUrl
+    );
 
     const txBody: TxBody = TxBody.fromPartial({
       messages: encodedMessages,
@@ -212,7 +215,7 @@ export class Signer extends BaseSigner<RpcClient> {
     };
 
     const signerInfo: SignerInfo = SignerInfo.fromPartial({
-      publicKey: this.encodePubKey(this.auth.key.pubkey),
+      publicKey: this.encodePubKey(this.auth.keys.pubkey.value),
       sequence: this._accountData.sequence,
       modeInfo: { single: { mode: SignMode.SIGN_MODE_DIRECT } },
     });
@@ -277,8 +280,8 @@ export class Signer extends BaseSigner<RpcClient> {
       checkTx && deliverTx
         ? "broadcast_tx_commit"
         : checkTx
-          ? "broadcast_tx_sync"
-          : "broadcast_tx_async";
+        ? "broadcast_tx_sync"
+        : "broadcast_tx_async";
     const txResponse = await this.request.broadcast(raw, mode);
     return txResponse;
   }

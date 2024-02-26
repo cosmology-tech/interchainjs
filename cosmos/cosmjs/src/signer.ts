@@ -85,16 +85,16 @@ export class CosmjsSigner {
   private async initAuth(address: string) {
     const { pubkey } = await this.getAccountData(address);
     const auth: Auth = {
-      key: {
+      keys: {
         pubkey,
       },
-      sign: (_data: Uint8Array) => {
+      signMessage: (_data: Uint8Array) => {
         throw new Error("Not implemented.");
       },
-      verify: (_data: Uint8Array, _signature: Uint8Array) => {
+      verifyMessage: (_data: Uint8Array, _signature: Uint8Array) => {
         throw new Error("Not implemented.");
       },
-      getAddress: (_chainId: string) => address,
+      getBech32Address: (_chainId: string) => address,
     };
     this.aminoSigner.by(auth);
   }
@@ -391,7 +391,7 @@ export class CosmjsSigner {
     try {
       const account = await this.request.getBaseAccount(address);
       return account;
-    } catch (error: any) {
+    } catch (error) {
       if (/Account is undefined\./i.test(error.toString())) {
         return null;
       }

@@ -1,6 +1,3 @@
-import { Secp256k1Auth } from "@cosmonauts/cosmos-proto";
-import { toBech32 } from "@cosmonauts/cosmos-proto";
-
 export interface ChainData {
   chainId: string;
   rpc: string;
@@ -33,18 +30,13 @@ export const seed: Record<string, string> = {
     "opinion knife other balcony surge more bamboo canoe romance ask argue teach anxiety adjust spike mystery wolf alone torch tail six decide wash alley",
 };
 
-function getAddress(prefix: string, seed: string) {
-  const auth = Secp256k1Auth.fromMnemonic(seed);
-  return toBech32(prefix, auth.pubKeyHash);
-}
-
 export const address = {
   osmosis: {
-    genesis: getAddress(chain.osmosis.prefix, seed.genesis),
-    test1: getAddress(chain.osmosis.prefix, seed.test1),
+    genesis: "osmo1qjtcxl86z0zua2egcsz4ncff2gzlcndz2jeczk",
+    test1: "osmo1pss7nxeh3f9md2vuxku8q99femnwdjtc8ws4un",
   },
   cosmoshub: {
-    genesis: getAddress(chain.cosmoshub.prefix, seed.genesis),
-    test1: getAddress(chain.cosmoshub.prefix, seed.test1),
+    genesis: "cosmos1qjtcxl86z0zua2egcsz4ncff2gzlcndzzf2g5y",
+    test1: "cosmos1pss7nxeh3f9md2vuxku8q99femnwdjtc04r92p",
   },
 };
