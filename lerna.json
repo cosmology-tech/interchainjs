@@ -2,8 +2,16 @@
   "lerna": "7",
   "conventionalCommits": true,
   "npmClient": "yarn",
-  "npmClientArgs": ["--no-lockfile"],
-  "packages": ["packages/*", "cosmos/*"],
+  "npmClientArgs": [
+    "--no-lockfile"
+  ],
+  "packages": [
+    "packages/*",
+    "cosmos/*",
+    "auth/algo/*",
+    "auth/config/*",
+    "auth/utils"
+  ],
   "version": "independent",
   "registry": "https://registry.npmjs.org",
   "command": {

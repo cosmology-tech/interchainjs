@@ -1,0 +1,24 @@
+{
+  "name": "@cosmonauts/injective",
+  "version": "1.0.0",
+  "main": "index.js",
+  "module": "esm/index.js",
+  "types": "index.d.ts",
+  "author": "liujun93 <ljun8575@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@cosmonauts/utils": "^1.0.0",
+    "@cosmonauts/types": "^1.0.0",
+    "@ethersproject/transactions": "^5.7.0"
+  },
+  "scripts": {
+    "build": "npm i && npm run build:clean; tsc && tsc -p tsconfig.esm.json; cp package.json dist/package.json; cp README.md dist/README.md",
+    "build:clean": "rimraf dist",
+    "build:release": "npm run build; cd dist; npm publish"
+  },
+  "files": [
+    "dist",
+    "package.json",
+    "README.md"
+  ]
+}
