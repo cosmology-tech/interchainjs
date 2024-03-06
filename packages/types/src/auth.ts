@@ -1,33 +1,14 @@
-import { type Key } from "@cosmonauts/utils";
-
-export interface PublicKeyType {
-  toPublicKey(isCompressed?: boolean): Key;
-}
-
-export interface SignatureType {
-  r: bigint;
-  s: bigint;
-  recovery: number;
-  toCompact(): Key;
-  toDER(isCompressed?: boolean): Key;
-}
-
-export interface AuthConfig {
-  hdPath: string;
-  computeAddress(args: PublicKeyType): Key;
-  computeSignature(args: SignatureType): Key;
-}
+import { type Key, type Signature } from "@cosmonauts/utils";
 
 export type Bech32Address = string;
 
 export interface Auth {
   getPublicKey: (isCompressed?: boolean) => Key;
-  address: Key;
-  sign: (data: Uint8Array) => Key;
-  verify: (data: Uint8Array, signature: Key) => boolean;
-  bech32Address?: Bech32Address;
+  sign: (data: Uint8Array) => Signature;
+  verify: (data: Uint8Array, signature: Signature) => boolean;
 }
 
-export interface AuthOptions extends Partial<AuthConfig> {
+export interface AuthOptions {
   bip39Password?: string;
+  hdPath?: string;
 }

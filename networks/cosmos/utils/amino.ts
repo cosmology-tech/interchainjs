@@ -1,4 +1,4 @@
-import { fromUtf8 } from "@cosmonauts/utils";
+import { assertEmpty, fromUtf8 } from "@cosmonauts/utils";
 import {
   AminoMessage,
   AminoConverter,
@@ -8,6 +8,7 @@ import {
 import { Message } from "../types/direct";
 import { Coin } from "../codegen/cosmos/base/v1beta1/coin";
 import { Fee } from "../codegen/cosmos/tx/v1beta1/tx";
+import { TelescopeGeneratedType } from "../codegen/types";
 
 function sortKey<T>(target: T): T {
   if (target === null || typeof target !== "object") {
@@ -76,5 +77,23 @@ export function toStdFee(fee: Fee): StdFee {
     gas: fee.gasLimit.toString(),
     granter: fee.granter === "" ? void 0 : fee.granter,
     payer: fee.payer === "" ? void 0 : fee.payer,
+  };
+}
+
+export function toConverter(
+  generated: TelescopeGeneratedType<any, any, any>
+): AminoConverter {
+  assertEmpty(generated.aminoType);
+  return {
+    aminoType: generated.aminoType,
+    typeUrl: generated.typeUrl,
+    fromAmino: (data: any) => {
+      assertEmpty(generated.fromAmino);
+      return generated.fromAmino(data);
+    },
+    toAmino: (data: any) => {
+      assertEmpty(generated.toAmino);
+      return generated.toAmino(data);
+    },
   };
 }

@@ -8,7 +8,7 @@
   "license": "MIT",
   "dependencies": {
     "@cosmonauts/cosmos": "^1.0.0",
-    "@cosmonauts/base": "^1.0.0",
+    "@cosmonauts/cosmos-msgs": "^1.0.0",
     "@cosmonauts/utils": "^1.0.0",
     "@cosmonauts/types": "^1.0.0",
     "decimal.js": "^10.4.3",

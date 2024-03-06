@@ -13,7 +13,7 @@ import {
   OfflineDirectSigner,
   OfflineSigner,
 } from "./types/wallet";
-import { BroadcastTxError, sleep, TimeoutError } from "./utils";
+import { authTemplate, BroadcastTxError, sleep, TimeoutError } from "./utils";
 import {
   AuthInfo,
   Secp256k1PubKey,
@@ -24,35 +24,28 @@ import {
   StdSignDoc,
   TxBody,
   TxRaw,
+  IBinaryWriter,
+  Any,
 } from "@cosmonauts/cosmos/types";
 import {
   constructAuthInfo,
   constructSignerInfo,
   constructTxBody,
   toAminoMsgs,
+  toEncoder,
   toFee,
   toMessages,
   toStdFee,
 } from "@cosmonauts/cosmos/utils";
 import { AminoSigner } from "@cosmonauts/cosmos/amino";
-import { BaseAccount } from "./codegen/cosmos/auth/v1beta1/auth";
-import { defaultAuthConfig } from "@cosmonauts/cosmos/defaults";
-import { IBinaryWriter } from "./codegen/binary";
-import { Any } from "./codegen/google/protobuf/any";
-
-const authTemplate: Auth = {
-  bech32Address: "",
-  getPublicKey: (isCompressed?: boolean) => {
-    throw new Error("Not implemented.");
-  },
-  sign: (_data: Uint8Array) => {
-    throw new Error("Not implemented.");
-  },
-  verify: (_data: Uint8Array, _signature: Key) => {
-    throw new Error("Not implemented.");
-  },
-  address: Key.fromHex(""),
-};
+import {
+  SearchTxQuery,
+  SearchTxResponse,
+  IndexedTx,
+  Block,
+  BlockResponse,
+  TxResponse,
+} from "./types/query";
 
 /**
  * implement the same methods as what in `cosmjs` signingClient
@@ -73,7 +66,7 @@ export class SigningClient {
     offlineSigner: OfflineSigner,
     options: SignerOptions = {}
   ) {
-    aminoSigner.addEncoders(options.registry.map(([, g]) => g));
+    aminoSigner.addEncoders(options.registry.map(([, g]) => toEncoder(g)));
     aminoSigner.addConverters(Object.values(options.aminoConverters));
     this.aminoSigner = aminoSigner;
     this.offlineSigner = offlineSigner;
@@ -104,9 +97,7 @@ export class SigningClient {
     };
     const auth: Auth = {
       ...authTemplate,
-      bech32Address: address,
       getPublicKey,
-      address: defaultAuthConfig.computeAddress({ toPublicKey: getPublicKey }),
     };
     this.aminoSigner.setAuth(auth);
   }
@@ -148,6 +139,22 @@ export class SigningClient {
     return publicKey;
   }
 
+  private get requestClient() {
+    return this.aminoSigner.requestClient;
+  }
+
+  async getChainId() {
+    return await this.requestClient.getChainId();
+  }
+
+  async getAccountNumber() {
+    return await this.requestClient.getAccountNumber();
+  }
+
+  async getSequence() {
+    return await this.requestClient.getSequence();
+  }
+
   async sign(
     signerAddress: string,
     messages: EncodeObject[],
@@ -159,12 +166,10 @@ export class SigningClient {
     if (explicitSignerData) {
       signerData = explicitSignerData;
     } else {
-      const { accountNumber, sequence } = await this.getSequence(signerAddress);
-      const chainId = await this.getChainId();
       signerData = {
-        accountNumber: accountNumber,
-        sequence: sequence,
-        chainId: chainId,
+        accountNumber: await this.getAccountNumber(),
+        sequence: await this.getSequence(),
+        chainId: await this.getChainId(),
       };
     }
     return this._signDirect
@@ -181,10 +186,24 @@ export class SigningClient {
     let usedFee: StdFee;
     if (fee == "auto" || typeof fee === "number") {
       await this.initAuth(signerAddress);
-      const feeEstimation = await this.aminoSigner.estimateFee(messages, memo, {
-        multiplier: typeof fee === "number" ? fee : void 0,
-        gasPrice: this.gasPrice,
-      });
+      const { txBody } = constructTxBody(
+        messages,
+        this.aminoSigner.getEncoder,
+        memo
+      );
+      const { signerInfo } = constructSignerInfo(
+        "secp256k1",
+        this.aminoSigner.auth.getPublicKey(),
+        await this.requestClient.getSequence()
+      );
+      const feeEstimation = await this.requestClient.estimateFee(
+        txBody,
+        [signerInfo],
+        {
+          multiplier: typeof fee === "number" ? fee : void 0,
+          gasPrice: this.gasPrice,
+        }
+      );
       usedFee = toStdFee(feeEstimation);
     } else {
       usedFee = fee;
@@ -199,8 +218,22 @@ export class SigningClient {
     memo: string | undefined
   ): Promise<bigint> {
     await this.initAuth(signerAddress);
-    const gas = await this.aminoSigner.estimateGas(messages, memo);
-    return gas.gasUsed;
+    const { txBody } = constructTxBody(
+      messages,
+      this.aminoSigner.getEncoder,
+      memo
+    );
+    const { signerInfo } = constructSignerInfo(
+      "secp256k1",
+      this.aminoSigner.auth.getPublicKey(),
+      await this.requestClient.getSequence()
+    );
+    const feeEstimation = await this.requestClient.estimateFee(
+      txBody,
+      [signerInfo],
+      { multiplier: 1 }
+    );
+    return feeEstimation.gasLimit;
   }
 
   async broadcastTxSync(tx: Uint8Array): Promise<string> {
@@ -395,5 +428,87 @@ export class SigningClient {
       signatures: [fromBase64(signature.signature)],
     });
     return txRaw;
+  }
+
+  get endpoint(): HttpEndpoint {
+    return this.requestClient.endpoint;
+  }
+
+  async getTx(id: string): Promise<IndexedTx | null> {
+    const data = await fetch(`${this.endpoint.url}/tx?hash=0x${id}`);
+    const json = await data.json();
+    const tx: TxResponse = json["result"];
+    if (!tx) return null;
+    const txRaw = TxRaw.decode(fromBase64(tx.tx));
+    const txBody = TxBody.decode(txRaw.bodyBytes);
+    return {
+      height: tx.height,
+      txIndex: tx.index,
+      hash: tx.hash,
+      code: tx.tx_result.code,
+      events: tx.tx_result.events,
+      rawLog: tx.tx_result.log,
+      tx: fromBase64(tx.tx),
+      msgResponses: txBody.messages,
+      gasUsed: BigInt(tx.tx_result.gas_used),
+      gasWanted: BigInt(tx.tx_result.gas_wanted),
+    };
+  }
+
+  async searchTx(query: SearchTxQuery): Promise<IndexedTx[]> {
+    let rawQuery: string;
+    if (typeof query === "string") {
+      rawQuery = query;
+    } else if (Array.isArray(query)) {
+      rawQuery = query.map((t) => `${t.key}=${t.value}`).join(" AND ");
+    } else {
+      throw new Error("Got unsupported query type.");
+    }
+    const orderBy: "asc" | "desc" = "asc";
+    const data = await fetch(
+      `${this.endpoint.url}/tx_search?query="${rawQuery}"&order_by="${orderBy}"`
+      // `${this.endpoint.url}/tx_search?query="${rawQuery}"&order_by="${orderBy}"&page=1&per_page=100`
+    );
+    const json = await data.json();
+
+    const { txs }: SearchTxResponse = json["result"];
+    return txs.map((tx) => {
+      return {
+        height: Number.parseInt(tx.height),
+        txIndex: tx.index,
+        hash: tx.hash,
+        code: 0,
+        // events: tx.tx_result.tags,
+        events: [],
+        rawLog: tx.tx_result.log || "",
+        tx: fromBase64(tx.tx),
+        msgResponses: [],
+        gasUsed: BigInt(tx.tx_result.gas_used),
+        gasWanted: BigInt(tx.tx_result.gas_wanted),
+      } as IndexedTx;
+    });
+  }
+
+  async getBlock(height?: number): Promise<Block> {
+    const data = await fetch(
+      height == void 0
+        ? `${this.endpoint.url}/block?height=${height}`
+        : `${this.endpoint.url}/block`
+    );
+    const json = await data.json();
+    const { block_id, block }: BlockResponse = json["result"];
+    return {
+      id: block_id.hash.toUpperCase(),
+      header: {
+        version: {
+          block: block.header.version.block,
+          app: block.header.version.app,
+        },
+        height: Number(block.header.height),
+        chainId: block.header.chain_id,
+        time: block.header.time,
+      },
+      txs: block.data.txs.map((tx: string) => fromBase64(tx)),
+    };
   }
 }

@@ -1,3 +1,3 @@
 throw new Error(
-  "@cosmonauts/injective have no entry-point: consult README for usage"
+  "@cosmonauts/ethereum have no entry-point: consult README for usage"
 );

@@ -44,4 +44,12 @@ export class Key {
   toBech32(prefix: string, limit?: number) {
     return bech32.encode(prefix, bech32.toWords(this.value), limit);
   }
+
+  slice(start?: number, end?: number): Key {
+    return Key.from(this.value.slice(start, end));
+  }
+
+  concat(key: Key) {
+    return Key.from(new Uint8Array([...this.value, ...key.value]));
+  }
 }

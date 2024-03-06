@@ -1,5 +1,3 @@
-import { BaseSigner } from "@cosmonauts/base";
-import { defaultMessageHash } from "./defaults";
 import { DirectSigner } from "./direct";
 import { Auth, HttpEndpoint } from "@cosmonauts/types";
 import {
@@ -23,7 +21,8 @@ import {
   constructSignerInfo,
   constructTxBody,
 } from "./utils/direct";
-import { isEmpty } from "@cosmonauts/utils";
+import { isEmpty, BaseSigner } from "@cosmonauts/utils";
+import { defaultSignerConfig } from "./defaults";
 
 export class AminoSigner extends BaseSigner {
   readonly converters: AminoConverter[];
@@ -35,7 +34,7 @@ export class AminoSigner extends BaseSigner {
     converters: AminoConverter[],
     endpoint?: string | HttpEndpoint
   ) {
-    super(auth, defaultMessageHash);
+    super(auth, defaultSignerConfig);
     this.converters = converters;
     this.directSigner = new DirectSigner(auth, encoders, endpoint);
   }
@@ -118,7 +117,7 @@ export class AminoSigner extends BaseSigner {
 
   async signDoc(doc: StdSignDoc) {
     const encoded = encodeStdSignDoc(doc);
-    const signature = this.signArbitrary(encoded);
+    const signature = this.sign(encoded);
     const toTxRaw = () => {
       const bodyBytes = constructTxBody(
         toMessages(doc.msgs, this.getConverter),
@@ -160,7 +159,7 @@ export class AminoSigner extends BaseSigner {
     return await this.directSigner.broadcastTxRaw(txRaw, options);
   }
 
-  async broadcast(data: Uint8Array, options?: BroadcastOptions) {
-    return await this.directSigner.broadcast(data, options);
+  async broadcast(message: Uint8Array, options?: BroadcastOptions) {
+    return await this.directSigner.broadcast(message, options);
   }
 }

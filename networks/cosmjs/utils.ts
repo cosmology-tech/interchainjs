@@ -1,3 +1,6 @@
+import { Auth } from "@cosmonauts/types";
+import { Key } from "@cosmonauts/utils";
+
 /**
  * An error when broadcasting the transaction. This contains the CheckTx errors
  * from the blockchain. Once a transaction is included in a block no BroadcastTxError
@@ -30,3 +33,16 @@ export class TimeoutError extends Error {
 export async function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
+
+export const authTemplate: Auth = {
+  getPublicKey: (isCompressed?: boolean) => {
+    throw new Error("Not implemented.");
+  },
+  sign: (_data: Uint8Array) => {
+    throw new Error("Not implemented.");
+  },
+  verify: (_data: Uint8Array, _signature: Key) => {
+    throw new Error("Not implemented.");
+  },
+  address: Key.fromHex(""),
+};

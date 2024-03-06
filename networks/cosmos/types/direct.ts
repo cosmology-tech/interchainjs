@@ -1,4 +1,4 @@
-import { Price } from "@cosmonauts/types";
+import { HttpEndpoint, Price } from "@cosmonauts/types";
 import { Fee, SignerInfo, TxBody } from "../codegen/cosmos/tx/v1beta1/tx";
 import { Event } from "../codegen/tendermint/abci/types";
 
@@ -39,6 +39,7 @@ export type BroadcastMode =
   | "broadcast_tx_commit";
 
 export interface RequestClient {
+  readonly endpoint: HttpEndpoint;
   getChainId: () => Promise<string>;
   getAccountNumber: () => Promise<bigint>;
   getSequence: () => Promise<bigint>;

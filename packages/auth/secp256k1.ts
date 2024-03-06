@@ -1,50 +1,28 @@
 import { secp256k1 } from "@noble/curves/secp256k1";
 import { HDKey } from "@scure/bip32";
 
-import { AuthConfig, AuthOptions, Auth } from "@cosmonauts/types";
+import { AuthOptions, Auth } from "@cosmonauts/types";
 import { getSeedFromMnemonic } from "./utils";
-import { Key } from "@cosmonauts/utils";
-
-const defaultAuthConfig: AuthConfig = {
-  hdPath: "",
-  computeAddress: (publicKeyType) => publicKeyType.toPublicKey(true),
-  computeSignature: (signatureType) => signatureType.toCompact(),
-};
+import { Key, Signature } from "@cosmonauts/utils";
 
 export class Secp256k1Auth implements Auth {
   protected seed: HDKey;
   protected hdkey: HDKey;
-  protected config: AuthConfig;
 
   readonly algo = "secp256k1";
 
-  constructor(seed: Uint8Array, config: AuthConfig) {
-    this.config = config;
+  constructor(seed: Uint8Array, hdPath: string = "") {
     this.seed = HDKey.fromMasterSeed(seed);
-    this.updateHdPath(this.config.hdPath);
+    this.updateHdPath(hdPath);
   }
 
   static fromMnemonic(mnemonic: string, options?: AuthOptions) {
     const seed = getSeedFromMnemonic(mnemonic, options?.bip39Password);
-    const config: AuthConfig = {
-      hdPath: options?.hdPath || defaultAuthConfig.hdPath,
-      computeAddress:
-        options?.computeAddress || defaultAuthConfig.computeAddress,
-      computeSignature:
-        options?.computeSignature || defaultAuthConfig.computeSignature,
-    };
-    return new Secp256k1Auth(seed, config);
+    return new Secp256k1Auth(seed, options?.hdPath);
   }
 
-  static fromSeed(seed: Key, options?: AuthConfig) {
-    const config: AuthConfig = {
-      hdPath: options?.hdPath || defaultAuthConfig.hdPath,
-      computeAddress:
-        options?.computeAddress || defaultAuthConfig.computeAddress,
-      computeSignature:
-        options?.computeSignature || defaultAuthConfig.computeSignature,
-    };
-    return new Secp256k1Auth(seed.value, config);
+  static fromSeed(seed: Key, options?: Pick<AuthOptions, "hdPath">) {
+    return new Secp256k1Auth(seed.value, options?.hdPath);
   }
 
   updateHdPath(hdPath?: string) {
@@ -64,24 +42,19 @@ export class Secp256k1Auth implements Auth {
     );
   }
 
-  get address(): Key {
-    return this.config.computeAddress({ toPublicKey: this.getPublicKey });
-  }
-
-  sign(data: Uint8Array): Key {
+  sign(data: Uint8Array): Signature {
     if (!this.privateKey) {
       throw new Error("No privateKey set!");
     }
-    const sig = secp256k1.sign(data, this.privateKey!.toBigInt());
-    return this.config.computeSignature({
-      ...sig,
-      toCompact: () => Key.from(sig.toCompactRawBytes()),
-      toDER: (isCompressed?: boolean) =>
-        Key.from(sig.toDERRawBytes(isCompressed)),
-    });
+    const signature = secp256k1.sign(data, this.privateKey!.toBigInt());
+    return new Signature(
+      Key.fromBigInt(signature.r),
+      Key.fromBigInt(signature.s),
+      signature.recovery
+    );
   }
 
-  verify(data: Uint8Array, signature: Key) {
-    return this.hdkey.verify(data, signature.value);
+  verify(data: Uint8Array, signature: Signature) {
+    return this.hdkey.verify(data, signature.toCompact().value);
   }
 }

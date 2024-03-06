@@ -1,4 +1,4 @@
-import { Key } from "@cosmonauts/utils";
+import { Key, Signature } from "@cosmonauts/utils";
 import { Auth, Bech32Address } from "@cosmonauts/types";
 
 export class Ed25519Auth implements Auth {
@@ -8,10 +8,10 @@ export class Ed25519Auth implements Auth {
     throw new Error("Not implemented yet");
   }
 
-  sign(data: Uint8Array): Uint8Array {
+  sign(message: Uint8Array): Signature {
     throw new Error("Not implemented yet");
   }
-  verify(data: Uint8Array, signature: Uint8Array): boolean {
+  verify(message: Uint8Array, signature: Signature): boolean {
     throw new Error("Not implemented yet");
   }
 

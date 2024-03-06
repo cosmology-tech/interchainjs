@@ -1,15 +1,9 @@
 import { bytes as assertBytes } from "@noble/hashes/_assert";
 import { sha256 } from "@noble/hashes/sha256";
 import { BroadcastOptions, FeeOptions } from "./types/direct";
-import { AuthConfig, PublicKeyType, SignatureType } from "@cosmonauts/types";
+import { SignerConfig } from "@cosmonauts/types";
 import { ripemd160 } from "@noble/hashes/ripemd160";
-import { Key } from "@cosmonauts/utils";
-
-export const defaultMessageHash = (data: Uint8Array) => {
-  const hashed = sha256(data);
-  assertBytes(hashed);
-  return hashed;
-};
+import { Key, Signature } from "@cosmonauts/utils";
 
 export const defaultBroadcastOptions: BroadcastOptions = {
   checkTx: true,
@@ -21,9 +15,24 @@ export const defaultFeeOptions: FeeOptions = {
   gasPrice: "average",
 };
 
-export const defaultAuthConfig: AuthConfig = {
-  hdPath: "m/44'/118'/0'/0/0",
-  computeAddress: (args: PublicKeyType) =>
-    Key.from(ripemd160(sha256(args.toPublicKey(false).value))),
-  computeSignature: (args: SignatureType) => args.toCompact(),
+export const defaultHdPath = "m/44'/118'/0'/0/0";
+
+export const defaultSignerConfig: SignerConfig = {
+  publicKey: {
+    isCompressed: true,
+    toAddress: (publicKey: Key) => Key.from(ripemd160(sha256(publicKey.value))),
+  },
+  message: {
+    hash: (message: Uint8Array) => {
+      const hashed = sha256(message);
+      assertBytes(hashed);
+      return hashed;
+    },
+  },
+  signature: {
+    toKey: (signature: Signature) => signature.toCompact(),
+    fromKey: (key: Key) => {
+      return new Signature(key.slice(0, 32), key.slice(32, 64));
+    },
+  },
 };

@@ -4,10 +4,11 @@ import {
   SignerInfo,
   TxBody,
 } from "../codegen/cosmos/tx/v1beta1/tx";
-import { EncodedMessage, Message } from "../types/direct";
-import { Key } from "@cosmonauts/utils";
+import { EncodedMessage, Encoder, Message } from "../types/direct";
+import { Key, assertEmpty } from "@cosmonauts/utils";
 import { PubKey as Secp256k1PubKey } from "../codegen/cosmos/crypto/secp256k1/keys";
 import { SignMode } from "../codegen/cosmos/tx/signing/v1beta1/signing";
+import { TelescopeGeneratedType } from "../codegen/types";
 
 export function constructTxBody(
   messages: Message[],
@@ -70,5 +71,17 @@ export function constructAuthInfo(signerInfos: SignerInfo[], fee: Fee) {
   return {
     authInfo,
     encode: () => AuthInfo.encode(authInfo).finish(),
+  };
+}
+
+export function toEncoder(
+  generated: TelescopeGeneratedType<any, any, any>
+): Encoder {
+  return {
+    typeUrl: generated.typeUrl,
+    encode: (data: any) => {
+      assertEmpty(generated.encode);
+      return generated.encode(generated.fromPartial(data)).finish();
+    },
   };
 }

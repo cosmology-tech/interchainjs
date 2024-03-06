@@ -1,10 +1,5 @@
 import { Auth } from "@cosmonauts/types";
-import { toBase64 } from "@cosmonauts/utils";
 import { Secp256k1Auth } from "@cosmonauts/auth/secp256k1";
-import {
-  defaultAuthConfig,
-  defaultMessageHash,
-} from "@cosmonauts/cosmos/defaults";
 import { StdSignDoc, SignDoc } from "@cosmonauts/cosmos/types";
 import { encodeStdSignDoc } from "@cosmonauts/cosmos/utils";
 
@@ -18,6 +13,14 @@ import {
   WalletOptions,
   Bech32Address,
 } from "../types/wallet";
+import {
+  defaultSignerConfig,
+  defaultHdPath,
+} from "@cosmonauts/cosmos/defaults";
+
+const isPublicKeyCompressed = defaultSignerConfig.publicKey.isCompressed;
+const toAddress = defaultSignerConfig.publicKey.toAddress;
+const messageHash = defaultSignerConfig.message.hash;
 
 export class Secp256k1Wallet implements Wallet {
   readonly auths: Auth[] = [];
@@ -26,12 +29,14 @@ export class Secp256k1Wallet implements Wallet {
   constructor(auths: Auth[], prefix: string = "cosmos") {
     this.auths = auths;
     this.auths.forEach((auth) => {
-      this.addrs.push(auth.address.toBech32(prefix));
+      this.addrs.push(
+        toAddress(auth.getPublicKey(isPublicKeyCompressed)).toBech32(prefix)
+      );
     });
   }
 
   static fromMnemonic(mnemonic: string, options?: WalletOptions) {
-    const hdPaths = options?.hdPaths || [defaultAuthConfig.hdPath];
+    const hdPaths = options?.hdPaths || [defaultHdPath];
     const auths: Auth[] = [];
     hdPaths.forEach((hdPath) => {
       auths.push(
@@ -67,8 +72,8 @@ export class Secp256k1Wallet implements Wallet {
   signDirect(signerAddress: string, signDoc: SignDoc): DirectSignResponse {
     const auth = this.getAuthFromBech32Addr(signerAddress);
     const doc = SignDoc.fromPartial(signDoc);
-    const signature = auth.sign(
-      defaultMessageHash(SignDoc.encode(doc).finish())
+    const signature = defaultSignerConfig.signature.toKey(
+      auth.sign(messageHash(SignDoc.encode(doc).finish()))
     );
     return {
       signed: doc,
@@ -79,14 +84,16 @@ export class Secp256k1Wallet implements Wallet {
             key: auth.getPublicKey(),
           },
         },
-        signature: toBase64(signature.value),
+        signature: signature.toBase64(),
       },
     };
   }
 
   signAmino(signerAddress: string, signDoc: StdSignDoc): AminoSignResponse {
     const auth = this.getAuthFromBech32Addr(signerAddress);
-    const signature = auth.sign(defaultMessageHash(encodeStdSignDoc(signDoc)));
+    const signature = defaultSignerConfig.signature.toKey(
+      auth.sign(messageHash(encodeStdSignDoc(signDoc)))
+    );
     return {
       signed: signDoc,
       signature: {
@@ -96,7 +103,7 @@ export class Secp256k1Wallet implements Wallet {
             key: auth.getPublicKey(),
           },
         },
-        signature: toBase64(signature.value),
+        signature: signature.toBase64(),
       },
     };
   }

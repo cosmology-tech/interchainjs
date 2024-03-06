@@ -1,5 +1,4 @@
-import { BaseSigner } from "@cosmonauts/base";
-import { assertEmpty, isEmpty } from "@cosmonauts/utils";
+import { assertEmpty, isEmpty, BaseSigner } from "@cosmonauts/utils";
 import { Auth, HttpEndpoint } from "@cosmonauts/types";
 import { Fee, SignDoc, TxRaw } from "./codegen/cosmos/tx/v1beta1/tx";
 import {
@@ -15,7 +14,7 @@ import {
   constructSignerInfo,
   constructTxBody,
 } from "./utils/direct";
-import { defaultBroadcastOptions, defaultMessageHash } from "./defaults";
+import { defaultBroadcastOptions, defaultSignerConfig } from "./defaults";
 import { RpcClient } from "./request/rpc";
 
 export class DirectSigner extends BaseSigner {
@@ -27,10 +26,10 @@ export class DirectSigner extends BaseSigner {
     encoders: Encoder[],
     endpoint?: string | HttpEndpoint
   ) {
-    super(auth, defaultMessageHash);
+    super(auth, defaultSignerConfig);
     this.encoders = encoders;
     if (!isEmpty(endpoint)) {
-      this._requestClient = new RpcClient(endpoint, auth.address);
+      this._requestClient = new RpcClient(endpoint, this.address);
     }
   }
 
@@ -86,7 +85,7 @@ export class DirectSigner extends BaseSigner {
 
   signDoc(doc: SignDoc) {
     const signDoc = SignDoc.fromPartial(doc);
-    const signature = this.signArbitrary(SignDoc.encode(signDoc).finish());
+    const signature = this.sign(SignDoc.encode(signDoc).finish());
     const toTxRaw = () => {
       const txRaw = TxRaw.fromPartial({
         bodyBytes: doc.bodyBytes,
@@ -114,7 +113,7 @@ export class DirectSigner extends BaseSigner {
     );
   }
 
-  async broadcast(data: Uint8Array, options?: BroadcastOptions) {
+  async broadcast(message: Uint8Array, options?: BroadcastOptions) {
     const _options = options || defaultBroadcastOptions;
     const mode =
       _options.checkTx && _options.deliverTx
@@ -122,7 +121,7 @@ export class DirectSigner extends BaseSigner {
         : _options.checkTx
         ? "broadcast_tx_sync"
         : "broadcast_tx_async";
-    const txResponse = await this.requestClient.broadcast(data, mode);
-    return txResponse;
+    const result = await this.requestClient.broadcast(message, mode);
+    return result;
   }
 }
