@@ -23,12 +23,13 @@ export class StargateSigningClient extends SigningClient {
     signer: OfflineSigner,
     options: SignerOptions = {}
   ): StargateSigningClient {
-    const aminoSigner = new AminoSigner(authTemplate, [], [], endpoint);
+    const aminoSigner = new AminoSigner(authTemplate, [], []);
     const signingClient = new StargateSigningClient(
       aminoSigner,
       signer,
       options
     );
+    signingClient.setEndpoint(endpoint);
     return signingClient;
   }
 }

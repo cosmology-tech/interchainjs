@@ -1,12 +1,12 @@
 import { assertEmpty, isEmpty, BaseSigner } from "@cosmonauts/utils";
-import { Auth, HttpEndpoint } from "@cosmonauts/types";
+import { Auth, HttpEndpoint, SignerConfig } from "@cosmonauts/types";
 import { Fee, SignDoc, TxRaw } from "./codegen/cosmos/tx/v1beta1/tx";
 import {
   BroadcastOptions,
   Encoder,
   FeeOptions,
   Message,
-  RequestClient,
+  QueryClient,
   SignerOptions,
 } from "./types/direct";
 import {
@@ -15,34 +15,42 @@ import {
   constructTxBody,
 } from "./utils/direct";
 import { defaultBroadcastOptions, defaultSignerConfig } from "./defaults";
-import { RpcClient } from "./request/rpc";
+import { RpcClient } from "./query/rpc";
+import { StdFee } from "./types/amino";
+import { toFee } from "./utils";
+import { SignMode } from "./types";
 
 export class DirectSigner extends BaseSigner {
-  protected _requestClient?: RequestClient;
+  protected _queryClient?: QueryClient;
   readonly encoders: Encoder[];
 
   constructor(
     auth: Auth,
     encoders: Encoder[],
-    endpoint?: string | HttpEndpoint
+    endpoint?: string | HttpEndpoint,
+    config?: SignerConfig
   ) {
-    super(auth, defaultSignerConfig);
+    super(auth, config ?? defaultSignerConfig);
     this.encoders = encoders;
     if (!isEmpty(endpoint)) {
-      this._requestClient = new RpcClient(endpoint, this.address);
+      this.setEndpoint(endpoint);
     }
   }
 
-  get requestClient() {
-    assertEmpty(this._requestClient);
-    return this._requestClient;
+  setEndpoint(endpoint: string | HttpEndpoint) {
+    this._queryClient = new RpcClient(endpoint, this.address);
   }
 
-  addEncoders(encoders: Encoder[]) {
+  get queryClient() {
+    assertEmpty(this._queryClient);
+    return this._queryClient;
+  }
+
+  addEncoders = (encoders: Encoder[]) => {
     this.encoders.push(...encoders);
-  }
+  };
 
-  getEncoder(typeUrl: string) {
+  getEncoder = (typeUrl: string) => {
     const encoder = this.encoders.find(
       (encoder) => encoder.typeUrl === typeUrl
     );
@@ -52,11 +60,11 @@ export class DirectSigner extends BaseSigner {
       );
     }
     return encoder;
-  }
+  };
 
   async signMessages(
     messages: Message[],
-    fee?: Fee,
+    fee?: StdFee,
     memo?: string,
     options?: FeeOptions & SignerOptions
   ) {
@@ -65,19 +73,20 @@ export class DirectSigner extends BaseSigner {
     const { signerInfo } = constructSignerInfo(
       "secp256k1",
       this.auth.getPublicKey(),
-      options?.sequence ?? (await this.requestClient.getSequence())
+      options?.sequence ?? (await this.queryClient.getSequence()),
+      SignMode.SIGN_MODE_DIRECT
+    );
+
+    const _fee: Fee = toFee(
+      fee ?? (await this.queryClient.estimateFee(txBody, [signerInfo], options))
     );
 
     const doc = SignDoc.fromPartial({
       bodyBytes: encode(),
-      authInfoBytes: constructAuthInfo(
-        [signerInfo],
-        fee ??
-          (await this.requestClient.estimateFee(txBody, [signerInfo], options))
-      ).encode(),
-      chainId: options?.chainId ?? (await this.requestClient.getChainId()),
+      authInfoBytes: constructAuthInfo([signerInfo], _fee).encode(),
+      chainId: options?.chainId ?? (await this.queryClient.getChainId()),
       accountNumber:
-        options?.accountNumber ?? (await this.requestClient.getAccountNumber()),
+        options?.accountNumber ?? (await this.queryClient.getAccountNumber()),
     });
 
     return this.signDoc(doc);
@@ -114,14 +123,7 @@ export class DirectSigner extends BaseSigner {
   }
 
   async broadcast(message: Uint8Array, options?: BroadcastOptions) {
-    const _options = options || defaultBroadcastOptions;
-    const mode =
-      _options.checkTx && _options.deliverTx
-        ? "broadcast_tx_commit"
-        : _options.checkTx
-        ? "broadcast_tx_sync"
-        : "broadcast_tx_async";
-    const result = await this.requestClient.broadcast(message, mode);
+    const result = await this.queryClient.broadcast(message, options);
     return result;
   }
 }

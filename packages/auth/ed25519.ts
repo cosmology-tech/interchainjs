@@ -1,7 +1,9 @@
-import { Key, Signature } from "@cosmonauts/utils";
-import { Auth, Bech32Address } from "@cosmonauts/types";
+import { Key } from "@cosmonauts/utils";
+import { Auth, Bech32Address, Signature } from "@cosmonauts/types";
 
 export class Ed25519Auth implements Auth {
+  readonly algo = "ed25519";
+
   constructor() {}
 
   getPublicKey(isCompressed?: boolean): Key {

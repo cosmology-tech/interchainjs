@@ -4,7 +4,7 @@ import { BinaryReader, BinaryWriter } from "../../../../binary";
 import { DeepPartial } from "../../../../helpers";
 /**
  * SignMode represents a signing mode with its own security guarantees.
- * 
+ *
  * This enum should be considered a registry of all known sign modes
  * in the Cosmos ecosystem. Apps are not expected to support all known
  * sign modes. Apps that would like to support custom  sign modes are
@@ -34,7 +34,7 @@ export enum SignMode {
    * SignDocDirectAux. As opposed to SIGN_MODE_DIRECT, this sign mode does not
    * require signers signing over other signers' `signer_info`. It also allows
    * for adding Tips in transactions.
-   * 
+   *
    * Since: cosmos-sdk 0.46
    */
   SIGN_MODE_DIRECT_AUX = 3,
@@ -46,13 +46,13 @@ export enum SignMode {
   /**
    * SIGN_MODE_EIP_191 - SIGN_MODE_EIP_191 specifies the sign mode for EIP 191 signing on the Cosmos
    * SDK. Ref: https://eips.ethereum.org/EIPS/eip-191
-   * 
+   *
    * Currently, SIGN_MODE_EIP_191 is registered as a SignMode enum variant,
    * but is not implemented on the SDK by default. To enable EIP-191, you need
    * to pass a custom `TxConfig` that has an implementation of
    * `SignModeHandler` for EIP-191. The SDK may decide to fully support
    * EIP-191 in the future.
-   * 
+   *
    * Since: cosmos-sdk 0.45.2
    */
   SIGN_MODE_EIP_191 = 191,
@@ -148,27 +148,36 @@ export interface SignatureDescriptor_Data_Multi {
 }
 function createBaseSignatureDescriptors(): SignatureDescriptors {
   return {
-    signatures: []
+    signatures: [],
   };
 }
 export const SignatureDescriptors = {
   typeUrl: "/cosmos.tx.signing.v1beta1.SignatureDescriptors",
   aminoType: "cosmos-sdk/SignatureDescriptors",
-  encode(message: SignatureDescriptors, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
+  encode(
+    message: SignatureDescriptors,
+    writer: BinaryWriter = BinaryWriter.create()
+  ): BinaryWriter {
     for (const v of message.signatures) {
       SignatureDescriptor.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
-  decode(input: BinaryReader | Uint8Array, length?: number): SignatureDescriptors {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+  decode(
+    input: BinaryReader | Uint8Array,
+    length?: number
+  ): SignatureDescriptors {
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSignatureDescriptors();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.signatures.push(SignatureDescriptor.decode(reader, reader.uint32()));
+          message.signatures.push(
+            SignatureDescriptor.decode(reader, reader.uint32())
+          );
           break;
         default:
           reader.skipType(tag & 7);
@@ -179,34 +188,45 @@ export const SignatureDescriptors = {
   },
   fromPartial(object: DeepPartial<SignatureDescriptors>): SignatureDescriptors {
     const message = createBaseSignatureDescriptors();
-    message.signatures = object.signatures?.map(e => SignatureDescriptor.fromPartial(e)) || [];
+    message.signatures =
+      object.signatures?.map((e) => SignatureDescriptor.fromPartial(e)) || [];
     return message;
-  }
+  },
 };
 function createBaseSignatureDescriptor(): SignatureDescriptor {
   return {
     publicKey: undefined,
     data: undefined,
-    sequence: BigInt(0)
+    sequence: BigInt(0),
   };
 }
 export const SignatureDescriptor = {
   typeUrl: "/cosmos.tx.signing.v1beta1.SignatureDescriptor",
   aminoType: "cosmos-sdk/SignatureDescriptor",
-  encode(message: SignatureDescriptor, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
+  encode(
+    message: SignatureDescriptor,
+    writer: BinaryWriter = BinaryWriter.create()
+  ): BinaryWriter {
     if (message.publicKey !== undefined) {
       Any.encode(message.publicKey, writer.uint32(10).fork()).ldelim();
     }
     if (message.data !== undefined) {
-      SignatureDescriptor_Data.encode(message.data, writer.uint32(18).fork()).ldelim();
+      SignatureDescriptor_Data.encode(
+        message.data,
+        writer.uint32(18).fork()
+      ).ldelim();
     }
     if (message.sequence !== BigInt(0)) {
       writer.uint32(24).uint64(message.sequence);
     }
     return writer;
   },
-  decode(input: BinaryReader | Uint8Array, length?: number): SignatureDescriptor {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+  decode(
+    input: BinaryReader | Uint8Array,
+    length?: number
+  ): SignatureDescriptor {
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSignatureDescriptor();
     while (reader.pos < end) {
@@ -216,7 +236,10 @@ export const SignatureDescriptor = {
           message.publicKey = Any.decode(reader, reader.uint32());
           break;
         case 2:
-          message.data = SignatureDescriptor_Data.decode(reader, reader.uint32());
+          message.data = SignatureDescriptor_Data.decode(
+            reader,
+            reader.uint32()
+          );
           break;
         case 3:
           message.sequence = reader.uint64();
@@ -230,42 +253,70 @@ export const SignatureDescriptor = {
   },
   fromPartial(object: DeepPartial<SignatureDescriptor>): SignatureDescriptor {
     const message = createBaseSignatureDescriptor();
-    message.publicKey = object.publicKey !== undefined && object.publicKey !== null ? Any.fromPartial(object.publicKey) : undefined;
-    message.data = object.data !== undefined && object.data !== null ? SignatureDescriptor_Data.fromPartial(object.data) : undefined;
-    message.sequence = object.sequence !== undefined && object.sequence !== null ? BigInt(object.sequence.toString()) : BigInt(0);
+    message.publicKey =
+      object.publicKey !== undefined && object.publicKey !== null
+        ? Any.fromPartial(object.publicKey)
+        : undefined;
+    message.data =
+      object.data !== undefined && object.data !== null
+        ? SignatureDescriptor_Data.fromPartial(object.data)
+        : undefined;
+    message.sequence =
+      object.sequence !== undefined && object.sequence !== null
+        ? BigInt(object.sequence.toString())
+        : BigInt(0);
     return message;
-  }
+  },
 };
 function createBaseSignatureDescriptor_Data(): SignatureDescriptor_Data {
   return {
     single: undefined,
-    multi: undefined
+    multi: undefined,
   };
 }
 export const SignatureDescriptor_Data = {
   typeUrl: "/cosmos.tx.signing.v1beta1.Data",
   aminoType: "cosmos-sdk/Data",
-  encode(message: SignatureDescriptor_Data, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
+  encode(
+    message: SignatureDescriptor_Data,
+    writer: BinaryWriter = BinaryWriter.create()
+  ): BinaryWriter {
     if (message.single !== undefined) {
-      SignatureDescriptor_Data_Single.encode(message.single, writer.uint32(10).fork()).ldelim();
+      SignatureDescriptor_Data_Single.encode(
+        message.single,
+        writer.uint32(10).fork()
+      ).ldelim();
     }
     if (message.multi !== undefined) {
-      SignatureDescriptor_Data_Multi.encode(message.multi, writer.uint32(18).fork()).ldelim();
+      SignatureDescriptor_Data_Multi.encode(
+        message.multi,
+        writer.uint32(18).fork()
+      ).ldelim();
     }
     return writer;
   },
-  decode(input: BinaryReader | Uint8Array, length?: number): SignatureDescriptor_Data {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+  decode(
+    input: BinaryReader | Uint8Array,
+    length?: number
+  ): SignatureDescriptor_Data {
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSignatureDescriptor_Data();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.single = SignatureDescriptor_Data_Single.decode(reader, reader.uint32());
+          message.single = SignatureDescriptor_Data_Single.decode(
+            reader,
+            reader.uint32()
+          );
           break;
         case 2:
-          message.multi = SignatureDescriptor_Data_Multi.decode(reader, reader.uint32());
+          message.multi = SignatureDescriptor_Data_Multi.decode(
+            reader,
+            reader.uint32()
+          );
           break;
         default:
           reader.skipType(tag & 7);
@@ -274,23 +325,34 @@ export const SignatureDescriptor_Data = {
     }
     return message;
   },
-  fromPartial(object: DeepPartial<SignatureDescriptor_Data>): SignatureDescriptor_Data {
+  fromPartial(
+    object: DeepPartial<SignatureDescriptor_Data>
+  ): SignatureDescriptor_Data {
     const message = createBaseSignatureDescriptor_Data();
-    message.single = object.single !== undefined && object.single !== null ? SignatureDescriptor_Data_Single.fromPartial(object.single) : undefined;
-    message.multi = object.multi !== undefined && object.multi !== null ? SignatureDescriptor_Data_Multi.fromPartial(object.multi) : undefined;
+    message.single =
+      object.single !== undefined && object.single !== null
+        ? SignatureDescriptor_Data_Single.fromPartial(object.single)
+        : undefined;
+    message.multi =
+      object.multi !== undefined && object.multi !== null
+        ? SignatureDescriptor_Data_Multi.fromPartial(object.multi)
+        : undefined;
     return message;
-  }
+  },
 };
 function createBaseSignatureDescriptor_Data_Single(): SignatureDescriptor_Data_Single {
   return {
     mode: 0,
-    signature: new Uint8Array()
+    signature: new Uint8Array(),
   };
 }
 export const SignatureDescriptor_Data_Single = {
   typeUrl: "/cosmos.tx.signing.v1beta1.Single",
   aminoType: "cosmos-sdk/Single",
-  encode(message: SignatureDescriptor_Data_Single, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
+  encode(
+    message: SignatureDescriptor_Data_Single,
+    writer: BinaryWriter = BinaryWriter.create()
+  ): BinaryWriter {
     if (message.mode !== 0) {
       writer.uint32(8).int32(message.mode);
     }
@@ -299,15 +361,19 @@ export const SignatureDescriptor_Data_Single = {
     }
     return writer;
   },
-  decode(input: BinaryReader | Uint8Array, length?: number): SignatureDescriptor_Data_Single {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+  decode(
+    input: BinaryReader | Uint8Array,
+    length?: number
+  ): SignatureDescriptor_Data_Single {
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSignatureDescriptor_Data_Single();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.mode = (reader.int32() as any);
+          message.mode = reader.int32() as any;
           break;
         case 2:
           message.signature = reader.bytes();
@@ -319,33 +385,45 @@ export const SignatureDescriptor_Data_Single = {
     }
     return message;
   },
-  fromPartial(object: DeepPartial<SignatureDescriptor_Data_Single>): SignatureDescriptor_Data_Single {
+  fromPartial(
+    object: DeepPartial<SignatureDescriptor_Data_Single>
+  ): SignatureDescriptor_Data_Single {
     const message = createBaseSignatureDescriptor_Data_Single();
     message.mode = object.mode ?? 0;
     message.signature = object.signature ?? new Uint8Array();
     return message;
-  }
+  },
 };
 function createBaseSignatureDescriptor_Data_Multi(): SignatureDescriptor_Data_Multi {
   return {
     bitarray: undefined,
-    signatures: []
+    signatures: [],
   };
 }
 export const SignatureDescriptor_Data_Multi = {
   typeUrl: "/cosmos.tx.signing.v1beta1.Multi",
   aminoType: "cosmos-sdk/Multi",
-  encode(message: SignatureDescriptor_Data_Multi, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
+  encode(
+    message: SignatureDescriptor_Data_Multi,
+    writer: BinaryWriter = BinaryWriter.create()
+  ): BinaryWriter {
     if (message.bitarray !== undefined) {
-      CompactBitArray.encode(message.bitarray, writer.uint32(10).fork()).ldelim();
+      CompactBitArray.encode(
+        message.bitarray,
+        writer.uint32(10).fork()
+      ).ldelim();
     }
     for (const v of message.signatures) {
       SignatureDescriptor_Data.encode(v!, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
-  decode(input: BinaryReader | Uint8Array, length?: number): SignatureDescriptor_Data_Multi {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+  decode(
+    input: BinaryReader | Uint8Array,
+    length?: number
+  ): SignatureDescriptor_Data_Multi {
+    const reader =
+      input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSignatureDescriptor_Data_Multi();
     while (reader.pos < end) {
@@ -355,7 +433,9 @@ export const SignatureDescriptor_Data_Multi = {
           message.bitarray = CompactBitArray.decode(reader, reader.uint32());
           break;
         case 2:
-          message.signatures.push(SignatureDescriptor_Data.decode(reader, reader.uint32()));
+          message.signatures.push(
+            SignatureDescriptor_Data.decode(reader, reader.uint32())
+          );
           break;
         default:
           reader.skipType(tag & 7);
@@ -364,10 +444,17 @@ export const SignatureDescriptor_Data_Multi = {
     }
     return message;
   },
-  fromPartial(object: DeepPartial<SignatureDescriptor_Data_Multi>): SignatureDescriptor_Data_Multi {
+  fromPartial(
+    object: DeepPartial<SignatureDescriptor_Data_Multi>
+  ): SignatureDescriptor_Data_Multi {
     const message = createBaseSignatureDescriptor_Data_Multi();
-    message.bitarray = object.bitarray !== undefined && object.bitarray !== null ? CompactBitArray.fromPartial(object.bitarray) : undefined;
-    message.signatures = object.signatures?.map(e => SignatureDescriptor_Data.fromPartial(e)) || [];
+    message.bitarray =
+      object.bitarray !== undefined && object.bitarray !== null
+        ? CompactBitArray.fromPartial(object.bitarray)
+        : undefined;
+    message.signatures =
+      object.signatures?.map((e) => SignatureDescriptor_Data.fromPartial(e)) ||
+      [];
     return message;
-  }
+  },
 };

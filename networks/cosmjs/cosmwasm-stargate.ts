@@ -28,12 +28,13 @@ export class CosmWasmSigningClient extends SigningClient {
     signer: OfflineSigner,
     options: SignerOptions = {}
   ): CosmWasmSigningClient {
-    const aminoSigner = new AminoSigner(authTemplate, [], [], endpoint);
+    const aminoSigner = new AminoSigner(authTemplate, [], []);
     const signingClient = new CosmWasmSigningClient(
       aminoSigner,
       signer,
       options
     );
+    signingClient.setEndpoint(endpoint);
     return signingClient;
   }
 }

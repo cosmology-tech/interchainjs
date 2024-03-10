@@ -1,15 +1,16 @@
 import { HttpEndpoint, Price } from "@cosmonauts/types";
-import { Fee, SignerInfo, TxBody } from "../codegen/cosmos/tx/v1beta1/tx";
+import { SignerInfo, TxBody } from "../codegen/cosmos/tx/v1beta1/tx";
 import { Event } from "../codegen/tendermint/abci/types";
+import { StdFee } from "./amino";
 
-export interface Message {
+export interface Message<T = any> {
   typeUrl: string;
-  value: any;
+  value: T;
 }
 
 export interface BroadcastOptions {
-  checkTx: boolean;
-  deliverTx: boolean;
+  checkTx?: boolean;
+  deliverTx?: boolean;
 }
 
 export interface FeeOptions {
@@ -38,7 +39,7 @@ export type BroadcastMode =
   | "broadcast_tx_sync"
   | "broadcast_tx_commit";
 
-export interface RequestClient {
+export interface QueryClient {
   readonly endpoint: HttpEndpoint;
   getChainId: () => Promise<string>;
   getAccountNumber: () => Promise<bigint>;
@@ -47,10 +48,10 @@ export interface RequestClient {
     txBody: TxBody,
     signerInfos: SignerInfo[],
     options?: FeeOptions
-  ) => Promise<Fee>;
+  ) => Promise<StdFee>;
   broadcast: (
     txBytes: Uint8Array,
-    mode: BroadcastMode
+    options?: BroadcastOptions
   ) => Promise<BroadcastResult>;
 }
 

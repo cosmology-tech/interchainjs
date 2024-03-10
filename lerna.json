@@ -7,10 +7,7 @@
   ],
   "packages": [
     "packages/*",
-    "cosmos/*",
-    "auth/algo/*",
-    "auth/config/*",
-    "auth/utils"
+    "networks/*"
   ],
   "version": "independent",
   "registry": "https://registry.npmjs.org",

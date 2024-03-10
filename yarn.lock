@@ -1026,6 +1026,13 @@
   dependencies:
     regenerator-runtime "^0.14.0"
 
+"@babel/runtime@^7.21.0":
+  version "7.24.0"
+  resolved "https://registry.npmjs.org/@babel/runtime/-/runtime-7.24.0.tgz#584c450063ffda59697021430cb47101b085951e"
+  integrity sha512-Chk32uHMg6TnQdvw2e9IlqPpFX/6NLuK0Ys2PqLb7/gL5uFn9mXvK715FGLlOLQrcO4qIkNHkvPGktzzXexsFw==
+  dependencies:
+    regenerator-runtime "^0.14.0"
+
 "@babel/template@^7.18.10", "@babel/template@^7.22.15", "@babel/template@^7.3.3":
   version "7.22.15"
   resolved "https://registry.npmjs.org/@babel/template/-/template-7.22.15.tgz#09576efc3830f0430f4548ef971dde1350ef2f38"
@@ -1105,6 +1112,13 @@
   version "0.2.3"
   resolved "https://registry.npmjs.org/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
+
+"@chain-registry/types@^0.18.1":
+  version "0.18.1"
+  resolved "https://registry.npmjs.org/@chain-registry/types/-/types-0.18.1.tgz#bd926ddf204f2ae986a79b42f0cfe85764e2977a"
+  integrity sha512-H/UnOyd7WdcWHa2FGKxy4MclDDFrbE2rFwaUh9oubNJOey7UBI4dNF10oZIWM/1by15LUgDz45fVbh6uA6W5Tg==
+  dependencies:
+    "@babel/runtime" "^7.21.0"
 
 "@confio/ics23@^0.6.8":
   version "0.6.8"
@@ -1343,18 +1357,6 @@
   resolved "https://registry.npmjs.org/@cosmjs/utils/-/utils-0.32.2.tgz#324304aa85bfa6f10561cc17781d824d02130897"
   integrity sha512-Gg5t+eR7vPJMAmhkFt6CZrzPd0EKpAslWwk5rFVYZpJsM8JG5KT9XQ99hgNM3Ov6ScNoIWbXkpX27F6A9cXR4Q==
 
-"@cosmology/ast@^1.4.2":
-  version "1.4.2"
-  resolved "https://registry.npmjs.org/@cosmology/ast/-/ast-1.4.2.tgz#adeceef0e956dc2fba96c6d26eb6afd6442444fd"
-  integrity sha512-pHIsahNp2hlUIqiMBfafwupGjMdMHMfU8b1d1IJvmgmS8kV+0zGI360+W4UiMn6/302/mA+WV94HtQpB0wGmtw==
-  dependencies:
-    "@babel/parser" "^7.23.6"
-    "@babel/types" "7.23.6"
-    "@cosmology/types" "^1.4.0"
-    "@cosmology/utils" "^1.4.0"
-    case "1.6.3"
-    dotty "0.1.2"
-
 "@cosmology/ast@^1.4.7":
   version "1.4.7"
   resolved "https://registry.npmjs.org/@cosmology/ast/-/ast-1.4.7.tgz#24d40e77e526f0c91664fe14d9049192c61873fb"
@@ -1366,19 +1368,6 @@
     "@cosmology/utils" "^1.4.2"
     case "1.6.3"
     dotty "0.1.2"
-
-"@cosmology/proto-parser@^1.4.1":
-  version "1.4.1"
-  resolved "https://registry.npmjs.org/@cosmology/proto-parser/-/proto-parser-1.4.1.tgz#04442a52515ff28e014aad08baaf76a96b6dc248"
-  integrity sha512-SAh7WgtMui2PdoSvV6mrYxGb/0qkcJ1GQgWSMz2Loy5FwvA5k2fdWPnHpfjpSf7i9/cIe6YtOsit15RheCOZeQ==
-  dependencies:
-    "@cosmology/protobufjs" "6.11.6"
-    "@cosmology/types" "^1.4.0"
-    "@cosmology/utils" "^1.4.0"
-    dotty "0.1.2"
-    glob "8.0.3"
-    minimatch "5.1.0"
-    mkdirp "3.0.0"
 
 "@cosmology/proto-parser@^1.4.4":
   version "1.4.4"
@@ -1442,57 +1431,12 @@
     rimraf "5.0.0"
     shelljs "0.8.5"
 
-"@cosmology/telescope@^1.4.3":
-  version "1.4.3"
-  resolved "https://registry.npmjs.org/@cosmology/telescope/-/telescope-1.4.3.tgz#8f9b613162d1bee9336cf36d701180ab2b287b26"
-  integrity sha512-9uc4JWcZj0ctgTt6vMYmUOJeNR6rPEr+O5YqpJdiWaMNCA8ap2Csne5HRmI1JKGJ0slHV+BuIjZHMZmoUdeQeA==
-  dependencies:
-    "@babel/generator" "^7.23.6"
-    "@babel/parser" "^7.23.6"
-    "@babel/traverse" "7.23.6"
-    "@babel/types" "7.23.6"
-    "@cosmology/ast" "^1.4.2"
-    "@cosmology/proto-parser" "^1.4.1"
-    "@cosmology/types" "^1.4.0"
-    "@cosmology/utils" "^1.4.0"
-    "@cosmwasm/ts-codegen" "0.34.0"
-    "@types/parse-package-name" "0.1.0"
-    case "1.6.3"
-    dargs "7.0.0"
-    deepmerge "4.3.1"
-    dotty "0.1.2"
-    fuzzy "0.1.3"
-    glob "8.0.3"
-    inquirerer "0.1.3"
-    long "^5.2.1"
-    minimatch "5.1.0"
-    minimist "1.2.8"
-    mkdirp "3.0.0"
-    parse-package-name "1.0.0"
-    rimraf "5.0.0"
-    shelljs "0.8.5"
-
-"@cosmology/types@^1.4.0":
-  version "1.4.0"
-  resolved "https://registry.npmjs.org/@cosmology/types/-/types-1.4.0.tgz#fbc46b39f11c2cf0fc110d161d40b6c9e02bc69b"
-  integrity sha512-DQx63AKl7EX11IFlDUfMX5XmRnz7yqytLXzx3udaQnZln3GpowsAMZEj5f1IoHwfDpOyI5XLPkDAX3dYirjgSQ==
-  dependencies:
-    case "1.6.3"
-
 "@cosmology/types@^1.4.2":
   version "1.4.2"
   resolved "https://registry.npmjs.org/@cosmology/types/-/types-1.4.2.tgz#e5771f139c8e44735968ed87583e832e410696b9"
   integrity sha512-GkzC1eJFJWnQmS4Vkje53qBFledKNB3YYEQnV/sJ28sS9Ud020AvLuXkG8eqRsmdpDNxGI7F+hzWQaaahDk1Ng==
   dependencies:
     case "1.6.3"
-
-"@cosmology/utils@^1.4.0":
-  version "1.4.0"
-  resolved "https://registry.npmjs.org/@cosmology/utils/-/utils-1.4.0.tgz#246d2a230747675d75a7134b8059ea3e8cc28ced"
-  integrity sha512-Wh8TSAhJ8u+v4JVK//4T9pTE9bpv6gOyNpwPXS81CV571+sBCUbDyQPLOgovHxy/EqO5NIlC9CNfU5ip54sZ1Q==
-  dependencies:
-    "@cosmology/types" "^1.4.0"
-    dotty "0.1.2"
 
 "@cosmology/utils@^1.4.2":
   version "1.4.2"
@@ -1501,6 +1445,15 @@
   dependencies:
     "@cosmology/types" "^1.4.2"
     dotty "0.1.2"
+
+"@cosmonauts/core@^1.0.0":
+  version "1.0.4"
+  resolved "https://registry.npmjs.org/@cosmonauts/core/-/core-1.0.4.tgz#e461eb1679e8678e734e536eb65108848bef020f"
+  integrity sha512-cXZOwD1pFZxLgPtmh8wFxATd5oNooSCF+egIfGdkMQkiTQNy3cB9e36tDZUO8BAKg7mNpK+SifEZpLb3971gwA==
+  dependencies:
+    "@noble/hashes" "^1.3.1"
+    buffer "^6.0.3"
+    elliptic "^6.5.4"
 
 "@cosmwasm/ts-codegen@0.34.0":
   version "0.34.0"
@@ -2574,7 +2527,7 @@
   dependencies:
     "@noble/hashes" "1.3.1"
 
-"@noble/curves@^1.3.0", "@noble/curves@~1.3.0":
+"@noble/curves@^1.1.0":
   version "1.3.0"
   resolved "https://registry.npmjs.org/@noble/curves/-/curves-1.3.0.tgz#01be46da4fd195822dab821e72f71bf4aeec635e"
   integrity sha512-t01iSXPuN+Eqzb4eBX0S5oubSqXbK/xXa1Ne18Hj8f9pStxztHCE2gfboSp/dZRLSqfuLpRK2nDXDK+W9puocA==
@@ -2586,7 +2539,7 @@
   resolved "https://registry.npmjs.org/@noble/hashes/-/hashes-1.3.1.tgz#8831ef002114670c603c458ab8b11328406953a9"
   integrity sha512-EbqwksQwz9xDRGfDST86whPBgM65E0OH/pCgqW0GBVzO22bNE+NuIbeTb714+IfSjU3aRk47EUvXIb5bTsenKA==
 
-"@noble/hashes@1.3.3", "@noble/hashes@^1", "@noble/hashes@^1.0.0", "@noble/hashes@^1.2.0", "@noble/hashes@^1.3.1", "@noble/hashes@~1.3.0", "@noble/hashes@~1.3.1", "@noble/hashes@~1.3.2":
+"@noble/hashes@1.3.3", "@noble/hashes@^1", "@noble/hashes@^1.0.0", "@noble/hashes@^1.2.0", "@noble/hashes@^1.3.1", "@noble/hashes@~1.3.0", "@noble/hashes@~1.3.1":
   version "1.3.3"
   resolved "https://registry.npmjs.org/@noble/hashes/-/hashes-1.3.3.tgz#39908da56a4adc270147bb07968bf3b16cfe1699"
   integrity sha512-V7/fPHgl+jsVPXqqeOzT8egNj2iBIVt+ECeMMG8TdcnTikP3oaBtUVqpT/gYCR68aEBJSF+XbYUxStjbFMqIIA==
@@ -2969,7 +2922,7 @@
     mz "^2.7.0"
     prettier "^2.6.2"
 
-"@scure/base@~1.1.0", "@scure/base@~1.1.4":
+"@scure/base@~1.1.0":
   version "1.1.5"
   resolved "https://registry.npmjs.org/@scure/base/-/base-1.1.5.tgz#1d85d17269fe97694b9c592552dd9e5e33552157"
   integrity sha512-Brj9FiG2W1MRQSTB212YVPRrcbjkv48FoZi/u4l/zds/ieRrqsh7aUf6CLwkAq61oKXr/ZlTzlY66gLIj3TFTQ==
@@ -2982,15 +2935,6 @@
     "@noble/curves" "~1.1.0"
     "@noble/hashes" "~1.3.1"
     "@scure/base" "~1.1.0"
-
-"@scure/bip32@^1.3.3":
-  version "1.3.3"
-  resolved "https://registry.npmjs.org/@scure/bip32/-/bip32-1.3.3.tgz#a9624991dc8767087c57999a5d79488f48eae6c8"
-  integrity sha512-LJaN3HwRbfQK0X1xFSi0Q9amqOgzQnnDngIt+ZlsBC3Bm7/nE7K0kwshZHyaru79yIVRv/e1mQAjZyuZG6jOFQ==
-  dependencies:
-    "@noble/curves" "~1.3.0"
-    "@noble/hashes" "~1.3.2"
-    "@scure/base" "~1.1.4"
 
 "@scure/bip39@1.2.1":
   version "1.2.1"
@@ -3666,7 +3610,7 @@ axios@^0.27.2:
     follow-redirects "^1.14.9"
     form-data "^4.0.0"
 
-axios@^1.0.0, axios@^1.5.1, axios@^1.6.0:
+axios@^1.0.0, axios@^1.6.0:
   version "1.6.5"
   resolved "https://registry.npmjs.org/axios/-/axios-1.6.5.tgz#2c090da14aeeab3770ad30c3a1461bc970fb0cd8"
   integrity sha512-Ii012v05KEVuUoFWmMW/UQv9aRIc3ZwkWDcM+h5Il8izZCtRVpDUfwpoFf7eOtajT3QiGR4yDUx7lPqHJULgbg==
@@ -4057,6 +4001,14 @@ case@1.6.3:
   version "1.6.3"
   resolved "https://registry.npmjs.org/case/-/case-1.6.3.tgz#0a4386e3e9825351ca2e6216c60467ff5f1ea1c9"
   integrity sha512-mzDSXIPaFwVDvZAHqZ9VlbyF4yyXRuX6IvB06WvPYkqJVO24kX1PPhv9bfpKNFZyxYFmmgo03HUiD8iklmJYRQ==
+
+chain-registry@^1.29.1:
+  version "1.29.1"
+  resolved "https://registry.npmjs.org/chain-registry/-/chain-registry-1.29.1.tgz#15b0392af72a95ec6eab5f4c74cb8f28eec1b80f"
+  integrity sha512-1VdBKme094W3NzsQO7rZkCtGVYnxFGtouv6o+qBdwcRsBUqrhD+QCfNhvuQXa10vKnnpByIDlO9Xg10mx/3KWw==
+  dependencies:
+    "@babel/runtime" "^7.21.0"
+    "@chain-registry/types" "^0.18.1"
 
 chalk@4.1.0:
   version "4.1.0"
@@ -5547,7 +5499,7 @@ glob@8.0.3:
     minimatch "^5.0.1"
     once "^1.3.0"
 
-glob@^10.0.0, glob@^10.2.2, glob@^10.3.7:
+glob@^10.0.0, glob@^10.2.2:
   version "10.3.10"
   resolved "https://registry.npmjs.org/glob/-/glob-10.3.10.tgz#0351ebb809fd187fe421ab96af83d3a70715df4b"
   integrity sha512-fa46+tv1Ak0UPK1TOy/pZrIybNNt4HCv7SDzwyfiOZkvZLEbjsZkJBPtDHVshZjbecAoAGSC20MjLDG/qr679g==
@@ -8576,13 +8528,6 @@ rimraf@^4.4.1:
   integrity sha512-Gk8NlF062+T9CqNGn6h4tls3k6T1+/nXdOcSZVikNVtlRdYpA7wRJJMoXmuvOnLW844rPjdQ7JgXCYM6PPC/og==
   dependencies:
     glob "^9.2.0"
-
-rimraf@^5.0.1:
-  version "5.0.5"
-  resolved "https://registry.npmjs.org/rimraf/-/rimraf-5.0.5.tgz#9be65d2d6e683447d2e9013da2bf451139a61ccf"
-  integrity sha512-CqDakW+hMe/Bz202FPEymy68P+G50RfMQK+Qo5YUqc9SPipvbGjCGKd0RSKEelbsfQuw3g5NZDSrlZZAJurH1A==
-  dependencies:
-    glob "^10.3.7"
 
 ripemd160@^2.0.0, ripemd160@^2.0.1:
   version "2.0.2"

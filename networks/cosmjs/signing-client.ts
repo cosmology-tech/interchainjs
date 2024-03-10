@@ -46,6 +46,9 @@ import {
   BlockResponse,
   TxResponse,
 } from "./types/query";
+import { defaultSignerConfig } from "@cosmonauts/cosmos/defaults";
+
+const isPublicKeyCompressed = defaultSignerConfig.publicKey.isCompressed;
 
 /**
  * implement the same methods as what in `cosmjs` signingClient
@@ -61,13 +64,17 @@ export class SigningClient {
   private readonly _signDirect?: OfflineDirectSigner["signDirect"];
   private readonly gasPrice?: Price | string;
 
+  private _endpoint: string | HttpEndpoint;
+
   constructor(
     aminoSigner: AminoSigner,
     offlineSigner: OfflineSigner,
     options: SignerOptions = {}
   ) {
-    aminoSigner.addEncoders(options.registry.map(([, g]) => toEncoder(g)));
-    aminoSigner.addConverters(Object.values(options.aminoConverters));
+    aminoSigner.addEncoders(
+      options.registry?.map(([, g]) => toEncoder(g)) || []
+    );
+    aminoSigner.addConverters(Object.values(options.aminoConverters || {}));
     this.aminoSigner = aminoSigner;
     this.offlineSigner = offlineSigner;
     this._getAccounts = offlineSigner.getAccounts;
@@ -83,23 +90,30 @@ export class SigningClient {
     signer: OfflineSigner,
     options: SignerOptions = {}
   ): SigningClient {
-    const aminoSigner = new AminoSigner(authTemplate, [], [], endpoint);
-    return new SigningClient(aminoSigner, signer, options);
+    const aminoSigner = new AminoSigner(authTemplate, [], []);
+    const signingClient = new SigningClient(aminoSigner, signer, options);
+    signingClient.setEndpoint(endpoint);
+    return signingClient;
+  }
+
+  setEndpoint(endpoint: string | HttpEndpoint) {
+    this._endpoint = endpoint;
   }
 
   private async initAuth(address: string) {
     const { pubkey } = await this.getAccountData(address);
     const getPublicKey = (isCompressed?: boolean) => {
-      if (!isCompressed) {
+      if (isCompressed) {
         return Key.from(pubkey);
       }
-      throw new Error("Getting compressed public key is not implemented");
+      throw new Error("Getting uncompressed public key is not implemented");
     };
     const auth: Auth = {
       ...authTemplate,
       getPublicKey,
     };
     this.aminoSigner.setAuth(auth);
+    this.aminoSigner.setEndpoint(this._endpoint);
   }
 
   private async getAccountData(address: string): Promise<AccountData> {
@@ -139,20 +153,20 @@ export class SigningClient {
     return publicKey;
   }
 
-  private get requestClient() {
-    return this.aminoSigner.requestClient;
+  private get queryClient() {
+    return this.aminoSigner.queryClient;
   }
 
   async getChainId() {
-    return await this.requestClient.getChainId();
+    return await this.queryClient.getChainId();
   }
 
   async getAccountNumber() {
-    return await this.requestClient.getAccountNumber();
+    return await this.queryClient.getAccountNumber();
   }
 
   async getSequence() {
-    return await this.requestClient.getSequence();
+    return await this.queryClient.getSequence();
   }
 
   async sign(
@@ -193,10 +207,13 @@ export class SigningClient {
       );
       const { signerInfo } = constructSignerInfo(
         "secp256k1",
-        this.aminoSigner.auth.getPublicKey(),
-        await this.requestClient.getSequence()
+        this.aminoSigner.auth.getPublicKey(isPublicKeyCompressed),
+        await this.queryClient.getSequence(),
+        this._signDirect
+          ? SignMode.SIGN_MODE_DIRECT
+          : SignMode.SIGN_MODE_LEGACY_AMINO_JSON
       );
-      const feeEstimation = await this.requestClient.estimateFee(
+      const feeEstimation = await this.queryClient.estimateFee(
         txBody,
         [signerInfo],
         {
@@ -204,7 +221,7 @@ export class SigningClient {
           gasPrice: this.gasPrice,
         }
       );
-      usedFee = toStdFee(feeEstimation);
+      usedFee = feeEstimation;
     } else {
       usedFee = fee;
     }
@@ -225,15 +242,18 @@ export class SigningClient {
     );
     const { signerInfo } = constructSignerInfo(
       "secp256k1",
-      this.aminoSigner.auth.getPublicKey(),
-      await this.requestClient.getSequence()
+      this.aminoSigner.auth.getPublicKey(isPublicKeyCompressed),
+      await this.queryClient.getSequence(),
+      this._signDirect
+        ? SignMode.SIGN_MODE_DIRECT
+        : SignMode.SIGN_MODE_LEGACY_AMINO_JSON
     );
-    const feeEstimation = await this.requestClient.estimateFee(
+    const feeEstimation = await this.queryClient.estimateFee(
       txBody,
       [signerInfo],
       { multiplier: 1 }
     );
-    return feeEstimation.gasLimit;
+    return BigInt(feeEstimation.gas);
   }
 
   async broadcastTxSync(tx: Uint8Array): Promise<string> {
@@ -413,8 +433,11 @@ export class SigningClient {
 
     const { signerInfo } = constructSignerInfo(
       "secp256k1",
-      this.aminoSigner.auth.getPublicKey(),
-      BigInt(signed.sequence)
+      this.aminoSigner.auth.getPublicKey(isPublicKeyCompressed),
+      BigInt(signed.sequence),
+      this._signDirect
+        ? SignMode.SIGN_MODE_DIRECT
+        : SignMode.SIGN_MODE_LEGACY_AMINO_JSON
     );
 
     const authInfoBytes = constructAuthInfo(
@@ -431,7 +454,7 @@ export class SigningClient {
   }
 
   get endpoint(): HttpEndpoint {
-    return this.requestClient.endpoint;
+    return this.queryClient.endpoint;
   }
 
   async getTx(id: string): Promise<IndexedTx | null> {

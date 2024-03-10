@@ -40,11 +40,11 @@ export function toMessages(
   aminoMsgs: AminoMessage[],
   getConverter: (aminoType: string) => AminoConverter
 ): Message[] {
-  return aminoMsgs.map((msg) => {
-    const { fromAmino, typeUrl } = getConverter(msg.type);
+  return aminoMsgs.map(({ type, value }) => {
+    const { fromAmino, typeUrl } = getConverter(type);
     return {
       typeUrl,
-      value: fromAmino(msg),
+      value: fromAmino(value),
     };
   });
 }
@@ -53,11 +53,11 @@ export function toAminoMsgs(
   messages: Message[],
   getConverter: (typeUrl: string) => AminoConverter
 ): AminoMessage[] {
-  return messages.map((msg) => {
-    const { toAmino, aminoType } = getConverter(msg.typeUrl);
+  return messages.map(({ typeUrl, value }) => {
+    const { toAmino, aminoType } = getConverter(typeUrl);
     return {
       type: aminoType,
-      value: toAmino(msg),
+      value: toAmino(value),
     };
   });
 }

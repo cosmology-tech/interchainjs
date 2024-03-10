@@ -8,10 +8,7 @@
   "license": "MIT",
   "workspaces": [
     "packages/*",
-    "cosmos/*",
-    "auth/algo/*",
-    "auth/config/*",
-    "auth/utils"
+    "networks/*"
   ],
   "publishConfig": {
     "access": "restricted"
@@ -19,12 +16,9 @@
   "scripts": {
     "build": "lerna run prepare",
     "bootstrap": "lerna bootstrap",
-    "proto:download": "lerna run proto:download",
-    "proto:codegen": "lerna run proto:codegen",
-    "proto:update": "lerna run proto:update",
-    "start-server": "cd __test__/cosmos && ./scripts/start-server.sh",
-    "stop-server": "cd __test__/cosmos && ./scripts/stop-server.sh",
-    "restart-server": "cd __test__/cosmos && ./scripts/stop-server.sh && ./scripts/start-server.sh",
+    "starship:start": "cd __test__ && ./scripts/start-server.sh",
+    "starship:stop": "cd __test__ && ./scripts/stop-server.sh",
+    "starship:restart": "cd __test__ && ./scripts/stop-server.sh && ./scripts/start-server.sh",
     "test:cosmos": "cd __test__/cosmos && jest --testPathPattern=./src",
     "pub": "lerna publish",
     "clear": "lerna run clear --stream",

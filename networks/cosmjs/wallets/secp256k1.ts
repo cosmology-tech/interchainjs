@@ -12,6 +12,7 @@ import {
   Wallet,
   WalletOptions,
   Bech32Address,
+  Algo,
 } from "../types/wallet";
 import {
   defaultSignerConfig,
@@ -36,13 +37,12 @@ export class Secp256k1Wallet implements Wallet {
   }
 
   static fromMnemonic(mnemonic: string, options?: WalletOptions) {
-    const hdPaths = options?.hdPaths || [defaultHdPath];
+    const hdPaths = options?.hdPaths || [defaultHdPath.secp256k1];
     const auths: Auth[] = [];
     hdPaths.forEach((hdPath) => {
       auths.push(
-        Secp256k1Auth.fromMnemonic(mnemonic, {
-          bip39Password: options.bip39Password,
-          hdPath,
+        Secp256k1Auth.fromMnemonic(mnemonic, hdPath, {
+          bip39Password: options?.bip39Password,
         })
       );
     });
@@ -54,8 +54,8 @@ export class Secp256k1Wallet implements Wallet {
     this.auths.forEach((auth, i) => {
       accounts.push({
         address: this.addrs[i],
-        algo: "secp256k1",
-        pubkey: auth.getPublicKey().value,
+        algo: auth.algo as Algo,
+        pubkey: auth.getPublicKey(isPublicKeyCompressed).value,
       });
     });
     return accounts;
@@ -72,8 +72,9 @@ export class Secp256k1Wallet implements Wallet {
   signDirect(signerAddress: string, signDoc: SignDoc): DirectSignResponse {
     const auth = this.getAuthFromBech32Addr(signerAddress);
     const doc = SignDoc.fromPartial(signDoc);
-    const signature = defaultSignerConfig.signature.toKey(
-      auth.sign(messageHash(SignDoc.encode(doc).finish()))
+    const signature = defaultSignerConfig.signature.toCompact(
+      auth.sign(messageHash(SignDoc.encode(doc).finish())),
+      auth.algo
     );
     return {
       signed: doc,
@@ -81,7 +82,7 @@ export class Secp256k1Wallet implements Wallet {
         pub_key: {
           type: "tendermint/PubKeySecp256k1",
           value: {
-            key: auth.getPublicKey(),
+            key: auth.getPublicKey(isPublicKeyCompressed),
           },
         },
         signature: signature.toBase64(),
@@ -91,8 +92,9 @@ export class Secp256k1Wallet implements Wallet {
 
   signAmino(signerAddress: string, signDoc: StdSignDoc): AminoSignResponse {
     const auth = this.getAuthFromBech32Addr(signerAddress);
-    const signature = defaultSignerConfig.signature.toKey(
-      auth.sign(messageHash(encodeStdSignDoc(signDoc)))
+    const signature = defaultSignerConfig.signature.toCompact(
+      auth.sign(messageHash(encodeStdSignDoc(signDoc))),
+      auth.algo
     );
     return {
       signed: signDoc,
@@ -100,7 +102,7 @@ export class Secp256k1Wallet implements Wallet {
         pub_key: {
           type: "tendermint/PubKeySecp256k1",
           value: {
-            key: auth.getPublicKey(),
+            key: auth.getPublicKey(isPublicKeyCompressed),
           },
         },
         signature: signature.toBase64(),

@@ -1,4 +1,4 @@
-import { Auth } from "@cosmonauts/types";
+import { Auth, Signature } from "@cosmonauts/types";
 import { Key } from "@cosmonauts/utils";
 
 /**
@@ -35,14 +35,14 @@ export async function sleep(ms: number): Promise<void> {
 }
 
 export const authTemplate: Auth = {
+  algo: "secp256k1",
   getPublicKey: (isCompressed?: boolean) => {
-    throw new Error("Not implemented.");
+    throw new Error("Not implemented yet");
   },
   sign: (_data: Uint8Array) => {
-    throw new Error("Not implemented.");
+    throw new Error("Not implemented yet");
   },
-  verify: (_data: Uint8Array, _signature: Key) => {
-    throw new Error("Not implemented.");
+  verify: (_data: Uint8Array, _signature: Signature) => {
+    throw new Error("Not implemented yet");
   },
-  address: Key.fromHex(""),
 };

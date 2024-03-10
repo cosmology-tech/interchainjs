@@ -1,5 +1,6 @@
-import { type Key, type Signature } from "@cosmonauts/utils";
+import { type Key } from "@cosmonauts/utils";
 import Decimal from "decimal.js";
+import {  Signature } from "./auth";
 
 export interface HttpEndpoint {
   url: string;
@@ -20,7 +21,7 @@ export interface SignerConfig {
     hash(message: Uint8Array): Uint8Array;
   };
   signature: {
-    fromKey(key: Key): Signature;
-    toKey(signature: Signature): Key;
+    fromCompact(key: Key, algo: string): Signature;
+    toCompact(signature: Signature, algo: string): Key;
   };
 }

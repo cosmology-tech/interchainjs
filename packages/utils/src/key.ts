@@ -6,7 +6,7 @@ import {
   toBigInt,
   toHex,
 } from "./encoding";
-import { bech32 } from "bech32";
+import bech32 from "bech32";
 
 export class Key {
   constructor(public readonly value: Uint8Array) {}
@@ -30,7 +30,7 @@ export class Key {
   }
 
   toHex() {
-    return `0x${toHex(this.value)}`;
+    return toHex(this.value);
   }
 
   toBase64() {

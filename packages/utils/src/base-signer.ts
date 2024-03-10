@@ -34,13 +34,13 @@ export class BaseSigner {
 
   sign(message: Uint8Array): Key {
     const signature = this.auth.sign(this.config.message.hash(message));
-    return this.config.signature.toKey(signature);
+    return this.config.signature.toCompact(signature, this.auth.algo);
   }
 
   verify(message: Uint8Array, signature: Key): boolean {
     return this.auth.verify(
       this.config.message.hash(message),
-      this.config.signature.fromKey(signature)
+      this.config.signature.fromCompact(signature, this.auth.algo)
     );
   }
 }

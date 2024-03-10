@@ -9,6 +9,8 @@ import { Key, assertEmpty } from "@cosmonauts/utils";
 import { PubKey as Secp256k1PubKey } from "../codegen/cosmos/crypto/secp256k1/keys";
 import { SignMode } from "../codegen/cosmos/tx/signing/v1beta1/signing";
 import { TelescopeGeneratedType } from "../codegen/types";
+import { StdFee } from "../types/amino";
+import { toFee } from "./amino";
 
 export function constructTxBody(
   messages: Message[],
@@ -34,7 +36,8 @@ export function constructTxBody(
 export function constructSignerInfo(
   keyType: "secp256k1" | "ed25519",
   publicKey: Key,
-  sequence: bigint
+  sequence: bigint,
+  signMode: SignMode
 ) {
   let encodedKey: EncodedMessage;
   switch (keyType) {
@@ -57,7 +60,7 @@ export function constructSignerInfo(
   const signerInfo = SignerInfo.fromPartial({
     publicKey: encodedKey,
     sequence,
-    modeInfo: { single: { mode: SignMode.SIGN_MODE_DIRECT } },
+    modeInfo: { single: { mode: signMode } },
   });
 
   return {

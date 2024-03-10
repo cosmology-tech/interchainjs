@@ -29,7 +29,7 @@ export function toBigInt(bytes: Uint8Array): bigint {
 }
 
 export function fromBigInt(i: bigint): Uint8Array {
-  return fromHex(i.toString(8));
+  return fromHex(i.toString(16));
 }
 
 export function fromAscii(str: string): Uint8Array {
