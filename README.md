@@ -5,8 +5,6 @@
 - [@cosmonauts/auth](/packages/auth/README.md)
 - [@cosmonauts/cosmos](/networks/cosmos/README.md)
 - [@cosmonauts/cosmos-msgs](/networks/cosmos/README.md)
-- [@cosmonauts/cosmjs](/networks/cosmjs/README.md)
-
 
 ## Usage
 
@@ -34,3 +32,9 @@ const signer = new AminoSigner(auth, [toEncoder(MsgSend)], [toConverter(MsgSend)
 const result = await signer.signAndBroadcast(<send token messages>);
 console.log(result.hash); // the hash of TxRaw
 ```
+
+## Migration from `@cosmjs`
+
+We created a specific package to make it easy to migrate from `@cosmjs`.
+
+- [@cosmonauts/cosmjs](/networks/cosmjs/README.md)
