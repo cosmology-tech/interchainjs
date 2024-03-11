@@ -12,5 +12,10 @@
   ],
   "eslint.format.enable": false,
   "typescript.tsdk": "node_modules/typescript/lib",
-  "cSpell.words": ["codegen"]
+  "cSpell.words": [
+    "codegen"
+  ],
+  "[typescript]": {
+    "editor.defaultFormatter": "svipas.prettier-plus"
+  }
 }

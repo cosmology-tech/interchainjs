@@ -32,12 +32,12 @@ export class BaseSigner {
     this._config = config;
   }
 
-  sign(message: Uint8Array): Key {
+  signArbitrary(message: Uint8Array): Key {
     const signature = this.auth.sign(this.config.message.hash(message));
     return this.config.signature.toCompact(signature, this.auth.algo);
   }
 
-  verify(message: Uint8Array, signature: Key): boolean {
+  verifyArbitrary(message: Uint8Array, signature: Key): boolean {
     return this.auth.verify(
       this.config.message.hash(message),
       this.config.signature.fromCompact(signature, this.auth.algo)

@@ -1,0 +1,14 @@
+{
+  "name": "@cosmonauts/types",
+  "version": "1.0.1",
+  "types": "index.d.ts",
+  "author": "liujun93 <ljun8575@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "pub": "npm publish --access public"
+  },
+  "dependencies": {
+    "decimal.js": "^10.4.3",
+    "@cosmonauts/utils": "^1.0.0"
+  }
+}

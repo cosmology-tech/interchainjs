@@ -1,0 +1,19 @@
+{
+  "name": "@cosmonauts/cosmos-msgs",
+  "version": "1.0.1",
+  "description": "Cosmos message codecs",
+  "main": "index.js",
+  "module": "esm/index.js",
+  "types": "index.d.ts",
+  "author": "liujun93 <ljun8575@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "pub": "npm publish --access public"
+  },
+  "keywords": [
+    "cosmos",
+    "blockchain",
+    "transaction",
+    "message"
+  ]
+}

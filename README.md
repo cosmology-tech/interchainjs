@@ -1,17 +1,36 @@
 # Sign
 
-## Run docs
+## Main Packages
+
+- [@cosmonauts/auth](/packages/auth/README.md)
+- [@cosmonauts/cosmos](/networks/cosmos/README.md)
+- [@cosmonauts/cosmos-msgs](/networks/cosmos/README.md)
+- [@cosmonauts/cosmjs](/networks/cosmjs/README.md)
+
+
+## Usage
 
 ```sh
-cd packages/docs
-yarn dev
+npm install @cosmonauts/auth @cosmonauts/cosmos @cosmonauts/cosmos-msgs
 ```
 
-## Cosmos
+```ts
+// use sub-imports, to ensure small app size
+import { DirectSigner } from "@cosmonauts/cosmos/direct";
+import { AminoSigner } from "@cosmonauts/cosmos/amino";
+import { defaultHdPath } from "@cosmonauts/cosmos/defaults";
+import { toConverter, toEncoder } from "@cosmonauts/cosmos/utils";
+import { Secp256k1Auth } from "@cosmonauts/auth/secp256k1";
+import { MsgSend } from "@cosmonauts/cosmos-msgs/cosmos/bank/v1beta1/tx";
 
-- [Code Structure](https://github.com/cosmology-tech/sign/blob/main/packages/docs/pages/cosmos/structure.md)
-- [Auth vs. Wallet](https://github.com/cosmology-tech/sign/blob/main/packages/docs/pages/cosmos/auth-wallet.mdx)
-- [Registered Messages](https://github.com/cosmology-tech/sign/blob/main/packages/docs/pages/cosmos/messages.md)
-- [Hands-on Exercises](https://github.com/cosmology-tech/sign/blob/main/packages/docs/pages/cosmos/exercises.md)
-- [Proto Update](https://github.com/cosmology-tech/sign/blob/main/packages/docs/pages/cosmos/update.md)
-- [Running Tests](https://github.com/cosmology-tech/sign/blob/main/packages/docs/pages/cosmos/run-tests.md)
+const auth = Secp256k1Auth.fromMnemonic("<mnemonic words>", defaultHdPath);
+
+// direct signer
+const signer = new DirectSigner(auth, [toEncoder(MsgSend)], <rpc endpoint>);
+
+// amino signer
+const signer = new AminoSigner(auth, [toEncoder(MsgSend)], [toConverter(MsgSend)], <rpc endpoint>);
+
+const result = await signer.signAndBroadcast(<send token messages>);
+console.log(result.hash); // the hash of TxRaw
+```

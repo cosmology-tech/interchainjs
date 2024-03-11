@@ -1,14 +1,14 @@
 {
   "name": "@cosmonauts/ethereum",
+  "version": "1.0.0",
+  "description": "Transaction codec and client to communicate with ethereum blockchain",
+  "main": "index.js",
+  "module": "esm/index.js",
+  "types": "index.d.ts",
   "author": "liujun93 <ljun8575@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "rename": "renamer -f \"/^package.dist.json$/\" -r \"package.json\" \"dist/*\"",
-    "copy": "copyfiles package.dist.json README.md dist",
-    "copy-and-rename": "npm run copy && npm run rename",
-    "clean": "rimraf dist",
-    "build": "npm run clean; tsc; tsc -p tsconfig.esm.json; npm run copy-and-rename",
-    "pub": "cd dist && npm run pub"
+    "pub": "npm publish --access public"
   },
   "dependencies": {
     "@ethereumjs/tx": "^5.0.0",
@@ -27,5 +27,10 @@
   "devDependencies": {
     "bn.js": "^4.11.9",
     "eth-crypto": "^2.6.0"
-  }
+  },
+  "keywords": [
+    "ethereum",
+    "blockchain",
+    "transaction"
+  ]
 }

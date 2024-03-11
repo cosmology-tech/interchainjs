@@ -5,6 +5,6 @@
     "rootDir": ".",
     "declaration": false
   },
-  "include": ["**/*.ts"],
-  "exclude": ["node_modules", "scripts"]
+  "include": ["**/*.ts", "data"],
+  "exclude": ["node_modules", "scripts", "**/*.spec.*"]
 }

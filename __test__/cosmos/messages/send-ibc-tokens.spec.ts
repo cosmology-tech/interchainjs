@@ -43,9 +43,10 @@ describe("Send IBC tokens", () => {
       [toEncoder(MsgTransfer)],
       chain.osmosis.rpc
     );
-    const resp = await (await signer.signMessages(messages))
-      .toTxRaw()
-      .broadcast({ checkTx: true, deliverTx: true });
+    const resp = await (await signer.sign(messages)).broadcast({
+      checkTx: true,
+      deliverTx: true,
+    });
     expect(resp.check_tx?.code).toEqual(0);
     expect(resp.deliver_tx?.code).toEqual(0);
   });
@@ -57,9 +58,10 @@ describe("Send IBC tokens", () => {
       [toConverter(MsgTransfer)],
       chain.osmosis.rpc
     );
-    const resp = await (await signer.signMessages(messages))
-      .toTxRaw()
-      .broadcast({ checkTx: true, deliverTx: true });
+    const resp = await (await signer.sign(messages)).broadcast({
+      checkTx: true,
+      deliverTx: true,
+    });
     expect(resp.check_tx?.code).toEqual(0);
     expect(resp.deliver_tx?.code).toEqual(0);
   });

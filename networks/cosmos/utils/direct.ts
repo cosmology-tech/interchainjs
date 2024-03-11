@@ -34,7 +34,7 @@ export function constructTxBody(
 }
 
 export function constructSignerInfo(
-  keyType: "secp256k1" | "ed25519",
+  keyType: string,
   publicKey: Key,
   sequence: bigint,
   signMode: SignMode

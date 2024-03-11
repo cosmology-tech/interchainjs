@@ -5,10 +5,21 @@ import { AminoSigner } from "@cosmonauts/cosmos/amino";
 import { toConverter, toEncoder } from "@cosmonauts/cosmos/utils";
 import { MsgSend } from "@cosmonauts/cosmos-msgs/cosmos/bank/v1beta1/tx";
 import { MsgTransfer } from "@cosmonauts/cosmos-msgs/ibc/applications/transfer/v1/tx";
-// import { auth, messages } from "./send-tokens.spec";
-import { auth, messages } from "./send-ibc-tokens.spec";
+import { auth, messages } from "./send-tokens.spec";
+// import { auth, messages } from "./send-ibc-tokens.spec";
 import { StdFee } from "@cosmonauts/cosmos/types";
 import { toHex } from "@cosmonauts/utils";
+import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
+import { DirectSigner } from "@cosmonauts/cosmos/direct";
+
+async function getDirectClient() {
+  return await SigningStargateClient.connectWithSigner(
+    chain.osmosis.rpc,
+    await DirectSecp256k1HdWallet.fromMnemonic(seed.genesis, {
+      prefix: chain.osmosis.prefix,
+    })
+  );
+}
 
 async function getAminoClient() {
   return await SigningStargateClient.connectWithSigner(
@@ -31,24 +42,39 @@ export const fee: StdFee = {
 
 export const memo = "for test";
 
-it("compare with cosmjs 1.0", async () => {
-  const client = await getAminoClient();
-  const signer = new AminoSigner(
+it("Direct signing: compare with cosmjs 1.0", async () => {
+  const client = await getDirectClient();
+  const signer = new DirectSigner(
     auth,
-    [toEncoder(MsgTransfer)],
-    [toConverter(MsgTransfer)],
+    [toEncoder(MsgSend), toEncoder(MsgTransfer)],
     chain.osmosis.rpc
   );
 
   const txRaw = await client.sign(address.osmosis.genesis, messages, fee, memo);
-  const { signature, toTxRaw } = await signer.signMessages(messages, fee, memo);
-
-  expect(signature.toHex()).toBe(toHex(txRaw.signatures[0]));
-
   const {
-    txRaw: { bodyBytes, authInfoBytes },
-  } = toTxRaw();
+    txRaw: { bodyBytes, authInfoBytes, signatures },
+  } = await signer.sign(messages, fee, memo);
 
+  expect(toHex(signatures[0])).toBe(toHex(txRaw.signatures[0]));
+  expect(toHex(bodyBytes)).toBe(toHex(txRaw.bodyBytes));
+  expect(toHex(authInfoBytes)).toBe(toHex(txRaw.authInfoBytes));
+});
+
+it("Amino signing: compare with cosmjs 1.0", async () => {
+  const client = await getAminoClient();
+  const signer = new AminoSigner(
+    auth,
+    [toEncoder(MsgSend), toEncoder(MsgTransfer)],
+    [toConverter(MsgSend), toConverter(MsgTransfer)],
+    chain.osmosis.rpc
+  );
+
+  const txRaw = await client.sign(address.osmosis.genesis, messages, fee, memo);
+  const {
+    txRaw: { bodyBytes, authInfoBytes, signatures },
+  } = await signer.sign(messages, fee, memo);
+
+  expect(toHex(signatures[0])).toBe(toHex(txRaw.signatures[0]));
   expect(toHex(bodyBytes)).toBe(toHex(txRaw.bodyBytes));
   expect(toHex(authInfoBytes)).toBe(toHex(txRaw.authInfoBytes));
 });

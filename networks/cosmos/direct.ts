@@ -14,7 +14,7 @@ import {
   constructSignerInfo,
   constructTxBody,
 } from "./utils/direct";
-import { defaultBroadcastOptions, defaultSignerConfig } from "./defaults";
+import { defaultSignerConfig } from "./defaults";
 import { RpcClient } from "./query/rpc";
 import { StdFee } from "./types/amino";
 import { toFee } from "./utils";
@@ -62,7 +62,7 @@ export class DirectSigner extends BaseSigner {
     return encoder;
   };
 
-  async signMessages(
+  async sign(
     messages: Message[],
     fee?: StdFee,
     memo?: string,
@@ -92,37 +92,46 @@ export class DirectSigner extends BaseSigner {
     return this.signDoc(doc);
   }
 
+  async signAndBroadcast(
+    messages: Message[],
+    fee?: StdFee,
+    memo?: string,
+    options?: FeeOptions & SignerOptions & BroadcastOptions
+  ) {
+    const {broadcast} = await this.sign(messages, fee, memo, options)
+    return await broadcast(options)
+  }
+
   signDoc(doc: SignDoc) {
     const signDoc = SignDoc.fromPartial(doc);
-    const signature = this.sign(SignDoc.encode(signDoc).finish());
+    const signature = this.signArbitrary(SignDoc.encode(signDoc).finish());
     const toTxRaw = () => {
       const txRaw = TxRaw.fromPartial({
         bodyBytes: doc.bodyBytes,
         authInfoBytes: doc.authInfoBytes,
         signatures: [signature.value],
       });
-      return {
-        txRaw,
-        broadcast: async (options?: BroadcastOptions) => {
-          return this.broadcastTxRaw(txRaw, options);
-        },
-      };
+      return txRaw
     };
+    const txRaw = toTxRaw();
     return {
       signature,
       signed: signDoc,
-      toTxRaw,
+      txRaw,
+      broadcast: async (options?: BroadcastOptions) => {
+        return this.broadcast(txRaw, options);
+      },
     };
   }
 
-  async broadcastTxRaw(txRaw: TxRaw, options?: BroadcastOptions) {
-    return this.broadcast(
+  async broadcast(txRaw: TxRaw, options?: BroadcastOptions) {
+    return this.broadcastArbitrary(
       TxRaw.encode(TxRaw.fromPartial(txRaw)).finish(),
       options
     );
   }
 
-  async broadcast(message: Uint8Array, options?: BroadcastOptions) {
+  async broadcastArbitrary(message: Uint8Array, options?: BroadcastOptions) {
     const result = await this.queryClient.broadcast(message, options);
     return result;
   }

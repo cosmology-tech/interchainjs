@@ -36,11 +36,11 @@ export const address = {
   osmosis: {
     genesis: "osmo1qjtcxl86z0zua2egcsz4ncff2gzlcndz2jeczk",
     test1: "osmo1pss7nxeh3f9md2vuxku8q99femnwdjtc8ws4un",
-    validator: "osmovaloper1xcr44lpzhdwds7xnttlhcvee34d4s5qucz5z7d",
+    validator: "osmovaloper1qjtcxl86z0zua2egcsz4ncff2gzlcndzs93m43",
   },
   cosmoshub: {
     genesis: "cosmos1qjtcxl86z0zua2egcsz4ncff2gzlcndzzf2g5y",
     test1: "cosmos1pss7nxeh3f9md2vuxku8q99femnwdjtc04r92p",
-    validator: "cosmosvaloper1xcr44lpzhdwds7xnttlhcvee34d4s5qu06mynt",
+    validator: "cosmosvaloper1qjtcxl86z0zua2egcsz4ncff2gzlcndz8a7ach",
   },
 };

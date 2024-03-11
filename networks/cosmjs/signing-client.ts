@@ -206,7 +206,7 @@ export class SigningClient {
         memo
       );
       const { signerInfo } = constructSignerInfo(
-        "secp256k1",
+        this.aminoSigner.auth.algo,
         this.aminoSigner.auth.getPublicKey(isPublicKeyCompressed),
         await this.queryClient.getSequence(),
         this._signDirect
@@ -257,7 +257,7 @@ export class SigningClient {
   }
 
   async broadcastTxSync(tx: Uint8Array): Promise<string> {
-    const broadcasted = await this.aminoSigner.broadcast(tx, {
+    const broadcasted = await this.aminoSigner.broadcastArbitrary(tx, {
       checkTx: true,
       deliverTx: false,
     });

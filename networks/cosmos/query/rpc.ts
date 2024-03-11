@@ -166,7 +166,7 @@ export class RpcClient implements QueryClient {
     txBytes: Uint8Array,
     options?: BroadcastOptions
   ): Promise<BroadcastResult> {
-    const { checkTx, deliverTx } = { ...options, ...defaultBroadcastOptions };
+    const { checkTx, deliverTx } = { ...defaultBroadcastOptions, ...options };
     const mode: BroadcastMode =
       checkTx && deliverTx
         ? "broadcast_tx_commit"
