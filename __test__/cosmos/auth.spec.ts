@@ -2,14 +2,11 @@ import { Slip10, Slip10Curve, Slip10RawIndex } from "@cosmjs/crypto";
 import { fromUtf8, toBase64 } from "@cosmonauts/utils";
 import { Secp256k1Auth } from "@cosmonauts/auth/secp256k1";
 import { getSeedFromMnemonic } from "@cosmonauts/auth/utils";
-import {
-  defaultHdPath,
-  defaultSignerConfig,
-} from "@cosmonauts/cosmos/defaults";
+import { defaultSignerConfig } from "@cosmonauts/cosmos/defaults";
 
 import { seed } from "../data";
 
-const auth = Secp256k1Auth.fromMnemonic(seed.genesis, defaultHdPath.secp256k1!);
+const auth = Secp256k1Auth.fromMnemonic(seed.genesis).derive("cosmos");
 const hash = defaultSignerConfig.message.hash;
 
 const expected = Slip10.derivePath(

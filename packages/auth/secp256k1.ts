@@ -1,9 +1,12 @@
 import { secp256k1 } from "@noble/curves/secp256k1";
 import { HDKey } from "@scure/bip32";
 
-import { AuthOptions, Auth, Signature } from "@cosmonauts/types";
+import { AuthOptions, Auth, Signature, Network } from "@cosmonauts/types";
 import { getSeedFromMnemonic } from "./utils";
 import { Key, isEmpty } from "@cosmonauts/utils";
+import { defaultHdPaths } from "./defaults";
+
+const hdPaths = defaultHdPaths.filter(({ algo }) => algo === "secp256k1");
 
 export class Secp256k1Auth implements Auth {
   protected seed: HDKey;
@@ -11,25 +14,40 @@ export class Secp256k1Auth implements Auth {
 
   readonly algo = "secp256k1";
 
-  constructor(seed: Uint8Array, hdPath: string) {
-    if (isEmpty(hdPath)) {
-      throw new Error("HD (Hierarchical Deterministic) Path not provided");
-    }
+  constructor(seed: Uint8Array, hdPath?: string | Network) {
     this.seed = HDKey.fromMasterSeed(seed);
-    this.updateHdPath(hdPath);
+    this.derive(hdPath);
   }
 
-  static fromMnemonic(mnemonic: string, hdPath: string, options?: AuthOptions) {
+  static fromMnemonic(
+    mnemonic: string,
+    hdPath?: string | Network,
+    options?: AuthOptions
+  ) {
     const seed = getSeedFromMnemonic(mnemonic, options?.bip39Password);
     return new Secp256k1Auth(seed, hdPath);
   }
 
-  static fromSeed(seed: Key, hdPath: string) {
+  static fromSeed(seed: Key, hdPath?: string | Network) {
     return new Secp256k1Auth(seed.value, hdPath);
   }
 
-  updateHdPath(hdPath?: string) {
-    this.hdkey = hdPath ? this.seed.derive(hdPath) : this.seed;
+  derive(hdPath?: string | Network) {
+    switch (hdPath) {
+      case "cosmos":
+      case "injective":
+      case "ethereum":
+        const path = hdPaths.find(({ network }) => network === hdPath)?.path;
+        if (isEmpty(path)) {
+          throw new Error(`No such HD Path found for network ${hdPath}`);
+        }
+        this.hdkey = this.seed.derive(path);
+        break;
+      default:
+        this.hdkey = hdPath ? this.seed.derive(hdPath) : this.seed;
+        break;
+    }
+    return this;
   }
 
   get privateKey() {

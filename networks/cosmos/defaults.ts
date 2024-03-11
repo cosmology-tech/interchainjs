@@ -16,10 +16,6 @@ export const defaultFeeOptions: FeeOptions = {
   gasPrice: "average",
 };
 
-export const defaultHdPath = {
-  secp256k1: "m/44'/118'/0'/0/0",
-};
-
 export const defaultSignerConfig: SignerConfig = {
   publicKey: {
     isCompressed: true,

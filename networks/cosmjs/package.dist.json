@@ -1,6 +1,6 @@
 {
   "name": "@cosmonauts/cosmjs",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Wrapper of @cosmonauts/auth and @cosmonauts/cosmos to fit corresponding interfaces in @cosmjs",
   "main": "index.js",
   "module": "esm/index.js",

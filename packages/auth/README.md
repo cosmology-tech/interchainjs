@@ -19,6 +19,15 @@ const signature = auth.sign(Uint8Array.from([1, 2, 3]));
 console.log(signature.toHex());
 ```
 
+It's easy to derive *cosmos/injective/ethereum* network HD path (taking `cosmos` as example)
+
+```ts
+// derive with Cosmos default HD path "m/44'/118'/0'/0/0"
+const auth = Secp256k1Auth.fromMnemonic("<mnemonic words>", "cosmos");
+// is identical to 
+const auth = Secp256k1Auth.fromMnemonic("<mnemonic words>", "m/44'/118'/0'/0/0");
+```
+
 ## Implementations
 
 - **secp256k1 auth** from `@cosmonauts/auth/secp256k1`

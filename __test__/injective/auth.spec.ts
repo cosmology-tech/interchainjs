@@ -1,21 +1,18 @@
 import { Secp256k1Auth } from "@cosmonauts/auth/secp256k1";
-import {
-  defaultSignerConfig,
-  defaultHdPath,
-} from "@cosmonauts/injective/defaults";
+import { defaultSignerConfig } from "@cosmonauts/injective/defaults";
 import { seed } from "../data";
 import { PrivateKey } from "@injectivelabs/sdk-ts";
 import { Wallet } from "ethers";
 
 const mnemonic = seed.genesis;
-const myAuth = Secp256k1Auth.fromMnemonic(mnemonic, defaultHdPath.secp256k1);
+const myAuth = Secp256k1Auth.fromMnemonic(mnemonic).derive("injective");
 
 const toAddress = defaultSignerConfig.publicKey.toAddress;
 const isCompressed = defaultSignerConfig.publicKey.isCompressed;
 
 describe("vs. Ethers", () => {
   it("should have identical key pair", () => {
-    const hisAuth = Wallet.fromMnemonic(mnemonic, defaultHdPath.secp256k1);
+    const hisAuth = Wallet.fromMnemonic(mnemonic);
     expect(`0x${myAuth.privateKey.toHex()}`).toEqual(hisAuth.privateKey);
     expect(`0x${myAuth.getPublicKey(isCompressed).toHex()}`).toEqual(
       hisAuth.publicKey

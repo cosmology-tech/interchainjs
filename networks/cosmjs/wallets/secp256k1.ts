@@ -14,14 +14,15 @@ import {
   Bech32Address,
   Algo,
 } from "../types/wallet";
-import {
-  defaultSignerConfig,
-  defaultHdPath,
-} from "@cosmonauts/cosmos/defaults";
+import { defaultSignerConfig } from "@cosmonauts/cosmos/defaults";
+import { defaultHdPaths } from "@cosmonauts/auth/defaults";
 
 const isPublicKeyCompressed = defaultSignerConfig.publicKey.isCompressed;
 const toAddress = defaultSignerConfig.publicKey.toAddress;
 const messageHash = defaultSignerConfig.message.hash;
+const defaultHdPath = defaultHdPaths.find(
+  ({ network, algo }) => network === "cosmos" && algo === "secp256k1"
+)!.path;
 
 export class Secp256k1Wallet implements Wallet {
   readonly auths: Auth[] = [];
@@ -37,7 +38,7 @@ export class Secp256k1Wallet implements Wallet {
   }
 
   static fromMnemonic(mnemonic: string, options?: WalletOptions) {
-    const hdPaths = options?.hdPaths || [defaultHdPath.secp256k1];
+    const hdPaths = options?.hdPaths || [defaultHdPath];
     const auths: Auth[] = [];
     hdPaths.forEach((hdPath) => {
       auths.push(

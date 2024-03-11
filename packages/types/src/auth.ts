@@ -18,3 +18,11 @@ export interface Signature {
    readonly s: Key;
    readonly recovery?: number;
 }
+
+export type Network = "cosmos" | "injective" | "ethereum"
+
+export interface HdPathType {
+  network: Network;
+  algo: string;
+  path: string;
+}

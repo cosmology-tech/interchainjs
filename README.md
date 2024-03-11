@@ -16,12 +16,11 @@ npm install @cosmonauts/auth @cosmonauts/cosmos @cosmonauts/cosmos-msgs
 // use sub-imports, to ensure small app size
 import { DirectSigner } from "@cosmonauts/cosmos/direct";
 import { AminoSigner } from "@cosmonauts/cosmos/amino";
-import { defaultHdPath } from "@cosmonauts/cosmos/defaults";
 import { toConverter, toEncoder } from "@cosmonauts/cosmos/utils";
 import { Secp256k1Auth } from "@cosmonauts/auth/secp256k1";
 import { MsgSend } from "@cosmonauts/cosmos-msgs/cosmos/bank/v1beta1/tx";
 
-const auth = Secp256k1Auth.fromMnemonic("<mnemonic words>", defaultHdPath);
+const auth = Secp256k1Auth.fromMnemonic("<mnemonic words>", "cosmos");
 
 // direct signer
 const signer = new DirectSigner(auth, [toEncoder(MsgSend)], <rpc endpoint>);
