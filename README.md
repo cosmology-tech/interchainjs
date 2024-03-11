@@ -4,7 +4,7 @@
 
 - [@cosmonauts/auth](/packages/auth/README.md)
 - [@cosmonauts/cosmos](/networks/cosmos/README.md)
-- [@cosmonauts/cosmos-msgs](/networks/cosmos/README.md)
+- [@cosmonauts/cosmos-msgs](/networks/cosmos-msgs/README.md)
 
 ## Usage
 
