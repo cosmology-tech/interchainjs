@@ -1,5 +1,4 @@
 import { Secp256k1Auth } from "@cosmonauts/auth/secp256k1";
-import { defaultHdPath } from "@cosmonauts/cosmos/defaults";
 import { DirectSigner } from "@cosmonauts/cosmos/direct";
 import { Key } from "@cosmonauts/utils";
 

@@ -47,6 +47,7 @@ import {
   TxResponse,
 } from "./types/query";
 import { defaultSignerConfig } from "@cosmonauts/cosmos/defaults";
+import { TxRpc } from "@cosmonauts/cosmos-msgs/types";
 
 const isPublicKeyCompressed = defaultSignerConfig.publicKey.isCompressed;
 
@@ -65,6 +66,7 @@ export class SigningClient {
   private readonly gasPrice?: Price | string;
 
   private _endpoint: string | HttpEndpoint;
+  protected txRpc: TxRpc;
 
   constructor(
     aminoSigner: AminoSigner,
@@ -83,6 +85,16 @@ export class SigningClient {
     this.broadcastTimeoutMs = options.broadcastTimeoutMs;
     this.broadcastPollIntervalMs = options.broadcastPollIntervalMs;
     this.gasPrice = options.gasPrice;
+    this.txRpc = {
+      request(
+        service: string,
+        method: string,
+        data: Uint8Array
+      ): Promise<Uint8Array> {
+        throw new Error("Not implemented yet");
+      },
+      signAndBroadcast: this.signAndBroadcast,
+    };
   }
 
   static connectWithSigner(

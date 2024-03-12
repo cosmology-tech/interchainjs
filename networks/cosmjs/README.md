@@ -14,7 +14,7 @@ To sign messages (taking `stargate` signing client as example)
 // import * from "@cosmonauts/cosmjs"; // Error: use sub-imports, to ensure small app size
 import { StargateSigningClient } from "@cosmonauts/cosmjs/stargate";
 
-const client = StargateSigningClient.connectWithSigner(<rpc endpoint>, <offline signer>);
+const client = StargateSigningClient.connectWithSigner(<rpc-endpoint>, <offline signer>);
 const result = await client.signAndBroadcast(<address>, <messages>, "auto");
 console.log(result.transactionHash); // the hash of TxRaw
 ```
@@ -24,7 +24,7 @@ To construct an offline signer (taking `direct` signer as example)
 ```ts
 import { Secp256k1Wallet } from "@cosmonauts/cosmjs/wallets/secp256k1";
 
-const wallet = Secp256k1Wallet.fromMnemonic("<mnemonic words>", { prefix: "<prefix>" });
+const wallet = Secp256k1Wallet.fromMnemonic("<mnemonic-words>", { prefix: "<prefix>" });
 const directOfflineSigner = wallet.toOfflineDirectSigner();
 ```
 

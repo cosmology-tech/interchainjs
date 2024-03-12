@@ -5,12 +5,13 @@ import { AminoSigner } from "@cosmonauts/cosmos/amino";
 import { toConverter, toEncoder } from "@cosmonauts/cosmos/utils";
 import { MsgSend } from "@cosmonauts/cosmos-msgs/cosmos/bank/v1beta1/tx";
 import { MsgTransfer } from "@cosmonauts/cosmos-msgs/ibc/applications/transfer/v1/tx";
-import { auth, messages } from "./send-tokens.spec";
-// import { auth, messages } from "./send-ibc-tokens.spec";
+import { messages } from "./send-tokens.spec";
+// import { messages } from "./send-ibc-tokens.spec";
 import { StdFee } from "@cosmonauts/cosmos/types";
 import { toHex } from "@cosmonauts/utils";
 import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import { DirectSigner } from "@cosmonauts/cosmos/direct";
+import { auth } from "../constants";
 
 async function getDirectClient() {
   return await SigningStargateClient.connectWithSigner(

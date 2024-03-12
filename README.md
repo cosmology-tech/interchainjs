@@ -31,13 +31,13 @@ import { toConverter, toEncoder } from "@cosmonauts/cosmos/utils";
 import { Secp256k1Auth } from "@cosmonauts/auth/secp256k1";
 import { MsgSend } from "@cosmonauts/cosmos-msgs/cosmos/bank/v1beta1/tx";
 
-const auth = Secp256k1Auth.fromMnemonic("<mnemonic words>", "cosmos");
+const auth = Secp256k1Auth.fromMnemonic("<mnemonic-words>", "cosmos");
 
 // direct signer
-const signer = new DirectSigner(auth, [toEncoder(MsgSend)], <rpc endpoint>);
+const signer = new DirectSigner(auth, [toEncoder(MsgSend)], <rpc-endpoint>);
 
 // amino signer
-const signer = new AminoSigner(auth, [toEncoder(MsgSend)], [toConverter(MsgSend)], <rpc endpoint>);
+const signer = new AminoSigner(auth, [toEncoder(MsgSend)], [toConverter(MsgSend)], <rpc-endpoint>);
 
 const result = await signer.signAndBroadcast(<send token messages>);
 console.log(result.hash); // the hash of TxRaw
@@ -70,13 +70,13 @@ import { AminoSigner } from "@cosmonauts/injective/amino";
 import { Secp256k1Auth } from "@cosmonauts/auth/secp256k1";
 import { MsgSend } from "@cosmonauts/cosmos-msgs/cosmos/bank/v1beta1/tx";
 
-const auth = Secp256k1Auth.fromMnemonic("<mnemonic words>", "injective");
+const auth = Secp256k1Auth.fromMnemonic("<mnemonic-words>", "injective");
 
 // direct signer
-const signer = new DirectSigner(auth, [toEncoder(MsgSend)], <rpc endpoint>);
+const signer = new DirectSigner(auth, [toEncoder(MsgSend)], <rpc-endpoint>);
 
 // amino signer
-const signer = new AminoSigner(auth, [toEncoder(MsgSend)], [toConverter(MsgSend)], <rpc endpoint>);
+const signer = new AminoSigner(auth, [toEncoder(MsgSend)], [toConverter(MsgSend)], <rpc-endpoint>);
 
 const result = await signer.signAndBroadcast(<send token messages>);
 console.log(result.hash); // the hash of TxRaw

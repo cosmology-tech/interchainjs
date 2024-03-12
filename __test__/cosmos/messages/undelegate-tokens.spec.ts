@@ -1,11 +1,11 @@
 import { DirectSigner } from "@cosmonauts/cosmos/direct";
 import { MsgUndelegate } from "@cosmonauts/cosmos-msgs/cosmos/staking/v1beta1/tx";
 
-import { address, chain, seed } from "../../data";
-import { Secp256k1Auth } from "@cosmonauts/auth/secp256k1";
+import { address, chain } from "../../data";
 import { toConverter, toEncoder } from "@cosmonauts/cosmos/utils";
 import { Message } from "@cosmonauts/cosmos/types";
 import { AminoSigner } from "@cosmonauts/cosmos/amino";
+import { auth } from "../constants";
 
 export const messages: Message<MsgUndelegate>[] = [
   {
@@ -20,8 +20,6 @@ export const messages: Message<MsgUndelegate>[] = [
     },
   },
 ];
-
-export const auth = Secp256k1Auth.fromMnemonic(seed.genesis).derive("cosmos");
 
 describe("Undelegate tokens", () => {
   it("should success with direct signing", async () => {

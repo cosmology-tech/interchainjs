@@ -14,7 +14,7 @@ Taking `direct` signing mode as example.
 // import * from "@cosmonauts/cosmos"; // Error: use sub-imports, to ensure small app size
 import { DirectSigner } from "@cosmonauts/cosmos/direct";
 
-const signer = new DirectSigner(<auth>, <encoders>, <rpc endpoint>);
+const signer = new DirectSigner(<auth>, <encoders>, <rpc-endpoint>);
 const result = await signer.signAndBroadcast(<messages>);
 console.log(result.hash); // the hash of TxRaw
 ```

@@ -1,6 +1,7 @@
 import { AminoSigner } from "@cosmonauts/cosmos/amino";
 import { StargateMsgs } from "@cosmonauts/cosmos-msgs/stargate";
 import { CosmWasmMsgs } from "@cosmonauts/cosmos-msgs/cosmwasm";
+import { TxImpl } from "@cosmonauts/cosmos-msgs/stargate-cosmwasm.tx";
 import { SigningClient } from "./signing-client";
 import { OfflineSigner } from "./types/wallet";
 import { SignerOptions } from "./types/signing-client";
@@ -9,6 +10,8 @@ import { toConverter, toEncoder } from "@cosmonauts/cosmos/utils";
 import { authTemplate } from "./utils";
 
 export class CosmWasmSigningClient extends SigningClient {
+  readonly helpers: TxImpl;
+
   constructor(
     aminoSigner: AminoSigner,
     offlineSigner: OfflineSigner,
@@ -21,6 +24,8 @@ export class CosmWasmSigningClient extends SigningClient {
     this.aminoSigner.addConverters(
       [...StargateMsgs, ...CosmWasmMsgs].map((g) => toConverter(g))
     );
+    this.helpers = new TxImpl();
+    this.helpers.init(this.txRpc);
   }
 
   static connectWithSigner(

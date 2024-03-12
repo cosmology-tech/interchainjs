@@ -1,11 +1,11 @@
 import { DirectSigner } from "@cosmonauts/cosmos/direct";
 import { MsgSend } from "@cosmonauts/cosmos-msgs/cosmos/bank/v1beta1/tx";
 
-import { address, chain, seed } from "../../data";
-import { Secp256k1Auth } from "@cosmonauts/auth/secp256k1";
+import { address, chain } from "../../data";
 import { toConverter, toEncoder } from "@cosmonauts/cosmos/utils";
 import { Message } from "@cosmonauts/cosmos/types";
 import { AminoSigner } from "@cosmonauts/cosmos/amino";
+import { auth } from "../constants";
 
 export const messages: Message<MsgSend>[] = [
   {
@@ -22,8 +22,6 @@ export const messages: Message<MsgSend>[] = [
     },
   },
 ];
-
-export const auth = Secp256k1Auth.fromMnemonic(seed.genesis).derive("cosmos");
 
 describe("Send tokens", () => {
   it("should success with direct signing", async () => {
