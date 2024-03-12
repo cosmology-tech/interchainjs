@@ -8,7 +8,7 @@
   "author": "liujun93 <ljun8575@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "pub": "npm publish --access public"
+    "pub": "npm patch && npm publish --access public"
   },
   "dependencies": {
     "@cosmonauts/utils": "^1.0.0",

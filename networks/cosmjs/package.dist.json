@@ -1,6 +1,6 @@
 {
   "name": "@cosmonauts/cosmjs",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Wrapper of @cosmonauts/auth and @cosmonauts/cosmos to fit corresponding interfaces in @cosmjs",
   "main": "index.js",
   "module": "esm/index.js",
@@ -8,7 +8,7 @@
   "author": "liujun93 <ljun8575@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "pub": "npm publish --access public"
+    "pub": "npm patch && npm publish --access public"
   },
   "dependencies": {
     "@cosmonauts/cosmos": "^1.0.0",
