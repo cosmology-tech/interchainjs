@@ -31,7 +31,7 @@ const wallet = Secp256k1Wallet.fromMnemonic("<mnemonic-words>", { prefix: "<pref
 const directOfflineSigner = wallet.toOfflineDirectSigner();
 ```
 
-To make queries
+To make queries (taking querying `validators` as example)
 
 ```ts
 import { RpcQuery } from "@cosmonauts/cosmjs/query/rpc";
