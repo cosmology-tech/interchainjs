@@ -16,6 +16,9 @@ import { StargateSigningClient } from "@cosmonauts/cosmjs/stargate";
 
 const client = StargateSigningClient.connectWithSigner(<rpc-endpoint>, <offline signer>);
 const result = await client.signAndBroadcast(<address>, <messages>, "auto");
+// or you can use helper functions to do `signAndBroadcast`. taking send tokens as example
+const result = await client.helpers.send(<address>, <MsgSend message>, "auto", "");
+
 console.log(result.transactionHash); // the hash of TxRaw
 ```
 
