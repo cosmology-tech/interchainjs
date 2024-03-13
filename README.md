@@ -36,7 +36,7 @@ const signer = new DirectSigner(auth, [toEncoder(MsgSend)], <rpc-endpoint>);
 // amino signer
 const signer = new AminoSigner(auth, [toEncoder(MsgSend)], [toConverter(MsgSend)], <rpc-endpoint>);
 
-const result = await signer.signAndBroadcast(<send token messages>);
+const result = await signer.signAndBroadcast(<send-token-messages>);
 console.log(result.hash); // the hash of TxRaw
 ```
 
