@@ -1,4 +1,3 @@
-import { assertEmpty, isEmpty, BaseSigner } from "@cosmonauts/utils";
 import { Auth, HttpEndpoint, SignerConfig } from "@cosmonauts/types";
 import { Fee, SignDoc, TxRaw } from "./codegen/cosmos/tx/v1beta1/tx";
 import {
@@ -6,22 +5,20 @@ import {
   Encoder,
   FeeOptions,
   Message,
-  QueryClient,
   SignerOptions,
-} from "./types/direct";
+  TxBodyOptions,
+} from "./types";
 import {
   constructAuthInfo,
   constructSignerInfo,
   constructTxBody,
-} from "./utils/direct";
-import { defaultSignerConfig } from "./defaults";
-import { RpcClient } from "./query/rpc";
+  BaseSigner,
+} from "./utils";
 import { StdFee } from "./types/amino";
 import { toFee } from "./utils";
 import { SignMode } from "./types";
 
-export class DirectSigner extends BaseSigner {
-  protected _queryClient?: QueryClient;
+export class DirectSigner extends BaseSigner<SignDoc> {
   readonly encoders: Encoder[];
 
   constructor(
@@ -30,20 +27,8 @@ export class DirectSigner extends BaseSigner {
     endpoint?: string | HttpEndpoint,
     config?: SignerConfig
   ) {
-    super(auth, config ?? defaultSignerConfig);
+    super(auth, endpoint, config);
     this.encoders = encoders;
-    if (!isEmpty(endpoint)) {
-      this.setEndpoint(endpoint);
-    }
-  }
-
-  setEndpoint(endpoint: string | HttpEndpoint) {
-    this._queryClient = new RpcClient(endpoint, this.address);
-  }
-
-  get queryClient() {
-    assertEmpty(this._queryClient);
-    return this._queryClient;
   }
 
   addEncoders = (encoders: Encoder[]) => {
@@ -62,17 +47,30 @@ export class DirectSigner extends BaseSigner {
     return encoder;
   };
 
+  protected signDoc = (doc: SignDoc) => {
+    const signDoc = SignDoc.fromPartial(doc);
+    const signature = this.signArbitrary(SignDoc.encode(signDoc).finish());
+    return {
+      signature,
+      signed: signDoc,
+    };
+  };
+
   async sign(
     messages: Message[],
     fee?: StdFee,
     memo?: string,
-    options?: FeeOptions & SignerOptions
+    options?: FeeOptions & SignerOptions & TxBodyOptions
   ) {
-    const { txBody, encode } = constructTxBody(messages, this.getEncoder, memo);
+    const { txBody, encode } = constructTxBody(
+      messages,
+      this.getEncoder,
+      memo,
+      options
+    );
 
     const { signerInfo } = constructSignerInfo(
-      "secp256k1",
-      this.auth.getPublicKey(),
+      this.encodedPublicKey,
       options?.sequence ?? (await this.queryClient.getSequence()),
       SignMode.SIGN_MODE_DIRECT
     );
@@ -89,50 +87,19 @@ export class DirectSigner extends BaseSigner {
         options?.accountNumber ?? (await this.queryClient.getAccountNumber()),
     });
 
-    return this.signDoc(doc);
-  }
-
-  async signAndBroadcast(
-    messages: Message[],
-    fee?: StdFee,
-    memo?: string,
-    options?: FeeOptions & SignerOptions & BroadcastOptions
-  ) {
-    const { broadcast } = await this.sign(messages, fee, memo, options);
-    return await broadcast(options);
-  }
-
-  signDoc(doc: SignDoc) {
-    const signDoc = SignDoc.fromPartial(doc);
-    const signature = this.signArbitrary(SignDoc.encode(signDoc).finish());
-    const toTxRaw = () => {
-      const txRaw = TxRaw.fromPartial({
-        bodyBytes: doc.bodyBytes,
-        authInfoBytes: doc.authInfoBytes,
-        signatures: [signature.value],
-      });
-      return txRaw;
-    };
-    const txRaw = toTxRaw();
+    const { signature, signed } = await this.signDoc(doc);
+    const txRaw = TxRaw.fromPartial({
+      bodyBytes: doc.bodyBytes,
+      authInfoBytes: doc.authInfoBytes,
+      signatures: [signature.value],
+    });
     return {
       signature,
-      signed: signDoc,
+      signed,
       txRaw,
       broadcast: async (options?: BroadcastOptions) => {
         return this.broadcast(txRaw, options);
       },
     };
-  }
-
-  async broadcast(txRaw: TxRaw, options?: BroadcastOptions) {
-    return this.broadcastArbitrary(
-      TxRaw.encode(TxRaw.fromPartial(txRaw)).finish(),
-      options
-    );
-  }
-
-  async broadcastArbitrary(message: Uint8Array, options?: BroadcastOptions) {
-    const result = await this.queryClient.broadcast(message, options);
-    return result;
   }
 }

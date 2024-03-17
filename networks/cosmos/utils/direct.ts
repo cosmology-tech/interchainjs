@@ -4,18 +4,16 @@ import {
   SignerInfo,
   TxBody,
 } from "../codegen/cosmos/tx/v1beta1/tx";
-import { EncodedMessage, Encoder, Message } from "../types/direct";
-import { Key, assertEmpty } from "@cosmonauts/utils";
-import { PubKey as Secp256k1PubKey } from "../codegen/cosmos/crypto/secp256k1/keys";
+import { EncodedMessage, Encoder, Message, TxBodyOptions } from "../types";
+import { assertEmpty } from "@cosmonauts/utils";
 import { SignMode } from "../codegen/cosmos/tx/signing/v1beta1/signing";
 import { TelescopeGeneratedType } from "../codegen/types";
-import { StdFee } from "../types/amino";
-import { toFee } from "./amino";
 
 export function constructTxBody(
   messages: Message[],
   getEncoder: (typeUrl: string) => { encode: (data: any) => Uint8Array },
-  memo?: string
+  memo?: string,
+  options?: TxBodyOptions
 ) {
   const encoded = messages.map(({ typeUrl, value }) => {
     return {
@@ -26,6 +24,9 @@ export function constructTxBody(
   const txBody = TxBody.fromPartial({
     messages: encoded,
     memo,
+    timeoutHeight: options?.timeoutHeight,
+    extensionOptions: options?.extensionOptions,
+    nonCriticalExtensionOptions: options?.nonCriticalExtensionOptions,
   });
   return {
     txBody,
@@ -34,31 +35,12 @@ export function constructTxBody(
 }
 
 export function constructSignerInfo(
-  keyType: string,
-  publicKey: Key,
+  publicKey: EncodedMessage,
   sequence: bigint,
   signMode: SignMode
 ) {
-  let encodedKey: EncodedMessage;
-  switch (keyType) {
-    case "secp256k1":
-      encodedKey = {
-        typeUrl: Secp256k1PubKey.typeUrl,
-        value: Secp256k1PubKey.encode(
-          Secp256k1PubKey.fromPartial({ key: publicKey.value })
-        ).finish(),
-      };
-      break;
-    case "ed25519":
-      throw new Error(
-        "Ed25519 signer info construction is not implemented yet"
-      );
-    default:
-      throw new Error(`Unsupported public key type: ${keyType}`);
-  }
-
   const signerInfo = SignerInfo.fromPartial({
-    publicKey: encodedKey,
+    publicKey,
     sequence,
     modeInfo: { single: { mode: signMode } },
   });

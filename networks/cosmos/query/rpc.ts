@@ -7,7 +7,7 @@ import {
   BroadcastResult,
   FeeOptions,
   QueryClient,
-} from "../types/direct";
+} from "../types";
 import { Status, CometBroadcastResult } from "../types/rpc";
 import {
   accountDecoders,

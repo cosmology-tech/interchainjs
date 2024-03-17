@@ -35,7 +35,6 @@ import {
   toEncoder,
   toFee,
   toMessages,
-  toStdFee,
 } from "@cosmonauts/cosmos/utils";
 import { AminoSigner } from "@cosmonauts/cosmos/amino";
 import {
@@ -218,8 +217,7 @@ export class SigningClient {
         memo
       );
       const { signerInfo } = constructSignerInfo(
-        this.aminoSigner.auth.algo,
-        this.aminoSigner.auth.getPublicKey(isPublicKeyCompressed),
+        this.aminoSigner.encodedPublicKey,
         await this.queryClient.getSequence(),
         this._signDirect
           ? SignMode.SIGN_MODE_DIRECT
@@ -253,8 +251,7 @@ export class SigningClient {
       memo
     );
     const { signerInfo } = constructSignerInfo(
-      "secp256k1",
-      this.aminoSigner.auth.getPublicKey(isPublicKeyCompressed),
+      this.aminoSigner.encodedPublicKey,
       await this.queryClient.getSequence(),
       this._signDirect
         ? SignMode.SIGN_MODE_DIRECT
@@ -444,8 +441,7 @@ export class SigningClient {
     ).encode();
 
     const { signerInfo } = constructSignerInfo(
-      "secp256k1",
-      this.aminoSigner.auth.getPublicKey(isPublicKeyCompressed),
+      this.aminoSigner.encodedPublicKey,
       BigInt(signed.sequence),
       this._signDirect
         ? SignMode.SIGN_MODE_DIRECT

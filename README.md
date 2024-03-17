@@ -33,10 +33,8 @@ import { MsgSend } from "@cosmonauts/cosmos-msgs/cosmos/bank/v1beta1/tx";
 
 const auth = Secp256k1Auth.fromMnemonic("<mnemonic-words>", "cosmos");
 
-// direct signer
+// direct signer or amino signer
 const signer = new DirectSigner(auth, [toEncoder(MsgSend)], <rpc-endpoint>);
-
-// amino signer
 const signer = new AminoSigner(auth, [toEncoder(MsgSend)], [toConverter(MsgSend)], <rpc-endpoint>);
 
 const result = await signer.signAndBroadcast(<send token messages>);

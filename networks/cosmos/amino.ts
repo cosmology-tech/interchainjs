@@ -4,30 +4,21 @@ import {
   Encoder,
   FeeOptions,
   Message,
-  QueryClient,
   SignerOptions,
-} from "./types/direct";
+  TxBodyOptions,
+} from "./types";
 import { AminoConverter, StdFee, StdSignDoc } from "./types/amino";
 import { Fee, TxRaw } from "./codegen/cosmos/tx/v1beta1/tx";
-import {
-  encodeStdSignDoc,
-  toAminoMsgs,
-  toFee,
-  toMessages,
-  toStdFee,
-} from "./utils/amino";
+import { encodeStdSignDoc, toAminoMsgs, toFee, toStdFee } from "./utils/amino";
 import {
   constructAuthInfo,
   constructSignerInfo,
   constructTxBody,
-} from "./utils/direct";
-import { isEmpty, BaseSigner, assertEmpty } from "@cosmonauts/utils";
-import { defaultSignerConfig } from "./defaults";
+  BaseSigner,
+} from "./utils";
 import { SignMode } from "./types";
-import { RpcClient } from "./query/rpc";
 
-export class AminoSigner extends BaseSigner {
-  protected _queryClient?: QueryClient;
+export class AminoSigner extends BaseSigner<StdSignDoc> {
   readonly encoders: Encoder[];
   readonly converters: AminoConverter[];
 
@@ -38,21 +29,9 @@ export class AminoSigner extends BaseSigner {
     endpoint?: string | HttpEndpoint,
     config?: SignerConfig
   ) {
-    super(auth, config ?? defaultSignerConfig);
+    super(auth, endpoint, config);
     this.encoders = encoders;
     this.converters = converters;
-    if (!isEmpty(endpoint)) {
-      this.setEndpoint(endpoint);
-    }
-  }
-
-  setEndpoint(endpoint: string | HttpEndpoint) {
-    this._queryClient = new RpcClient(endpoint, this.address);
-  }
-
-  get queryClient() {
-    assertEmpty(this._queryClient);
-    return this._queryClient;
   }
 
   addEncoders = (encoders: Encoder[]) => {
@@ -99,29 +78,38 @@ export class AminoSigner extends BaseSigner {
     return converter;
   };
 
+  protected async signDoc(doc: StdSignDoc) {
+    const encoded = encodeStdSignDoc(doc);
+    const signature = this.signArbitrary(encoded);
+    return {
+      signature,
+      signed: doc,
+    };
+  }
+
   async sign(
     messages: Message[],
     fee?: StdFee,
     memo?: string,
-    options?: FeeOptions & SignerOptions
+    options?: FeeOptions & SignerOptions & TxBodyOptions
   ) {
-    let _fee: Fee;
-    if (isEmpty(fee)) {
-      const { txBody } = constructTxBody(messages, this.getEncoder, memo);
-      const { signerInfo } = constructSignerInfo(
-        "secp256k1",
-        this.auth.getPublicKey(),
-        options?.sequence ?? (await this.queryClient.getSequence()),
-        SignMode.SIGN_MODE_LEGACY_AMINO_JSON
-      );
-      _fee = toFee(
-        await this.queryClient.estimateFee(txBody, [signerInfo], options)
-      );
-    } else {
-      _fee = toFee(fee);
-    }
+    const { txBody, encode } = constructTxBody(
+      messages,
+      this.getEncoder,
+      memo,
+      options
+    );
+    const { signerInfo } = constructSignerInfo(
+      this.encodedPublicKey,
+      options?.sequence ?? (await this.queryClient.getSequence()),
+      SignMode.SIGN_MODE_LEGACY_AMINO_JSON
+    );
 
-    const stdSignDoc: StdSignDoc = {
+    const _fee: Fee = toFee(
+      fee ?? (await this.queryClient.estimateFee(txBody, [signerInfo], options))
+    );
+
+    const doc: StdSignDoc = {
       chain_id: options?.chainId ?? (await this.queryClient.getChainId()),
       account_number: (
         options?.accountNumber ?? (await this.queryClient.getAccountNumber())
@@ -133,68 +121,20 @@ export class AminoSigner extends BaseSigner {
       msgs: toAminoMsgs(messages, this.getConverterFromTypeUrl),
       memo: memo ?? "",
     };
-    return this.signDoc(stdSignDoc);
-  }
 
-  async signAndBroadcast(
-    messages: Message[],
-    fee?: StdFee,
-    memo?: string,
-    options?: FeeOptions & SignerOptions & BroadcastOptions
-  ) {
-    const { broadcast } = await this.sign(messages, fee, memo, options)
-    return await broadcast(options)
-  }
-
-  async signDoc(doc: StdSignDoc) {
-    const encoded = encodeStdSignDoc(doc);
-    const signature = this.signArbitrary(encoded);
-    const toTxRaw = () => {
-      const bodyBytes = constructTxBody(
-        toMessages(doc.msgs, this.getConverter),
-        this.getEncoder,
-        doc.memo
-      ).encode();
-
-      const { signerInfo } = constructSignerInfo(
-        this.auth.algo,
-        this.auth.getPublicKey(),
-        BigInt(doc.sequence),
-        SignMode.SIGN_MODE_LEGACY_AMINO_JSON
-      );
-
-      const authInfoBytes = constructAuthInfo(
-        [signerInfo],
-        toFee(doc.fee)
-      ).encode();
-
-      const txRaw = TxRaw.fromPartial({
-        bodyBytes,
-        authInfoBytes,
-        signatures: [signature.value],
-      });
-      return txRaw;
-    };
-    const txRaw = toTxRaw();
+    const { signature, signed } = await this.signDoc(doc);
+    const txRaw = TxRaw.fromPartial({
+      bodyBytes: encode(),
+      authInfoBytes: constructAuthInfo([signerInfo], _fee).encode(),
+      signatures: [signature.value],
+    });
     return {
       signature,
-      signed: doc,
+      signed,
       txRaw,
       broadcast: async (options?: BroadcastOptions) => {
         return this.broadcast(txRaw, options);
       },
     };
-  }
-
-  async broadcast(txRaw: TxRaw, options?: BroadcastOptions) {
-    return this.broadcastArbitrary(
-      TxRaw.encode(TxRaw.fromPartial(txRaw)).finish(),
-      options
-    );
-  }
-
-  async broadcastArbitrary(message: Uint8Array, options?: BroadcastOptions) {
-    const result = await this.queryClient.broadcast(message, options);
-    return result;
   }
 }

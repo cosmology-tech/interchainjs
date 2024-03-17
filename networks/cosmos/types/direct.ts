@@ -1,27 +1,8 @@
-import { HttpEndpoint, Price } from "@cosmonauts/types";
-import { SignerInfo, TxBody } from "../codegen/cosmos/tx/v1beta1/tx";
 import { Event } from "../codegen/tendermint/abci/types";
-import { StdFee } from "./amino";
 
 export interface Message<T = any> {
   typeUrl: string;
   value: T;
-}
-
-export interface BroadcastOptions {
-  checkTx?: boolean;
-  deliverTx?: boolean;
-}
-
-export interface FeeOptions {
-  multiplier?: number;
-  gasPrice?: Price | string | "average" | "high" | "low";
-}
-
-export interface SignerOptions {
-  chainId?: string;
-  accountNumber?: bigint;
-  sequence?: bigint;
 }
 
 export interface EncodedMessage {
@@ -38,22 +19,6 @@ export type BroadcastMode =
   | "broadcast_tx_async"
   | "broadcast_tx_sync"
   | "broadcast_tx_commit";
-
-export interface QueryClient {
-  readonly endpoint: HttpEndpoint;
-  getChainId: () => Promise<string>;
-  getAccountNumber: () => Promise<bigint>;
-  getSequence: () => Promise<bigint>;
-  estimateFee: (
-    txBody: TxBody,
-    signerInfos: SignerInfo[],
-    options?: FeeOptions
-  ) => Promise<StdFee>;
-  broadcast: (
-    txBytes: Uint8Array,
-    options?: BroadcastOptions
-  ) => Promise<BroadcastResult>;
-}
 
 export interface CheckTxResult {
   code: number;

@@ -18,10 +18,12 @@ export class BaseSigner {
     return this._config;
   }
 
+  get publicKey() {
+    return this.auth.getPublicKey(this.config.publicKey.isCompressed);
+  }
+
   get address() {
-    return this.config.publicKey.toAddress(
-      this.auth.getPublicKey(this.config.publicKey.isCompressed)
-    );
+    return this.config.publicKey.toAddress(this.publicKey);
   }
 
   setAuth(auth: Auth) {
