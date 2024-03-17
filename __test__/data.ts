@@ -21,6 +21,13 @@ export const chain: Record<string, ChainData> = {
     prefix: "cosmos",
     denom: "uatom",
   },
+  injective: {
+    chainId: "injective-1",
+    rpc: "http://localhost:26658",
+    rest: "http://localhost:1318",
+    prefix: "inj",
+    denom: "inj",
+  },
 };
 
 export const seed: Record<string, string> = {
@@ -42,5 +49,9 @@ export const address = {
     genesis: "cosmos1qjtcxl86z0zua2egcsz4ncff2gzlcndzzf2g5y",
     test1: "cosmos1pss7nxeh3f9md2vuxku8q99femnwdjtc04r92p",
     validator: "cosmosvaloper1qjtcxl86z0zua2egcsz4ncff2gzlcndz8a7ach",
+  },
+  injective: {
+    genesis: "inj19jz9fuagspcva4t7tvuhvtndnqavwx9el2u06m",
+    test1: "inj1mfmsvd30fyehuvzq6d40ejcx732necwe4nkk37",
   },
 };

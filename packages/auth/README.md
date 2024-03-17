@@ -1,6 +1,6 @@
 # Auth
 
-Authentication for web3 accounts.
+Authentication/Wallet for web3 accounts.
 
 ## Usage
 
@@ -27,6 +27,12 @@ const auth = Secp256k1Auth.fromMnemonic("<mnemonic-words>", "cosmos");
 // is identical to 
 const auth = Secp256k1Auth.fromMnemonic("<mnemonic-words>", "m/44'/118'/0'/0/0");
 ```
+
+`Auth` objected can be utilized by different signers. See
+
+- [@cosmonauts/cosmos](/networks/cosmos/README.md)
+- [@cosmonauts/ethereum](/networks/ethereum/README.md)
+- [@cosmonauts/injective](/networks/injective/README.md)
 
 ## Implementations
 

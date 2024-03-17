@@ -9,14 +9,16 @@ import { defaultHdPaths } from "./defaults";
 const hdPaths = defaultHdPaths.filter(({ algo }) => algo === "secp256k1");
 
 export class Secp256k1Auth implements Auth {
-  protected seed: HDKey;
-  protected hdkey: HDKey;
+  protected seed: HDKey | null = null;
+  protected hdkey: HDKey | null = null;
 
   readonly algo = "secp256k1";
 
-  constructor(seed: Uint8Array, hdPath?: string | Network) {
-    this.seed = HDKey.fromMasterSeed(seed);
-    this.derive(hdPath);
+  constructor(seed: Uint8Array | null, hdPath?: string | Network) {
+    if (seed) {
+      this.seed = HDKey.fromMasterSeed(seed);
+      this.derive(hdPath);
+    }
   }
 
   static fromMnemonic(
@@ -28,11 +30,35 @@ export class Secp256k1Auth implements Auth {
     return new Secp256k1Auth(seed, hdPath);
   }
 
-  static fromSeed(seed: Key, hdPath?: string | Network) {
+  static fromPrivateKey(seed: Key, hdPath?: string | Network) {
     return new Secp256k1Auth(seed.value, hdPath);
   }
 
+  static fromPublicKey(key: Key, isCompressed?: boolean) {
+    const auth = new Secp256k1Auth(null);
+    const isPubkeyCompressed = isCompressed;
+    auth.getPublicKey = (isCompressed?: boolean) => {
+      if (isCompressed && isPubkeyCompressed) {
+        return key;
+      }
+      if (!isCompressed && !isPubkeyCompressed) {
+        return key;
+      }
+      throw new Error(
+        `Failed to get ${
+          isCompressed ? "compressed" : "uncompressed"
+        } public key`
+      );
+    };
+    return;
+  }
+
   derive(hdPath?: string | Network) {
+    if (!this.seed) {
+      this.hdkey = null;
+      return this;
+    }
+
     switch (hdPath) {
       case "cosmos":
       case "injective":
@@ -57,11 +83,11 @@ export class Secp256k1Auth implements Auth {
     return Key.from(this.hdkey.privateKey);
   }
 
-  getPublicKey(isCompressed?: boolean) {
+  getPublicKey = (isCompressed?: boolean) => {
     return Key.from(
       secp256k1.getPublicKey(this.privateKey!.value, isCompressed)
     );
-  }
+  };
 
   sign(data: Uint8Array): Signature {
     if (!this.privateKey) {

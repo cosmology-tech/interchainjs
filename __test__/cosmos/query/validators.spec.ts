@@ -3,7 +3,7 @@ import {
   BondStatus,
   bondStatusToJSON,
 } from "@cosmonauts/cosmos-msgs/cosmos/staking/v1beta1/staking";
-import { rpcQuery } from "../constants";
+import { rpcQuery } from "../../cosmjs/constants";
 
 it("should query validators", async () => {
   const { validators } = await rpcQuery.validators({

@@ -38,6 +38,9 @@ export class BaseSigner {
   }
 
   verifyArbitrary(message: Uint8Array, signature: Key): boolean {
+    if (!this.auth.verify) {
+      throw new Error("verify method is not implemented yet");
+    }
     return this.auth.verify(
       this.config.message.hash(message),
       this.config.signature.fromCompact(signature, this.auth.algo)

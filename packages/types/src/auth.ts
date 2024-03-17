@@ -6,7 +6,7 @@ export interface Auth {
   algo: string;
   getPublicKey: (isCompressed?: boolean) => Key;
   sign: (data: Uint8Array) => Signature;
-  verify: (data: Uint8Array, signature: Signature) => boolean;
+  verify?: (data: Uint8Array, signature: Signature) => boolean;
 }
 
 export interface AuthOptions {

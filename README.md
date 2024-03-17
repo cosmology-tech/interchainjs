@@ -1,20 +1,23 @@
 # Sign
 
-- [Sign](#sign)
-  - [Cosmos Network](#cosmos-network)
-    - [Main Packages](#main-packages)
-    - [Usage](#usage)
-    - [Migration from `@cosmjs`](#migration-from-cosmjs)
+## Wallet
+
+Universally applied across different networks
+
+- [@cosmonauts/auth](/packages/auth/README.md)
 
 ## Cosmos Network
 
-### Main Packages
+### Querying
 
-- [@cosmonauts/auth](/packages/auth/README.md)
+- [@cosmonauts/cosmos-query](/networks/cosmos-query/README.md)
+  
+### Transactions
+
 - [@cosmonauts/cosmos](/networks/cosmos/README.md)
 - [@cosmonauts/cosmos-msgs](/networks/cosmos-msgs/README.md)
 
-### Usage
+#### Usage
 
 ```sh
 npm install @cosmonauts/auth @cosmonauts/cosmos @cosmonauts/cosmos-msgs
@@ -36,12 +39,16 @@ const signer = new DirectSigner(auth, [toEncoder(MsgSend)], <rpc-endpoint>);
 // amino signer
 const signer = new AminoSigner(auth, [toEncoder(MsgSend)], [toConverter(MsgSend)], <rpc-endpoint>);
 
-const result = await signer.signAndBroadcast(<send-token-messages>);
+const result = await signer.signAndBroadcast(<send token messages>);
 console.log(result.hash); // the hash of TxRaw
 ```
 
-### Migration from `@cosmjs`
+#### Migration from `@cosmjs`
 
 We created a specific package to make it easy to migrate from `@cosmjs`.
 
 - [@cosmonauts/cosmjs](/networks/cosmjs/README.md)
+
+## Injective Network
+
+## Ethereum Network

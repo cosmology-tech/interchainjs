@@ -1,20 +1,13 @@
-import { Secp256k1Auth } from "@cosmonauts/auth/secp256k1";
-import { defaultSignerConfig } from "@cosmonauts/injective/defaults";
-import { seed } from "../data";
+import { chain } from "../data";
 import { PrivateKey } from "@injectivelabs/sdk-ts";
 import { Wallet } from "ethers";
-
-const mnemonic = seed.genesis;
-const myAuth = Secp256k1Auth.fromMnemonic(mnemonic).derive("injective");
-
-const toAddress = defaultSignerConfig.publicKey.toAddress;
-const isCompressed = defaultSignerConfig.publicKey.isCompressed;
+import { auth, isCompressed, mnemonic, toAddress } from "./constants";
 
 describe("vs. Ethers", () => {
   it("should have identical key pair", () => {
     const hisAuth = Wallet.fromMnemonic(mnemonic);
-    expect(`0x${myAuth.privateKey.toHex()}`).toEqual(hisAuth.privateKey);
-    expect(`0x${myAuth.getPublicKey(isCompressed).toHex()}`).toEqual(
+    expect(`0x${auth.privateKey.toHex()}`).toEqual(hisAuth.privateKey);
+    expect(`0x${auth.getPublicKey(isCompressed).toHex()}`).toEqual(
       hisAuth.publicKey
     );
   });
@@ -24,16 +17,18 @@ describe("vs. Injectivelabs", () => {
   const hisAuth = PrivateKey.fromMnemonic(mnemonic);
 
   it("should get identical key results", () => {
-    expect(`0x${myAuth.privateKey.toHex()}`).toEqual(hisAuth.toPrivateKeyHex());
-    expect(myAuth.getPublicKey(true).toHex()).toEqual(
+    expect(`0x${auth.privateKey.toHex()}`).toEqual(hisAuth.toPrivateKeyHex());
+    expect(auth.getPublicKey(true).toHex()).toEqual(
       hisAuth.toPublicKey().toHex()
     );
   });
 
   it("should get identical address results", () => {
     const hisAddress = hisAuth.toAddress();
-    const myPubKey = myAuth.getPublicKey(true);
+    const myPubKey = auth.getPublicKey(true);
     expect(`0x${toAddress(myPubKey).toHex()}`).toEqual(hisAddress.toHex());
-    expect(toAddress(myPubKey).toBech32("inj")).toEqual(hisAddress.toBech32());
+    expect(toAddress(myPubKey).toBech32(chain.injective.prefix)).toEqual(
+      hisAddress.toBech32()
+    );
   });
 });

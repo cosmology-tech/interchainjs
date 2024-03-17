@@ -98,8 +98,8 @@ export class DirectSigner extends BaseSigner {
     memo?: string,
     options?: FeeOptions & SignerOptions & BroadcastOptions
   ) {
-    const {broadcast} = await this.sign(messages, fee, memo, options)
-    return await broadcast(options)
+    const { broadcast } = await this.sign(messages, fee, memo, options);
+    return await broadcast(options);
   }
 
   signDoc(doc: SignDoc) {
@@ -111,7 +111,7 @@ export class DirectSigner extends BaseSigner {
         authInfoBytes: doc.authInfoBytes,
         signatures: [signature.value],
       });
-      return txRaw
+      return txRaw;
     };
     const txRaw = toTxRaw();
     return {

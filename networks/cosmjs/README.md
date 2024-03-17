@@ -31,17 +31,6 @@ const wallet = Secp256k1Wallet.fromMnemonic("<mnemonic-words>", { prefix: "<pref
 const directOfflineSigner = wallet.toOfflineDirectSigner();
 ```
 
-To make queries (taking querying `validators` as example)
-
-```ts
-import { RpcQuery } from "@cosmonauts/cosmjs/query/rpc";
-
-const rpcQuery = new RpcQuery(chain.osmosis.rpc);
-const { validators } = await rpcQuery.validators({
-    status: bondStatusToJSON(BondStatus.BOND_STATUS_BONDED),
-});
-```
-
 ## Implementations
 
 - **signing client**
@@ -50,8 +39,6 @@ const { validators } = await rpcQuery.validators({
   - **cosmwasm signing client** from `@cosmonauts/cosmjs/cosmwasm-stargate`
 - **wallet**
   - **secp256k1 wallet** from `@cosmonauts/cosmjs/wallets/secp256k1`
-- **query**
-  - **rpc query client** from `@cosmonauts/cosmjs/query/rpc`
 
 ## License
 

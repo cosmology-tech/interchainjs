@@ -25,6 +25,7 @@
     "@cosmjs/stargate": "^0.32.2",
     "@cosmology/telescope": "^1.4.11",
     "@injectivelabs/sdk-ts": "^1.14.5",
+    "@injectivelabs/wallet-ts": "^1.14.7",
     "@types/jest": "^29.5.11",
     "@typescript-eslint/eslint-plugin": "^6.18.1",
     "@typescript-eslint/parser": "^6.18.1",

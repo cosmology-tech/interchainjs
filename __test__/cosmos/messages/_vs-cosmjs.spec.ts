@@ -43,7 +43,7 @@ export const fee: StdFee = {
 
 export const memo = "for test";
 
-it("Direct signing: compare with cosmjs 1.0", async () => {
+it("Direct signing: compare with @cosmjs 1.0", async () => {
   const client = await getDirectClient();
   const signer = new DirectSigner(
     auth,
@@ -61,7 +61,7 @@ it("Direct signing: compare with cosmjs 1.0", async () => {
   expect(toHex(authInfoBytes)).toBe(toHex(txRaw.authInfoBytes));
 });
 
-it("Amino signing: compare with cosmjs 1.0", async () => {
+it("Amino signing: compare with @cosmjs 1.0", async () => {
   const client = await getAminoClient();
   const signer = new AminoSigner(
     auth,
