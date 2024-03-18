@@ -4,8 +4,8 @@ import {
   AminoConverter,
   StdFee,
   StdSignDoc,
-} from "../types/amino";
-import { Message } from "../types/direct";
+  Message,
+} from "../types";
 import { Coin } from "../codegen/cosmos/base/v1beta1/coin";
 import { Fee } from "../codegen/cosmos/tx/v1beta1/tx";
 import { TelescopeGeneratedType } from "../codegen/types";

@@ -44,7 +44,14 @@ export class RpcClient implements QueryClient {
     this.txQuery = new TxQuery(txRpc);
   }
 
-  protected async getBaseAccount(): Promise<BaseAccount> {
+  async getBech32Address() {
+    if (!this.address) {
+      throw new Error("Address is not provided when constructing RpcClient");
+    }
+    return this.address.toBech32(getPrefix(await this.getChainId()));
+  }
+
+  async getBaseAccount(): Promise<BaseAccount> {
     const accountResp = await this.authQuery.account({
       address: await this.getBech32Address(),
     });
@@ -81,13 +88,6 @@ export class RpcClient implements QueryClient {
       this.chainId = status.node_info.network;
     }
     return this.chainId;
-  }
-
-  async getBech32Address() {
-    if (!this.address) {
-      throw new Error("Address is not provided when constructing RpcClient");
-    }
-    return this.address.toBech32(getPrefix(await this.getChainId()));
   }
 
   async getAccountNumber() {

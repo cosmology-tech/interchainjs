@@ -1,4 +1,4 @@
-import { CheckTxResult, DeliverTxResult } from "./direct";
+import { CheckTxResult, DeliverTxResult } from "./signer";
 
 export namespace CometBroadcastResult {
   export interface Async {

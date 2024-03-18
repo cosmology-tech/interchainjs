@@ -5,13 +5,14 @@ import {
   TxBody,
 } from "../codegen/cosmos/tx/v1beta1/tx";
 import {
-  AccountData,
+  DirectWallet,
   EncodedMessage,
   Encoder,
   Message,
   TxBodyOptions,
+  Wallet,
 } from "../types";
-import { Key, assertEmpty } from "@cosmonauts/utils";
+import { assertEmpty } from "@cosmonauts/utils";
 import { SignMode } from "../codegen/cosmos/tx/signing/v1beta1/signing";
 import { TelescopeGeneratedType } from "../codegen/types";
 import { Auth } from "@cosmonauts/types";
@@ -79,19 +80,17 @@ export function toEncoder(
   };
 }
 
-export async function constructAuthFromGetAccounts(
-  getAccounts: () => Promise<AccountData[]>
-) {
-  const accounts = await getAccounts();
+export async function constructAuthFromWallet(wallet: Wallet<any>) {
+  const account = await wallet.getAccount();
   const isPubkeyCompressed = defaultSignerConfig.publicKey.isCompressed;
   const auth: Auth = {
-    algo: accounts[0].algo,
+    algo: account.algo,
     getPublicKey(isCompressed?: boolean) {
       if (isCompressed && isPubkeyCompressed) {
-        return Key.from(accounts[0].pubkey);
+        return account.publicKey;
       }
       if (!isCompressed && !isPubkeyCompressed) {
-        return Key.from(accounts[0].pubkey);
+        return account.publicKey;
       }
       throw new Error(
         `Failed to get ${
@@ -104,4 +103,11 @@ export async function constructAuthFromGetAccounts(
     },
   };
   return auth;
+}
+
+export async function getAccountFromAuth(auth: Auth) {
+  return {
+    algo: auth.algo,
+    publicKey: auth.getPublicKey(defaultSignerConfig.publicKey.isCompressed),
+  };
 }

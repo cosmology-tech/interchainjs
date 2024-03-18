@@ -5,21 +5,41 @@ import {
   Encoder,
   FeeOptions,
   Message,
-  OfflineDirectSigner,
   SignerOptions,
   TxBodyOptions,
+  StdFee,
+  DirectWallet,
 } from "./types";
 import {
   constructAuthInfo,
   constructSignerInfo,
   constructTxBody,
   BaseSigner,
-  constructAuthFromGetAccounts,
+  constructAuthFromWallet,
+  getAccountFromAuth,
 } from "./utils";
-import { StdFee } from "./types/amino";
 import { toFee } from "./utils";
 import { SignMode } from "./types";
-import { Key } from "@cosmonauts/utils";
+import { defaultSignerConfig } from "./defaults";
+
+export function toWallet(auth: Auth): DirectWallet {
+  return {
+    getAccount: () => getAccountFromAuth(auth),
+    async sign(doc: SignDoc) {
+      const signDoc = SignDoc.fromPartial(doc);
+      const signature = auth.sign(
+        defaultSignerConfig.message.hash(SignDoc.encode(signDoc).finish())
+      );
+      return {
+        signature: defaultSignerConfig.signature.toCompact(
+          signature,
+          auth.algo
+        ),
+        signed: signDoc,
+      };
+    },
+  };
+}
 
 export class DirectSigner extends BaseSigner<SignDoc> {
   readonly encoders: Encoder[];
@@ -34,27 +54,14 @@ export class DirectSigner extends BaseSigner<SignDoc> {
     this.encoders = encoders;
   }
 
-  static async fromOfflineSigner(
-    endpoint: string | HttpEndpoint,
-    offlineSigner: OfflineDirectSigner,
-    encoders: Encoder[]
+  static async fromWallet(
+    wallet: DirectWallet,
+    encoders: Encoder[],
+    endpoint?: string | HttpEndpoint
   ) {
-    const auth: Auth = await constructAuthFromGetAccounts(
-      offlineSigner.getAccounts
-    );
+    const auth: Auth = await constructAuthFromWallet(wallet);
     const signer = new DirectSigner(auth, encoders, endpoint);
-    const bech32Address = await signer.queryClient.getBech32Address();
-    const signDoc = async (doc: SignDoc) => {
-      const { signature, signed } = await offlineSigner.signDirect(
-        bech32Address,
-        doc
-      );
-      return {
-        signed,
-        signature: Key.fromBase64(signature.signature),
-      };
-    };
-    signer.setSignDoc(signDoc);
+    signer.setSignDoc(wallet.sign);
     return signer;
   }
 

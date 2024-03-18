@@ -1,14 +1,16 @@
 import { Auth, HttpEndpoint, SignerConfig } from "@cosmonauts/types";
 import {
+  AminoWallet,
   BroadcastOptions,
   Encoder,
   FeeOptions,
   Message,
-  OfflineAminoSigner,
   SignerOptions,
   TxBodyOptions,
+  AminoConverter,
+  StdFee,
+  StdSignDoc,
 } from "./types";
-import { AminoConverter, StdFee, StdSignDoc } from "./types/amino";
 import { Fee, TxRaw } from "./codegen/cosmos/tx/v1beta1/tx";
 import { encodeStdSignDoc, toAminoMsgs, toFee, toStdFee } from "./utils/amino";
 import {
@@ -16,10 +18,28 @@ import {
   constructSignerInfo,
   constructTxBody,
   BaseSigner,
-  constructAuthFromGetAccounts,
+  getAccountFromAuth,
+  constructAuthFromWallet,
 } from "./utils";
 import { SignMode } from "./types";
-import { Key } from "@cosmonauts/utils";
+import { defaultSignerConfig } from "./defaults";
+
+export function toWallet(auth: Auth): AminoWallet {
+  return {
+    getAccount: () => getAccountFromAuth(auth),
+    async sign(doc: StdSignDoc) {
+      const encoded = encodeStdSignDoc(doc);
+      const signature = auth.sign(defaultSignerConfig.message.hash(encoded));
+      return {
+        signature: defaultSignerConfig.signature.toCompact(
+          signature,
+          auth.algo
+        ),
+        signed: doc,
+      };
+    },
+  };
+}
 
 export class AminoSigner extends BaseSigner<StdSignDoc> {
   readonly encoders: Encoder[];
@@ -37,28 +57,15 @@ export class AminoSigner extends BaseSigner<StdSignDoc> {
     this.converters = converters;
   }
 
-  static async fromOfflineSigner(
-    endpoint: string | HttpEndpoint,
-    offlineSigner: OfflineAminoSigner,
+  static async fromWallet(
+    wallet: AminoWallet,
     encoders: Encoder[],
-    converters: AminoConverter[]
+    converters: AminoConverter[],
+    endpoint?: string | HttpEndpoint
   ) {
-    const auth: Auth = await constructAuthFromGetAccounts(
-      offlineSigner.getAccounts
-    );
+    const auth: Auth = await constructAuthFromWallet(wallet);
     const signer = new AminoSigner(auth, encoders, converters, endpoint);
-    const bech32Address = await signer.queryClient.getBech32Address();
-    const signDoc = async (doc: StdSignDoc) => {
-      const { signature, signed } = await offlineSigner.signAmino(
-        bech32Address,
-        doc
-      );
-      return {
-        signed,
-        signature: Key.fromBase64(signature.signature),
-      };
-    };
-    signer.setSignDoc(signDoc);
+    signer.setSignDoc(wallet.sign);
     return signer;
   }
 

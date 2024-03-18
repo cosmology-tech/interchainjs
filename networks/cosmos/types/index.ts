@@ -1,8 +1,6 @@
-export * from "./amino";
-export * from "./direct";
 export * from "./rpc";
-export * from "./base";
-export * from "./offline-signer";
+export * from "./signer";
+export * from "./wallet";
 export {
   Fee,
   SignDoc,

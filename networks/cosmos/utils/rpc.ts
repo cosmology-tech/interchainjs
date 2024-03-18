@@ -14,7 +14,7 @@ import {
 } from "../codegen/cosmos/vesting/v1beta1/vesting";
 import { fromBase64, randomId, toBase64, toHex } from "@cosmonauts/utils";
 import { TxRpc } from "../codegen/types";
-import { BroadcastMode } from "../types/direct";
+import { BroadcastMode } from "../types";
 
 export const getPrefix = (chainId: string): string => {
   const prefix = (prefixJson as any)[chainId];
