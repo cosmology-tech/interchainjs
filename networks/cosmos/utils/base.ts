@@ -62,6 +62,14 @@ export abstract class BaseSigner<Doc> extends _BaseSigner {
     }
   }
 
+  setSignDoc(signDoc: (doc: Doc) => Promise<{ signature: Key; signed: Doc }>) {
+    this.signDoc = signDoc;
+  }
+
+  protected abstract signDoc: (
+    doc: Doc
+  ) => Promise<{ signature: Key; signed: Doc }>;
+
   abstract sign(
     messages: Message[],
     fee?: StdFee,

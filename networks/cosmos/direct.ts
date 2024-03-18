@@ -5,6 +5,7 @@ import {
   Encoder,
   FeeOptions,
   Message,
+  OfflineDirectSigner,
   SignerOptions,
   TxBodyOptions,
 } from "./types";
@@ -13,10 +14,12 @@ import {
   constructSignerInfo,
   constructTxBody,
   BaseSigner,
+  constructAuthFromGetAccounts,
 } from "./utils";
 import { StdFee } from "./types/amino";
 import { toFee } from "./utils";
 import { SignMode } from "./types";
+import { Key } from "@cosmonauts/utils";
 
 export class DirectSigner extends BaseSigner<SignDoc> {
   readonly encoders: Encoder[];
@@ -29,6 +32,30 @@ export class DirectSigner extends BaseSigner<SignDoc> {
   ) {
     super(auth, endpoint, config);
     this.encoders = encoders;
+  }
+
+  static async fromOfflineSigner(
+    endpoint: string | HttpEndpoint,
+    offlineSigner: OfflineDirectSigner,
+    encoders: Encoder[]
+  ) {
+    const auth: Auth = await constructAuthFromGetAccounts(
+      offlineSigner.getAccounts
+    );
+    const signer = new DirectSigner(auth, encoders, endpoint);
+    const bech32Address = await signer.queryClient.getBech32Address();
+    const signDoc = async (doc: SignDoc) => {
+      const { signature, signed } = await offlineSigner.signDirect(
+        bech32Address,
+        doc
+      );
+      return {
+        signed,
+        signature: Key.fromBase64(signature.signature),
+      };
+    };
+    signer.setSignDoc(signDoc);
+    return signer;
   }
 
   addEncoders = (encoders: Encoder[]) => {
@@ -47,7 +74,7 @@ export class DirectSigner extends BaseSigner<SignDoc> {
     return encoder;
   };
 
-  protected signDoc = (doc: SignDoc) => {
+  protected signDoc = async (doc: SignDoc) => {
     const signDoc = SignDoc.fromPartial(doc);
     const signature = this.signArbitrary(SignDoc.encode(signDoc).finish());
     return {

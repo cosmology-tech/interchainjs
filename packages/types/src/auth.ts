@@ -1,7 +1,5 @@
 import { type Key } from "@cosmonauts/utils";
 
-export type Bech32Address = string;
-
 export interface Auth {
   algo: string;
   getPublicKey: (isCompressed?: boolean) => Key;

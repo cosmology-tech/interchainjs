@@ -4,10 +4,18 @@ import {
   SignerInfo,
   TxBody,
 } from "../codegen/cosmos/tx/v1beta1/tx";
-import { EncodedMessage, Encoder, Message, TxBodyOptions } from "../types";
-import { assertEmpty } from "@cosmonauts/utils";
+import {
+  AccountData,
+  EncodedMessage,
+  Encoder,
+  Message,
+  TxBodyOptions,
+} from "../types";
+import { Key, assertEmpty } from "@cosmonauts/utils";
 import { SignMode } from "../codegen/cosmos/tx/signing/v1beta1/signing";
 import { TelescopeGeneratedType } from "../codegen/types";
+import { Auth } from "@cosmonauts/types";
+import { defaultSignerConfig } from "../defaults";
 
 export function constructTxBody(
   messages: Message[],
@@ -69,4 +77,31 @@ export function toEncoder(
       return generated.encode(generated.fromPartial(data)).finish();
     },
   };
+}
+
+export async function constructAuthFromGetAccounts(
+  getAccounts: () => Promise<AccountData[]>
+) {
+  const accounts = await getAccounts();
+  const isPubkeyCompressed = defaultSignerConfig.publicKey.isCompressed;
+  const auth: Auth = {
+    algo: accounts[0].algo,
+    getPublicKey(isCompressed?: boolean) {
+      if (isCompressed && isPubkeyCompressed) {
+        return Key.from(accounts[0].pubkey);
+      }
+      if (!isCompressed && !isPubkeyCompressed) {
+        return Key.from(accounts[0].pubkey);
+      }
+      throw new Error(
+        `Failed to get ${
+          isCompressed ? "compressed" : "uncompressed"
+        } public key`
+      );
+    },
+    sign(_data: Uint8Array) {
+      throw new Error("Not implemented yet");
+    },
+  };
+  return auth;
 }

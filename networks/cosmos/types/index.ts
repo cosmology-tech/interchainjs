@@ -2,6 +2,7 @@ export * from "./amino";
 export * from "./direct";
 export * from "./rpc";
 export * from "./base";
+export * from "./offline-signer";
 export {
   Fee,
   SignDoc,

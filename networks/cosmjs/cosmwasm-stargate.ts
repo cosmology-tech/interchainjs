@@ -7,7 +7,7 @@ import { OfflineSigner } from "./types/wallet";
 import { SignerOptions } from "./types/signing-client";
 import { HttpEndpoint } from "@cosmonauts/types";
 import { toConverter, toEncoder } from "@cosmonauts/cosmos/utils";
-import { authTemplate } from "./utils";
+import { defaultAuth } from "./utils";
 
 export class CosmWasmSigningClient extends SigningClient {
   readonly helpers: TxImpl;
@@ -33,7 +33,7 @@ export class CosmWasmSigningClient extends SigningClient {
     signer: OfflineSigner,
     options: SignerOptions = {}
   ): CosmWasmSigningClient {
-    const aminoSigner = new AminoSigner(authTemplate, [], []);
+    const aminoSigner = new AminoSigner(defaultAuth, [], []);
     const signingClient = new CosmWasmSigningClient(
       aminoSigner,
       signer,

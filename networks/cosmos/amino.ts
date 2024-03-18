@@ -4,6 +4,7 @@ import {
   Encoder,
   FeeOptions,
   Message,
+  OfflineAminoSigner,
   SignerOptions,
   TxBodyOptions,
 } from "./types";
@@ -15,8 +16,10 @@ import {
   constructSignerInfo,
   constructTxBody,
   BaseSigner,
+  constructAuthFromGetAccounts,
 } from "./utils";
 import { SignMode } from "./types";
+import { Key } from "@cosmonauts/utils";
 
 export class AminoSigner extends BaseSigner<StdSignDoc> {
   readonly encoders: Encoder[];
@@ -32,6 +35,31 @@ export class AminoSigner extends BaseSigner<StdSignDoc> {
     super(auth, endpoint, config);
     this.encoders = encoders;
     this.converters = converters;
+  }
+
+  static async fromOfflineSigner(
+    endpoint: string | HttpEndpoint,
+    offlineSigner: OfflineAminoSigner,
+    encoders: Encoder[],
+    converters: AminoConverter[]
+  ) {
+    const auth: Auth = await constructAuthFromGetAccounts(
+      offlineSigner.getAccounts
+    );
+    const signer = new AminoSigner(auth, encoders, converters, endpoint);
+    const bech32Address = await signer.queryClient.getBech32Address();
+    const signDoc = async (doc: StdSignDoc) => {
+      const { signature, signed } = await offlineSigner.signAmino(
+        bech32Address,
+        doc
+      );
+      return {
+        signed,
+        signature: Key.fromBase64(signature.signature),
+      };
+    };
+    signer.setSignDoc(signDoc);
+    return signer;
   }
 
   addEncoders = (encoders: Encoder[]) => {
@@ -78,14 +106,14 @@ export class AminoSigner extends BaseSigner<StdSignDoc> {
     return converter;
   };
 
-  protected async signDoc(doc: StdSignDoc) {
+  protected signDoc = async (doc: StdSignDoc) => {
     const encoded = encodeStdSignDoc(doc);
     const signature = this.signArbitrary(encoded);
     return {
       signature,
       signed: doc,
     };
-  }
+  };
 
   async sign(
     messages: Message[],

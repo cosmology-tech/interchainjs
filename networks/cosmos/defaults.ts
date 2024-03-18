@@ -1,7 +1,7 @@
 import { bytes as assertBytes } from "@noble/hashes/_assert";
 import { sha256 } from "@noble/hashes/sha256";
 import { BroadcastOptions, FeeOptions } from "./types";
-import { SignerConfig, Signature } from "@cosmonauts/types";
+import { SignerConfig, Signature, Auth } from "@cosmonauts/types";
 import { ripemd160 } from "@noble/hashes/ripemd160";
 import { Key } from "@cosmonauts/utils";
 import { secp256k1 } from "@noble/curves/secp256k1";

@@ -2,6 +2,7 @@ import { HttpEndpoint, Price } from "@cosmonauts/types";
 import { SignerInfo, TxBody } from "../codegen/cosmos/tx/v1beta1/tx";
 import { BroadcastResult } from "./direct";
 import { StdFee } from "./amino";
+import { Bech32Address } from "./offline-signer";
 
 export interface FeeOptions {
   multiplier?: number;
@@ -29,6 +30,7 @@ export interface BroadcastOptions {
 export interface QueryClient {
   readonly endpoint: HttpEndpoint;
   getChainId: () => Promise<string>;
+  getBech32Address: () => Promise<string>;
   getAccountNumber: () => Promise<bigint>;
   getSequence: () => Promise<bigint>;
   estimateFee: (

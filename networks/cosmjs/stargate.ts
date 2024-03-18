@@ -6,7 +6,7 @@ import { OfflineSigner } from "./types/wallet";
 import { SignerOptions } from "./types/signing-client";
 import { HttpEndpoint } from "@cosmonauts/types";
 import { toConverter, toEncoder } from "@cosmonauts/cosmos/utils";
-import { authTemplate } from "./utils";
+import { defaultAuth } from "./utils";
 
 export class StargateSigningClient extends SigningClient {
   readonly helpers: TxImpl;
@@ -28,7 +28,7 @@ export class StargateSigningClient extends SigningClient {
     signer: OfflineSigner,
     options: SignerOptions = {}
   ): StargateSigningClient {
-    const aminoSigner = new AminoSigner(authTemplate, [], []);
+    const aminoSigner = new AminoSigner(defaultAuth, [], []);
     const signingClient = new StargateSigningClient(
       aminoSigner,
       signer,

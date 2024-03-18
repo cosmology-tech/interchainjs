@@ -43,39 +43,76 @@ export const fee: StdFee = {
 
 export const memo = "for test";
 
-it("Direct signing: compare with @cosmjs 1.0", async () => {
-  const client = await getDirectClient();
-  const signer = new DirectSigner(
-    auth,
-    [toEncoder(MsgSend), toEncoder(MsgTransfer)],
-    chain.osmosis.rpc
-  );
+describe("Compare with @cosmjs 1.0", () => {
+  it("direct signing results should match", async () => {
+    const client = await getDirectClient();
+    const signer = new DirectSigner(
+      auth,
+      [toEncoder(MsgSend), toEncoder(MsgTransfer)],
+      chain.osmosis.rpc
+    );
 
-  const txRaw = await client.sign(address.osmosis.genesis, messages, fee, memo);
-  const {
-    txRaw: { bodyBytes, authInfoBytes, signatures },
-  } = await signer.sign(messages, fee, memo);
+    const txRaw = await client.sign(
+      address.osmosis.genesis,
+      messages,
+      fee,
+      memo
+    );
+    const {
+      txRaw: { bodyBytes, authInfoBytes, signatures },
+    } = await signer.sign(messages, fee, memo);
 
-  expect(toHex(signatures[0])).toBe(toHex(txRaw.signatures[0]));
-  expect(toHex(bodyBytes)).toBe(toHex(txRaw.bodyBytes));
-  expect(toHex(authInfoBytes)).toBe(toHex(txRaw.authInfoBytes));
-});
+    expect(toHex(signatures[0])).toBe(toHex(txRaw.signatures[0]));
+    expect(toHex(bodyBytes)).toBe(toHex(txRaw.bodyBytes));
+    expect(toHex(authInfoBytes)).toBe(toHex(txRaw.authInfoBytes));
+  });
 
-it("Amino signing: compare with @cosmjs 1.0", async () => {
-  const client = await getAminoClient();
-  const signer = new AminoSigner(
-    auth,
-    [toEncoder(MsgSend), toEncoder(MsgTransfer)],
-    [toConverter(MsgSend), toConverter(MsgTransfer)],
-    chain.osmosis.rpc
-  );
+  it("direct signing from OfflineSigner results should match", async () => {
+    const client = await getDirectClient();
+    const signer = await DirectSigner.fromOfflineSigner(
+      chain.osmosis.rpc,
+      (await DirectSecp256k1HdWallet.fromMnemonic(seed.genesis, {
+        prefix: chain.osmosis.prefix,
+      })) as any,
+      [toEncoder(MsgSend), toEncoder(MsgTransfer)]
+    );
 
-  const txRaw = await client.sign(address.osmosis.genesis, messages, fee, memo);
-  const {
-    txRaw: { bodyBytes, authInfoBytes, signatures },
-  } = await signer.sign(messages, fee, memo);
+    const txRaw = await client.sign(
+      address.osmosis.genesis,
+      messages,
+      fee,
+      memo
+    );
+    const {
+      txRaw: { bodyBytes, authInfoBytes, signatures },
+    } = await signer.sign(messages, fee, memo);
 
-  expect(toHex(signatures[0])).toBe(toHex(txRaw.signatures[0]));
-  expect(toHex(bodyBytes)).toBe(toHex(txRaw.bodyBytes));
-  expect(toHex(authInfoBytes)).toBe(toHex(txRaw.authInfoBytes));
+    expect(toHex(signatures[0])).toBe(toHex(txRaw.signatures[0]));
+    expect(toHex(bodyBytes)).toBe(toHex(txRaw.bodyBytes));
+    expect(toHex(authInfoBytes)).toBe(toHex(txRaw.authInfoBytes));
+  });
+
+  it("amino signing results should match", async () => {
+    const client = await getAminoClient();
+    const signer = new AminoSigner(
+      auth,
+      [toEncoder(MsgSend), toEncoder(MsgTransfer)],
+      [toConverter(MsgSend), toConverter(MsgTransfer)],
+      chain.osmosis.rpc
+    );
+
+    const txRaw = await client.sign(
+      address.osmosis.genesis,
+      messages,
+      fee,
+      memo
+    );
+    const {
+      txRaw: { bodyBytes, authInfoBytes, signatures },
+    } = await signer.sign(messages, fee, memo);
+
+    expect(toHex(signatures[0])).toBe(toHex(txRaw.signatures[0]));
+    expect(toHex(bodyBytes)).toBe(toHex(txRaw.bodyBytes));
+    expect(toHex(authInfoBytes)).toBe(toHex(txRaw.authInfoBytes));
+  });
 });

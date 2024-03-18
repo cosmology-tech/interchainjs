@@ -34,15 +34,12 @@ export async function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-export const authTemplate: Auth = {
+export const defaultAuth: Auth = {
   algo: "secp256k1",
-  getPublicKey: (isCompressed?: boolean) => {
+  getPublicKey: (_isCompressed?: boolean) => {
     throw new Error("Not implemented yet");
   },
   sign: (_data: Uint8Array) => {
-    throw new Error("Not implemented yet");
-  },
-  verify: (_data: Uint8Array, _signature: Signature) => {
     throw new Error("Not implemented yet");
   },
 };

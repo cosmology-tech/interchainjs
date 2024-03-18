@@ -13,7 +13,7 @@ import {
   OfflineDirectSigner,
   OfflineSigner,
 } from "./types/wallet";
-import { authTemplate, BroadcastTxError, sleep, TimeoutError } from "./utils";
+import { defaultAuth, BroadcastTxError, sleep, TimeoutError } from "./utils";
 import {
   AuthInfo,
   Secp256k1PubKey,
@@ -45,10 +45,7 @@ import {
   BlockResponse,
   TxResponse,
 } from "./types/query";
-import { defaultSignerConfig } from "@cosmonauts/cosmos/defaults";
 import { TxRpc } from "@cosmonauts/cosmos-msgs/types";
-
-const isPublicKeyCompressed = defaultSignerConfig.publicKey.isCompressed;
 
 /**
  * implement the same methods as what in `cosmjs` signingClient
@@ -101,7 +98,7 @@ export class SigningClient {
     signer: OfflineSigner,
     options: SignerOptions = {}
   ): SigningClient {
-    const aminoSigner = new AminoSigner(authTemplate, [], []);
+    const aminoSigner = new AminoSigner(defaultAuth, [], []);
     const signingClient = new SigningClient(aminoSigner, signer, options);
     signingClient.setEndpoint(endpoint);
     return signingClient;
@@ -112,7 +109,7 @@ export class SigningClient {
   }
 
   private async initAuth(address: string) {
-    const { pubkey } = await this.getAccountData(address);
+    const { pubkey, algo } = await this.getAccountData(address);
     const getPublicKey = (isCompressed?: boolean) => {
       if (isCompressed) {
         return Key.from(pubkey);
@@ -120,7 +117,8 @@ export class SigningClient {
       throw new Error("Getting uncompressed public key is not implemented");
     };
     const auth: Auth = {
-      ...authTemplate,
+      ...defaultAuth,
+      algo,
       getPublicKey,
     };
     this.aminoSigner.setAuth(auth);
