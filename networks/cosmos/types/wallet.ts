@@ -1,11 +1,11 @@
-import { Key } from "@cosmonauts/utils";
 import { StdSignDoc } from "./signer";
 import { SignDoc } from "../codegen/cosmos/tx/v1beta1/tx";
+import { BaseWalletAccount, Wallet } from "@cosmonauts/types";
+import { Key } from "@cosmonauts/utils";
 
-export interface Wallet<Doc> {
-  getAccount: () => Promise<{ algo: string; publicKey: Key }>;
-  sign: (doc: Doc) => Promise<{ signature: Key; signed: Doc }>;
+export interface CosmosAccount extends BaseWalletAccount {
+  getAddress(chainId?: string): Key | string;
 }
 
-export type DirectWallet = Wallet<SignDoc>;
-export type AminoWallet = Wallet<StdSignDoc>;
+export type DirectWallet = Wallet<CosmosAccount, SignDoc>;
+export type AminoWallet = Wallet<CosmosAccount, StdSignDoc>;

@@ -1,7 +1,11 @@
-import { Auth, HttpEndpoint, SignerConfig } from "@cosmonauts/types";
-import { Fee, SignDoc, TxRaw } from "./codegen/cosmos/tx/v1beta1/tx";
 import {
-  BroadcastOptions,
+  Auth,
+  BaseWallet,
+  HttpEndpoint,
+  SignerConfig,
+} from "@cosmonauts/types";
+import { SignDoc } from "./codegen/cosmos/tx/v1beta1/tx";
+import {
   Encoder,
   FeeOptions,
   Message,
@@ -10,130 +14,69 @@ import {
   StdFee,
   DirectWallet,
 } from "./types";
-import {
-  constructAuthInfo,
-  constructSignerInfo,
-  constructTxBody,
-  BaseSigner,
-  constructAuthFromWallet,
-  getAccountFromAuth,
-} from "./utils";
-import { toFee } from "./utils";
+import { BaseSigner, getAccountFromAuth, SignResponseFromAuth } from "./utils";
 import { SignMode } from "./types";
 import { defaultSignerConfig } from "./defaults";
+import { constructAuthFromWallet } from "@cosmonauts/utils";
 
-export function toWallet(auth: Auth): DirectWallet {
+export function toWallet(
+  auth: Auth,
+  config: SignerConfig = defaultSignerConfig
+): DirectWallet {
   return {
-    getAccount: () => getAccountFromAuth(auth),
-    async sign(doc: SignDoc) {
-      const signDoc = SignDoc.fromPartial(doc);
-      const signature = auth.sign(
-        defaultSignerConfig.message.hash(SignDoc.encode(signDoc).finish())
-      );
-      return {
-        signature: defaultSignerConfig.signature.toCompact(
-          signature,
-          auth.algo
-        ),
-        signed: signDoc,
-      };
-    },
+    getAccount: async () => getAccountFromAuth(auth, config),
+    sign: async (doc: SignDoc) =>
+      SignResponseFromAuth.signDirect(auth, doc, config),
   };
 }
 
 export class DirectSigner extends BaseSigner<SignDoc> {
-  readonly encoders: Encoder[];
-
   constructor(
     auth: Auth,
     encoders: Encoder[],
     endpoint?: string | HttpEndpoint,
     config?: SignerConfig
   ) {
-    super(auth, endpoint, config);
-    this.encoders = encoders;
+    super(auth, encoders, endpoint, config);
   }
 
   static async fromWallet(
-    wallet: DirectWallet,
+    wallet: BaseWallet<SignDoc>,
     encoders: Encoder[],
-    endpoint?: string | HttpEndpoint
+    endpoint?: string | HttpEndpoint,
+    config?: SignerConfig
   ) {
-    const auth: Auth = await constructAuthFromWallet(wallet);
-    const signer = new DirectSigner(auth, encoders, endpoint);
-    signer.setSignDoc(wallet.sign);
+    const auth: Auth = await constructAuthFromWallet(wallet, config);
+    const signer = new DirectSigner(auth, encoders, endpoint, config);
+    signer.signDoc = wallet.sign;
     return signer;
   }
 
-  addEncoders = (encoders: Encoder[]) => {
-    this.encoders.push(...encoders);
-  };
-
-  getEncoder = (typeUrl: string) => {
-    const encoder = this.encoders.find(
-      (encoder) => encoder.typeUrl === typeUrl
-    );
-    if (!encoder) {
-      throw new Error(
-        `No such Encoder for typeUrl ${typeUrl}, please add corresponding Encoder with method \`addEncoder\``
-      );
-    }
-    return encoder;
-  };
-
-  protected signDoc = async (doc: SignDoc) => {
-    const signDoc = SignDoc.fromPartial(doc);
-    const signature = this.signArbitrary(SignDoc.encode(signDoc).finish());
-    return {
-      signature,
-      signed: signDoc,
-    };
-  };
-
-  async sign(
+  async createDoc(
     messages: Message[],
     fee?: StdFee,
     memo?: string,
     options?: FeeOptions & SignerOptions & TxBodyOptions
   ) {
-    const { txBody, encode } = constructTxBody(
+    const { txRaw } = await this.createTxRaw(
       messages,
-      this.getEncoder,
+      SignMode.SIGN_MODE_DIRECT,
+      fee,
       memo,
       options
     );
 
-    const { signerInfo } = constructSignerInfo(
-      this.encodedPublicKey,
-      options?.sequence ?? (await this.queryClient.getSequence()),
-      SignMode.SIGN_MODE_DIRECT
-    );
-
-    const _fee: Fee = toFee(
-      fee ?? (await this.queryClient.estimateFee(txBody, [signerInfo], options))
-    );
-
-    const doc = SignDoc.fromPartial({
-      bodyBytes: encode(),
-      authInfoBytes: constructAuthInfo([signerInfo], _fee).encode(),
+    const signDoc: SignDoc = SignDoc.fromPartial({
+      bodyBytes: txRaw.bodyBytes,
+      authInfoBytes: txRaw.authInfoBytes,
       chainId: options?.chainId ?? (await this.queryClient.getChainId()),
       accountNumber:
         options?.accountNumber ?? (await this.queryClient.getAccountNumber()),
     });
-
-    const { signature, signed } = await this.signDoc(doc);
-    const txRaw = TxRaw.fromPartial({
-      bodyBytes: doc.bodyBytes,
-      authInfoBytes: doc.authInfoBytes,
-      signatures: [signature.value],
-    });
-    return {
-      signature,
-      signed,
-      txRaw,
-      broadcast: async (options?: BroadcastOptions) => {
-        return this.broadcast(txRaw, options);
-      },
-    };
+    return { signDoc, txRaw };
   }
+
+  signDoc = async (doc: SignDoc) => {
+    return SignResponseFromAuth.signDirect(this.auth, doc, this.config);
+  };
 }

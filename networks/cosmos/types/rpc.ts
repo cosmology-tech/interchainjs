@@ -1,4 +1,4 @@
-import { CheckTxResult, DeliverTxResult } from "./signer";
+import { CheckTxResponse, DeliverTxResponse } from "./signer";
 
 export namespace CometBroadcastResult {
   export interface Async {
@@ -10,11 +10,11 @@ export namespace CometBroadcastResult {
   }
   export type Sync = {
     hash: string;
-  } & CheckTxResult;
+  } & CheckTxResponse;
   export interface Commit {
     hash: string;
-    check_tx: CheckTxResult;
-    deliver_tx: DeliverTxResult;
+    check_tx: CheckTxResponse;
+    deliver_tx: DeliverTxResponse;
     height: string;
   }
 }

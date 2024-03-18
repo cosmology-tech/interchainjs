@@ -7,7 +7,7 @@ import { keccak_256 } from "@noble/hashes/sha3";
 export const defaultSignerConfig: SignerConfig = {
   publicKey: {
     isCompressed: false,
-    toAddress: (publicKey: Key) => Key.fromHex(computeAddress(publicKey.value)),
+    hash: (publicKey: Key) => Key.fromHex(computeAddress(publicKey.value)),
   },
   message: {
     hash: (message: Uint8Array) => {

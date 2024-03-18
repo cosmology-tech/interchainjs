@@ -62,6 +62,9 @@ async function getDirectWallet(): Promise<DirectWallet> {
       return {
         algo: accounts[0].algo,
         publicKey: Key.from(accounts[0].pubkey),
+        getAddress(chainId?: string) {
+          return address.osmosis.genesis;
+        },
       };
     },
     async sign(doc: SignDoc) {
@@ -87,6 +90,9 @@ async function getAminoWallet(): Promise<AminoWallet> {
       return {
         algo: accounts[0].algo,
         publicKey: Key.from(accounts[0].pubkey),
+        getAddress(chainId?: string) {
+          return address.osmosis.genesis;
+        },
       };
     },
     async sign(doc: StdSignDoc) {

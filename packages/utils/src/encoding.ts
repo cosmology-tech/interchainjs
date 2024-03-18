@@ -17,7 +17,9 @@ export function toBase64(bytes: Uint8Array): string {
 }
 
 export function fromHex(str: string): Uint8Array {
-  return Uint8Array.from(Buffer.from(str, "hex"));
+  return str.startsWith("0x")
+    ? Uint8Array.from(Buffer.from(str.slice(2), "hex"))
+    : Uint8Array.from(Buffer.from(str, "hex"));
 }
 
 export function toHex(bytes: Uint8Array): string {

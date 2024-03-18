@@ -8,24 +8,35 @@ import {
 import { defaultSignerConfig } from "../defaults";
 import {
   BroadcastOptions,
-  BroadcastResult,
+  BroadcastResponse,
   EncodedMessage,
+  Encoder,
+  Fee,
   FeeOptions,
   Message,
   QueryClient,
   Secp256k1PubKey,
+  SignMode,
   SignerOptions,
   StdFee,
   TxBodyOptions,
   TxRaw,
 } from "../types";
 import { RpcClient } from "../query/rpc";
+import {
+  constructAuthInfo,
+  constructSignerInfo,
+  constructTxBody,
+} from "./direct";
+import { toFee } from "./amino";
 
 export abstract class BaseSigner<Doc> extends _BaseSigner {
   protected _queryClient?: QueryClient;
+  readonly encoders: Encoder[];
 
   constructor(
     auth: Auth,
+    encoders: Encoder[],
     endpoint?: string | HttpEndpoint,
     config?: SignerConfig
   ) {
@@ -33,10 +44,31 @@ export abstract class BaseSigner<Doc> extends _BaseSigner {
     if (!isEmpty(endpoint)) {
       this.setEndpoint(endpoint);
     }
+    this.encoders = encoders;
+  }
+
+  addEncoders = (encoders: Encoder[]) => {
+    this.encoders.push(...encoders);
+  };
+
+  getEncoder = (typeUrl: string) => {
+    const encoder = this.encoders.find(
+      (encoder) => encoder.typeUrl === typeUrl
+    );
+    if (!encoder) {
+      throw new Error(
+        `No such Encoder for typeUrl ${typeUrl}, please add corresponding Encoder with method \`addEncoder\``
+      );
+    }
+    return encoder;
+  };
+
+  async getAddress() {
+    return await this.queryClient.getAddress();
   }
 
   setEndpoint(endpoint: string | HttpEndpoint) {
-    this._queryClient = new RpcClient(endpoint, this.address);
+    this._queryClient = new RpcClient(endpoint, this.publicKeyHash);
   }
 
   get queryClient() {
@@ -62,25 +94,71 @@ export abstract class BaseSigner<Doc> extends _BaseSigner {
     }
   }
 
-  setSignDoc(signDoc: (doc: Doc) => Promise<{ signature: Key; signed: Doc }>) {
-    this.signDoc = signDoc;
+  /**
+   * createTransaction without signing
+   */
+  async createTxRaw(
+    messages: Message[],
+    signMode: SignMode,
+    fee?: StdFee,
+    memo?: string,
+    options?: FeeOptions & SignerOptions & TxBodyOptions
+  ) {
+    const { txBody, encode } = constructTxBody(
+      messages,
+      this.getEncoder,
+      memo,
+      options
+    );
+
+    const { signerInfo } = constructSignerInfo(
+      this.encodedPublicKey,
+      options?.sequence ?? (await this.queryClient.getSequence()),
+      signMode
+    );
+
+    const stdFee =
+      fee ??
+      (await this.queryClient.estimateFee(txBody, [signerInfo], options));
+
+    const txRaw = TxRaw.fromPartial({
+      bodyBytes: encode(),
+      authInfoBytes: constructAuthInfo([signerInfo], toFee(stdFee)).encode(),
+      signatures: [],
+    });
+    return { txRaw, fee: stdFee };
   }
 
-  protected abstract signDoc: (
-    doc: Doc
-  ) => Promise<{ signature: Key; signed: Doc }>;
+  abstract createDoc(
+    messages: Message[],
+    fee: StdFee,
+    memo?: string,
+    options?: FeeOptions & SignerOptions & TxBodyOptions
+  ): Promise<{ signDoc: Doc; txRaw: TxRaw }>;
+  abstract signDoc: (doc: Doc) => Promise<{ signature: Key; signed: Doc }>;
 
-  abstract sign(
+  async sign(
     messages: Message[],
     fee?: StdFee,
     memo?: string,
     options?: FeeOptions & SignerOptions & TxBodyOptions
-  ): Promise<{
-    signature: Key;
-    signed: Doc;
-    txRaw: TxRaw;
-    broadcast: (options?: BroadcastOptions) => Promise<BroadcastResult>;
-  }>;
+  ) {
+    const created = await this.createDoc(messages, fee, memo, options);
+    const { signature, signed } = await this.signDoc(created.signDoc);
+    const txRawCompleted = TxRaw.fromPartial({
+      ...created.txRaw,
+      signatures: [signature.value],
+    });
+
+    return {
+      signature,
+      signed,
+      txRaw: txRawCompleted,
+      broadcast: async (options?: BroadcastOptions) => {
+        return this.broadcast(txRawCompleted, options);
+      },
+    };
+  }
 
   async broadcast(txRaw: TxRaw, options?: BroadcastOptions) {
     return this.broadcastArbitrary(

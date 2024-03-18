@@ -1,8 +1,28 @@
-import { Auth, HttpEndpoint, SignerConfig } from "@cosmonauts/types";
+import {
+  Auth,
+  BaseWallet,
+  HttpEndpoint,
+  SignerConfig,
+} from "@cosmonauts/types";
 import { AminoSigner as CosmosAminoSigner } from "@cosmonauts/cosmos/amino";
-import { Encoder, AminoConverter } from "@cosmonauts/cosmos/types";
+import { Encoder, AminoConverter, StdSignDoc } from "@cosmonauts/cosmos/types";
 import { defaultSignerConfig } from "./defaults";
 import { EncodedMessage, Secp256k1PubKey } from "@cosmonauts/cosmos/types";
+import { SignResponseFromAuth } from "@cosmonauts/cosmos/utils";
+import { getAccountFromAuth } from "./utils";
+import { AminoWallet } from "./types";
+import { constructAuthFromWallet } from "@cosmonauts/utils";
+
+export function toWallet(
+  auth: Auth,
+  config: SignerConfig = defaultSignerConfig.Cosmos
+): AminoWallet {
+  return {
+    getAccount: async () => getAccountFromAuth(auth, config),
+    sign: async (doc: StdSignDoc) =>
+      SignResponseFromAuth.signAmino(auth, doc, config),
+  };
+}
 
 export class AminoSigner extends CosmosAminoSigner {
   constructor(
@@ -12,10 +32,35 @@ export class AminoSigner extends CosmosAminoSigner {
     endpoint?: string | HttpEndpoint,
     config?: SignerConfig
   ) {
-    super(auth, encoders, converters, endpoint, config ?? defaultSignerConfig);
+    super(
+      auth,
+      encoders,
+      converters,
+      endpoint,
+      config ?? defaultSignerConfig.Cosmos
+    );
   }
 
-  protected get encodedPublicKey(): EncodedMessage {
+  static async fromWallet(
+    wallet: BaseWallet<StdSignDoc>,
+    encoders: Encoder[],
+    converters: AminoConverter[],
+    endpoint?: string | HttpEndpoint,
+    config?: SignerConfig
+  ) {
+    const auth: Auth = await constructAuthFromWallet(wallet, config);
+    const signer = new AminoSigner(
+      auth,
+      encoders,
+      converters,
+      endpoint,
+      config
+    );
+    signer.signDoc = wallet.sign;
+    return signer;
+  }
+
+  get encodedPublicKey(): EncodedMessage {
     switch (this.auth.algo) {
       case "secp256k1":
         return {

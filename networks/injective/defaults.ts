@@ -1,53 +1,139 @@
-import { SignerConfig, Signature } from "@cosmonauts/types";
-import { Key } from "@cosmonauts/utils";
-import { computeAddress } from "@ethersproject/transactions";
-import { bytes as assertBytes } from "@noble/hashes/_assert";
-import { sha256 } from "@noble/hashes/sha256";
-import { secp256k1 } from "@noble/curves/secp256k1";
+import { SignerConfig } from "@cosmonauts/types";
+import { defaultSignerConfig as CosmosSignerConfig } from "@cosmonauts/cosmos/defaults";
+import { defaultSignerConfig as EthereumSignerConfig } from "@cosmonauts/ethereum/defaults";
+import { EthTypedData } from "./types";
 
-export const defaultSignerConfig: SignerConfig = {
-  publicKey: {
-    isCompressed: false,
-    toAddress: (publicKey: Key) => Key.fromHex(computeAddress(publicKey.value)),
+const publicKeyConfig: SignerConfig["publicKey"] = {
+  isCompressed: CosmosSignerConfig.publicKey.isCompressed,
+  hash: EthereumSignerConfig.publicKey.hash,
+};
+
+export const defaultSignerConfig: Record<string, SignerConfig> = {
+  Cosmos: {
+    ...CosmosSignerConfig,
+    publicKey: publicKeyConfig,
   },
-  message: {
-    hash: (message: Uint8Array) => {
-      const hashed = sha256(message);
-      assertBytes(hashed);
-      return hashed;
-    },
+  Ethereum: {
+    ...EthereumSignerConfig,
+    publicKey: publicKeyConfig,
   },
-  signature: {
-    toCompact: (signature: Signature, algo: string) => {
-      switch (algo) {
-        case "secp256k1":
-          const sig = new secp256k1.Signature(
-            signature.r.toBigInt(),
-            signature.s.toBigInt(),
-            // @ts-ignore
-            signature.recovery
-          );
-          return Key.from(sig.toCompactRawBytes());
-        case "ed25519":
-          throw new Error("Not implemented yet");
-        default:
-          throw new Error(`Unidentified algorithm: ${algo}`);
-      }
-    },
-    fromCompact: (key: Key, algo: string) => {
-      switch (algo) {
-        case "secp256k1":
-          const sig = secp256k1.Signature.fromCompact(key.toHex());
-          return {
-            r: Key.fromBigInt(sig.r),
-            s: Key.fromBigInt(sig.s),
-            recovery: sig.recovery,
-          };
-        case "ed25519":
-          throw new Error("Not implemented yet");
-        default:
-          throw new Error(`Unidentified algorithm: ${algo}`);
-      }
-    },
+};
+
+export const defaultEthTypedData: Omit<EthTypedData, "message"> = {
+  primaryType: "Tx",
+  domain: {
+    name: "Injective Web3",
+    version: "1.0.0",
+    chainId: "0x378",
+    salt: "0",
+    verifyingContract: "cosmos",
+  },
+  types: {
+    EIP712Domain: [
+      {
+        name: "name",
+        type: "string",
+      },
+      {
+        name: "version",
+        type: "string",
+      },
+      {
+        name: "chainId",
+        type: "uint256",
+      },
+      {
+        name: "verifyingContract",
+        type: "string",
+      },
+      {
+        name: "salt",
+        type: "string",
+      },
+    ],
+    Tx: [
+      {
+        name: "account_number",
+        type: "string",
+      },
+      {
+        name: "chain_id",
+        type: "string",
+      },
+      {
+        name: "fee",
+        type: "Fee",
+      },
+      {
+        name: "memo",
+        type: "string",
+      },
+      {
+        name: "msgs",
+        type: "Msg[]",
+      },
+      {
+        name: "sequence",
+        type: "string",
+      },
+      {
+        name: "timeout_height",
+        type: "string",
+      },
+    ],
+    Fee: [
+      {
+        name: "amount",
+        type: "Coin[]",
+      },
+      {
+        name: "gas",
+        type: "string",
+      },
+    ],
+    Coin: [
+      {
+        name: "denom",
+        type: "string",
+      },
+      {
+        name: "amount",
+        type: "string",
+      },
+    ],
+    Msg: [
+      {
+        name: "type",
+        type: "string",
+      },
+      {
+        name: "value",
+        type: "MsgValue",
+      },
+    ],
+    // TypeAmount: [
+    //   {
+    //     name: "denom",
+    //     type: "string",
+    //   },
+    //   {
+    //     name: "amount",
+    //     type: "string",
+    //   },
+    // ],
+    // MsgValue: [
+    //   {
+    //     name: "from_address",
+    //     type: "string",
+    //   },
+    //   {
+    //     name: "to_address",
+    //     type: "string",
+    //   },
+    //   {
+    //     name: "amount",
+    //     type: "TypeAmount[]",
+    //   },
+    // ],
   },
 };

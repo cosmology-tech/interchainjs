@@ -1,7 +1,11 @@
-import { Auth, HttpEndpoint, SignerConfig } from "@cosmonauts/types";
+import {
+  Auth,
+  BaseWallet,
+  HttpEndpoint,
+  SignerConfig,
+} from "@cosmonauts/types";
 import {
   AminoWallet,
-  BroadcastOptions,
   Encoder,
   FeeOptions,
   Message,
@@ -11,38 +15,24 @@ import {
   StdFee,
   StdSignDoc,
 } from "./types";
-import { Fee, TxRaw } from "./codegen/cosmos/tx/v1beta1/tx";
-import { encodeStdSignDoc, toAminoMsgs, toFee, toStdFee } from "./utils/amino";
-import {
-  constructAuthInfo,
-  constructSignerInfo,
-  constructTxBody,
-  BaseSigner,
-  getAccountFromAuth,
-  constructAuthFromWallet,
-} from "./utils";
+import { toAminoMsgs } from "./utils/amino";
+import { BaseSigner, getAccountFromAuth, SignResponseFromAuth } from "./utils";
 import { SignMode } from "./types";
 import { defaultSignerConfig } from "./defaults";
+import { constructAuthFromWallet } from "@cosmonauts/utils";
 
-export function toWallet(auth: Auth): AminoWallet {
+export function toWallet(
+  auth: Auth,
+  config: SignerConfig = defaultSignerConfig
+): AminoWallet {
   return {
-    getAccount: () => getAccountFromAuth(auth),
-    async sign(doc: StdSignDoc) {
-      const encoded = encodeStdSignDoc(doc);
-      const signature = auth.sign(defaultSignerConfig.message.hash(encoded));
-      return {
-        signature: defaultSignerConfig.signature.toCompact(
-          signature,
-          auth.algo
-        ),
-        signed: doc,
-      };
-    },
+    getAccount: async () => getAccountFromAuth(auth, config),
+    sign: async (doc: StdSignDoc) =>
+      SignResponseFromAuth.signAmino(auth, doc, config),
   };
 }
 
 export class AminoSigner extends BaseSigner<StdSignDoc> {
-  readonly encoders: Encoder[];
   readonly converters: AminoConverter[];
 
   constructor(
@@ -52,38 +42,28 @@ export class AminoSigner extends BaseSigner<StdSignDoc> {
     endpoint?: string | HttpEndpoint,
     config?: SignerConfig
   ) {
-    super(auth, endpoint, config);
-    this.encoders = encoders;
+    super(auth, encoders, endpoint, config);
     this.converters = converters;
   }
 
   static async fromWallet(
-    wallet: AminoWallet,
+    wallet: BaseWallet<StdSignDoc>,
     encoders: Encoder[],
     converters: AminoConverter[],
-    endpoint?: string | HttpEndpoint
+    endpoint?: string | HttpEndpoint,
+    config?: SignerConfig
   ) {
-    const auth: Auth = await constructAuthFromWallet(wallet);
-    const signer = new AminoSigner(auth, encoders, converters, endpoint);
-    signer.setSignDoc(wallet.sign);
+    const auth: Auth = await constructAuthFromWallet(wallet, config);
+    const signer = new AminoSigner(
+      auth,
+      encoders,
+      converters,
+      endpoint,
+      config
+    );
+    signer.signDoc = wallet.sign;
     return signer;
   }
-
-  addEncoders = (encoders: Encoder[]) => {
-    this.encoders.push(...encoders);
-  };
-
-  getEncoder = (typeUrl: string) => {
-    const encoder = this.encoders.find(
-      (encoder) => encoder.typeUrl === typeUrl
-    );
-    if (!encoder) {
-      throw new Error(
-        `No such Encoder for typeUrl ${typeUrl}, please add corresponding Encoder with method \`addEncoder\``
-      );
-    }
-    return encoder;
-  };
 
   addConverters = (converters: AminoConverter[]) => {
     this.converters.push(...converters);
@@ -113,38 +93,21 @@ export class AminoSigner extends BaseSigner<StdSignDoc> {
     return converter;
   };
 
-  protected signDoc = async (doc: StdSignDoc) => {
-    const encoded = encodeStdSignDoc(doc);
-    const signature = this.signArbitrary(encoded);
-    return {
-      signature,
-      signed: doc,
-    };
-  };
-
-  async sign(
+  async createDoc(
     messages: Message[],
     fee?: StdFee,
     memo?: string,
     options?: FeeOptions & SignerOptions & TxBodyOptions
   ) {
-    const { txBody, encode } = constructTxBody(
+    const { txRaw, fee: _fee } = await this.createTxRaw(
       messages,
-      this.getEncoder,
+      SignMode.SIGN_MODE_LEGACY_AMINO_JSON,
+      fee,
       memo,
       options
     );
-    const { signerInfo } = constructSignerInfo(
-      this.encodedPublicKey,
-      options?.sequence ?? (await this.queryClient.getSequence()),
-      SignMode.SIGN_MODE_LEGACY_AMINO_JSON
-    );
 
-    const _fee: Fee = toFee(
-      fee ?? (await this.queryClient.estimateFee(txBody, [signerInfo], options))
-    );
-
-    const doc: StdSignDoc = {
+    const signDoc: StdSignDoc = {
       chain_id: options?.chainId ?? (await this.queryClient.getChainId()),
       account_number: (
         options?.accountNumber ?? (await this.queryClient.getAccountNumber())
@@ -152,24 +115,14 @@ export class AminoSigner extends BaseSigner<StdSignDoc> {
       sequence: (
         options?.sequence ?? (await this.queryClient.getSequence())
       ).toString(),
-      fee: toStdFee(_fee),
+      fee,
       msgs: toAminoMsgs(messages, this.getConverterFromTypeUrl),
       memo: memo ?? "",
     };
-
-    const { signature, signed } = await this.signDoc(doc);
-    const txRaw = TxRaw.fromPartial({
-      bodyBytes: encode(),
-      authInfoBytes: constructAuthInfo([signerInfo], _fee).encode(),
-      signatures: [signature.value],
-    });
-    return {
-      signature,
-      signed,
-      txRaw,
-      broadcast: async (options?: BroadcastOptions) => {
-        return this.broadcast(txRaw, options);
-      },
-    };
+    return { signDoc, txRaw };
   }
+
+  signDoc = async (doc: StdSignDoc) => {
+    return SignResponseFromAuth.signAmino(this.auth, doc, this.config);
+  };
 }

@@ -1,11 +1,32 @@
-import { Auth, HttpEndpoint, SignerConfig } from "@cosmonauts/types";
+import {
+  Auth,
+  BaseWallet,
+  HttpEndpoint,
+  SignerConfig,
+} from "@cosmonauts/types";
 import { defaultSignerConfig } from "./defaults";
 import { DirectSigner as CosmosDirectSigner } from "@cosmonauts/cosmos/direct";
 import {
   EncodedMessage,
   Encoder,
   Secp256k1PubKey,
+  SignDoc,
 } from "@cosmonauts/cosmos/types";
+import { getAccountFromAuth } from "./utils";
+import { SignResponseFromAuth } from "@cosmonauts/cosmos/utils";
+import { DirectWallet } from "./types";
+import { constructAuthFromWallet } from "@cosmonauts/utils";
+
+export function toWallet(
+  auth: Auth,
+  config: SignerConfig = defaultSignerConfig.Cosmos
+): DirectWallet {
+  return {
+    getAccount: async () => getAccountFromAuth(auth, config),
+    sign: async (doc: SignDoc) =>
+      SignResponseFromAuth.signDirect(auth, doc, config),
+  };
+}
 
 export class DirectSigner extends CosmosDirectSigner {
   constructor(
@@ -14,10 +35,22 @@ export class DirectSigner extends CosmosDirectSigner {
     endpoint?: string | HttpEndpoint,
     config?: SignerConfig
   ) {
-    super(auth, encoders, endpoint, config ?? defaultSignerConfig);
+    super(auth, encoders, endpoint, config ?? defaultSignerConfig.Cosmos);
   }
 
-  protected get encodedPublicKey(): EncodedMessage {
+  static async fromWallet(
+    wallet: BaseWallet<SignDoc>,
+    encoders: Encoder[],
+    endpoint?: string | HttpEndpoint,
+    config?: SignerConfig
+  ) {
+    const auth: Auth = await constructAuthFromWallet(wallet, config);
+    const signer = new DirectSigner(auth, encoders, endpoint, config);
+    signer.signDoc = wallet.sign;
+    return signer;
+  }
+
+  get encodedPublicKey(): EncodedMessage {
     switch (this.auth.algo) {
       case "secp256k1":
         return {

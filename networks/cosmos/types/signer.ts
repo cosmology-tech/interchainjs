@@ -1,5 +1,5 @@
 import { HttpEndpoint, Price } from "@cosmonauts/types";
-import { SignerInfo, TxBody } from "../codegen/cosmos/tx/v1beta1/tx";
+import { SignerInfo, TxBody, TxRaw } from "../codegen/cosmos/tx/v1beta1/tx";
 import { Coin } from "../codegen/cosmos/base/v1beta1/coin";
 import { Event } from "../codegen/tendermint/abci/types";
 
@@ -55,7 +55,7 @@ export type BroadcastMode =
   | "broadcast_tx_sync"
   | "broadcast_tx_commit";
 
-export interface CheckTxResult {
+export interface CheckTxResponse {
   code: number;
   data: string;
   /** nondeterministic */
@@ -75,7 +75,7 @@ export interface CheckTxResult {
   mempool_error: string;
 }
 
-export interface DeliverTxResult {
+export interface DeliverTxResponse {
   code: number;
   data: string;
   /** nondeterministic */
@@ -88,7 +88,7 @@ export interface DeliverTxResult {
   codespace: string;
 }
 
-export interface BroadcastResult {
+export interface BroadcastResponse {
   hash: string;
   add_tx?: {
     code?: number;
@@ -96,8 +96,8 @@ export interface BroadcastResult {
     log?: string;
     codespace?: string;
   };
-  check_tx?: CheckTxResult;
-  deliver_tx?: DeliverTxResult & { height: string };
+  check_tx?: CheckTxResponse;
+  deliver_tx?: DeliverTxResponse & { height: string };
 }
 
 export interface FeeOptions {
@@ -126,6 +126,7 @@ export interface BroadcastOptions {
 export interface QueryClient {
   readonly endpoint: HttpEndpoint;
   getChainId: () => Promise<string>;
+  getAddress: () => Promise<string>;
   getAccountNumber: () => Promise<bigint>;
   getSequence: () => Promise<bigint>;
   estimateFee: (
@@ -136,5 +137,5 @@ export interface QueryClient {
   broadcast: (
     txBytes: Uint8Array,
     options?: BroadcastOptions
-  ) => Promise<BroadcastResult>;
+  ) => Promise<BroadcastResponse>;
 }

@@ -16,9 +16,7 @@ export class Key {
   }
 
   static fromHex(value: string) {
-    return value.startsWith("0x")
-      ? new Key(fromHex(value.slice(2)))
-      : new Key(fromHex(value));
+    return new Key(fromHex(value));
   }
 
   static fromBase64(value: string) {
@@ -31,6 +29,10 @@ export class Key {
 
   toHex() {
     return toHex(this.value);
+  }
+
+  toPrefixedHex() {
+    return `0x${this.toHex()}`;
   }
 
   toBase64() {

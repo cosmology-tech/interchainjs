@@ -18,7 +18,7 @@ import { defaultSignerConfig } from "@cosmonauts/cosmos/defaults";
 import { defaultHdPaths } from "@cosmonauts/auth/defaults";
 
 const isPublicKeyCompressed = defaultSignerConfig.publicKey.isCompressed;
-const toAddress = defaultSignerConfig.publicKey.toAddress;
+const toAddress = defaultSignerConfig.publicKey.hash;
 const messageHash = defaultSignerConfig.message.hash;
 const defaultHdPath = defaultHdPaths.find(
   ({ network, algo }) => network === "cosmos" && algo === "secp256k1"

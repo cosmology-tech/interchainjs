@@ -19,7 +19,7 @@ export const defaultFeeOptions: FeeOptions = {
 export const defaultSignerConfig: SignerConfig = {
   publicKey: {
     isCompressed: true,
-    toAddress: (publicKey: Key) => Key.from(ripemd160(sha256(publicKey.value))),
+    hash: (publicKey: Key) => Key.from(ripemd160(sha256(publicKey.value))),
   },
   message: {
     hash: (message: Uint8Array) => {

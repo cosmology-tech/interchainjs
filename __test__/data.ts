@@ -23,7 +23,7 @@ export const chain: Record<string, ChainData> = {
   },
   injective: {
     chainId: "injective-1",
-    rpc: "http://localhost:26658",
+    rpc: "http://localhost:26653",
     rest: "http://localhost:1318",
     prefix: "inj",
     denom: "inj",

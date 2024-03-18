@@ -4,7 +4,7 @@ import { ServiceClientImpl as TxQuery } from "../codegen/cosmos/tx/v1beta1/servi
 import {
   BroadcastMode,
   BroadcastOptions,
-  BroadcastResult,
+  BroadcastResponse,
   FeeOptions,
   QueryClient,
 } from "../types";
@@ -29,31 +29,33 @@ import { defaultBroadcastOptions, defaultFeeOptions } from "../defaults";
 
 export class RpcClient implements QueryClient {
   readonly endpoint: HttpEndpoint;
-  readonly address?: Key;
 
   protected chainId?: string;
   protected accountNumber?: bigint;
   protected readonly authQuery: AuthQuery;
   protected readonly txQuery: TxQuery;
+  protected readonly publicKeyHash?: Key;
 
-  constructor(endpoint: string | HttpEndpoint, address?: Key) {
+  constructor(endpoint: string | HttpEndpoint, publicKeyHash?: Key) {
     this.endpoint = toHttpEndpoint(endpoint);
-    this.address = address;
+    this.publicKeyHash = publicKeyHash;
     const txRpc = createTxRpc(this.endpoint);
     this.authQuery = new AuthQuery(txRpc);
     this.txQuery = new TxQuery(txRpc);
   }
 
-  async getBech32Address() {
-    if (!this.address) {
-      throw new Error("Address is not provided when constructing RpcClient");
+  async getAddress() {
+    if (!this.publicKeyHash) {
+      throw new Error(
+        "publicKeyHash is not provided when constructing RpcClient"
+      );
     }
-    return this.address.toBech32(getPrefix(await this.getChainId()));
+    return this.publicKeyHash.toBech32(getPrefix(await this.getChainId()));
   }
 
   async getBaseAccount(): Promise<BaseAccount> {
     const accountResp = await this.authQuery.account({
-      address: await this.getBech32Address(),
+      address: await this.getAddress(),
     });
 
     if (!accountResp || !accountResp.account) {
@@ -169,7 +171,7 @@ export class RpcClient implements QueryClient {
   async broadcast(
     txBytes: Uint8Array,
     options?: BroadcastOptions
-  ): Promise<BroadcastResult> {
+  ): Promise<BroadcastResponse> {
     const { checkTx, deliverTx } = { ...defaultBroadcastOptions, ...options };
     const mode: BroadcastMode =
       checkTx && deliverTx

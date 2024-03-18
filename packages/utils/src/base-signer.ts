@@ -22,8 +22,8 @@ export class BaseSigner {
     return this.auth.getPublicKey(this.config.publicKey.isCompressed);
   }
 
-  get address() {
-    return this.config.publicKey.toAddress(this.publicKey);
+  get publicKeyHash() {
+    return this.config.publicKey.hash(this.publicKey);
   }
 
   setAuth(auth: Auth) {

@@ -4,5 +4,6 @@ import { seed } from "../data";
 
 export const mnemonic = seed.genesis;
 export const auth = Secp256k1Auth.fromMnemonic(mnemonic).derive("injective");
-export const toAddress = defaultSignerConfig.publicKey.toAddress;
-export const isCompressed = defaultSignerConfig.publicKey.isCompressed;
+export const hashPubKey = defaultSignerConfig.Cosmos.publicKey.hash;
+export const isPubKeyCompressed =
+  defaultSignerConfig.Cosmos.publicKey.isCompressed;

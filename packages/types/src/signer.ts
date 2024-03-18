@@ -15,7 +15,7 @@ export interface Price {
 export interface SignerConfig {
   publicKey: {
     isCompressed: boolean;
-    toAddress(publicKey: Key): Key;
+    hash(publicKey: Key): Key;
   };
   message: {
     hash(message: Uint8Array): Uint8Array;
