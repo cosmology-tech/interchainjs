@@ -1,5 +1,5 @@
-import { HttpEndpoint } from "@cosmonauts/types";
-import { fromBase64, randomId, toHex, toHttpEndpoint } from "@cosmonauts/utils";
+import { HttpEndpoint } from "@uni-sign/types";
+import { fromBase64, randomId, toHex, toHttpEndpoint } from "@uni-sign/utils";
 import { QueryImpl } from "./service-ops";
 import { TxRpc } from "./types";
 

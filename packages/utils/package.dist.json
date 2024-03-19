@@ -1,6 +1,6 @@
 {
-  "name": "@cosmonauts/utils",
-  "version": "1.0.0",
+  "name": "@uni-sign/utils",
+  "version": "0.0.1",
   "main": "index.js",
   "module": "esm/index.js",
   "types": "index.d.ts",
@@ -10,6 +10,6 @@
     "pub": "npm patch && npm publish --access public"
   },
   "dependencies": {
-    "@cosmonauts/types": "^1.0.0"
+    "@uni-sign/types": "^0.0.1"
   }
 }

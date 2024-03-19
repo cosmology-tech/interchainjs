@@ -1,5 +1,5 @@
-import { Auth, Signature } from "@cosmonauts/types";
-import { Key } from "@cosmonauts/utils";
+import { Auth, Signature } from "@uni-sign/types";
+import { Key } from "@uni-sign/utils";
 
 /**
  * An error when broadcasting the transaction. This contains the CheckTx errors

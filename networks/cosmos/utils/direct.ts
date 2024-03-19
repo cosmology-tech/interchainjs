@@ -5,7 +5,7 @@ import {
   TxBody,
 } from "../codegen/cosmos/tx/v1beta1/tx";
 import { EncodedMessage, Encoder, Message, TxBodyOptions } from "../types";
-import { assertEmpty } from "@cosmonauts/utils";
+import { assertEmpty } from "@uni-sign/utils";
 import { SignMode } from "../codegen/cosmos/tx/signing/v1beta1/signing";
 import { TelescopeGeneratedType } from "../codegen/types";
 

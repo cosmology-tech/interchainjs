@@ -1,3 +1,3 @@
 throw new Error(
-  "@cosmonauts/cosmos have no entry-point: consult README for usage"
+  "@uni-sign/cosmos have no entry-point: consult README for usage"
 );

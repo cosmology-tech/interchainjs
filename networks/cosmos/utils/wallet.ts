@@ -1,4 +1,4 @@
-import { Auth, SignerConfig, SignResponse } from "@cosmonauts/types";
+import { Auth, SignerConfig, SignResponse } from "@uni-sign/types";
 import { defaultSignerConfig } from "../defaults";
 import { getPrefix } from "./rpc";
 import { CosmosAccount, SignDoc, StdSignDoc } from "../types";

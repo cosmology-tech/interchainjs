@@ -1,10 +1,10 @@
 import { Secp256k1HdWallet } from "@cosmjs/amino";
 import { SigningStargateClient } from "@cosmjs/stargate";
 import { address, chain, seed } from "../../data";
-import { AminoSigner } from "@cosmonauts/cosmos/amino";
-import { toConverter, toEncoder } from "@cosmonauts/cosmos/utils";
-import { MsgSend } from "@cosmonauts/cosmos-msgs/cosmos/bank/v1beta1/tx";
-import { MsgTransfer } from "@cosmonauts/cosmos-msgs/ibc/applications/transfer/v1/tx";
+import { AminoSigner } from "@uni-sign/cosmos/amino";
+import { toConverter, toEncoder } from "@uni-sign/cosmos/utils";
+import { MsgSend } from "@uni-sign/cosmos-msgs/cosmos/bank/v1beta1/tx";
+import { MsgTransfer } from "@uni-sign/cosmos-msgs/ibc/applications/transfer/v1/tx";
 import { messages } from "./send-tokens.spec";
 // import { messages } from "./send-ibc-tokens.spec";
 import {
@@ -13,10 +13,10 @@ import {
   SignDoc,
   StdFee,
   StdSignDoc,
-} from "@cosmonauts/cosmos/types";
-import { Key, toHex } from "@cosmonauts/utils";
+} from "@uni-sign/cosmos/types";
+import { Key, toHex } from "@uni-sign/utils";
 import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
-import { DirectSigner } from "@cosmonauts/cosmos/direct";
+import { DirectSigner } from "@uni-sign/cosmos/direct";
 import { auth } from "../constants";
 
 async function getDirectClient() {

@@ -1,4 +1,4 @@
-import { Auth, BaseWallet, SignerConfig } from "@cosmonauts/types";
+import { Auth, BaseWallet, SignerConfig } from "@uni-sign/types";
 
 export async function constructAuthFromWallet(
   wallet: BaseWallet<any>,

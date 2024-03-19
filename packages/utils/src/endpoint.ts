@@ -1,4 +1,4 @@
-import { HttpEndpoint } from "@cosmonauts/types";
+import { HttpEndpoint } from "@uni-sign/types";
 
 export function toHttpEndpoint(endpoint: string | HttpEndpoint): HttpEndpoint {
   if (typeof endpoint === "string") {

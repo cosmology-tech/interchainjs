@@ -1,7 +1,7 @@
 import { StdSignDoc } from "./signer";
 import { SignDoc } from "../codegen/cosmos/tx/v1beta1/tx";
-import { BaseWalletAccount, Wallet } from "@cosmonauts/types";
-import { Key } from "@cosmonauts/utils";
+import { BaseWalletAccount, Wallet } from "@uni-sign/types";
+import { Key } from "@uni-sign/utils";
 
 export interface CosmosAccount extends BaseWalletAccount {
   getAddress(chainId?: string): Key | string;

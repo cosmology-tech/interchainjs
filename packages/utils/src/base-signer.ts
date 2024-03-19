@@ -1,4 +1,4 @@
-import { Auth, SignerConfig } from "@cosmonauts/types";
+import { Auth, SignerConfig } from "@uni-sign/types";
 import { Key } from "./key";
 
 export class BaseSigner {

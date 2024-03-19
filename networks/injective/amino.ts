@@ -1,17 +1,12 @@
-import {
-  Auth,
-  BaseWallet,
-  HttpEndpoint,
-  SignerConfig,
-} from "@cosmonauts/types";
-import { AminoSigner as CosmosAminoSigner } from "@cosmonauts/cosmos/amino";
-import { Encoder, AminoConverter, StdSignDoc } from "@cosmonauts/cosmos/types";
+import { Auth, BaseWallet, HttpEndpoint, SignerConfig } from "@uni-sign/types";
+import { AminoSigner as CosmosAminoSigner } from "@uni-sign/cosmos/amino";
+import { Encoder, AminoConverter, StdSignDoc } from "@uni-sign/cosmos/types";
 import { defaultSignerConfig } from "./defaults";
-import { EncodedMessage, Secp256k1PubKey } from "@cosmonauts/cosmos/types";
-import { SignResponseFromAuth } from "@cosmonauts/cosmos/utils";
+import { EncodedMessage, Secp256k1PubKey } from "@uni-sign/cosmos/types";
+import { SignResponseFromAuth } from "@uni-sign/cosmos/utils";
 import { getAccountFromAuth } from "./utils";
 import { AminoWallet } from "./types";
-import { constructAuthFromWallet } from "@cosmonauts/utils";
+import { constructAuthFromWallet } from "@uni-sign/utils";
 
 export function toWallet(
   auth: Auth,

@@ -1,10 +1,10 @@
-import { Price } from "@cosmonauts/types";
+import { Price } from "@uni-sign/types";
 import {
   AminoConverter,
   Message,
   Event,
   TelescopeGeneratedType,
-} from "@cosmonauts/cosmos/types";
+} from "@uni-sign/cosmos/types";
 
 export type EncodeObject = Message;
 

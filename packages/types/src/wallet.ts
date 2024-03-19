@@ -1,4 +1,4 @@
-import { Key } from "@cosmonauts/utils";
+import { Key } from "@uni-sign/utils";
 
 export interface BaseWalletAccount {
   algo: string;

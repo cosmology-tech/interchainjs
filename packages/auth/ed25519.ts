@@ -1,5 +1,5 @@
-import { Key } from "@cosmonauts/utils";
-import { Auth, Bech32Address, Signature } from "@cosmonauts/types";
+import { Key } from "@uni-sign/utils";
+import { Auth, Signature } from "@uni-sign/types";
 
 export class Ed25519Auth implements Auth {
   readonly algo = "ed25519";
@@ -14,14 +14,6 @@ export class Ed25519Auth implements Auth {
     throw new Error("Not implemented yet");
   }
   verify(message: Uint8Array, signature: Signature): boolean {
-    throw new Error("Not implemented yet");
-  }
-
-  get address(): Key {
-    throw new Error("Not implemented yet");
-  }
-
-  get bech32Address(): Bech32Address {
     throw new Error("Not implemented yet");
   }
 }

@@ -1570,12 +1570,12 @@
     "@cosmology/types" "^1.4.2"
     dotty "0.1.2"
 
-"@cosmonauts/types@^1.0.0":
+"@uni-sign/types@^1.0.0":
   version "1.0.1"
-  resolved "https://registry.npmjs.org/@cosmonauts/types/-/types-1.0.1.tgz#3337d9d28f55fc48bed426d75bf3414a0931f84b"
+  resolved "https://registry.npmjs.org/@uni-sign/types/-/types-1.0.1.tgz#3337d9d28f55fc48bed426d75bf3414a0931f84b"
   integrity sha512-y80QQMO1B0WgTdURpABEcDPEQaTwT73a7yXIadcJpWDbOb59iO3RSnZE5htuZU73kRochlEWu/PQsqrEOEe3kQ==
   dependencies:
-    "@cosmonauts/utils" "^1.0.0"
+    "@uni-sign/utils" "^1.0.0"
     decimal.js "^10.4.3"
 
 "@cosmostation/extension-client@^0.1.15":

@@ -1,5 +1,5 @@
-import { HttpEndpoint, Price } from "@cosmonauts/types";
-import { SignerInfo, TxBody, TxRaw } from "../codegen/cosmos/tx/v1beta1/tx";
+import { HttpEndpoint, Price, BroadcastOptions } from "@uni-sign/types";
+import { SignerInfo, TxBody } from "../codegen/cosmos/tx/v1beta1/tx";
 import { Coin } from "../codegen/cosmos/base/v1beta1/coin";
 import { Event } from "../codegen/tendermint/abci/types";
 
@@ -117,11 +117,6 @@ export type TxBodyOptions = Partial<
     "timeoutHeight" | "extensionOptions" | "nonCriticalExtensionOptions"
   >
 >;
-
-export interface BroadcastOptions {
-  checkTx?: boolean;
-  deliverTx?: boolean;
-}
 
 export interface QueryClient {
   readonly endpoint: HttpEndpoint;

@@ -1,6 +1,6 @@
 {
   "name": "sign",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "private": true,
   "description": "sign client for block-chain networks",
   "repository": "git@github.com:cosmology-tech/sign.git",
@@ -14,6 +14,8 @@
     "access": "restricted"
   },
   "scripts": {
+    "link:all": "lerna exec -- yarn link",
+    "symlink": "yarn link @uni-sign/auth @uni-sign/types @uni-sign/utils @uni-sign/cosmos-msgs @uni-sign/cosmos-query @uni-sign/cosmos @uni-sign/injective @uni-sign/ethereum",
     "starship:start": "cd __test__ && ./scripts/start-server.sh",
     "starship:stop": "cd __test__ && ./scripts/stop-server.sh",
     "starship:restart": "cd __test__ && ./scripts/stop-server.sh && ./scripts/start-server.sh",
@@ -43,5 +45,6 @@
     "strip-ansi": "^6",
     "ts-jest": "^29.1.1",
     "typescript": "^5.1.6"
-  }
+  },
+  "packageManager": "yarn@1.22.1"
 }

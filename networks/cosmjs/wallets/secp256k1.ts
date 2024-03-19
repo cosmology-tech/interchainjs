@@ -1,7 +1,7 @@
-import { Auth } from "@cosmonauts/types";
-import { Secp256k1Auth } from "@cosmonauts/auth/secp256k1";
-import { StdSignDoc, SignDoc } from "@cosmonauts/cosmos/types";
-import { encodeStdSignDoc } from "@cosmonauts/cosmos/utils";
+import { Auth } from "@uni-sign/types";
+import { Secp256k1Auth } from "@uni-sign/auth/secp256k1";
+import { StdSignDoc, SignDoc } from "@uni-sign/cosmos/types";
+import { encodeStdSignDoc } from "@uni-sign/cosmos/utils";
 
 import {
   AccountData,
@@ -14,8 +14,8 @@ import {
   Bech32Address,
   Algo,
 } from "../types/wallet";
-import { defaultSignerConfig } from "@cosmonauts/cosmos/defaults";
-import { defaultHdPaths } from "@cosmonauts/auth/defaults";
+import { defaultSignerConfig } from "@uni-sign/cosmos/defaults";
+import { defaultHdPaths } from "@uni-sign/auth/defaults";
 
 const isPublicKeyCompressed = defaultSignerConfig.publicKey.isCompressed;
 const toAddress = defaultSignerConfig.publicKey.hash;

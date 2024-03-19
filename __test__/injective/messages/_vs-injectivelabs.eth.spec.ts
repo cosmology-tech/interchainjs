@@ -1,8 +1,7 @@
 import { address, chain } from "../../data";
-import { StdFee } from "@cosmonauts/cosmos/types";
 import { MsgSend, getEip712TypedData } from "@injectivelabs/sdk-ts";
 import { EthereumChainId } from "@injectivelabs/ts-types";
-import { MsgSend as _MsgSend } from "@cosmonauts/cosmos-msgs/cosmos/bank/v1beta1/tx";
+import { MsgSend as _MsgSend } from "@uni-sign/cosmos-msgs/cosmos/bank/v1beta1/tx";
 
 const msg = MsgSend.fromJSON({
   amount: {
@@ -13,16 +12,6 @@ const msg = MsgSend.fromJSON({
   dstInjectiveAddress: address.injective.test1,
 });
 
-const fee: StdFee = {
-  gas: "20000000",
-  amount: [
-    {
-      denom: chain.injective.denom,
-      amount: "0.05",
-    },
-  ],
-};
-
 describe("Compare with @injectivelabs", () => {
   it("eip712TypedData signing", async () => {
     const eip712TypedData = getEip712TypedData({
@@ -32,6 +21,16 @@ describe("Compare with @injectivelabs", () => {
         sequence: "3",
         timeoutHeight: "10",
         chainId: "injective-1",
+      },
+      fee: {
+        amount: [
+          {
+            denom: chain.injective.denom,
+            amount: "0.05",
+          },
+        ],
+        gas: "2000",
+        feePayer: address.injective.genesis,
       },
       ethereumChainId: EthereumChainId.Injective,
     });

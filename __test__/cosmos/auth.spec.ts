@@ -1,7 +1,7 @@
 import { Slip10, Slip10Curve, Slip10RawIndex } from "@cosmjs/crypto";
-import { fromUtf8, toBase64 } from "@cosmonauts/utils";
-import { getSeedFromMnemonic } from "@cosmonauts/auth/utils";
-import { defaultSignerConfig } from "@cosmonauts/cosmos/defaults";
+import { fromUtf8, toBase64 } from "@uni-sign/utils";
+import { getSeedFromMnemonic } from "@uni-sign/auth/utils";
+import { defaultSignerConfig } from "@uni-sign/cosmos/defaults";
 
 import { seed } from "../data";
 import { auth } from "./constants";

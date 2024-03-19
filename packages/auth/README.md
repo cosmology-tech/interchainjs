@@ -5,14 +5,14 @@ Authentication/Wallet for web3 accounts.
 ## Usage
 
 ```sh
-npm install @cosmonauts/auth
+npm install @uni-sign/auth
 ```
 
 Taking `secp256k1` as example.
 
 ```ts
-// import * from "@cosmonauts/auth"; // Error: use sub-imports, to ensure small app size
-import { Secp256k1Auth } from "@cosmonauts/auth/secp256k1";
+// import * from "@uni-sign/auth"; // Error: use sub-imports, to ensure small app size
+import { Secp256k1Auth } from "@uni-sign/auth/secp256k1";
 
 const auth = Secp256k1Auth.fromMnemonic("<mnemonic-words>", "<HD path>");
 const signature = auth.sign(Uint8Array.from([1, 2, 3]));
@@ -30,14 +30,14 @@ const auth = Secp256k1Auth.fromMnemonic("<mnemonic-words>", "m/44'/118'/0'/0/0")
 
 `Auth` objected can be utilized by different signers. See
 
-- [@cosmonauts/cosmos](/networks/cosmos/README.md)
-- [@cosmonauts/ethereum](/networks/ethereum/README.md)
-- [@cosmonauts/injective](/networks/injective/README.md)
+- [@uni-sign/cosmos](/networks/cosmos/README.md)
+- [@uni-sign/ethereum](/networks/ethereum/README.md)
+- [@uni-sign/injective](/networks/injective/README.md)
 
 ## Implementations
 
-- **secp256k1 auth** from `@cosmonauts/auth/secp256k1`
-- **ed25519 auth** from `@cosmonauts/auth/ed25519` (`Not fully implemented yet`)
+- **secp256k1 auth** from `@uni-sign/auth/secp256k1`
+- **ed25519 auth** from `@uni-sign/auth/ed25519` (`Not fully implemented yet`)
 
 ## License
 

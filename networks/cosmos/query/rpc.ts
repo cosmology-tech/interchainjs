@@ -18,13 +18,13 @@ import {
   getLowGasPrice,
   getPrefix,
 } from "../utils/rpc";
-import { Key, isEmpty, toHttpEndpoint } from "@cosmonauts/utils";
+import { Key, isEmpty, toHttpEndpoint } from "@uni-sign/utils";
 import { TxBody, SignerInfo, Tx, Fee } from "../codegen/cosmos/tx/v1beta1/tx";
 import { constructAuthInfo } from "../utils/direct";
 import { SignMode } from "../codegen/cosmos/tx/signing/v1beta1/signing";
-import { toPrice } from "@cosmonauts/utils";
+import { toPrice } from "@uni-sign/utils";
 import { Decimal } from "decimal.js";
-import { HttpEndpoint, Price } from "@cosmonauts/types";
+import { HttpEndpoint, Price } from "@uni-sign/types";
 import { defaultBroadcastOptions, defaultFeeOptions } from "../defaults";
 
 export class RpcClient implements QueryClient {

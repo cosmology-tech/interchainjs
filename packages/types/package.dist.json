@@ -1,6 +1,6 @@
 {
-  "name": "@cosmonauts/types",
-  "version": "1.0.1",
+  "name": "@uni-sign/types",
+  "version": "0.0.1",
   "types": "index.d.ts",
   "author": "liujun93 <ljun8575@gmail.com>",
   "license": "MIT",
@@ -9,6 +9,6 @@
   },
   "dependencies": {
     "decimal.js": "^10.4.3",
-    "@cosmonauts/utils": "^1.0.0"
+    "@uni-sign/utils": "^0.0.1"
   }
 }

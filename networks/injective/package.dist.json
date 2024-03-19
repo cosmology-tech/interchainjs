@@ -1,6 +1,6 @@
 {
-  "name": "@cosmonauts/injective",
-  "version": "1.0.0",
+  "name": "@uni-sign/injective",
+  "version": "0.0.1",
   "main": "index.js",
   "module": "esm/index.js",
   "types": "index.d.ts",
@@ -10,10 +10,10 @@
     "pub": "npm patch && npm publish --access public"
   },
   "dependencies": {
-    "@cosmonauts/utils": "^1.0.0",
-    "@cosmonauts/types": "^1.0.0",
-    "@cosmonauts/cosmos": "^1.0.0",
-    "@cosmonauts/ethereum": "^1.0.0"
+    "@uni-sign/utils": "^0.0.1",
+    "@uni-sign/types": "^0.0.1",
+    "@uni-sign/cosmos": "^0.0.1",
+    "@uni-sign/ethereum": "^0.0.1"
   },
   "keywords": [
     "injective"

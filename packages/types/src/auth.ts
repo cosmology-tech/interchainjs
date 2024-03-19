@@ -1,4 +1,4 @@
-import { type Key } from "@cosmonauts/utils";
+import { type Key } from "@uni-sign/utils";
 
 export interface Auth {
   algo: string;

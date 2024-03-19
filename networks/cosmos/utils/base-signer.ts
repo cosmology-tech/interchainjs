@@ -1,17 +1,20 @@
-import { Auth, HttpEndpoint, SignerConfig } from "@cosmonauts/types";
 import {
-  Key,
+  Auth,
+  HttpEndpoint,
+  SignerConfig,
+  BroadcastOptions,
+  UniSigner,
+  SignResponse,
+} from "@uni-sign/types";
+import {
   BaseSigner as _BaseSigner,
   assertEmpty,
   isEmpty,
-} from "@cosmonauts/utils";
+} from "@uni-sign/utils";
 import { defaultSignerConfig } from "../defaults";
 import {
-  BroadcastOptions,
-  BroadcastResponse,
   EncodedMessage,
   Encoder,
-  Fee,
   FeeOptions,
   Message,
   QueryClient,
@@ -30,7 +33,8 @@ import {
 } from "./direct";
 import { toFee } from "./amino";
 
-export abstract class BaseSigner<Doc> extends _BaseSigner {
+export abstract class BaseSigner<SignDoc> extends _BaseSigner
+  implements UniSigner<SignDoc> {
   protected _queryClient?: QueryClient;
   readonly encoders: Encoder[];
 
@@ -134,8 +138,9 @@ export abstract class BaseSigner<Doc> extends _BaseSigner {
     fee: StdFee,
     memo?: string,
     options?: FeeOptions & SignerOptions & TxBodyOptions
-  ): Promise<{ signDoc: Doc; txRaw: TxRaw }>;
-  abstract signDoc: (doc: Doc) => Promise<{ signature: Key; signed: Doc }>;
+  ): Promise<{ signDoc: SignDoc; txRaw: TxRaw }>;
+
+  abstract signDoc: (doc: SignDoc) => Promise<SignResponse<SignDoc>>;
 
   async sign(
     messages: Message[],

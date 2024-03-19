@@ -1,9 +1,4 @@
-import {
-  Auth,
-  BaseWallet,
-  HttpEndpoint,
-  SignerConfig,
-} from "@cosmonauts/types";
+import { Auth, BaseWallet, HttpEndpoint, SignerConfig } from "@uni-sign/types";
 import { defaultEthTypedData, defaultSignerConfig } from "./defaults";
 import {
   AminoConverter,
@@ -13,12 +8,12 @@ import {
   SignerOptions,
   StdFee,
   TxBodyOptions,
-} from "@cosmonauts/cosmos/types";
-import { getAccountFromAuth } from "./utils";
-import { SignResponseFromAuth } from "@cosmonauts/ethereum/utils";
-import { BaseSigner } from "@cosmonauts/cosmos/utils";
+} from "@uni-sign/cosmos/types";
+import { getAccountFromAuth, toEthTypes } from "./utils";
+import { SignResponseFromAuth } from "@uni-sign/ethereum/utils";
+import { BaseSigner } from "@uni-sign/cosmos/utils";
 import { EthTypedDataWallet, EthTypedData } from "./types";
-import { constructAuthFromWallet } from "@cosmonauts/utils";
+import { constructAuthFromWallet } from "@uni-sign/utils";
 import { AminoSigner } from "./amino";
 
 export function toWallet(
@@ -95,6 +90,10 @@ export class EthTypedDataSigner extends BaseSigner<EthTypedData> {
     );
     const signDoc: EthTypedData = {
       ...defaultEthTypedData,
+      types: {
+        ...defaultEthTypedData.types,
+        ...toEthTypes(created.signDoc.msgs[0]), // ONLY one message type supported?
+      },
       message: created.signDoc,
     };
     return { signDoc, txRaw: created.txRaw };

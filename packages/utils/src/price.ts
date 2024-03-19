@@ -1,6 +1,6 @@
 import Decimal from "decimal.js";
 
-import { Price } from "@cosmonauts/types";
+import { Price } from "@uni-sign/types";
 
 /**
  *

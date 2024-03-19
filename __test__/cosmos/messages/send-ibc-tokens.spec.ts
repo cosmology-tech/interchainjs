@@ -1,10 +1,10 @@
-import { DirectSigner } from "@cosmonauts/cosmos/direct";
-import { MsgTransfer } from "@cosmonauts/cosmos-msgs/ibc/applications/transfer/v1/tx";
+import { DirectSigner } from "@uni-sign/cosmos/direct";
+import { MsgTransfer } from "@uni-sign/cosmos-msgs/ibc/applications/transfer/v1/tx";
 
 import { address, chain } from "../../data";
-import { toConverter, toEncoder } from "@cosmonauts/cosmos/utils";
-import { Message } from "@cosmonauts/cosmos/types";
-import { AminoSigner } from "@cosmonauts/cosmos/amino";
+import { toConverter, toEncoder } from "@uni-sign/cosmos/utils";
+import { Message } from "@uni-sign/cosmos/types";
+import { AminoSigner } from "@uni-sign/cosmos/amino";
 import { auth } from "../constants";
 
 export const messages: Message<MsgTransfer>[] = [

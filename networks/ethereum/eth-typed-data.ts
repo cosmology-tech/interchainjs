@@ -1,13 +1,15 @@
 import {
   Auth,
   BaseWallet,
+  BroadcastOptions,
   HttpEndpoint,
   SignerConfig,
-} from "@cosmonauts/types";
+  UniSigner,
+} from "@uni-sign/types";
 import { defaultSignerConfig } from "./defaults";
 import { SignResponseFromAuth, getAccountFromAuth } from "./utils";
 import { EthTypedData, EthTypedDataWallet } from "./types";
-import { BaseSigner, constructAuthFromWallet } from "@cosmonauts/utils";
+import { BaseSigner, constructAuthFromWallet } from "@uni-sign/utils";
 import { _TypedDataEncoder } from "@ethersproject/hash";
 
 export function toWallet(
@@ -21,7 +23,8 @@ export function toWallet(
   };
 }
 
-export class EthTypedDataSigner extends BaseSigner {
+export class EthTypedDataSigner extends BaseSigner
+  implements UniSigner<EthTypedData> {
   constructor(
     auth: Auth,
     endpoint?: string | HttpEndpoint,
@@ -47,5 +50,9 @@ export class EthTypedDataSigner extends BaseSigner {
       doc,
       this.config
     );
+  }
+
+  async broadcastArbitrary(message: Uint8Array, options?: BroadcastOptions) {
+    throw new Error("Not implemented yet");
   }
 }

@@ -9,32 +9,32 @@ A single, universal signing interface for any network. Birthed from the intercha
 
 Universally applied across different networks
 
-- [@cosmonauts/auth](/packages/auth/README.md)
+- [@uni-sign/auth](/packages/auth/README.md)
 
 ## Cosmos Network
 
 ### Querying
 
-- [@cosmonauts/cosmos-query](/networks/cosmos-query/README.md)
+- [@uni-sign/cosmos-query](/networks/cosmos-query/README.md)
   
 ### Transactions
 
-- [@cosmonauts/cosmos](/networks/cosmos/README.md)
-- [@cosmonauts/cosmos-msgs](/networks/cosmos-msgs/README.md)
+- [@uni-sign/cosmos](/networks/cosmos/README.md)
+- [@uni-sign/cosmos-msgs](/networks/cosmos-msgs/README.md)
 
 #### Usage
 
 ```sh
-npm install @cosmonauts/auth @cosmonauts/cosmos @cosmonauts/cosmos-msgs
+npm install @uni-sign/auth @uni-sign/cosmos @uni-sign/cosmos-msgs
 ```
 
 ```ts
 // use sub-imports, to ensure small app size
-import { DirectSigner } from "@cosmonauts/cosmos/direct";
-import { AminoSigner } from "@cosmonauts/cosmos/amino";
-import { toConverter, toEncoder } from "@cosmonauts/cosmos/utils";
-import { Secp256k1Auth } from "@cosmonauts/auth/secp256k1";
-import { MsgSend } from "@cosmonauts/cosmos-msgs/cosmos/bank/v1beta1/tx";
+import { DirectSigner } from "@uni-sign/cosmos/direct";
+import { AminoSigner } from "@uni-sign/cosmos/amino";
+import { toConverter, toEncoder } from "@uni-sign/cosmos/utils";
+import { Secp256k1Auth } from "@uni-sign/auth/secp256k1";
+import { MsgSend } from "@uni-sign/cosmos-msgs/cosmos/bank/v1beta1/tx";
 
 const auth = Secp256k1Auth.fromMnemonic("<mnemonic-words>", "cosmos");
 
@@ -50,7 +50,7 @@ console.log(result.hash); // the hash of TxRaw
 
 We created a specific package to make it easy to migrate from `@cosmjs`.
 
-- [@cosmonauts/cosmjs](/networks/cosmjs/README.md)
+- [@cosmology/cosmjs](/networks/cosmjs/README.md)
 
 ## Injective Network
 

@@ -1,6 +1,6 @@
-import { SignDoc, StdSignDoc } from "@cosmonauts/cosmos/types";
-import { EthTypedData as GeneralEthTypedData } from "@cosmonauts/ethereum/types";
-import { BaseWalletAccount, Wallet } from "@cosmonauts/types";
+import { SignDoc, StdSignDoc } from "@uni-sign/cosmos/types";
+import { EthTypedData as GeneralEthTypedData } from "@uni-sign/ethereum/types";
+import { BaseWalletAccount, Wallet } from "@uni-sign/types";
 
 export interface InjectiveAccount extends BaseWalletAccount {
   cosmosAddress: string;

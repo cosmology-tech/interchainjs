@@ -1,4 +1,4 @@
-import { HdPathType } from "@cosmonauts/types";
+import { HdPathType } from "@uni-sign/types";
 
 /**
  * path: m/purpose'/coin_type'/account'/change/address_index

@@ -1,6 +1,6 @@
-import { SignerConfig } from "@cosmonauts/types";
-import { defaultSignerConfig as CosmosSignerConfig } from "@cosmonauts/cosmos/defaults";
-import { defaultSignerConfig as EthereumSignerConfig } from "@cosmonauts/ethereum/defaults";
+import { SignerConfig } from "@uni-sign/types";
+import { defaultSignerConfig as CosmosSignerConfig } from "@uni-sign/cosmos/defaults";
+import { defaultSignerConfig as EthereumSignerConfig } from "@uni-sign/ethereum/defaults";
 import { EthTypedData } from "./types";
 
 const publicKeyConfig: SignerConfig["publicKey"] = {
@@ -83,6 +83,10 @@ export const defaultEthTypedData: Omit<EthTypedData, "message"> = {
     ],
     Fee: [
       {
+        name: "feePayer",
+        type: "string",
+      },
+      {
         name: "amount",
         type: "Coin[]",
       },
@@ -111,29 +115,5 @@ export const defaultEthTypedData: Omit<EthTypedData, "message"> = {
         type: "MsgValue",
       },
     ],
-    // TypeAmount: [
-    //   {
-    //     name: "denom",
-    //     type: "string",
-    //   },
-    //   {
-    //     name: "amount",
-    //     type: "string",
-    //   },
-    // ],
-    // MsgValue: [
-    //   {
-    //     name: "from_address",
-    //     type: "string",
-    //   },
-    //   {
-    //     name: "to_address",
-    //     type: "string",
-    //   },
-    //   {
-    //     name: "amount",
-    //     type: "TypeAmount[]",
-    //   },
-    // ],
   },
 };

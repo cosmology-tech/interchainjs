@@ -1,9 +1,9 @@
-import { SignResponse, SignerConfig } from "@cosmonauts/types";
-import { Auth } from "@cosmonauts/types";
+import { SignResponse, SignerConfig } from "@uni-sign/types";
+import { Auth } from "@uni-sign/types";
 import { defaultSignerConfig } from "./defaults";
 import { _TypedDataEncoder } from "@ethersproject/hash";
 import { EthTypedData, EthereumAccount } from "./types";
-import { fromHex } from "@cosmonauts/utils";
+import { fromHex } from "@uni-sign/utils";
 
 export function getAccountFromAuth(
   auth: Auth,

@@ -1,4 +1,4 @@
-import { BaseWalletAccount, Wallet } from "@cosmonauts/types";
+import { BaseWalletAccount, Wallet } from "@uni-sign/types";
 import { BigNumberish } from "@ethersproject/bignumber";
 import { BytesLike } from "@ethersproject/bytes";
 

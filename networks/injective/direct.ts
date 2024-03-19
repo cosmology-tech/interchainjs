@@ -1,21 +1,16 @@
-import {
-  Auth,
-  BaseWallet,
-  HttpEndpoint,
-  SignerConfig,
-} from "@cosmonauts/types";
+import { Auth, BaseWallet, HttpEndpoint, SignerConfig } from "@uni-sign/types";
 import { defaultSignerConfig } from "./defaults";
-import { DirectSigner as CosmosDirectSigner } from "@cosmonauts/cosmos/direct";
+import { DirectSigner as CosmosDirectSigner } from "@uni-sign/cosmos/direct";
 import {
   EncodedMessage,
   Encoder,
   Secp256k1PubKey,
   SignDoc,
-} from "@cosmonauts/cosmos/types";
+} from "@uni-sign/cosmos/types";
 import { getAccountFromAuth } from "./utils";
-import { SignResponseFromAuth } from "@cosmonauts/cosmos/utils";
+import { SignResponseFromAuth } from "@uni-sign/cosmos/utils";
 import { DirectWallet } from "./types";
-import { constructAuthFromWallet } from "@cosmonauts/utils";
+import { constructAuthFromWallet } from "@uni-sign/utils";
 
 export function toWallet(
   auth: Auth,

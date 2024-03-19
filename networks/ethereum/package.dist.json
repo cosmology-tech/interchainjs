@@ -1,6 +1,6 @@
 {
-  "name": "@cosmonauts/ethereum",
-  "version": "1.0.0",
+  "name": "@uni-sign/ethereum",
+  "version": "0.0.1",
   "description": "Transaction codec and client to communicate with ethereum blockchain",
   "main": "index.js",
   "module": "esm/index.js",
@@ -11,8 +11,8 @@
     "pub": "npm patch && npm publish --access public"
   },
   "dependencies": {
-    "@cosmonauts/utils": "^1.0.0",
-    "@cosmonauts/types": "^1.0.0",
+    "@uni-sign/utils": "^0.0.1",
+    "@uni-sign/types": "^0.0.1",
     "@ethersproject/transactions": "^5.7.0",
     "@ethersproject/bignumber": "^5.7.0",
     "@ethersproject/bytes": "^5.7.0",

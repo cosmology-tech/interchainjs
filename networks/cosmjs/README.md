@@ -1,18 +1,18 @@
 # Cosmjs
 
-Wrapper of `@cosmonauts/auth` and `@cosmonauts/cosmos` to fit corresponding interfaces in `@cosmjs` 
+Wrapper of `@uni-sign/auth` and `@uni-sign/cosmos` to fit corresponding interfaces in `@cosmjs` 
 
 ## Usage
 
 ```sh
-npm install @cosmonauts/cosmjs
+npm install @cosmology/cosmjs
 ```
 
 To sign messages (taking `stargate` signing client as example)
 
 ```ts
-// import * from "@cosmonauts/cosmjs"; // Error: use sub-imports, to ensure small app size
-import { StargateSigningClient } from "@cosmonauts/cosmjs/stargate";
+// import * from "@cosmology/cosmjs"; // Error: use sub-imports, to ensure small app size
+import { StargateSigningClient } from "@cosmology/cosmjs/stargate";
 
 const client = StargateSigningClient.connectWithSigner(<rpc-endpoint>, <offline signer>);
 const result = await client.signAndBroadcast(<address>, <messages>, "auto");
@@ -25,7 +25,7 @@ console.log(result.transactionHash); // the hash of TxRaw
 To construct an offline signer (taking `direct` signer as example)
 
 ```ts
-import { Secp256k1Wallet } from "@cosmonauts/cosmjs/wallets/secp256k1";
+import { Secp256k1Wallet } from "@cosmology/cosmjs/wallets/secp256k1";
 
 const wallet = Secp256k1Wallet.fromMnemonic("<mnemonic-words>", { prefix: "<prefix>" });
 const directOfflineSigner = wallet.toOfflineDirectSigner();
@@ -34,11 +34,11 @@ const directOfflineSigner = wallet.toOfflineDirectSigner();
 ## Implementations
 
 - **signing client**
-  - **signing client** from `@cosmonauts/cosmjs/signing-client`
-  - **stargate signing client** from `@cosmonauts/cosmjs/stargate`
-  - **cosmwasm signing client** from `@cosmonauts/cosmjs/cosmwasm-stargate`
+  - **signing client** from `@cosmology/cosmjs/signing-client`
+  - **stargate signing client** from `@cosmology/cosmjs/stargate`
+  - **cosmwasm signing client** from `@cosmology/cosmjs/cosmwasm-stargate`
 - **wallet**
-  - **secp256k1 wallet** from `@cosmonauts/cosmjs/wallets/secp256k1`
+  - **secp256k1 wallet** from `@cosmology/cosmjs/wallets/secp256k1`
 
 ## License
 

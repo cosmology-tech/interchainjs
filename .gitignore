@@ -5,3 +5,4 @@ test.ts
 scripts/test.sh
 **/.DS_Store
 **/dist
+**/yarn-error.log

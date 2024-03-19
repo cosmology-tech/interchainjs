@@ -1,5 +1,5 @@
-import { Auth, HttpEndpoint, Price } from "@cosmonauts/types";
-import { fromBase64, Key } from "@cosmonauts/utils";
+import { Auth, HttpEndpoint, Price } from "@uni-sign/types";
+import { fromBase64, Key } from "@uni-sign/utils";
 
 import {
   DeliverTxResponse,
@@ -26,7 +26,7 @@ import {
   TxRaw,
   IBinaryWriter,
   Any,
-} from "@cosmonauts/cosmos/types";
+} from "@uni-sign/cosmos/types";
 import {
   constructAuthInfo,
   constructSignerInfo,
@@ -35,8 +35,8 @@ import {
   toEncoder,
   toFee,
   toMessages,
-} from "@cosmonauts/cosmos/utils";
-import { AminoSigner } from "@cosmonauts/cosmos/amino";
+} from "@uni-sign/cosmos/utils";
+import { AminoSigner } from "@uni-sign/cosmos/amino";
 import {
   SearchTxQuery,
   SearchTxResponse,
@@ -45,7 +45,7 @@ import {
   BlockResponse,
   TxResponse,
 } from "./types/query";
-import { TxRpc } from "@cosmonauts/cosmos-msgs/types";
+import { TxRpc } from "@uni-sign/cosmos-msgs/types";
 
 /**
  * implement the same methods as what in `cosmjs` signingClient

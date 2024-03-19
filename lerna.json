@@ -5,17 +5,18 @@
   "npmClientArgs": [
     "--no-lockfile"
   ],
+  "useWorkspaces": true,
   "packages": [
     "packages/*",
     "networks/*"
   ],
-  "version": "independent",
+  "version": "0.0.1",
   "registry": "https://registry.npmjs.org",
   "command": {
     "create": {
-      "homepage": "https://github.com/cosmology-tech/sign",
+      "homepage": "https://github.com/cosmology-tech/unisign",
       "license": "SEE LICENSE IN LICENSE",
-      "access": "restricted"
+      "access": "public"
     },
     "publish": {
       "allowBranch": "main",

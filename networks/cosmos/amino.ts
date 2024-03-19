@@ -1,9 +1,4 @@
-import {
-  Auth,
-  BaseWallet,
-  HttpEndpoint,
-  SignerConfig,
-} from "@cosmonauts/types";
+import { Auth, BaseWallet, HttpEndpoint, SignerConfig } from "@uni-sign/types";
 import {
   AminoWallet,
   Encoder,
@@ -19,7 +14,7 @@ import { toAminoMsgs } from "./utils/amino";
 import { BaseSigner, getAccountFromAuth, SignResponseFromAuth } from "./utils";
 import { SignMode } from "./types";
 import { defaultSignerConfig } from "./defaults";
-import { constructAuthFromWallet } from "@cosmonauts/utils";
+import { constructAuthFromWallet } from "@uni-sign/utils";
 
 export function toWallet(
   auth: Auth,

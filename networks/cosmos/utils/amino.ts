@@ -1,4 +1,4 @@
-import { assertEmpty, fromUtf8 } from "@cosmonauts/utils";
+import { assertEmpty, fromUtf8 } from "@uni-sign/utils";
 import {
   AminoMessage,
   AminoConverter,

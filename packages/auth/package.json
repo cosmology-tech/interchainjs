@@ -1,19 +1,20 @@
 {
-  "name": "@cosmonauts/auth",
-  "version": "1.0.0",
+  "name": "@uni-sign/auth",
+  "version": "0.0.1",
   "author": "liujun93 <ljun8575@gmail.com>",
   "license": "MIT",
   "scripts": {
     "rename": "renamer -f \"/^package.dist.json$/\" -r \"package.json\" \"dist/*\"",
-    "copy": "copyfiles package.dist.json README.md dist",
+    "copy": "copyfiles -f ../../LICENSE-MIT ../../LICENSE-Apache dist; copyfiles package.dist.json README.md dist",
     "copy-and-rename": "npm run copy && npm run rename",
     "clean": "rimraf dist",
     "build": "npm run clean; tsc; tsc -p tsconfig.esm.json; npm run copy-and-rename",
-    "pub": "cd dist && npm run pub"
+    "pub": "cd dist && npm run pub",
+    "symlink": "yarn link @uni-sign/utils @uni-sign/types"
   },
   "dependencies": {
-    "@cosmonauts/utils": "^1.0.0",
-    "@cosmonauts/types": "^1.0.0",
+    "@uni-sign/utils": "^0.0.1",
+    "@uni-sign/types": "^0.0.1",
     "@noble/hashes": "^1.3.1",
     "@noble/curves": "^1.1.0"
   }

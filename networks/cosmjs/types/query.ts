@@ -1,4 +1,4 @@
-import { Event } from "@cosmonauts/cosmos/types";
+import { Event } from "@uni-sign/cosmos/types";
 
 /** A transaction that is indexed as part of the transaction history */
 export interface IndexedTx {
