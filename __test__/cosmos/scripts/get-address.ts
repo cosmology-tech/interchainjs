@@ -8,7 +8,7 @@ import { Key } from "@uni-sign/utils";
 // );
 
 // const signer = new DirectSigner(auth, []);
-// console.log("osmosis address", signer.address.toBech32("osmovaloper"));
+// console.log("cosmoshub address", signer.address.toBech32("osmovaloper"));
 // console.log("cosmoshub address", signer.address.toBech32("cosmosvaloper"));
 
 console.log(

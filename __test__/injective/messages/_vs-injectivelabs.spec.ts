@@ -1,7 +1,7 @@
 import { address, chain } from "../../data";
 import { Message, SignMode, StdFee } from "@uni-sign/cosmos/types";
 import { MsgSend, createTransaction } from "@injectivelabs/sdk-ts";
-import { auth, isCompressed } from "../constants";
+import { auth, isPubKeyCompressed } from "../constants";
 import { toHex } from "@uni-sign/utils";
 import { DirectSigner } from "@uni-sign/injective/direct";
 import { AminoSigner } from "@uni-sign/injective/amino";
@@ -61,7 +61,7 @@ describe("Compare with @injectivelabs", () => {
     });
 
     const { txRaw, signDoc } = createTransaction({
-      pubKey: auth.getPublicKey(isCompressed).toBase64(),
+      pubKey: auth.getPublicKey(isPubKeyCompressed).toBase64(),
       chainId: chain.injective.chainId,
       fee,
       message: msg,
@@ -93,7 +93,7 @@ describe("Compare with @injectivelabs", () => {
     });
 
     const { txRaw, signDoc } = createTransaction({
-      pubKey: auth.getPublicKey(isCompressed).toBase64(),
+      pubKey: auth.getPublicKey(isPubKeyCompressed).toBase64(),
       chainId: chain.injective.chainId,
       fee,
       message: msg,

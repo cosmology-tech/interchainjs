@@ -22,7 +22,14 @@ export interface AminoMessage {
 
 export interface Encoder {
   typeUrl: string;
+  fromPartial: (data: any) => any;
   encode: (data: any) => Uint8Array;
+}
+
+export interface Decoder {
+  typeUrl: string;
+  fromPartial: (data: any) => any;
+  decode: (data: Uint8Array) => any;
 }
 
 export interface AminoConverter {

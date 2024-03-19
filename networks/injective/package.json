@@ -13,6 +13,7 @@
     "clean": "rimraf dist",
     "build": "npm run clean; tsc; tsc -p tsconfig.esm.json; npm run copy-and-rename",
     "pub": "cd dist && npm run pub",
+    "bp": "npm run build && npm run pub",
     "symlink": "yarn link @uni-sign/utils @uni-sign/types @uni-sign/cosmos @uni-sign/ethereum"
   },
   "dependencies": {

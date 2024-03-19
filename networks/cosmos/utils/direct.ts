@@ -4,14 +4,20 @@ import {
   SignerInfo,
   TxBody,
 } from "../codegen/cosmos/tx/v1beta1/tx";
-import { EncodedMessage, Encoder, Message, TxBodyOptions } from "../types";
+import {
+  Decoder,
+  EncodedMessage,
+  Encoder,
+  Message,
+  TxBodyOptions,
+} from "../types";
 import { assertEmpty } from "@uni-sign/utils";
 import { SignMode } from "../codegen/cosmos/tx/signing/v1beta1/signing";
 import { TelescopeGeneratedType } from "../codegen/types";
 
 export function constructTxBody(
   messages: Message[],
-  getEncoder: (typeUrl: string) => { encode: (data: any) => Uint8Array },
+  getEncoder: (typeUrl: string) => Encoder,
   memo?: string,
   options?: TxBodyOptions
 ) {
@@ -64,9 +70,23 @@ export function toEncoder(
 ): Encoder {
   return {
     typeUrl: generated.typeUrl,
+    fromPartial: generated.fromPartial,
     encode: (data: any) => {
       assertEmpty(generated.encode);
       return generated.encode(generated.fromPartial(data)).finish();
+    },
+  };
+}
+
+export function toDecoder(
+  generated: TelescopeGeneratedType<any, any, any>
+): Decoder {
+  return {
+    typeUrl: generated.typeUrl,
+    fromPartial: generated.fromPartial,
+    decode: (data: Uint8Array) => {
+      assertEmpty(generated.decode);
+      return generated.decode(data);
     },
   };
 }

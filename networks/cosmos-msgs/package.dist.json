@@ -1,6 +1,6 @@
 {
   "name": "@uni-sign/cosmos-msgs",
-  "version": "1.0.2",
+  "version": "0.0.1",
   "description": "Cosmos message codecs",
   "main": "index.js",
   "module": "esm/index.js",
@@ -8,7 +8,7 @@
   "author": "liujun93 <ljun8575@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "pub": "npm patch && npm publish --access public"
+    "pub": "npm publish --access public"
   },
   "keywords": [
     "cosmos",

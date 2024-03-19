@@ -6,7 +6,7 @@ import { aminoClient, directClient } from "../constants";
 describe("Cosmjs: Send tokens", () => {
   it("should success with direct signing", async () => {
     const resp = await directClient.helpers.send(
-      address.osmosis.genesis,
+      address.cosmoshub.genesis,
       messages[0].value,
       "auto",
       ""
@@ -16,7 +16,7 @@ describe("Cosmjs: Send tokens", () => {
 
   it("should success with amino signing", async () => {
     const resp = await aminoClient.helpers.send(
-      address.osmosis.genesis,
+      address.cosmoshub.genesis,
       messages[0].value,
       "auto",
       ""

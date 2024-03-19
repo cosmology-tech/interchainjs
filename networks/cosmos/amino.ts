@@ -35,7 +35,7 @@ export class AminoSigner extends BaseSigner<StdSignDoc> {
     encoders: Encoder[],
     converters: AminoConverter[],
     endpoint?: string | HttpEndpoint,
-    config?: SignerConfig
+    config: SignerConfig = defaultSignerConfig
   ) {
     super(auth, encoders, endpoint, config);
     this.converters = converters;
@@ -46,7 +46,7 @@ export class AminoSigner extends BaseSigner<StdSignDoc> {
     encoders: Encoder[],
     converters: AminoConverter[],
     endpoint?: string | HttpEndpoint,
-    config?: SignerConfig
+    config: SignerConfig = defaultSignerConfig
   ) {
     const auth: Auth = await constructAuthFromWallet(wallet, config);
     const signer = new AminoSigner(

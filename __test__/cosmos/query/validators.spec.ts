@@ -10,5 +10,5 @@ it("should query validators", async () => {
     status: bondStatusToJSON(BondStatus.BOND_STATUS_BONDED),
   });
   const validatorAddress = validators[0]?.operatorAddress;
-  expect(validatorAddress).toBe(address.osmosis.validator);
+  expect(validatorAddress).toBe(address.cosmoshub.validator);
 });

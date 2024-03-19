@@ -3,15 +3,15 @@ import { Secp256k1Wallet } from "@cosmology/cosmjs/wallets/secp256k1";
 import { StargateSigningClient } from "@cosmology/cosmjs/stargate";
 
 export const wallet = Secp256k1Wallet.fromMnemonic(seed.genesis, {
-  prefix: chain.osmosis.prefix,
+  prefix: chain.cosmoshub.prefix,
 });
 
 export const directClient = StargateSigningClient.connectWithSigner(
-  chain.osmosis.rpc,
+  chain.cosmoshub.rpc,
   wallet.toOfflineDirectSigner()
 );
 
 export const aminoClient = StargateSigningClient.connectWithSigner(
-  chain.osmosis.rpc,
+  chain.cosmoshub.rpc,
   wallet.toOfflineAminoSigner()
 );

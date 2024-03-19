@@ -13,7 +13,7 @@ export const messages: Message<MsgVote>[] = [
     typeUrl: MsgVote.typeUrl,
     value: {
       proposalId: 4n,
-      voter: address.osmosis.genesis,
+      voter: address.cosmoshub.genesis,
       option: VoteOption.VOTE_OPTION_YES,
     },
   },
@@ -24,7 +24,7 @@ describe("Vote", () => {
     const signer = new DirectSigner(
       auth,
       [toEncoder(MsgVote)],
-      chain.osmosis.rpc
+      chain.cosmoshub.rpc
     );
     const resp = await (await signer.sign(messages)).broadcast({
       checkTx: true,
@@ -39,7 +39,7 @@ describe("Vote", () => {
       auth,
       [toEncoder(MsgVote)],
       [toConverter(MsgVote)],
-      chain.osmosis.rpc
+      chain.cosmoshub.rpc
     );
     const resp = await (await signer.sign(messages)).broadcast({
       checkTx: true,

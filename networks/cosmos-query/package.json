@@ -8,6 +8,11 @@
     "copy-and-rename": "npm run copy && npm run rename",
     "clean": "rimraf dist",
     "build": "npm run clean; tsc; tsc -p tsconfig.esm.json; npm run copy-and-rename",
-    "pub": "cd dist && npm run pub"
+    "pub": "cd dist && npm run pub",
+    "bp": "npm run build && npm run pub"
+  },
+  "dependencies": {
+    "@uni-sign/types": "^0.0.1",
+    "@uni-sign/utils": "^0.0.1"
   }
 }

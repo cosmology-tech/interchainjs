@@ -28,16 +28,16 @@ export class DirectSigner extends CosmosDirectSigner {
     auth: Auth,
     encoders: Encoder[],
     endpoint?: string | HttpEndpoint,
-    config?: SignerConfig
+    config: SignerConfig = defaultSignerConfig.Cosmos
   ) {
-    super(auth, encoders, endpoint, config ?? defaultSignerConfig.Cosmos);
+    super(auth, encoders, endpoint, config);
   }
 
   static async fromWallet(
     wallet: BaseWallet<SignDoc>,
     encoders: Encoder[],
     endpoint?: string | HttpEndpoint,
-    config?: SignerConfig
+    config: SignerConfig = defaultSignerConfig.Cosmos
   ) {
     const auth: Auth = await constructAuthFromWallet(wallet, config);
     const signer = new DirectSigner(auth, encoders, endpoint, config);

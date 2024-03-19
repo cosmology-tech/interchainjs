@@ -35,9 +35,9 @@ export class EthTypedDataSigner extends BaseSigner<EthTypedData> {
     encoders: Encoder[],
     converters: AminoConverter[],
     endpoint?: string | HttpEndpoint,
-    config?: SignerConfig
+    config: SignerConfig = defaultSignerConfig.Ethereum
   ) {
-    super(auth, encoders, endpoint, config ?? defaultSignerConfig.Ethereum);
+    super(auth, encoders, endpoint, config);
     this.aminoSigner = new AminoSigner(
       auth,
       encoders,

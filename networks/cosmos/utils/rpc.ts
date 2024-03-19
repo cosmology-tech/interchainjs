@@ -14,7 +14,9 @@ import {
 } from "../codegen/cosmos/vesting/v1beta1/vesting";
 import { fromBase64, randomId, toBase64, toHex } from "@uni-sign/utils";
 import { TxRpc } from "../codegen/types";
-import { BroadcastMode } from "../types";
+import { BroadcastMode, Decoder } from "../types";
+import { toDecoder } from "./direct";
+import { EthAccount } from "../codegen/injective/types/v1beta1/account";
 
 export const getPrefix = (chainId: string): string => {
   const prefix = (prefixJson as any)[chainId];
@@ -64,7 +66,8 @@ export const accountDecoders = [
   ContinuousVestingAccount,
   DelayedVestingAccount,
   PeriodicVestingAccount,
-];
+  EthAccount,
+].map((msg) => toDecoder(msg));
 
 export function createTxRpc(endpoint: HttpEndpoint): TxRpc {
   return {

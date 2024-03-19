@@ -14,11 +14,11 @@ export const messages: Message<MsgSend>[] = [
       amount: [
         {
           amount: "100000",
-          denom: chain.osmosis.denom,
+          denom: chain.cosmoshub.denom,
         },
       ],
-      fromAddress: address.osmosis.genesis,
-      toAddress: address.osmosis.test1,
+      fromAddress: address.cosmoshub.genesis,
+      toAddress: address.cosmoshub.test1,
     },
   },
 ];
@@ -28,7 +28,7 @@ describe("Send tokens", () => {
     const signer = new DirectSigner(
       auth,
       [toEncoder(MsgSend)],
-      chain.osmosis.rpc
+      chain.cosmoshub.rpc
     );
     const resp = await (await signer.sign(messages)).broadcast({
       checkTx: true,
@@ -43,7 +43,7 @@ describe("Send tokens", () => {
       auth,
       [toEncoder(MsgSend)],
       [toConverter(MsgSend)],
-      chain.osmosis.rpc
+      chain.cosmoshub.rpc
     );
     const resp = await (await signer.sign(messages)).broadcast({
       checkTx: true,

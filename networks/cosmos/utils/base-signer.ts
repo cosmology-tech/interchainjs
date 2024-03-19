@@ -42,9 +42,9 @@ export abstract class BaseSigner<SignDoc> extends _BaseSigner
     auth: Auth,
     encoders: Encoder[],
     endpoint?: string | HttpEndpoint,
-    config?: SignerConfig
+    config: SignerConfig = defaultSignerConfig
   ) {
-    super(auth, config ?? defaultSignerConfig);
+    super(auth, config);
     if (!isEmpty(endpoint)) {
       this.setEndpoint(endpoint);
     }

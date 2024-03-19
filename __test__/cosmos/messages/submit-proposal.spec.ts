@@ -12,11 +12,11 @@ export const messages: Message<MsgSubmitProposal>[] = [
   {
     typeUrl: MsgSubmitProposal.typeUrl,
     value: {
-      proposer: address.osmosis.genesis,
+      proposer: address.cosmoshub.genesis,
       initialDeposit: [
         {
           amount: "1000000",
-          denom: chain.osmosis.denom,
+          denom: chain.cosmoshub.denom,
         },
       ],
       content: {
@@ -37,7 +37,7 @@ describe("Submit proposal", () => {
     const signer = new DirectSigner(
       auth,
       [toEncoder(MsgSubmitProposal)],
-      chain.osmosis.rpc
+      chain.cosmoshub.rpc
     );
     const resp = await (await signer.sign(messages)).broadcast({
       checkTx: true,
@@ -52,7 +52,7 @@ describe("Submit proposal", () => {
       auth,
       [toEncoder(MsgSubmitProposal)],
       [toConverter(MsgSubmitProposal)],
-      chain.osmosis.rpc
+      chain.cosmoshub.rpc
     );
     const resp = await (await signer.sign(messages)).broadcast({
       checkTx: true,

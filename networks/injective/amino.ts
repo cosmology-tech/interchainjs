@@ -25,15 +25,9 @@ export class AminoSigner extends CosmosAminoSigner {
     encoders: Encoder[],
     converters: AminoConverter[],
     endpoint?: string | HttpEndpoint,
-    config?: SignerConfig
+    config: SignerConfig = defaultSignerConfig.Cosmos
   ) {
-    super(
-      auth,
-      encoders,
-      converters,
-      endpoint,
-      config ?? defaultSignerConfig.Cosmos
-    );
+    super(auth, encoders, converters, endpoint, config);
   }
 
   static async fromWallet(
@@ -41,7 +35,7 @@ export class AminoSigner extends CosmosAminoSigner {
     encoders: Encoder[],
     converters: AminoConverter[],
     endpoint?: string | HttpEndpoint,
-    config?: SignerConfig
+    config: SignerConfig = defaultSignerConfig.Cosmos
   ) {
     const auth: Auth = await constructAuthFromWallet(wallet, config);
     const signer = new AminoSigner(

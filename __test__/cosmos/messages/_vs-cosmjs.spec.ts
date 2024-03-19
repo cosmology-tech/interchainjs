@@ -21,18 +21,18 @@ import { auth } from "../constants";
 
 async function getDirectClient() {
   return await SigningStargateClient.connectWithSigner(
-    chain.osmosis.rpc,
+    chain.cosmoshub.rpc,
     await DirectSecp256k1HdWallet.fromMnemonic(seed.genesis, {
-      prefix: chain.osmosis.prefix,
+      prefix: chain.cosmoshub.prefix,
     })
   );
 }
 
 async function getAminoClient() {
   return await SigningStargateClient.connectWithSigner(
-    chain.osmosis.rpc,
+    chain.cosmoshub.rpc,
     await Secp256k1HdWallet.fromMnemonic(seed.genesis, {
-      prefix: chain.osmosis.prefix,
+      prefix: chain.cosmoshub.prefix,
     })
   );
 }
@@ -41,7 +41,7 @@ export const fee: StdFee = {
   gas: "20000000",
   amount: [
     {
-      denom: chain.osmosis.denom,
+      denom: chain.cosmoshub.denom,
       amount: "400000",
     },
   ],
@@ -53,7 +53,7 @@ async function getDirectWallet(): Promise<DirectWallet> {
   const offlineSigner = await DirectSecp256k1HdWallet.fromMnemonic(
     seed.genesis,
     {
-      prefix: chain.osmosis.prefix,
+      prefix: chain.cosmoshub.prefix,
     }
   );
   return {
@@ -63,13 +63,13 @@ async function getDirectWallet(): Promise<DirectWallet> {
         algo: accounts[0].algo,
         publicKey: Key.from(accounts[0].pubkey),
         getAddress(chainId?: string) {
-          return address.osmosis.genesis;
+          return address.cosmoshub.genesis;
         },
       };
     },
     async sign(doc: SignDoc) {
       const { signature, signed } = await offlineSigner.signDirect(
-        address.osmosis.genesis,
+        address.cosmoshub.genesis,
         doc
       );
       return {
@@ -82,7 +82,7 @@ async function getDirectWallet(): Promise<DirectWallet> {
 
 async function getAminoWallet(): Promise<AminoWallet> {
   const offlineSigner = await Secp256k1HdWallet.fromMnemonic(seed.genesis, {
-    prefix: chain.osmosis.prefix,
+    prefix: chain.cosmoshub.prefix,
   });
   return {
     async getAccount() {
@@ -91,13 +91,13 @@ async function getAminoWallet(): Promise<AminoWallet> {
         algo: accounts[0].algo,
         publicKey: Key.from(accounts[0].pubkey),
         getAddress(chainId?: string) {
-          return address.osmosis.genesis;
+          return address.cosmoshub.genesis;
         },
       };
     },
     async sign(doc: StdSignDoc) {
       const { signature, signed } = await offlineSigner.signAmino(
-        address.osmosis.genesis,
+        address.cosmoshub.genesis,
         doc
       );
       return {
@@ -114,11 +114,11 @@ describe("Compare with @cosmjs 1.0", () => {
     const signer = new DirectSigner(
       auth,
       [toEncoder(MsgSend), toEncoder(MsgTransfer)],
-      chain.osmosis.rpc
+      chain.cosmoshub.rpc
     );
 
     const txRaw = await client.sign(
-      address.osmosis.genesis,
+      address.cosmoshub.genesis,
       messages,
       fee,
       memo
@@ -138,11 +138,11 @@ describe("Compare with @cosmjs 1.0", () => {
     const signer = await DirectSigner.fromWallet(
       await getDirectWallet(),
       [toEncoder(MsgSend), toEncoder(MsgTransfer)],
-      chain.osmosis.rpc
+      chain.cosmoshub.rpc
     );
 
     const txRaw = await client.sign(
-      address.osmosis.genesis,
+      address.cosmoshub.genesis,
       messages,
       fee,
       memo
@@ -162,11 +162,11 @@ describe("Compare with @cosmjs 1.0", () => {
       auth,
       [toEncoder(MsgSend), toEncoder(MsgTransfer)],
       [toConverter(MsgSend), toConverter(MsgTransfer)],
-      chain.osmosis.rpc
+      chain.cosmoshub.rpc
     );
 
     const txRaw = await client.sign(
-      address.osmosis.genesis,
+      address.cosmoshub.genesis,
       messages,
       fee,
       memo
@@ -187,11 +187,11 @@ describe("Compare with @cosmjs 1.0", () => {
       await getAminoWallet(),
       [toEncoder(MsgSend), toEncoder(MsgTransfer)],
       [toConverter(MsgSend), toConverter(MsgTransfer)],
-      chain.osmosis.rpc
+      chain.cosmoshub.rpc
     );
 
     const txRaw = await client.sign(
-      address.osmosis.genesis,
+      address.cosmoshub.genesis,
       messages,
       fee,
       memo

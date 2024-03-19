@@ -13,11 +13,11 @@ export const messages: Message<MsgTransfer>[] = [
     value: {
       sourcePort: "transfer",
       sourceChannel: "channel-0",
-      sender: address.osmosis.genesis,
-      receiver: address.cosmoshub.test1,
+      sender: address.cosmoshub.genesis,
+      receiver: address.osmosis.test1,
       token: {
         amount: "1000000",
-        denom: chain.osmosis.denom,
+        denom: chain.cosmoshub.denom,
       },
       timeoutHeight: {
         revisionHeight: 13417750n,
@@ -35,7 +35,7 @@ describe("Send IBC tokens", () => {
     const signer = new DirectSigner(
       auth,
       [toEncoder(MsgTransfer)],
-      chain.osmosis.rpc
+      chain.cosmoshub.rpc
     );
     const resp = await (await signer.sign(messages)).broadcast({
       checkTx: true,
@@ -50,7 +50,7 @@ describe("Send IBC tokens", () => {
       auth,
       [toEncoder(MsgTransfer)],
       [toConverter(MsgTransfer)],
-      chain.osmosis.rpc
+      chain.cosmoshub.rpc
     );
     const resp = await (await signer.sign(messages)).broadcast({
       checkTx: true,

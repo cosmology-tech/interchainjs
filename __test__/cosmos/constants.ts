@@ -3,4 +3,4 @@ import { chain, seed } from "../data";
 import { RpcQuery } from "@uni-sign/cosmos-query/rpc";
 
 export const auth = Secp256k1Auth.fromMnemonic(seed.genesis).derive("cosmos");
-export const rpcQuery = new RpcQuery(chain.osmosis.rpc);
+export const rpcQuery = new RpcQuery(chain.cosmoshub.rpc);

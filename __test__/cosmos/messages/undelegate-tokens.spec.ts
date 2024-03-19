@@ -11,10 +11,10 @@ export const messages: Message<MsgUndelegate>[] = [
   {
     typeUrl: MsgUndelegate.typeUrl,
     value: {
-      delegatorAddress: address.osmosis.genesis,
-      validatorAddress: address.osmosis.validator,
+      delegatorAddress: address.cosmoshub.genesis,
+      validatorAddress: address.cosmoshub.validator,
       amount: {
-        denom: chain.osmosis.denom,
+        denom: chain.cosmoshub.denom,
         amount: "10000",
       },
     },
@@ -26,7 +26,7 @@ describe("Undelegate tokens", () => {
     const signer = new DirectSigner(
       auth,
       [toEncoder(MsgUndelegate)],
-      chain.osmosis.rpc
+      chain.cosmoshub.rpc
     );
     const resp = await (await signer.sign(messages)).broadcast({
       checkTx: true,
@@ -41,7 +41,7 @@ describe("Undelegate tokens", () => {
       auth,
       [toEncoder(MsgUndelegate)],
       [toConverter(MsgUndelegate)],
-      chain.osmosis.rpc
+      chain.cosmoshub.rpc
     );
     const resp = await (await signer.sign(messages)).broadcast({
       checkTx: true,

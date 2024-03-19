@@ -7,15 +7,8 @@ export interface ChainData {
 }
 
 export const chain: Record<string, ChainData> = {
-  osmosis: {
-    chainId: "osmosis-1",
-    rpc: "http://localhost:26653",
-    rest: "http://localhost:1313",
-    prefix: "osmo",
-    denom: "uosmo",
-  },
   cosmoshub: {
-    chainId: "cosmoshub-1",
+    chainId: "cosmoshub-4",
     rpc: "http://localhost:26657",
     rest: "http://localhost:1317",
     prefix: "cosmos",
@@ -27,6 +20,13 @@ export const chain: Record<string, ChainData> = {
     rest: "http://localhost:1313",
     prefix: "inj",
     denom: "inj",
+  },
+  osmosis: {
+    chainId: "osmosis-1",
+    rpc: "http://localhost:26653",
+    rest: "http://localhost:1313",
+    prefix: "osmo",
+    denom: "uosmo",
   },
 };
 

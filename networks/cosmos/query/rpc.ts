@@ -3,7 +3,6 @@ import { QueryClientImpl as AuthQuery } from "../codegen/cosmos/auth/v1beta1/que
 import { ServiceClientImpl as TxQuery } from "../codegen/cosmos/tx/v1beta1/service.rpc.Service";
 import {
   BroadcastMode,
-  BroadcastOptions,
   BroadcastResponse,
   FeeOptions,
   QueryClient,
@@ -24,7 +23,7 @@ import { constructAuthInfo } from "../utils/direct";
 import { SignMode } from "../codegen/cosmos/tx/signing/v1beta1/signing";
 import { toPrice } from "@uni-sign/utils";
 import { Decimal } from "decimal.js";
-import { HttpEndpoint, Price } from "@uni-sign/types";
+import { HttpEndpoint, Price, BroadcastOptions } from "@uni-sign/types";
 import { defaultBroadcastOptions, defaultFeeOptions } from "../defaults";
 
 export class RpcClient implements QueryClient {
