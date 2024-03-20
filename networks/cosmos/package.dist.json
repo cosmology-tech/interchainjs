@@ -8,7 +8,7 @@
   "author": "liujun93 <ljun8575@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "pub": "npm publish --access public"
+    "pub": "npm version patch && npm publish --access public"
   },
   "dependencies": {
     "@uni-sign/types": "^0.0.1",

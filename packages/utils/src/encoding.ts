@@ -26,6 +26,10 @@ export function toHex(bytes: Uint8Array): string {
   return Buffer.from(bytes).toString("hex");
 }
 
+export function toPrefixedHex(bytes: Uint8Array): string {
+  return `0x${toHex(bytes)}`;
+}
+
 export function toBigInt(bytes: Uint8Array): bigint {
   return BigInt(`0x${toHex(bytes)}`);
 }

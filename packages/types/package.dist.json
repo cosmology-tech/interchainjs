@@ -5,7 +5,7 @@
   "author": "liujun93 <ljun8575@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "pub": "npm publish --access public"
+    "pub": "npm version patch && npm publish --access public"
   },
   "dependencies": {
     "decimal.js": "^10.4.3",

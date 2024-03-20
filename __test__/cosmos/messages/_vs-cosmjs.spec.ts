@@ -7,17 +7,12 @@ import { MsgSend } from "@uni-sign/cosmos-msgs/cosmos/bank/v1beta1/tx";
 import { MsgTransfer } from "@uni-sign/cosmos-msgs/ibc/applications/transfer/v1/tx";
 import { messages } from "./send-tokens.spec";
 // import { messages } from "./send-ibc-tokens.spec";
-import {
-  AminoWallet,
-  DirectWallet,
-  SignDoc,
-  StdFee,
-  StdSignDoc,
-} from "@uni-sign/cosmos/types";
-import { Key, toHex } from "@uni-sign/utils";
+import { AminoWallet, DirectWallet, StdFee } from "@uni-sign/cosmos/types";
+import { toHex } from "@uni-sign/utils";
 import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import { DirectSigner } from "@uni-sign/cosmos/direct";
 import { auth } from "../constants";
+import { toDirectWallet, toAminoWallet } from "@cosmology/cosmjs/utils";
 
 async function getDirectClient() {
   return await SigningStargateClient.connectWithSigner(
@@ -50,62 +45,21 @@ export const fee: StdFee = {
 export const memo = "for test";
 
 async function getDirectWallet(): Promise<DirectWallet> {
-  const offlineSigner = await DirectSecp256k1HdWallet.fromMnemonic(
-    seed.genesis,
-    {
+  return toDirectWallet(
+    (await DirectSecp256k1HdWallet.fromMnemonic(seed.genesis, {
       prefix: chain.cosmoshub.prefix,
-    }
+    })) as any,
+    chain.cosmoshub.chainId
   );
-  return {
-    async getAccount() {
-      const accounts = await offlineSigner.getAccounts();
-      return {
-        algo: accounts[0].algo,
-        publicKey: Key.from(accounts[0].pubkey),
-        getAddress(chainId?: string) {
-          return address.cosmoshub.genesis;
-        },
-      };
-    },
-    async sign(doc: SignDoc) {
-      const { signature, signed } = await offlineSigner.signDirect(
-        address.cosmoshub.genesis,
-        doc
-      );
-      return {
-        signature: Key.fromBase64(signature.signature),
-        signed,
-      };
-    },
-  };
 }
 
 async function getAminoWallet(): Promise<AminoWallet> {
-  const offlineSigner = await Secp256k1HdWallet.fromMnemonic(seed.genesis, {
-    prefix: chain.cosmoshub.prefix,
-  });
-  return {
-    async getAccount() {
-      const accounts = await offlineSigner.getAccounts();
-      return {
-        algo: accounts[0].algo,
-        publicKey: Key.from(accounts[0].pubkey),
-        getAddress(chainId?: string) {
-          return address.cosmoshub.genesis;
-        },
-      };
-    },
-    async sign(doc: StdSignDoc) {
-      const { signature, signed } = await offlineSigner.signAmino(
-        address.cosmoshub.genesis,
-        doc
-      );
-      return {
-        signature: Key.fromBase64(signature.signature),
-        signed: signed as any,
-      };
-    },
-  };
+  return toAminoWallet(
+    (await Secp256k1HdWallet.fromMnemonic(seed.genesis, {
+      prefix: chain.cosmoshub.prefix,
+    })) as any,
+    chain.cosmoshub.chainId
+  );
 }
 
 describe("Compare with @cosmjs 1.0", () => {
