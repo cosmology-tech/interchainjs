@@ -1,0 +1,67 @@
+import { TxRpc } from "./types";
+import * as _CosmosAuthV1beta1Queryrpc from "./cosmos/auth/v1beta1/query.rpc.Query";
+import * as _CosmosBankV1beta1Queryrpc from "./cosmos/bank/v1beta1/query.rpc.Query";
+import * as _CosmosGovV1beta1Queryrpc from "./cosmos/gov/v1beta1/query.rpc.Query";
+import * as _CosmosStakingV1beta1Queryrpc from "./cosmos/staking/v1beta1/query.rpc.Query";
+import * as _CosmwasmWasmV1Queryrpc from "./cosmwasm/wasm/v1/query.rpc.Query";
+export interface QueryImpl extends _CosmosAuthV1beta1Queryrpc.StargateImpl, _CosmosBankV1beta1Queryrpc.StargateImpl, _CosmosGovV1beta1Queryrpc.StargateImpl, _CosmosStakingV1beta1Queryrpc.StargateImpl, _CosmwasmWasmV1Queryrpc.CosmWasmImpl {}
+export class QueryImpl {
+  rpc: TxRpc;
+  init(rpc: TxRpc) {
+    this.rpc = rpc;
+    this.accounts = _CosmosAuthV1beta1Queryrpc.createClientImpl(rpc).accounts;
+    this.account = _CosmosAuthV1beta1Queryrpc.createClientImpl(rpc).account;
+    this.accountAddressByID = _CosmosAuthV1beta1Queryrpc.createClientImpl(rpc).accountAddressByID;
+    this.getAuthParams = _CosmosAuthV1beta1Queryrpc.createClientImpl(rpc).params;
+    this.moduleAccounts = _CosmosAuthV1beta1Queryrpc.createClientImpl(rpc).moduleAccounts;
+    this.moduleAccountByName = _CosmosAuthV1beta1Queryrpc.createClientImpl(rpc).moduleAccountByName;
+    this.bech32Prefix = _CosmosAuthV1beta1Queryrpc.createClientImpl(rpc).bech32Prefix;
+    this.addressBytesToString = _CosmosAuthV1beta1Queryrpc.createClientImpl(rpc).addressBytesToString;
+    this.addressStringToBytes = _CosmosAuthV1beta1Queryrpc.createClientImpl(rpc).addressStringToBytes;
+    this.accountInfo = _CosmosAuthV1beta1Queryrpc.createClientImpl(rpc).accountInfo;
+    this.balance = _CosmosBankV1beta1Queryrpc.createClientImpl(rpc).balance;
+    this.allBalances = _CosmosBankV1beta1Queryrpc.createClientImpl(rpc).allBalances;
+    this.spendableBalances = _CosmosBankV1beta1Queryrpc.createClientImpl(rpc).spendableBalances;
+    this.spendableBalanceByDenom = _CosmosBankV1beta1Queryrpc.createClientImpl(rpc).spendableBalanceByDenom;
+    this.totalSupply = _CosmosBankV1beta1Queryrpc.createClientImpl(rpc).totalSupply;
+    this.supplyOf = _CosmosBankV1beta1Queryrpc.createClientImpl(rpc).supplyOf;
+    this.getBankParams = _CosmosBankV1beta1Queryrpc.createClientImpl(rpc).params;
+    this.denomMetadata = _CosmosBankV1beta1Queryrpc.createClientImpl(rpc).denomMetadata;
+    this.denomsMetadata = _CosmosBankV1beta1Queryrpc.createClientImpl(rpc).denomsMetadata;
+    this.denomOwners = _CosmosBankV1beta1Queryrpc.createClientImpl(rpc).denomOwners;
+    this.sendEnabled = _CosmosBankV1beta1Queryrpc.createClientImpl(rpc).sendEnabled;
+    this.proposal = _CosmosGovV1beta1Queryrpc.createClientImpl(rpc).proposal;
+    this.proposals = _CosmosGovV1beta1Queryrpc.createClientImpl(rpc).proposals;
+    this.getVote = _CosmosGovV1beta1Queryrpc.createClientImpl(rpc).vote;
+    this.votes = _CosmosGovV1beta1Queryrpc.createClientImpl(rpc).votes;
+    this.getGovParams = _CosmosGovV1beta1Queryrpc.createClientImpl(rpc).params;
+    this.getDeposit = _CosmosGovV1beta1Queryrpc.createClientImpl(rpc).deposit;
+    this.deposits = _CosmosGovV1beta1Queryrpc.createClientImpl(rpc).deposits;
+    this.tallyResult = _CosmosGovV1beta1Queryrpc.createClientImpl(rpc).tallyResult;
+    this.validators = _CosmosStakingV1beta1Queryrpc.createClientImpl(rpc).validators;
+    this.validator = _CosmosStakingV1beta1Queryrpc.createClientImpl(rpc).validator;
+    this.validatorDelegations = _CosmosStakingV1beta1Queryrpc.createClientImpl(rpc).validatorDelegations;
+    this.validatorUnbondingDelegations = _CosmosStakingV1beta1Queryrpc.createClientImpl(rpc).validatorUnbondingDelegations;
+    this.delegation = _CosmosStakingV1beta1Queryrpc.createClientImpl(rpc).delegation;
+    this.unbondingDelegation = _CosmosStakingV1beta1Queryrpc.createClientImpl(rpc).unbondingDelegation;
+    this.delegatorDelegations = _CosmosStakingV1beta1Queryrpc.createClientImpl(rpc).delegatorDelegations;
+    this.delegatorUnbondingDelegations = _CosmosStakingV1beta1Queryrpc.createClientImpl(rpc).delegatorUnbondingDelegations;
+    this.redelegations = _CosmosStakingV1beta1Queryrpc.createClientImpl(rpc).redelegations;
+    this.delegatorValidators = _CosmosStakingV1beta1Queryrpc.createClientImpl(rpc).delegatorValidators;
+    this.delegatorValidator = _CosmosStakingV1beta1Queryrpc.createClientImpl(rpc).delegatorValidator;
+    this.historicalInfo = _CosmosStakingV1beta1Queryrpc.createClientImpl(rpc).historicalInfo;
+    this.pool = _CosmosStakingV1beta1Queryrpc.createClientImpl(rpc).pool;
+    this.getStakingParams = _CosmosStakingV1beta1Queryrpc.createClientImpl(rpc).params;
+    this.contractInfo = _CosmwasmWasmV1Queryrpc.createClientImpl(rpc).contractInfo;
+    this.contractHistory = _CosmwasmWasmV1Queryrpc.createClientImpl(rpc).contractHistory;
+    this.contractsByCode = _CosmwasmWasmV1Queryrpc.createClientImpl(rpc).contractsByCode;
+    this.allContractState = _CosmwasmWasmV1Queryrpc.createClientImpl(rpc).allContractState;
+    this.rawContractState = _CosmwasmWasmV1Queryrpc.createClientImpl(rpc).rawContractState;
+    this.smartContractState = _CosmwasmWasmV1Queryrpc.createClientImpl(rpc).smartContractState;
+    this.code = _CosmwasmWasmV1Queryrpc.createClientImpl(rpc).code;
+    this.codes = _CosmwasmWasmV1Queryrpc.createClientImpl(rpc).codes;
+    this.pinnedCodes = _CosmwasmWasmV1Queryrpc.createClientImpl(rpc).pinnedCodes;
+    this.getWasmParams = _CosmwasmWasmV1Queryrpc.createClientImpl(rpc).params;
+    this.contractsByCreator = _CosmwasmWasmV1Queryrpc.createClientImpl(rpc).contractsByCreator;
+  }
+}

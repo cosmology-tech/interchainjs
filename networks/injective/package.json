@@ -1,0 +1,22 @@
+{
+  "name": "@uni-sign/injective",
+  "version": "0.0.1",
+  "main": "index.js",
+  "module": "esm/index.js",
+  "types": "index.d.ts",
+  "author": "liujun93 <ljun8575@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "copy": "copyfiles -f ../../LICENSE-MIT ../../LICENSE-Apache README.md dist",
+    "clean": "del dist/** '!dist/package.json'",
+    "build": "npm run clean; tsc; tsc -p tsconfig.esm.json; npm run copy",
+    "pub": "npm run build && cd dist && npm run pub"
+  },
+  "dependencies": {
+    "@uni-sign/utils": "latest",
+    "@uni-sign/types": "latest",
+    "@uni-sign/cosmos": "latest",
+    "@uni-sign/ethereum": "latest",
+    "decimal.js": "^10.4.3"
+  }
+}

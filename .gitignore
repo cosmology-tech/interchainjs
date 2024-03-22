@@ -1,0 +1,10 @@
+node_modules/
+test-data.ts
+test.ts
+test.ts
+scripts/test.sh
+**/.DS_Store
+**/dist/*
+**/yarn-error.log
+!**/dist/package.json
+lerna-debug.log

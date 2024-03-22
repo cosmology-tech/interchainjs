@@ -1,0 +1,14 @@
+{
+  "name": "@uni-sign/types",
+  "author": "liujun93 <ljun8575@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "copy": "copyfiles -f ../../LICENSE-MIT ../../LICENSE-Apache README.md dist",
+    "clean": "del dist/** '!dist/package.json'",
+    "build": "npm run clean; tsc; tsc -p tsconfig.esm.json; npm run copy",
+    "pub": "npm run build && cd dist && npm run pub"
+  },
+  "dependencies": {
+    "decimal.js": "^10.4.3"
+  }
+}

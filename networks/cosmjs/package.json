@@ -1,0 +1,20 @@
+{
+  "name": "@cosmology/cosmjs",
+  "author": "liujun93 <ljun8575@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "copy": "copyfiles -f ../../LICENSE-MIT ../../LICENSE-Apache README.md dist",
+    "clean": "del dist/** '!dist/package.json'",
+    "build": "npm run clean; tsc; tsc -p tsconfig.esm.json; npm run copy",
+    "pub": "npm run build && cd dist && npm run pub"
+  },
+  "dependencies": {
+    "@uni-sign/cosmos": "latest",
+    "@uni-sign/cosmos-msgs": "latest",
+    "@uni-sign/cosmos-query": "latest",
+    "@uni-sign/utils": "latest",
+    "@uni-sign/types": "latest",
+    "decimal.js": "^10.4.3",
+    "@noble/hashes": "^1.3.1"
+  }
+}
