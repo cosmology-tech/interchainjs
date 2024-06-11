@@ -106,7 +106,7 @@ describe("Staking tokens testing", () => {
       amount: [
         {
           denom,
-          amount: "100000",
+          amount: "1000000000000000",
         },
       ],
       gas: "550000",

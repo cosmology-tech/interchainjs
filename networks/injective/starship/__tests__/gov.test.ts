@@ -135,7 +135,7 @@ describe("Governance tests for injective", () => {
       amount: [
         {
           denom,
-          amount: "100000",
+          amount: "1000000000000000",
         },
       ],
       gas: "550000",
@@ -174,7 +174,7 @@ describe("Governance tests for injective", () => {
       amount: [
         {
           denom,
-          amount: "100000",
+          amount: "1000000000000000",
         },
       ],
       gas: "550000",
@@ -221,7 +221,7 @@ describe("Governance tests for injective", () => {
       amount: [
         {
           denom,
-          amount: "100000",
+          amount: "1000000000000000",
         },
       ],
       gas: "550000",
@@ -259,7 +259,7 @@ describe("Governance tests for injective", () => {
       amount: [
         {
           denom,
-          amount: "100000",
+          amount: "1000000000000000",
         },
       ],
       gas: "550000",
